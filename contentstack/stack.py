@@ -124,11 +124,6 @@ class Stack(object):
         """Fetches all Content Types from the Stack.
 
         This call returns comprehensive information of all the content types available in a particular stack in your account.
-        API Reference: https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-types/content-model/get-the-content-model-of-a-space
-
-        :param query: (optional) Dict with API options.
-        :return: List of :class:`ContentType <contentful.content_type.ContentType>` objects.
-        :rtype: List of contentful.content_type.ContentType
 
         Usage:
             >>> content_types = stack.content_types()
