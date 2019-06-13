@@ -1,0 +1,69 @@
+"""
+ * MIT License
+ *
+ * Copyright (c) 2012 - 2019 Contentstack
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+"""
+
+
+import logging
+import urllib
+import requests
+
+try: 
+    from logging import NullHandler
+except ImportError:
+    class NullHandler(logging.Handler):
+        def emit(self, record):
+            pass
+
+
+logging.getLogger(__name__).addHandler(NullHandler())
+log = logging.getLogger(__name__)
+
+class utils:
+
+    '''def is_internet_on():
+        try: urllib.request.urlopen('http://216.58.192.142', timeout=1)
+        #return True
+    except urllib2.URLError as err: 
+        return False'''
+
+
+
+class StackException(Exception):
+    """StackException Class"""
+    pass
+
+
+class NotSupportedException(Exception):
+    """ exception is thrown when something is not supported by the API."""
+    pass
+
+
+class retry_request(object):
+    """
+    Decorator to retry function calls in case they raise rate limit exceptions
+    """
+    pass
+
+
+
