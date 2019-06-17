@@ -1,6 +1,6 @@
 import logging
-import requests
-from requests.auth import HTTPDigestAuth
+#import requests
+#from requests.auth import HTTPDigestAuth
 import json
 import config
 import urllib.parse
@@ -41,9 +41,8 @@ class HTTPConnection:
         encoded_query = urllib.parse.urlencode(self.__query)
         self.__local_headers.update({'Content-Type': 'application/json',
                                      'X-User-Agent': __config.SDK_VERSION })
-        response = requests.post(
-            __config.get_host(), encoded_query, self.__local_headers)
+        #response = requests.post(__config.get_host(), encoded_query, self.__local_headers)
         
-        print(response.json)
+        #print(response.json)
 
 

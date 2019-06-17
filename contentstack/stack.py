@@ -57,7 +57,6 @@ class Stack(object):
  
 
 
-
     def __initialise_stack(self):
             if not self.__api_key:
                 return AssertionError('Please enter the API key of stack of which you wish to retrieve the content types.')
@@ -66,14 +65,11 @@ class Stack(object):
             if not self.__environment:
                 return AssertionError('Environment can not be Empty')
             else:
-                
                 self.__stack_query__   = dict()
                 self.__local_headers__ = dict()
-                self.__local_headers__ = {
-                    'api_key': self.__api_key, 
-                    'access_token': self.__access_token, 
-                    'environment' : self.__environment 
-                }
+                self.__local_headers__['api_key'] = self.__api_key
+                self.__local_headers__['access_token'] = self.__access_token
+                self.__local_headers__['environment'] = self.__environment
 
 
 
@@ -124,6 +120,11 @@ class Stack(object):
         """Fetches all Content Types from the Stack.
 
         This call returns comprehensive information of all the content types available in a particular stack in your account.
+        API Reference: https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-types/content-model/get-the-content-model-of-a-space
+
+        :param query: (optional) Dict with API options.
+        :return: List of :class:`ContentType <contentful.content_type.ContentType>` objects.
+        :rtype: List of contentful.content_type.ContentType
 
         Usage:
             >>> content_types = stack.content_types()
@@ -136,7 +137,7 @@ class Stack(object):
     def get_application_key(self):
         ''' get_application_key() returns stack API_Key '''
         if 'api_key' in self.__local_headers__:
-            self.__local_headers__('api_key')
+            self.__local_headers__['api_key']
             return self
         
 
@@ -144,7 +145,7 @@ class Stack(object):
     def get_access_token(self):
         ''' get_access_token() method returns access token '''
         if 'access_token' in self.__local_headers__:
-            self.__local_headers__('access_token')
+            self.__local_headers__['access_token']
             return self
 
 
@@ -159,7 +160,7 @@ class Stack(object):
 
     def set_header(self, header_key, header_value):
         ''' set_header() mrthod sets additinal headers to the stack '''
-        self.__local_headers__.update({header_key: header_value})
+        self.__local_headers__[header_key] = header_value
         return self
 
 
@@ -205,7 +206,7 @@ class Stack(object):
         collaborators with whom the stacks are shared. 
         A detailed information about each collaborator is returned.
         """
-        self.__stack_query__ = {'include_collaborators':True}
+        self.__stack_query__['include_collaborators']=True
         return self
 
 
@@ -216,7 +217,7 @@ class Stack(object):
         such as the description, format of date, 
         format of time, and so on. Users can include or exclude stack variables in the response. 
         """
-        self.__stack_query__ = {'include_stack_variables':True}
+        self.__stack_query__['include_stack_variables']=True
         return self
 
 
@@ -225,7 +226,7 @@ class Stack(object):
         """
         view the access token of your stack.
         """
-        self.__stack_query__ = {'include_discrete_variables':True}
+        self.__stack_query__['include_discrete_variables']=True
         return self
 
 
@@ -234,7 +235,7 @@ class Stack(object):
         """
         the total count of entries available in a content type.
         """
-        self.__stack_query__ = {'include_count':True}
+        self.__stack_query__['include_count']=True
         return self
 
 
@@ -249,8 +250,8 @@ class Stack(object):
         In such cases, this token can be used to restart the sync process from where it was interrupted.
         """
         self.__sync_query__ = dict()
-        self.__sync_query__ = {'init':True}
-        self.__sync_query__ = {'pagination_token':pagination_token}
+        self.__sync_query__['init']=True
+        self.__sync_query__['pagination_token']=pagination_token
         return self.__sync_query__
 
 
@@ -263,10 +264,9 @@ class Stack(object):
         and the details of the content that was deleted or updated.
         """
         self.__sync_query__ = dict()
-        self.__sync_query__ = {'init':True}
-        self.__sync_query__ = {'sync_token':sync_token}
+        self.__sync_query__['init'] =  True
+        self.__sync_query__['sync_token'] = sync_token
         return self.__sync_query__
-
         
  
         
@@ -295,11 +295,16 @@ class Stack(object):
         If you do not specify any value, it will bring all published entries and published assets.
         """
         self.__sync_query__ = dict()
-        self.__sync_query__ = {"init":True}
-        self.__sync_query__ = {"start_from":from_date }
-        self.__sync_query__ = {"content_type_uid":content_type_uid }
-        self.__sync_query__ = {"type":publish_type }
-        self.__sync_query__ = {"locale":langauge }
+        self.__sync_query__['init'] = True
+        if from_date != None:
+            self.__sync_query__["start_from"] = from_date 
+        if content_type_uid != None:
+            self.__sync_query__["content_type_uid"] = content_type_uid
+        if publish_type != None:
+            self.__sync_query__["type"] = publish_type
+        if langauge != None:
+            self.__sync_query__["locale"] = langauge
+
         return self.__sync_query__
 
 
