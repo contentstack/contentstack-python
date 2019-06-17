@@ -27,12 +27,11 @@ import logging
 
 class Config(object):
         
-
         def __init__(self):
                 self.host_url = 'cdn.contentstack.io'
                 self.api_version = 'v3'
                 self.environment = None
-                self.SDK_VERSION = 0.0.1
+                self.SDK_VERSION = "0.0.1"
                 self.SDK_NAME = 'contentstack-python'
 
 
