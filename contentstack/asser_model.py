@@ -26,8 +26,13 @@
 import logging
 
 
-class AssetModel():
-    logging.info("Asset  Model")
+class AssetModel:
 
     def __init__(self):
-        logging.info('AssetModel initialised')
+        print(AssetModel, 'is initialised')
+
+
+
+
+
+asser_model = AssetModel()

@@ -21,29 +21,30 @@
      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
      SOFTWARE.
  """
+
 import logging
-#import entry
+from contentstack import entry
+from contentstack import stack
 from config import Config
-from query import Query
 
 
 class ContentType(object):
-    
+
     def __init__(self, content_type_uid):
+        self.stack_instance = stack
         self.content_type_id = content_type_uid
-        #self.get_url()
         self.local_header = dict()
 
-    
     def set_stack_instance(self, stack):
         self.stack_instance = stack
-        self.local_header   = stack.local_header
-    
-    
-    def set_header(self, key, value):
-        """ headers can be added by key and respected values """
-        self.local_header.update({key: value})
+        self.local_header = stack.__local_headers__
 
+    def set_header(self, key, value):
+        """
+        headers can be added by key and respected values
+        :returns self
+        """
+        self.local_header.update({key: value})
 
     def remove_header(self, header_key):
         """
@@ -51,11 +52,9 @@ class ContentType(object):
         """
         if header_key in self.local_header:
             self.local_header.pop(header_key)
-    
 
+    def entry(self, entry_uid=None, content_type_id=None):
 
-    def entry(self, entry_uid = None, content_type_id = None):
-    
         '''
         [About]: An entry is the actual piece of content created 
         using one of the defined content types. Read more about Entries.
@@ -84,7 +83,6 @@ class ContentType(object):
         entry = entry.Entry(entry_uid=entry_uid, content_type_id=self.content_type_id)
         entry.set_content_type_instance(self)
         return entry
-    
 
     def query(self):
         '''
@@ -93,17 +91,14 @@ class ContentType(object):
         and provide a query in JSON format as the value.
         To learn more about the queries, refer to the Queries section.
         '''
-        query =  query.Query(self.content_type_id)
-        #query.formHead = 
-        #query.setContentTypeInstance(this)
+        query = query.Query(self.content_type_id)
+        # query.formHead =
+        # query.setContentTypeInstance(this)
         return query
 
-
     def fetch(self, callback):
-    
-        return self.get_url()
-        
 
+        return self.get_url()
 
     def get_url(self):
         self.__configs = Config()

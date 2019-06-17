@@ -25,9 +25,11 @@
 
 import logging
 
-class Asset():
+
+class Asset:
 
     def __init__(self):
         logging.info("Asset initialised")
 
 
+asset = Asset()

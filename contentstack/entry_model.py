@@ -1,6 +1,5 @@
-
 class EntryModel:
-    
+
     def __init__(self, result):
         self.result = result
         self.entry_uid = None
@@ -13,9 +12,7 @@ class EntryModel:
         self._metadata = dict
         self.tags = dict
 
-
     def get_uid(self):
-        if self.result != None :
-            if 'uid' in self.result :
+        if self.result != None:
+            if 'uid' in self.result:
                 self.result['uid'] = 'uid'
-
