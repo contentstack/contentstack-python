@@ -23,30 +23,29 @@
  *
 """
 
-
 import logging
 
+
 class HTTPError(Exception):
-    
     errors_str = {
-        
-        'error_invalid_json'                   : "Please provide valid JSON.",
-        'error_message_stack_api_key_is_null'  : "Stack api key can not be null.",
-        'error_form_name'                      : "Please set contentType name.",
-        'error_stack_access_token_is_null'     : "Access token can not be null.",
-        'error_stack_environment_is_null'      : "Environment can not be null.",
-        'Error_Connection_Error'               : "Connection error",
-        'Error_Auth_Failure_Error'             : "Authentication Not present.",
-        'Error_Parse_Error'                    : "Parsing Error.",
-        'Error_Server_Error'                   : "Server interaction went wrong, Please try again.",
-        'Error_Default'                        : "Oops! Something went wrong. Please try again.",
-        'Error_No_Network'                     : "Network not available.",
-        'Error_Called_Default_Method'          : "You must called Contentstack.stack() first",
-        'Error_Query_Filter_Exception'         : "Please provide valid params."
+
+        'error_invalid_json': "Please provide valid JSON.",
+        'error_message_stack_api_key_is_null': "Stack api key can not be null.",
+        'error_form_name': "Please set contentType name.",
+        'error_stack_access_token_is_null': "Access token can not be null.",
+        'error_stack_environment_is_null': "Environment can not be null.",
+        'Error_Connection_Error': "Connection error",
+        'Error_Auth_Failure_Error': "Authentication Not present.",
+        'Error_Parse_Error': "Parsing Error.",
+        'Error_Server_Error': "Server interaction went wrong, Please try again.",
+        'Error_Default': "Oops! Something went wrong. Please try again.",
+        'Error_No_Network': "Network not available.",
+        'Error_Called_Default_Method': "You must called Contentstack.stack() first",
+        'Error_Query_Filter_Exception': "Please provide valid params."
     }
 
-def __init__(self):
 
+def __init__(self):
     errors = {
 
         400: "The request was incorrect or corrupted.",
@@ -61,17 +60,13 @@ def __init__(self):
         504: "A server did not receive a timely response from another server that it was accessing while attempting to load the web page or fill another request by the browser."
     }
 
-
     def get_error(self, response):
         print('Error')
 
-
-    def set_logging_config(self,level):
-        print('level '+level)
+    def set_logging_config(self, level):
+        print('level ' + level)
 
 
 class ConfigError(Exception):
     """Configuration Error Class"""
     pass
-
-
