@@ -22,7 +22,7 @@
      SOFTWARE.
  """
 import logging
-import entry
+#import entry
 from config import Config
 from query import Query
 
@@ -31,7 +31,7 @@ class ContentType(object):
     
     def __init__(self, content_type_uid):
         self.content_type_id = content_type_uid
-        self.__get_url('content_types/{0}'.format(self.content_type_id))
+        #self.get_url()
         self.local_header = dict()
 
     
@@ -41,26 +41,58 @@ class ContentType(object):
     
     
     def set_header(self, key, value):
-        """
-        Scope is limited to this object and followed classes. 
-        """
+        """ headers can be added by key and respected values """
         self.local_header.update({key: value})
 
 
     def remove_header(self, header_key):
+        """
+        headers can be removed by key
+        """
         if header_key in self.local_header:
             self.local_header.pop(header_key)
     
 
-    def entry(self, entry_uid = None): 
-        entry = entry.Entry(self.content_type_id)
-        entry.set_content_type_instance(self)
+
+    def entry(self, entry_uid = None, content_type_id = None):
+    
+        '''
+        [About]: An entry is the actual piece of content created 
+        using one of the defined content types. Read more about Entries.
+        
+        [Single Entry] -->
+        The Get a single entry request fetches a particular entry of a content type.
+        [API Reference] : https://www.contentstack.com/docs/apis/content-delivery-api/#single-entry
+        Implementation: 
+        single_entry = stack.content_type('product').entry('entry_uid')
+        
+        [All Entries] : -->
+        The Get all entries call fetches the list of all the entries 
+        of a particular content type. It also returns the content of 
+        each entry in JSON format. You can also specify the environment 
+        and locale of which you wish to get the entries.
+        [API Reference] : https://www.contentstack.com/docs/apis/content-delivery-api/#entries
+
+        Implementation:
+        entries = entry = stack.content_type('product').entry()
+        '''
+        if content_type_id != None:
+            self.content_type_id = content_type_id
         if entry_uid != None:
             entry.set_uid(entry_uid)
+
+        entry = entry.Entry(entry_uid=entry_uid, content_type_id=self.content_type_id)
+        entry.set_content_type_instance(self)
         return entry
     
 
     def query(self):
+        '''
+        You can add queries to extend the functionality of this API call. 
+        Under the URI Parameters section, insert a parameter named query 
+        and provide a query in JSON format as the value.
+        To learn more about the queries, refer to the Queries section.
+        '''
         query =  query.Query(self.content_type_id)
         #query.formHead = 
         #query.setContentTypeInstance(this)
@@ -68,14 +100,14 @@ class ContentType(object):
 
 
     def fetch(self, callback):
+    
+        return self.get_url()
         
-        return self.__get_url(self.content_type_id)
-        
 
 
-
-    def __get_url(self, url):
+    def get_url(self):
         self.__configs = Config()
         VERSION = self.__configs.get_version()
         http_schema = self.__configs.get_host()
-        return "/{0}/{1}/content_types/{2}".format(http_schema, VERSION, url)
+        url = "/{0}/{1}/content_types/{2}".format(http_schema, VERSION, self.content_type_id)
+        return url
