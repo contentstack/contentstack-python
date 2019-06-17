@@ -31,14 +31,14 @@ import json
 import time
 import sys
 import re
-from contentstack import content_type
+from contentstack import content_type, stack
 from contentstack import config
 import urllib.parse
 
 
-class Stack(object):
+class Stack:
 
-    def __init__(self, api_key, access_token, environment, config=None):
+    def __init__(self, api_key: str, access_token: str, environment: str, config: object = None) -> object:
         '''
         A stack is a space that stores the content of a project (a web or mobile property). 
         Within a stack, you can create content structures, content entries, users, etc. 
