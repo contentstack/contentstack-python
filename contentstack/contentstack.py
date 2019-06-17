@@ -26,37 +26,33 @@
 
 import config
 import logging
-import stack
-from contentstack import stack
 
 
 class Contentstack(object):
 
     def stack(self, api_key, access_token, environment, config):
         logging.info("Initicalised with configs")
-        
+
         if api_key is None:
             logging.error("API Key can not be empty")
             raise AssertionError("API Key can not be empty")
-        
+
         if access_token is None:
             logging.error("Access Token can not be empty")
             raise AssertionError("Access Token can not be empty")
-        
+
         if environment is None:
             logging.error("Environment can not be empty")
             raise AssertionError("Environment can not be empty")
-        
+
         if config is None:
             logging.error("congig can not be empty")
             raise AssertionError("Environment can not be empty")
-        
+
         else:
             logging.info("stack initialisation attempted with config")
-            return_stack = stack(api_key, access_token, environment)
-            return return_stack
-
-
+            # return_stack = stack(api_key, access_token, environment)
+            #return return_stack
 
 
 

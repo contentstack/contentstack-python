@@ -25,39 +25,38 @@
 
 import logging
 
+
 class Config(object):
-        
-        def __init__(self):
-                self.host_url = 'cdn.contentstack.io'
-                self.api_version = 'v3'
-                self.environment = None
-                self.SDK_VERSION = "0.0.1"
-                self.SDK_NAME = 'contentstack-python'
 
+    SDK_VERSION = 'contentstack-python[0.0.1]'
 
-        def set_host(self, host_url= 'cdn.contentstack.io'):
-                logging.info("set host")
-                if host_url != None:
-                        self.url = host_url
-                        return self
+    def __init__(self):
+        self.host_url = 'cdn.contentstack.io'
+        self.api_version = 'v3'
+        self.environment = None
+        self.SDK_VERSION = "0.0.1"
+        self.SDK_NAME = 'contentstack-python'
 
+    def set_host(self, host_url='cdn.contentstack.io'):
+        logging.info("set host")
+        if host_url != None:
+            self.url = host_url
+            return self
 
-        def set_environment(self, environment):
-                logging.info("set environment")
-                if environment != None:
-                        self.environment = environment
-                        return self
+    def set_environment(self, environment):
+        logging.info("set environment")
+        if environment != None:
+            self.environment = environment
+            return self
 
-        def get_host(self):
-                logging.info('getting host url')
-                return self.host_url
-        
+    def get_host(self):
+        logging.info('getting host url')
+        return self.host_url
 
-        def get_version(self):
-                logging.info('getting api version')
-                return self.api_version
+    def get_version(self):
+        logging.info('getting api version')
+        return self.api_version
 
-
-        def get_environment(self):
-                logging.info('get invironment')
-                return self.environment
+    def get_environment(self):
+        logging.info('get invironment')
+        return self.environment
