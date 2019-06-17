@@ -1,13 +1,13 @@
 
 
-from stack import Stack
 from config import Config
-from query import Query
+from . import stack
+
 
 
 configs = Config()
 configs.set_host('stag-cdn.contentstack.io')
-stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development', config=configs)
+stack  = stack.Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development', config=configs)
 content = stack.content_type('product')
 print(content.get_url())
 
