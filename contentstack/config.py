@@ -28,24 +28,24 @@ import logging
 
 class Config(object):
 
-    SDK_VERSION = 'contentstack-python[0.0.1]'
+    SDK_VERSION = '[0.0.1]'
+    SDK_NAME = 'contentstack-python'
 
     def __init__(self):
         self.host_url = 'cdn.contentstack.io'
         self.api_version = 'v3'
         self.environment = None
-        self.SDK_VERSION = "0.0.1"
-        self.SDK_NAME = 'contentstack-python'
+        self.http_protocol = 'https://'
 
     def set_host(self, host_url='cdn.contentstack.io'):
         logging.info("set host")
-        if host_url != None:
-            self.url = host_url
+        if host_url is not None:
+            self.host_url = host_url
             return self
 
     def set_environment(self, environment):
         logging.info("set environment")
-        if environment != None:
+        if environment is not None:
             self.environment = environment
             return self
 
@@ -58,5 +58,9 @@ class Config(object):
         return self.api_version
 
     def get_environment(self):
-        logging.info('get invironment')
+        logging.info('get environment')
         return self.environment
+
+    def get_http_protocol(self):
+        logging.info('get http protocol')
+        return self.http_protocol

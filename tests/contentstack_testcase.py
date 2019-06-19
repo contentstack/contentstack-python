@@ -1,24 +1,32 @@
 from unittest import TestCase
 import logging
-import unittest
-import contentstack.stack
+import requests
+from contentstack.stack import Stack
+from contentstack.stack import Stack
+from contentstack.HTTPConnection import HTTPConnection
 
 
 class ContentstackTestcase(TestCase):
 
-    def test_snake_case(self):
-        self.assertEqual('foo', 'foo')
-        self.assertEqual('foo', 'foo')
-        self.assertEqual('foo', 'foo')
-        self.assertEqual('foo', 'foo')
-        self.assertEqual('foo', 'foo')
+    # def setUp(self):
+    #    self.stack = contentstack.Stack('blt20962a819b57e233', 'blt01638c90cc28fb6f', 'development')
+    #    pass
 
-    @staticmethod
-    def stack_initialisation(self):
-        init_stack = contentstack.stack.Stack('blt20962a819b57e233','blt01638c90cc28fb6f','development')
-        access_token = init_stack.get_access_token()
-        self.assertEqual(access_token, 'blt01638c90cc28fb6f')
+    def test_stack(self):
+        self.stack = Stack('blt20962a819b57e233', 'blt01638c90cc28fb6f')
+        self.assertEqual(self.stack.get_application_key(), 'blt01638c90cc28fb6f')
+        self.assertEqual(self.stack.get_environment(), 'blt01638c90cc28fb6f')
+        self.assertEqual(self.stack.get_access_token(), 'blt01638c90cc28fb6f')
+        logging.getLogger('stack-test').debug('passed')
 
+    def get_api_response(self):
+        requests.get('https://api.github.com')
+        print(requests.Response)
+        self.assertEqual('abc', 'abc')
+
+    def get_url(self):
+        print(self.stack.get_collaborators())
+        self.stack._get_url('shailesh')
 
 # configs = Config()
 # configs.set_host('stag-cdn.contentstack.io')

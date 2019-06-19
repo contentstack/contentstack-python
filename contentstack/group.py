@@ -25,7 +25,10 @@
 import logging
 
 
-class Group(object):
+class Group:
     
     def __init__(self):
         logging.info('Group initialised')
+
+    def callme(self):
+        pass
