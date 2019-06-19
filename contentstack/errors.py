@@ -70,3 +70,19 @@ def __init__(self):
 class ConfigError(Exception):
     """Configuration Error Class"""
     pass
+
+
+class StackException(Exception):
+    """StackException Class"""
+    pass
+
+
+class NotSupportedException(Exception):
+    """ exception is thrown when something is not supported by the API."""
+    pass
+
+
+class retry_request(object):
+    """
+    Decorator to retry function calls in case they raise rate limit exceptions
+    """
