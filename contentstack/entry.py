@@ -24,20 +24,17 @@
  *
  """
 
-import logging
-import requests
-
 
 class Entry:
 
-    def __init__(self, entry_uid=None, content_type_id=None):
+    def __init__(self, entry_uid=None, content_type_id=None, content_type_instance=None):
+        self.ct_instance = content_type_instance
         self.local_header = {}
         self.entry_uid = entry_uid
         self.content_type_id = content_type_id
         self._metadata = {}
 
     def set_content_type_instance(self, content_type_instance):
-        self.ct_instance = content_type_instance
         return self
 
     def configure(self, **model):
