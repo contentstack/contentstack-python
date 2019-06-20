@@ -23,13 +23,12 @@ SOFTWARE.
  
 """
 import urllib
-
+import logging
 import contentstack
 from contentstack import errors as err
 from contentstack import config
 from contentstack import content_type
 import requests
-from .HTTPConnection import HTTPConnection
 import requests
 import platform
 from re import sub
@@ -63,26 +62,28 @@ class Stack(object):
         :param environment:
         :param configs:
         """
+        logging.debug('stack initialisation attempted with: ', api_key, access_token, environment)
 
         self._api_key = api_key
         self._access_token = access_token
         self._environment = environment
-        self._configs = configs
-        self._initialise_stack()
 
+        if configs is not None:
+            self._configs = configs
+            self.set_config(config)
+
+        self._initialise_stack()
+        # declare stack class variables
         self._stack_query = dict()
         self._local_headers = dict()
         self._setup_stack()
-
         # set class variables to initialise image transformation.
         self._image_transform_url = None
         self._image_params = dict
-
         # set sync variables
         self._sync_query = dict()
 
     def _initialise_stack(self):
-
         if not self._api_key:
             raise err.StackException(
                 'Please enter the API key of stack of which you wish to retrieve the content types.'
@@ -302,16 +303,18 @@ class Stack(object):
 
         return self._sync_query
 
-    def print_object(self):
-        return self._sync_query, self._stack_query
+    def get_stack_query(self):
+        return self._stack_query
 
-    def _request_headers(self):
+    def get_sync_query(self):
+        return self._sync_query
+
+    def local_headers(self):
         # Sets the default Request Headers.
-        headers = {'X-User-Agent': self._contentful_user_agent(),
-                   'Content-Type': 'application/contentstack.v{0}+json'.format(self._configs.SDK_VERSION),
-                   'Accept-Encoding': 'gzip' if self.gzip_encoded else 'identity'}
-
-        return headers
+        self._local_headers['X-User-Agent'] = self._contentful_user_agent()
+        self._local_headers['Content-Type'] = 'application/contentstack.v{0}+json'.format(self._configs.SDK_VERSION)
+        self._local_headers['Accept-Encoding'] = 'accept-encoding'
+        return self._local_headers
 
     def get_environment(self):
         return self._local_headers['environment']
@@ -325,3 +328,6 @@ class Stack(object):
         self._local_headers['api_key'] = self._api_key
         self._local_headers['access_token'] = self._access_token
         self._local_headers['environment'] = self._environment
+        # setup environment
+        # null pointer checked already
+        # self._configs.set_environment(self._environment)

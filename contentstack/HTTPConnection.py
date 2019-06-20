@@ -8,7 +8,7 @@ from contentstack import config
 
 class HTTPConnection:
 
-    def __init__(self,  query=None):
+    def __init__(self, query=None):
         self._query = query
 
     def get_query_request(self):
@@ -27,13 +27,14 @@ class HTTPConnection:
         return self.__http_request()
 
     def __http_request(self):
-        encoded_query = urllib.parse.urlencode(self.__query)
-        self._local_headers['Content-Type'] ='application/json'.format()
-        self._local_headers['X-User-Agent'] = config.Config.SDK_VERSION
-        response = requests.post(config.Config.get_host(), encoded_query, self.__local_headers)
+        pass
+        # encoded_query = urllib.parse.urlencode(self.__query)
+        # self._local_headers['Content-Type'] = 'application/json/{0}'.format(config.Config.SDK_VERSION)
+        # self._local_headers['X-User-Agent'] = config.Config.SDK_VERSION
+        # response = requests.post(config.Config.get_host(), encoded_query, self._local_headers)
+        # print(response.json)
 
-        print(response.json)
 
-
-connection: HTTPConnection = HTTPConnection(local_headers={'dwd','wdq'},query={'dwwd':'dwdwq'})
+_param = {'param1': 'param1 value', 'param2': 'param2 value', 'param3': 'param3 value'}
+connection: HTTPConnection = HTTPConnection(_param)
 connection.get_entry_request()
