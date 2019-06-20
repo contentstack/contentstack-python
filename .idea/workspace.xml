@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4a5a7ca2-5e8a-4154-88e7-87aa643ea220" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/doc/Test Results - pytest_for_contentstack_testcase_ContentstackTestcase.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/shaileshmishra.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/shaileshmishra.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contentstack/HTTPConnection.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/HTTPConnection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contentstack/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contentstack/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contentstack/stack.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/stack.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/contentstack_testcase.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/contentstack_testcase.py" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.idea/httpRequests/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -51,8 +44,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/contentstack/stack.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="145">
-              <caret line="85" column="32" selection-start-line="85" selection-start-column="32" selection-end-line="85" selection-end-column="32" />
+            <state relative-caret-position="426">
+              <caret line="139" column="97" selection-start-line="139" selection-start-column="97" selection-end-line="139" selection-end-column="97" />
               <folding>
                 <element signature="e#1090#1103#0" expanded="true" />
               </folding>
@@ -380,7 +373,7 @@
       <updated>1560840867688</updated>
       <workItem from="1560840873427" duration="241000" />
       <workItem from="1560843156657" duration="1985000" />
-      <workItem from="1560849628032" duration="37991000" />
+      <workItem from="1560849628032" duration="38415000" />
     </task>
     <task id="LOCAL-00001" summary="stack code refactored">
       <created>1560930443683</created>
@@ -389,7 +382,14 @@
       <option name="project" value="LOCAL" />
       <updated>1560930443684</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="stack code refactored">
+      <created>1561011259154</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1561011259154</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -425,7 +425,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="40217000" />
+    <option name="totallyTimeSpent" value="40641000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -865,8 +865,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/contentstack/stack.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="145">
-          <caret line="85" column="32" selection-start-line="85" selection-start-column="32" selection-end-line="85" selection-end-column="32" />
+        <state relative-caret-position="426">
+          <caret line="139" column="97" selection-start-line="139" selection-start-column="97" selection-end-line="139" selection-end-column="97" />
           <folding>
             <element signature="e#1090#1103#0" expanded="true" />
           </folding>
