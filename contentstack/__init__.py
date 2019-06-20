@@ -11,7 +11,7 @@ from .group import Group
 from .HTTPConnection import HTTPConnection
 from .stack import Stack
 
-__author__ = 'contentstack GmbH (Shailesh Mishra)'
+__author__ = 'contentstack - (www.github.con/contentstack)'
 __email__ = 'shailesh.mishra@contentstack.com'
 __version__ = '0.0.1'
 __endpoint__ = 'cdn.contentstack.io'

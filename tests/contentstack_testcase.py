@@ -1,44 +1,39 @@
 from unittest import TestCase
-import logging
-import requests
+
+import contentstack
 from contentstack.stack import Stack
-from contentstack.stack import Stack
-from contentstack.HTTPConnection import HTTPConnection
 
 
 class ContentstackTestcase(TestCase):
 
-    # def setUp(self):
-    #    self.stack = contentstack.Stack('blt20962a819b57e233', 'blt01638c90cc28fb6f', 'development')
-    #    pass
+    def setUp(self):
+        self.stack = Stack('blt20962a819b57e233', 'blt01638c90cc28fb6f', 'development')
 
     def test_stack(self):
-        self.stack = Stack('blt20962a819b57e233', 'blt01638c90cc28fb6f')
-        self.assertEqual(self.stack.get_application_key(), 'blt01638c90cc28fb6f')
-        self.assertEqual(self.stack.get_environment(), 'blt01638c90cc28fb6f')
-        self.assertEqual(self.stack.get_access_token(), 'blt01638c90cc28fb6f')
-        logging.getLogger('stack-test').debug('passed')
+        # self.stack = Stack('blt20962a819b57e233', 'blt01638c90cc28fb6f', 'development')
+        self.assertEqual('development', self.stack.get_environment())
+        self.assertEqual('blt01638c90cc28fb6f', self.stack.get_access_token())
+        self.assertEqual('blt20962a819b57e233', self.stack.get_application_key())
 
-    def get_api_response(self):
-        requests.get('https://api.github.com')
-        print(requests.Response)
-        self.assertEqual('abc', 'abc')
+    def test_config(self):
+        conf = contentstack.config.Config()
+        self.assertEqual('v3', conf.get_version())
+        self.assertEqual('https://', conf.get_http_protocol())
+        self.assertEqual('cdn.contentstack.io', conf.get_host())
+        self.assertEqual('https://cdn.contentstack.io/v3/', conf._get_endpoint())
 
-    def get_url(self):
-        print(self.stack.get_collaborators())
-        self.stack._get_url('shailesh')
+    def test_stack_headers(self):
+        is_contains = False
+        self.stack.get_collaborators()
+        stack_query = self.stack.get_stack_query()
+        if 'include_collaborators' in stack_query:
+            is_contains = True
+        self.assertEqual(True, is_contains)
 
-# configs = Config()
-# configs.set_host('stag-cdn.contentstack.io')
-# stack  = stack.Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development', config=configs)
-# content = stack.content_type('product')
-# print(content.get_url())
 
-# stack_config = stack.set_config(configs)
-# print('configs host', stack_config.get_host())
-# stack.sync(content_type_uid='product', from_date='12-03-2021',langauge='in-eu', publish_type='asset_published')
 
-# content_type=stack.content_type('product')
-# entry = content_type.entry('blt7392474')
-# sync_params, stack_param = stack.print_object()
-# print(sync_params, stack_param, configs.get_host())
+
+
+
+
+
