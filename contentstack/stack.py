@@ -28,10 +28,7 @@ import contentstack
 from contentstack import errors as err
 from contentstack import config
 from contentstack import content_type
-import requests
-import requests
-import platform
-from re import sub
+from contentstack import http_request
 
 """
 contentstack.stack
@@ -147,6 +144,8 @@ class Stack(object):
             >>> stack = Stack('blt20962a819b57e233', 'blt01638c90cc28fb6f', 'development')
             >>> content_types = stack.content_types()
         """
+        ct_url = self._get_url('content_types?include_count=true')
+        print(ct_url)
         return self._get_url('content_types?include_count=true')
 
     def get_application_key(self):
@@ -219,7 +218,7 @@ class Stack(object):
         collaborators with whom the stacks are shared.
         A detailed information about each collaborator is returned.
         """
-        self._stack_query['include_collaborators'] = True
+        self._stack_query['include_collaborators'] = 'true'
         return self
 
     def get_included_stack_variables(self):
@@ -228,21 +227,21 @@ class Stack(object):
         such as the description, format of date,
         format of time, and so on. Users can include or exclude stack variables in the response.
         """
-        self._stack_query['include_stack_variables'] = True
+        self._stack_query['include_stack_variables'] = 'true'
         return self
 
     def get_included_descrete_variables(self):
         """
         view the access token of your stack.
         """
-        self._stack_query['include_discrete_variables'] = True
+        self._stack_query['include_discrete_variables'] = 'true'
         return self
 
     def include_count(self):
         """
         the total count of entries available in a content type.
         """
-        self._stack_query['include_count'] = True
+        self._stack_query['include_count'] = 'true'
         return self
 
     def sync_pagination(self, pagination_token: str):
@@ -255,7 +254,7 @@ class Stack(object):
         It is especially useful if the sync process is interrupted midway (due to network issues, etc.).
         In such cases, this token can be used to restart the sync process from where it was interrupted.
         """
-        self._sync_query = {'init': True, 'pagination_token': pagination_token}
+        self._sync_query = {'init': 'true', 'pagination_token': pagination_token}
         return self._sync_query
 
     def sync_token(self, sync_token):
@@ -265,7 +264,7 @@ class Stack(object):
         The sync token fetches only the content that was added after your last sync,
         and the details of the content that was deleted or updated.
         """
-        self._sync_query = {'init': True, 'sync_token': sync_token}
+        self._sync_query = {'init': 'true', 'sync_token': sync_token}
         return self._sync_query
 
     def sync(self, from_date=None, content_type_uid=None, publish_type=None, language_code='en-us'):
@@ -291,7 +290,7 @@ class Stack(object):
         If you do not specify any value, it will bring all published entries and published assets.
         """
 
-        self._sync_query['init'] = True
+        self._sync_query['init'] = 'true'
         if from_date is not None:
             self._sync_query["start_from"] = from_date
         if content_type_uid is not None:
@@ -309,13 +308,6 @@ class Stack(object):
     def get_sync_query(self):
         return self._sync_query
 
-    def local_headers(self):
-        # Sets the default Request Headers.
-        self._local_headers['X-User-Agent'] = self._contentful_user_agent()
-        self._local_headers['Content-Type'] = 'application/contentstack.v{0}+json'.format(self._configs.SDK_VERSION)
-        self._local_headers['Accept-Encoding'] = 'accept-encoding'
-        return self._local_headers
-
     def get_environment(self):
         return self._local_headers['environment']
 
@@ -331,3 +323,23 @@ class Stack(object):
         # setup environment
         # null pointer checked already
         # self._configs.set_environment(self._environment)
+
+    def fetch(self):
+        print('stack_query', self._stack_query)
+        # query_params = self._stack_query
+        http_request.HTTPRequest('stacks', self._stack_query, self._local_headers)
+
+    def fetch_sync(self):
+        # sync_query_params = self._sync_query
+        http_request.HTTPRequest('sync', self._sync_query, self._local_headers)
+        # self._get_url('')
+
+
+class PublishType(object):
+    entry_published = 'entry_published'
+    entry_unpublished = 'entry_unpublished'
+    entry_deleted = 'entry_deleted'
+    asset_published = 'asset_published'
+    asset_unpublished = 'asset_unpublished'
+    asset_deleted = 'asset_deleted'
+    content_type_deleted = 'content_type_deleted'

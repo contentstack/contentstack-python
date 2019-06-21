@@ -22,6 +22,7 @@
       <option name="ignoredIdentifiers">
         <list>
           <option value="contentstack.stack.config" />
+          <option value="set.format" />
         </list>
       </option>
     </inspection_tool>

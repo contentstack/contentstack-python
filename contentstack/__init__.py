@@ -8,7 +8,7 @@ from .content_type import ContentType
 from .entry_model import EntryModel
 from .errors import HTTPError, ConfigError
 from .group import Group
-from .HTTPConnection import HTTPConnection
+from .http_request import HTTPRequest
 from .stack import Stack
 
 __author__ = 'contentstack - (www.github.con/contentstack)'
