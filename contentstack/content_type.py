@@ -21,9 +21,6 @@
      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
      SOFTWARE.
  """
-
-import logging
-from contentstack import entry
 from contentstack import stack
 from config import Config
 

@@ -53,9 +53,9 @@ class Config(object):
         logging.info('get http protocol', self.http_protocol)
         return self.http_protocol
 
-    def _get_endpoint(self):
+    def get_endpoint(self, url_path):
         api_version: str = self.get_version()
         host_url = self.get_host()
         http_protocol = self.get_http_protocol()
-        config_url = "{0}{1}/{2}/".format(http_protocol, host_url, api_version)
+        config_url = "{0}{1}/{2}/{3}".format(http_protocol, host_url, api_version, url_path)
         return config_url
