@@ -1,9 +1,10 @@
 import requests
 from contentstack import config
 import urllib.parse
+import logging
 
 
-class HTTPRequest(object):
+class HTTPRequestConnection(object):
 
     def __init__(self, url_path, query=dict, local_headers=dict):
         self.url_path = url_path
@@ -11,25 +12,38 @@ class HTTPRequest(object):
         self._local_headers = local_headers
         if 'environment' in self._local_headers:
             self._query_prams['environment'] = self._local_headers['environment']
+        self.url_path = config.Config().get_endpoint(self.url_path)
 
-        # self._query_prams = urllib.parse.quote_plus(self._query_prams)
+    def http_request(self) -> dict:
         self._local_headers['X-User-Agent'] = self._contentstack_user_agent()
         self._local_headers['Content-Type'] = 'application/json'
-        # http request based on url_path and respected query
-        self.url_path = config.Config().get_endpoint(self.url_path)
-        self._http_request()
-
-    def _http_request(self):
+        # print('_query_prams', self._query_prams)
+        # print('url_endpoint', self.url_path)
+        # print('Please wait we are fetching {0} response'.format(self.url_path))
         response = requests.get(
-            self.url_path,
-            params=self._query_prams,
+            self.url_path, params=self._query_prams,
             headers=self._local_headers,
         )
 
-        json_response = response.json()
-        stack = json_response['stack']
-        collaborators = stack['collaborators']
-        print(collaborators, collaborators)
+        print(response.url)
+        logging.info('url', response.url)
+        if response.ok:
+            json_response = response.json()
+            if 'stack' in json_response:
+                logging.info('stack response')
+                return json_response['stack']
+            if 'content_types' in json_response:
+                logging.info('content type response')
+                return json_response['content_types']
+            if 'items' in json_response:
+                logging.info('sync response')
+                return json_response['items']
+        else:
+            error_response = response.json()
+            # error_message = error_response["error_message"]
+            # error_code = error_response["error_code"]
+            # error_code = error_response["errors"]
+            return error_response
 
     @staticmethod
     def _contentstack_user_agent() -> str:
@@ -58,5 +72,14 @@ class HTTPRequest(object):
 
         return header.__str__()
 
-# connection = HTTPRequest(url_path='sync', query=None)
-# connection._http_request()
+    def set_entry_model(self):
+        pass
+
+    def set_content_type_model(self):
+        pass
+
+    def set_query_model(self):
+        pass
+
+    def set_asset_model(self):
+        pass
