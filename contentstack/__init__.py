@@ -2,13 +2,14 @@ from .stack import Stack
 from .entry import Entry
 from .asset import Asset
 from .asset_library import AssetLibrary
-from .asset_model import AssetModel
 from .config import Config
+from .sync_stack import SyncStack
+from .query_result import QueryResult
 from .content_type import ContentType
 from .entry_model import EntryModel
 from .errors import HTTPError, ConfigError
 from .group import Group
-from .http_request import HTTPRequest
+from .http_request import HTTPRequestConnection
 from .stack import Stack
 
 __author__ = 'contentstack - (www.github.con/contentstack)'
