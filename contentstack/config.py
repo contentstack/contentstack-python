@@ -28,10 +28,8 @@ import logging
 
 class Config(object):
 
-    SDK_VERSION = '[0.0.1]'
-
-    def __init__(self):
-        self.host_url: str = 'cdn.contentstack.io'
+    def __init__(self, host_url: str = 'cdn.contentstack.io'):
+        self.host_url = host_url
         self.api_version: str = 'v3'
         self.http_protocol: str = 'https://'
 

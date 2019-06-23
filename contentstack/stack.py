@@ -54,12 +54,13 @@ class Stack(object):
         Within a stack, you can create content structures, content entries, users, etc.
         related to the project. Read more about Stacks
         API Reference: [https://www.contentstack.com/docs/guide/stack]
+        :type configs: config.Config
         :param api_key:
         :param access_token:
         :param environment:
         :param configs:
         """
-        logging.debug('stack initialisation attempted with: ', api_key, access_token, environment)
+        logging.debug('initialisation attempted with: ', api_key, access_token, environment)
 
         self._api_key = api_key
         self._access_token = access_token
@@ -81,6 +82,7 @@ class Stack(object):
         self._sync_query = dict()
 
     def _initialise_stack(self):
+
         if not self._api_key:
             raise err.StackException(
                 'Please enter the API key of stack of which you wish to retrieve the content types.'
@@ -100,10 +102,7 @@ class Stack(object):
         :param configs:
         :return:
         """
-        self._configs = configs
-        if self._environment is not None:
-            self._configs.set_environment(self._environment)
-            self.set_environment(self._environment)
+        self._configs: config.Config = configs
         return self._configs
 
     def stack(self, api_key):
@@ -128,7 +127,9 @@ class Stack(object):
         :return: :class:`ContentType <contentstack.content_type.ContentType>` object.
         :return type: contentstack.content_type.ContentType
         """
-        return content_type.ContentType(content_type_id)
+        content_type_path = content_type.ContentType(content_type_id)
+        logging.info('type', type(content_type_path))
+        return content_type_path
 
     def content_types(self):
         """Fetches all Content Types from the Stack.
@@ -144,9 +145,11 @@ class Stack(object):
             >>> stack = Stack('blt20962a819b57e233', 'blt01638c90cc28fb6f', 'development')
             >>> content_types = stack.content_types()
         """
-        ct_url = self._get_url('content_types?include_count=true')
-        print(ct_url)
-        return self._get_url('content_types?include_count=true')
+        logging.info('stack', 'get content types')
+        content_types_query: dict = {'include_count': 'true'}
+        https_request = http_request.HTTPRequestConnection('content_types', content_types_query, self._local_headers)
+        result = https_request.http_request()
+        return result
 
     def get_application_key(self):
 
@@ -241,7 +244,7 @@ class Stack(object):
         """
         the total count of entries available in a content type.
         """
-        self._stack_query['include_count'] = 'true'
+        self._stack_query['include_count'] = "true"
         return self
 
     def sync_pagination(self, pagination_token: str):
@@ -255,7 +258,7 @@ class Stack(object):
         In such cases, this token can be used to restart the sync process from where it was interrupted.
         """
         self._sync_query = {'init': 'true', 'pagination_token': pagination_token}
-        return self._sync_query
+        return self
 
     def sync_token(self, sync_token):
         """
@@ -265,7 +268,7 @@ class Stack(object):
         and the details of the content that was deleted or updated.
         """
         self._sync_query = {'init': 'true', 'sync_token': sync_token}
-        return self._sync_query
+        return self
 
     def sync(self, from_date=None, content_type_uid=None, publish_type=None, language_code='en-us'):
 
@@ -290,7 +293,7 @@ class Stack(object):
         If you do not specify any value, it will bring all published entries and published assets.
         """
 
-        self._sync_query['init'] = 'true'
+        self._sync_query["init"] = 'true'
         if from_date is not None:
             self._sync_query["start_from"] = from_date
         if content_type_uid is not None:
@@ -300,13 +303,10 @@ class Stack(object):
         if language_code is not None:
             self._sync_query["locale"] = language_code
 
-        return self._sync_query
+        return self
 
-    def get_stack_query(self):
+    def _get_stack_query(self):
         return self._stack_query
-
-    def get_sync_query(self):
-        return self._sync_query
 
     def get_environment(self):
         return self._local_headers['environment']
@@ -320,26 +320,13 @@ class Stack(object):
         self._local_headers['api_key'] = self._api_key
         self._local_headers['access_token'] = self._access_token
         self._local_headers['environment'] = self._environment
-        # setup environment
-        # null pointer checked already
-        # self._configs.set_environment(self._environment)
 
-    def fetch(self):
-        print('stack_query', self._stack_query)
-        # query_params = self._stack_query
-        http_request.HTTPRequest('stacks', self._stack_query, self._local_headers)
+    def fetch(self) -> dict:
+        https_request = http_request.HTTPRequestConnection('stacks', self._stack_query, self._local_headers)
+        result = https_request.http_request()
+        return result
 
     def fetch_sync(self):
-        # sync_query_params = self._sync_query
-        http_request.HTTPRequest('sync', self._sync_query, self._local_headers)
-        # self._get_url('')
-
-
-class PublishType(object):
-    entry_published = 'entry_published'
-    entry_unpublished = 'entry_unpublished'
-    entry_deleted = 'entry_deleted'
-    asset_published = 'asset_published'
-    asset_unpublished = 'asset_unpublished'
-    asset_deleted = 'asset_deleted'
-    content_type_deleted = 'content_type_deleted'
+        https_request = http_request.HTTPRequestConnection('stacks/sync', self._sync_query, self._local_headers)
+        result = https_request.http_request()
+        return result
