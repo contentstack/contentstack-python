@@ -25,7 +25,7 @@
  """
 
 
-class Entry:
+class Entry(object):
 
     def __init__(self, entry_uid=None, content_type_id=None, content_type_instance=None):
         self.ct_instance = content_type_instance
@@ -36,6 +36,10 @@ class Entry:
 
     def set_content_type_instance(self, content_type_instance):
         return self
+
+    def set_uid(self, entry_uid: str):
+        if entry_uid is not None:
+            self.entry_uid = entry_uid
 
     def configure(self, **model):
         # [SET this section after Entry Model setup]
@@ -238,3 +242,5 @@ class Entry:
 
     def except_eith_reference_uid(sel):
         pass
+
+

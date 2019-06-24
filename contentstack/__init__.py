@@ -10,7 +10,6 @@ from .entry_model import EntryModel
 from .errors import HTTPError, ConfigError
 from .group import Group
 from .http_request import HTTPRequestConnection
-from .stack import Stack
 
 __author__ = 'contentstack - (www.github.con/contentstack)'
 __email__ = 'shailesh.mishra@contentstack.com'

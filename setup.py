@@ -13,5 +13,5 @@ setup(
     license='',
     author='shailesh-mishra',
     author_email='',
-    description='', install_requires=['requests']
+    description='', install_requires=['requests', 'config']
 )

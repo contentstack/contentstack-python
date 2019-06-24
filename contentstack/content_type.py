@@ -21,85 +21,79 @@
      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
      SOFTWARE.
  """
-from contentstack import stack
-from config import Config
+import contentstack
+from contentstack.entry import Entry
+from contentstack.query import Query
 
 
 class ContentType(object):
 
+    # _entry_instance: Entry
+    # _query_instance: Query
+    # _stack_instance: Stack
+
     def __init__(self, content_type_uid):
-        self.stack_instance = stack
+        self._stack_instance: contentstack.Stack
+        self._entry_instance: Entry
+        self._query_instance: Query
         self.content_type_id = content_type_uid
         self.local_header = dict()
 
-    def set_stack_instance(self, stack):
-        self.stack_instance = stack
-        self.local_header = stack.__local_headers__
+    def set_stack_instance(self, _stack= None):
+        self.local_header = _stack.local_headers
 
     def set_header(self, key, value):
-        """
-        headers can be added by key and respected values
-        :returns self
-        """
-        self.local_header.update({key: value})
+        self.local_header[key] = value
 
     def remove_header(self, header_key):
-        """
-        headers can be removed by key
-        """
         if header_key in self.local_header:
             self.local_header.pop(header_key)
 
-    def entry(self, entry_uid=None, content_type_id=None):
+    def entry(self, entry_uid: str = None, content_type_id: str = None):
 
-        '''
-        [About]: An entry is the actual piece of content created 
-        using one of the defined content types. Read more about Entries.
+        """
+        About: An entry is the actual piece of content created using one of the defined content types.
+            Read more about Entries [https://www.contentstack.com/docs/apis/content-delivery-api/#single-entry].
         
-        [Single Entry] -->
-        The Get a single entry request fetches a particular entry of a content type.
-        [API Reference] : https://www.contentstack.com/docs/apis/content-delivery-api/#single-entry
-        Implementation: 
-        single_entry = stack.content_type('product').entry('entry_uid')
+        Single Entry: The Get a single entry request fetches a particular entry of a content type.
+            [API Reference] : https://www.contentstack.com/docs/apis/content-delivery-api/#single-entry
+            Implementation:
+            single_entry = stack.content_type('product').entry('entry_uid')
         
-        [All Entries] : -->
-        The Get all entries call fetches the list of all the entries 
-        of a particular content type. It also returns the content of 
-        each entry in JSON format. You can also specify the environment 
-        and locale of which you wish to get the entries.
-        [API Reference] : https://www.contentstack.com/docs/apis/content-delivery-api/#entries
+        All Entries:
+            The Get all entries call fetches the list of all the entries
+            of a particular content type. It also returns the content of
+            each entry in JSON format. You can also specify the environment
+            and locale of which you wish to get the entries.
+            [API Reference] : https://www.contentstack.com/docs/apis/content-delivery-api/#entries
 
-        Implementation:
-        entries = entry = stack.content_type('product').entry()
-        '''
-        if content_type_id != None:
+        Uses:
+            >>>> entry  = self.stack_instance.content_types().entry()
+        """
+        if content_type_id is not None:
             self.content_type_id = content_type_id
-        if entry_uid != None:
-            entry.set_uid(entry_uid)
+        if entry_uid is not None:
+            self._entry_instance.set_uid(entry_uid)
 
-        entry = entry.Entry(entry_uid=entry_uid, content_type_id=self.content_type_id)
-        entry.set_content_type_instance(self)
-        return entry
+        self._entry_instance = contentstack.Entry(entry_uid=entry_uid, content_type_id=self.content_type_id)
+        self._entry_instance.set_content_type_instance(self)
+        print('return type', type(self.entry_instance))
+        return self._entry_instance
 
-    def query(self):
-        '''
+    def query(self) -> Query:
+
+        """
         You can add queries to extend the functionality of this API call. 
         Under the URI Parameters section, insert a parameter named query 
         and provide a query in JSON format as the value.
         To learn more about the queries, refer to the Queries section.
-        '''
-        query = query.Query(self.content_type_id)
+        """
+
+        self._query_instance = Query(self.content_type_id)
         # query.formHead =
         # query.setContentTypeInstance(this)
-        return query
+        print('type', type(self._query_instance))
+        return self._query_instance
 
-    def fetch(self, callback):
-
-        return self.get_url()
-
-    def get_url(self):
-        self.__configs = Config()
-        VERSION = self.__configs.get_version()
-        http_schema = self.__configs.get_host()
-        url = "/{0}/{1}/content_types/{2}".format(http_schema, VERSION, self.content_type_id)
-        return url
+    def fetch(self):
+        pass

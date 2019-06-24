@@ -15,17 +15,11 @@ class HTTPRequestConnection(object):
         self.url_path = config.Config().get_endpoint(self.url_path)
 
     def http_request(self) -> dict:
+
         self._local_headers['X-User-Agent'] = self._contentstack_user_agent()
         self._local_headers['Content-Type'] = 'application/json'
-        # print('_query_prams', self._query_prams)
-        # print('url_endpoint', self.url_path)
-        # print('Please wait we are fetching {0} response'.format(self.url_path))
-        response = requests.get(
-            self.url_path, params=self._query_prams,
-            headers=self._local_headers,
-        )
-
-        print(response.url)
+        response = requests.get(self.url_path, params=self._query_prams, headers=self._local_headers)
+        # print(response.url)
         logging.info('url', response.url)
         if response.ok:
             json_response = response.json()
