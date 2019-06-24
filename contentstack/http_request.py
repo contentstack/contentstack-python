@@ -1,4 +1,5 @@
 import requests
+from urllib3.util import timeout
 from contentstack import config
 import urllib.parse
 import logging
@@ -10,12 +11,11 @@ class HTTPRequestConnection(object):
         self.url_path = url_path
         self._query_prams = query
         self._local_headers = local_headers
+        self.url_path = config.Config().get_endpoint(self.url_path)
         if 'environment' in self._local_headers:
             self._query_prams['environment'] = self._local_headers['environment']
-        self.url_path = config.Config().get_endpoint(self.url_path)
 
     def http_request(self) -> dict:
-
         self._local_headers['X-User-Agent'] = self._contentstack_user_agent()
         self._local_headers['Content-Type'] = 'application/json'
         response = requests.get(self.url_path, params=self._query_prams, headers=self._local_headers)
@@ -27,11 +27,21 @@ class HTTPRequestConnection(object):
                 logging.info('stack response')
                 return json_response['stack']
             if 'content_types' in json_response:
-                logging.info('content type response')
+                logging.info('contenttypes response')
                 return json_response['content_types']
             if 'items' in json_response:
                 logging.info('sync response')
                 return json_response['items']
+            if 'content_type' in json_response:
+                logging.info('content type response')
+                return json_response['content_type']
+            if 'entry' in json_response:
+                logging.info('entry response')
+                return json_response['entry']
+            if 'entries' in json_response:
+                logging.info('entries response')
+                return json_response['entries']
+
         else:
             error_response = response.json()
             # error_message = error_response["error_message"]

@@ -33,7 +33,7 @@ class ContentstackTestcase(TestCase):
 
     def test_content_type(self):
         variable = self.stack.content_type('product')
-        self.assertEqual('product', variable.content_type_id)
+        self.assertEqual('product', variable._content_type_uid)
 
     def test_content_types(self):
         result = self.stack.content_types()
@@ -50,7 +50,7 @@ class ContentstackTestcase(TestCase):
             self.assertTrue(True)
 
     def test_stack_fetch_discrete_variables(self):
-        discrete_var = self.stack.get_included_descrete_variables()
+        discrete_var = self.stack.get_included_discrete_variables()
         result = discrete_var.fetch()
         if 'discrete_variables' in result:
             discrete_variables = result["discrete_variables"]
@@ -111,7 +111,19 @@ class ContentstackTestcase(TestCase):
     # [Content-Type]
     ##############################################################
 
-    def test_content_type(self):
-        entry_klass = self.stack.content_type('product').entry('blt804738989')
-        entry_klass.get_url()
-        pass
+    def test_content_type_network_request(self):
+        ct_klass = self.stack.content_type('product')
+        ct_result = ct_klass.fetch()
+        if 'schema' in ct_result:
+            schema_result = ct_result['schema']
+            for schema in schema_result:
+                print(schema)
+            self.assertEquals(list, type(schema_result))
+
+    def test_get_entries_by_uid(self):
+        entry_stack = Stack(api_key="blt20962a819b57e233", access_token="cs18efd90468f135a3a5eda3ba", environment="production")
+        entry_instance = entry_stack.content_type('product').entry('blt9965f5f9840923ba')
+        result = entry_instance.fetch()
+        if result is not None:
+            what_is_title = result["title"]
+            self.assertEquals('Redmi Note 3', what_is_title)

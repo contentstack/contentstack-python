@@ -1,4 +1,3 @@
-from .stack import Stack
 from .entry import Entry
 from .asset import Asset
 from .asset_library import AssetLibrary

@@ -23,23 +23,47 @@
  * SOFTWARE.
  *
  """
+from contentstack import http_request
 
 
 class Entry(object):
 
-    def __init__(self, entry_uid=None, content_type_id=None, content_type_instance=None):
-        self.ct_instance = content_type_instance
-        self.local_header = {}
-        self.entry_uid = entry_uid
-        self.content_type_id = content_type_id
-        self._metadata = {}
+    def __init__(self, content_type_id, entry_uid=None):
+        self._entry_url_path: str = ''
+        self._local_params: dict = {}
+        self._stack_headers: dict = {}
+        self._entry_uid = entry_uid
+        self._content_type_id = content_type_id
 
-    def set_content_type_instance(self, content_type_instance):
+    def set_content_type_instance(self, entry_url_path: str, stack_headers):
+        self._entry_url_path = entry_url_path
+        self._stack_headers = stack_headers
+        print(self._entry_url_path)
+        return self
+
+    def set_local_headers(self, local_header: str):
+        self._stack_headers = local_header
         return self
 
     def set_uid(self, entry_uid: str):
         if entry_uid is not None:
-            self.entry_uid = entry_uid
+            self._entry_uid = entry_uid
+
+    def set_version(self, version: str):
+        self._local_params["version"] = version
+        return self
+
+    def set_locale(self, locale_code):
+        self._local_params["locale"] = locale_code
+        self
+
+    def fetch(self) -> dict:
+        print('_entry_url_path', self._entry_url_path)
+        https_request = http_request.HTTPRequestConnection(self._entry_url_path, self._local_params,
+                                                           self._stack_headers)
+        result = https_request.http_request()
+        return result
+
 
     def configure(self, **model):
         # [SET this section after Entry Model setup]
@@ -63,12 +87,12 @@ class Entry(object):
     def set_header(self, key, value):
         ''' [Uses]: header = set_header('key', 'value')'''
         if key != None and value != None:
-            self.local_header[key] = value
+            self._local_params[key] = value
 
     def remove_header(self, key):
         ''' [Uses]: header = remove_header('key')'''
-        if key in self.local_header:
-            self.local_header.pop(key)
+        if key in self._local_params:
+            self._local_params.pop(key)
 
     def get_title(self):
 
@@ -93,10 +117,10 @@ class Entry(object):
         self.tags = tags_list
 
     def get_content_type(self):
-        return self.content_type_id
+        return self._content_type_id
 
     def get_uid(self):
-        return self.entry_uid
+        return self._entry_uid
 
     def get_metadata(self):
         return self._metadata
@@ -242,5 +266,3 @@ class Entry(object):
 
     def except_eith_reference_uid(sel):
         pass
-
-
