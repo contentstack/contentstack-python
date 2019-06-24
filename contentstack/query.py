@@ -26,9 +26,8 @@
 
 class Query:
 
-    def __init__(self, entry_uid=None, content_type_id=None):
+    def __init__(self, content_type_id: str):
         self.local_header = {}
-        self.entry_uid = entry_uid
         self.content_type_id = content_type_id
 
     def set_content_type_instance(self, ct_instance):

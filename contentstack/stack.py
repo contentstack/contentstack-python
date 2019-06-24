@@ -73,7 +73,7 @@ class Stack(object):
         self._initialise_stack()
         # declare stack class variables
         self._stack_query = dict()
-        self.local_headers = dict()
+        self._local_headers = dict()
         self._setup_stack()
         # set class variables to initialise image transformation.
         self._image_transform_url = None
@@ -106,7 +106,7 @@ class Stack(object):
         return self._configs
 
     def stack(self, api_key):
-        self.local_headers['api_key'] = api_key
+        self._local_headers['api_key'] = api_key
         return self
 
     def _get_url(self, url: str) -> object:
@@ -115,8 +115,7 @@ class Stack(object):
         http_protocol = self._configs.get_http_protocol()
         return "/{0}/{1}/{2}/{3}".format(http_protocol, host_url, api_version, url)
 
-    @staticmethod
-    def content_type(content_type_id):
+    def content_type(self, content_type_id: str):
         """
         Fetches a Content Type by content_type_id.
         Content type defines the structure or schema of a page or a section of your web or mobile property.
@@ -127,9 +126,9 @@ class Stack(object):
         :return: :class:`ContentType <contentstack.content_type.ContentType>` object.
         :return type: contentstack.content_type.ContentType
         """
-        content_type_path = content_type.ContentType(content_type_id)
-        logging.info('type', type(content_type_path))
-        return content_type_path
+        ct_path = content_type.ContentType(content_type_id, self._local_headers)
+        logging.info('type', type(ct_path))
+        return ct_path
 
     def content_types(self):
         """Fetches all Content Types from the Stack.
@@ -147,7 +146,7 @@ class Stack(object):
         """
         logging.info('stack', 'get content types')
         content_types_query: dict = {'include_count': 'true'}
-        https_request = http_request.HTTPRequestConnection('content_types', content_types_query, self.local_headers)
+        https_request = http_request.HTTPRequestConnection('content_types', content_types_query, self._local_headers)
         result = https_request.http_request()
         return result
 
@@ -157,8 +156,8 @@ class Stack(object):
         get_application_key() returns stack API_Key
         return self
         """
-        if 'api_key' in self.local_headers:
-            app_key = self.local_headers['api_key']
+        if 'api_key' in self._local_headers:
+            app_key = self._local_headers['api_key']
             return app_key
 
     def get_access_token(self):
@@ -167,16 +166,16 @@ class Stack(object):
         get_access_token() method returns access token for the current stack
         :return self:
         """
-        if 'access_token' in self.local_headers:
-            access_token = self.local_headers['access_token']
+        if 'access_token' in self._local_headers:
+            access_token = self._local_headers['access_token']
             return access_token
 
     def remove_header(self, header_key):
         """
         remove_header() method removes existing header by key
         """
-        if header_key in self.local_headers:
-            del self.local_headers[header_key]
+        if header_key in self._local_headers:
+            del self._local_headers[header_key]
             return self
 
     def set_header(self, header_key, header_value):
@@ -184,8 +183,8 @@ class Stack(object):
         set_header() mrthod sets additinal headers to the stack
         :returns _local_headers
         """
-        self.local_headers[header_key] = header_value
-        return self.local_headers
+        self._local_headers[header_key] = header_value
+        return self._local_headers
 
     def image_transform(self, image_url: str, transform_params=dict):
 
@@ -233,7 +232,7 @@ class Stack(object):
         self._stack_query['include_stack_variables'] = 'true'
         return self
 
-    def get_included_descrete_variables(self):
+    def get_included_discrete_variables(self):
         """
         view the access token of your stack.
         """
@@ -306,24 +305,24 @@ class Stack(object):
         return self
 
     def get_environment(self):
-        return self.local_headers['environment']
+        return self._local_headers['environment']
 
     def set_environment(self, environment):
-        if environment in self.local_headers:
-            self.local_headers['environment'] = environment
+        if environment in self._local_headers:
+            self._local_headers['environment'] = environment
         return self
 
     def _setup_stack(self):
-        self.local_headers['api_key'] = self._api_key
-        self.local_headers['access_token'] = self._access_token
-        self.local_headers['environment'] = self._environment
+        self._local_headers['api_key'] = self._api_key
+        self._local_headers['access_token'] = self._access_token
+        self._local_headers['environment'] = self._environment
 
     def fetch(self) -> dict:
-        https_request = http_request.HTTPRequestConnection('stacks', self._stack_query, self.local_headers)
+        https_request = http_request.HTTPRequestConnection('stacks', self._stack_query, self._local_headers)
         result = https_request.http_request()
         return result
 
     def fetch_sync(self):
-        https_request = http_request.HTTPRequestConnection('stacks/sync', self._sync_query, self.local_headers)
+        https_request = http_request.HTTPRequestConnection('stacks/sync', self._sync_query, self._local_headers)
         result = https_request.http_request()
         return result
