@@ -8,7 +8,8 @@ class ContentstackTestcase(TestCase):
     def setUp(self):
         set_obj = config.Config()
         set_obj.set_host('stag-cdn.contentstack.io')
-        self.stack = Stack('blt20962a819b57e233', 'blt01638c90cc28fb6f', 'development', set_obj)
+        self.stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development',
+                           configs=set_obj)
 
     def test_stack(self):
         self.assertEqual('development', self.stack.get_environment())
@@ -25,8 +26,8 @@ class ContentstackTestcase(TestCase):
     def test_include_collaborators(self):
         is_contains = False
         self.stack.get_collaborators()
-        stack_query = self.stack._get_stack_query()
-        if 'include_collaborators' in stack_query:
+        stack_query = self.stack.fetch()
+        if 'collaborators' in stack_query:
             is_contains = True
         self.assertEqual(True, is_contains)
 
@@ -77,7 +78,8 @@ class ContentstackTestcase(TestCase):
     ##############################################################
 
     def test_sync_pagination(self):
-        sync_stack = Stack("blt20962a819b57e233", "cs18efd90468f135a3a5eda3ba", "development")
+        sync_stack = Stack(api_key="blt20962a819b57e233", access_token="cs18efd90468f135a3a5eda3ba",
+                           environment="development")
         stack_sync = sync_stack.sync_pagination('csfakepaginationtoken')
         sync_result = stack_sync.fetch_sync()
         if 'error_code' in sync_result:
@@ -86,7 +88,8 @@ class ContentstackTestcase(TestCase):
 
     def test_init_sync(self):
         sync_stack = Stack("blt20962a819b57e233", "cs18efd90468f135a3a5eda3ba", "production")
-        stack_sync = sync_stack.sync(from_date='2018-01-14T00:00:00.000Z', content_type_uid='product', publish_type='entry_published')
+        stack_sync = sync_stack.sync(from_date='2018-01-14T00:00:00.000Z', content_type_uid='product',
+                                     publish_type='entry_published')
         sync_result = stack_sync.fetch_sync()
         self.assertEquals(list, type(sync_result))
         self.assertEquals(7, len(sync_result))
@@ -96,9 +99,19 @@ class ContentstackTestcase(TestCase):
             self.assertEquals('entry_published', type_of_data)
 
     def test_sync_token(self):
-        sync_stack = Stack("blt20962a819b57e233", "cs18efd90468f135a3a5eda3ba", "development")
+        sync_stack = Stack(api_key="blt20962a819b57e233", access_token="cs18efd90468f135a3a5eda3ba",
+                           environment="development")
         stack_sync = sync_stack.sync_token('csfakepaginationtoken')
         sync_result = stack_sync.fetch_sync()
         if 'error_code' in sync_result:
             error_code = sync_result["error_code"]
             self.assertEquals(141, error_code)
+
+    ##############################################################
+    # [Content-Type]
+    ##############################################################
+
+    def test_content_type(self):
+        entry_klass = self.stack.content_type('product').entry('blt804738989')
+        entry_klass.get_url()
+        pass
