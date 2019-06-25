@@ -35,8 +35,7 @@ class Config(object):
 
     def set_host(self, host_url=None):
         logging.info("set host", host_url)
-        if host_url is not None:
-            self.host_url = host_url
+        self.host_url = host_url
         return self
 
     def get_host(self):

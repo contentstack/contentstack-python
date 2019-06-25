@@ -1,6 +1,9 @@
+import logging
 from unittest import TestCase
 from contentstack import config
 from contentstack.stack import Stack
+logger = logging.getLogger('ContentstackTestcase')
+logger.setLevel(logging.DEBUG)
 
 
 class ContentstackTestcase(TestCase):
@@ -45,8 +48,8 @@ class ContentstackTestcase(TestCase):
         result = stack_fetch.fetch()
         if 'collaborators' in result:
             collaborators = result["collaborators"]
-            print("collaborators", collaborators)
-            print("collaborators count", len(collaborators))
+            logger.info("collaborators", collaborators)
+            logger.info("collaborators count", len(collaborators))
             self.assertTrue(True)
 
     def test_stack_fetch_discrete_variables(self):
@@ -54,7 +57,7 @@ class ContentstackTestcase(TestCase):
         result = discrete_var.fetch()
         if 'discrete_variables' in result:
             discrete_variables = result["discrete_variables"]
-            print("discrete_var", discrete_variables)
+            logger.info("discrete_var", discrete_variables)
             self.assertTrue(True)
 
     def test_stack_fetch_stack_variables(self):
@@ -62,7 +65,7 @@ class ContentstackTestcase(TestCase):
         result = stack_var.fetch()
         if 'stack_variables' in result:
             stack_variables = result["stack_variables"]
-            print("stack_variables", stack_variables)
+            logger.info("stack_variables", stack_variables)
             self.assertTrue(True)
 
     def test_stack_include_count(self):
@@ -70,7 +73,7 @@ class ContentstackTestcase(TestCase):
         result = stack_var.fetch()
         if 'stack_variables' in result:
             stack_variables = result["stack_variables"]
-            print("stack_variables", stack_variables)
+            logger.info("stack_variables", stack_variables)
             self.assertTrue(True)
 
     ##############################################################
@@ -95,7 +98,7 @@ class ContentstackTestcase(TestCase):
         self.assertEquals(7, len(sync_result))
         for data in sync_result:
             type_of_data = data["type"]
-            print(type_of_data, data["data"])
+            logger.info(type_of_data, data["data"])
             self.assertEquals('entry_published', type_of_data)
 
     def test_sync_token(self):
@@ -117,7 +120,8 @@ class ContentstackTestcase(TestCase):
         if 'schema' in ct_result:
             schema_result = ct_result['schema']
             for schema in schema_result:
-                print(schema)
+                logger.info(schema)
+                logger.info(schema)
             self.assertEquals(list, type(schema_result))
 
     def test_get_entries_by_uid(self):
@@ -125,5 +129,4 @@ class ContentstackTestcase(TestCase):
         entry_instance = entry_stack.content_type('product').entry('blt9965f5f9840923ba')
         result = entry_instance.fetch()
         if result is not None:
-            what_is_title = result["title"]
-            self.assertEquals('Redmi Note 3', what_is_title)
+            self.assertEquals(dict, type(result))
