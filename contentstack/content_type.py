@@ -21,61 +21,78 @@
      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
      SOFTWARE.
  """
-import logging
-import entry
-from config import Config
-from query import Query
+import contentstack
+from contentstack import http_request
+from contentstack.query import Query
+from contentstack.entry import Entry
 
 
 class ContentType(object):
-    
-    def __init__(self, content_type_uid):
-        self.content_type_id = content_type_uid
-        self.__get_url('content_types/{0}'.format(self.content_type_id))
-        self.local_header = dict()
 
-    
-    def set_stack_instance(self, stack):
-        self.stack_instance = stack
-        self.local_header   = stack.local_header
-    
-    
+    def __init__(self, content_type_uid: str, stack_headers):
+
+        self._entry_instance: Entry
+        self._query_instance: Query
+        self._entry_uid: str = ''
+        self._content_type_uid = content_type_uid
+        self._entry_instance = contentstack.Entry(content_type_id=self._content_type_uid, entry_uid=self._entry_uid)
+        self._query_instance = Query(self._content_type_uid)
+
+        self._stack_headers = stack_headers
+        self._local_params: dict = {}
+
     def set_header(self, key, value):
-        """
-        Scope is limited to this object and followed classes. 
-        """
-        self.local_header.update({key: value})
-
+        self._local_params[key] = value
 
     def remove_header(self, header_key):
         if header_key in self.local_header:
-            self.local_header.pop(header_key)
-    
+            self._local_params.pop(header_key)
 
-    def entry(self, entry_uid = None): 
-        entry = entry.Entry(self.content_type_id)
-        entry.set_content_type_instance(self)
-        if entry_uid != None:
-            entry.set_uid(entry_uid)
-        return entry
-    
+    def entry(self, entry_uid: str = None):
+        """
+        An entry is the actual piece of content created using one of the defined content types.
+        Read more about Entries. [ https://www.contentstack.com/docs/apis/content-delivery-api/#entries ]
+
+        The Get all entries call fetches the list of all the entries of a particular content type.
+        It also returns the content of each entry in JSON format.
+        You can also specify the environment and locale of which you wish to get the entries.
+
+        :param entry_uid:
+        :return:
+        """
+        self._entry_uid = entry_uid
+        if self._entry_uid is not None:
+            self._entry_instance.set_entry_uid(self._entry_uid)
+        entry_url = self._get_entry_url()
+        self._entry_instance.set_content_type_instance(entry_url, self._stack_headers)
+        return self._entry_instance
 
     def query(self):
-        query =  query.Query(self.content_type_id)
-        #query.formHead = 
-        #query.setContentTypeInstance(this)
-        return query
 
+        """
+        You can add queries to extend the functionality of this API call. 
+        Under the URI Parameters section, insert a parameter named query 
+        and provide a query in JSON format as the value.
+        To learn more about the queries, refer to the Queries section.
+        """
+        return self._query_instance
 
-    def fetch(self, callback):
-        
-        return self.__get_url(self.content_type_id)
-        
+    def fetch(self) -> dict:
+        https_request = http_request.HTTPRequestConnection(self._get_content_type_url(), self._local_params,
+                                                           self._stack_headers)
+        result = https_request.http_request()
+        return result
 
+    # def find_entries(self) -> dict:
+    # https_request = http_request.HTTPRequestConnection(self._get_entries_url(), self._local_params, self.stack_headers)
+    # result = https_request.http_request()
+    # return result
 
+    def _get_content_type_url(self) -> str:
+        return 'content_types/{0}'.format(self._content_type_uid)
 
-    def __get_url(self, url):
-        self.__configs = Config()
-        VERSION = self.__configs.get_version()
-        http_schema = self.__configs.get_host()
-        return "/{0}/{1}/content_types/{2}".format(http_schema, VERSION, url)
+    def _get_entry_url(self) -> str:
+        return 'content_types/{0}/entries/{1}'.format(self._content_type_uid, self._entry_uid)
+
+    # def _get_entries_url(self) -> str:
+    #    return 'content_types/{0}/entries'.format(self.content_type_uid)
