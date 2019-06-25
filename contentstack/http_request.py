@@ -19,8 +19,8 @@ class HTTPRequestConnection(object):
         self._local_headers['X-User-Agent'] = self._contentstack_user_agent()
         self._local_headers['Content-Type'] = 'application/json'
         response = requests.get(self.url_path, params=self._query_prams, headers=self._local_headers)
-        # print(response.url)
-        logging.info('url', response.url)
+
+        print('request url:: ', response.url)
         if response.ok:
             json_response = response.json()
             if 'stack' in json_response:
