@@ -1,9 +1,31 @@
-import logging
+# __init__.py
+# Contentstack testcases
+# Created by Shailesh on 22/06/19.
+# Copyright (c) 2012 - 2019 Contentstack. All rights reserved.
+
+# [MIT License] :: Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 from unittest import TestCase
 from contentstack import config
 from contentstack.stack import Stack
-logger = logging.getLogger('ContentstackTestcase')
-logger.setLevel(logging.DEBUG)
+# logger = logging.getLogger('ContentstackTestcase')
+# logger.setLevel(logging.DEBUG)
 
 
 class ContentstackTestcase(TestCase):
@@ -11,8 +33,8 @@ class ContentstackTestcase(TestCase):
     def setUp(self):
         set_obj = config.Config()
         set_obj.set_host('stag-cdn.contentstack.io')
-        self.stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development',
-                           configs=set_obj)
+        self.stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development', configs=set_obj)
+        self.production_stack = Stack(api_key="blt20962a819b57e233", access_token="cs18efd90468f135a3a5eda3ba", environment="production")
 
     def test_stack(self):
         self.assertEqual('development', self.stack.get_environment())
@@ -48,8 +70,8 @@ class ContentstackTestcase(TestCase):
         result = stack_fetch.fetch()
         if 'collaborators' in result:
             collaborators = result["collaborators"]
-            logger.info("collaborators", collaborators)
-            logger.info("collaborators count", len(collaborators))
+            print("collaborators", collaborators)
+            print("collaborators count", len(collaborators))
             self.assertTrue(True)
 
     def test_stack_fetch_discrete_variables(self):
@@ -57,7 +79,7 @@ class ContentstackTestcase(TestCase):
         result = discrete_var.fetch()
         if 'discrete_variables' in result:
             discrete_variables = result["discrete_variables"]
-            logger.info("discrete_var", discrete_variables)
+            print("discrete_var", discrete_variables)
             self.assertTrue(True)
 
     def test_stack_fetch_stack_variables(self):
@@ -65,7 +87,7 @@ class ContentstackTestcase(TestCase):
         result = stack_var.fetch()
         if 'stack_variables' in result:
             stack_variables = result["stack_variables"]
-            logger.info("stack_variables", stack_variables)
+            print("stack_variables", stack_variables)
             self.assertTrue(True)
 
     def test_stack_include_count(self):
@@ -73,7 +95,7 @@ class ContentstackTestcase(TestCase):
         result = stack_var.fetch()
         if 'stack_variables' in result:
             stack_variables = result["stack_variables"]
-            logger.info("stack_variables", stack_variables)
+            print("stack_variables", stack_variables)
             self.assertTrue(True)
 
     ##############################################################
@@ -98,7 +120,7 @@ class ContentstackTestcase(TestCase):
         self.assertEquals(7, len(sync_result))
         for data in sync_result:
             type_of_data = data["type"]
-            logger.info(type_of_data, data["data"])
+            print(type_of_data, data["data"])
             self.assertEquals('entry_published', type_of_data)
 
     def test_sync_token(self):
@@ -120,13 +142,132 @@ class ContentstackTestcase(TestCase):
         if 'schema' in ct_result:
             schema_result = ct_result['schema']
             for schema in schema_result:
-                logger.info(schema)
-                logger.info(schema)
+                print(schema)
             self.assertEquals(list, type(schema_result))
 
     def test_get_entries_by_uid(self):
-        entry_stack = Stack(api_key="blt20962a819b57e233", access_token="cs18efd90468f135a3a5eda3ba", environment="production")
-        entry_instance = entry_stack.content_type('product').entry('blt9965f5f9840923ba')
+        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
         result = entry_instance.fetch()
         if result is not None:
             self.assertEquals(dict, type(result))
+
+    def test_entry_title(self):
+        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
+        result = entry_instance.fetch()
+        if result is not None:
+            self.assertEquals("Redmi Note 3", entry_instance.get_title())
+
+    def test_entry_url(self):
+        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
+        result = entry_instance.fetch()
+        if result is not None:
+            self.assertEquals("", entry_instance.get_url())
+
+    def test_entry_tags(self):
+        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
+        result = entry_instance.fetch()
+        if result is not None:
+            self.assertEquals(list, type(entry_instance.get_tags()))
+
+    def test_entry_content_type(self):
+        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
+        result = entry_instance.fetch()
+        if result is not None:
+            self.assertEquals('product', entry_instance.get_content_type())
+
+    def test_entry_get_uid(self):
+        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
+        result = entry_instance.fetch()
+        if result is not None:
+            self.assertEquals('blt9965f5f9840923ba', entry_instance.get_uid())
+
+    def test_entry_get_locale(self):
+        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
+        entry_instance.set_locale('en-us')
+        result = entry_instance.fetch()
+        if result is not None:
+            if '-' in entry_instance.get_locale():
+                self.assertEquals('en-us', entry_instance.get_locale())
+
+    def test_entry_to_json(self):
+        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
+        entry_instance.set_locale('en-us')
+        result = entry_instance.fetch()
+        if result is not None:
+            self.assertEquals(dict, type(entry_instance.to_json()))
+
+    def test_entry_get(self):
+        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
+        entry_instance.set_locale('en-us')
+        result = entry_instance.fetch()
+        print(result)
+        if result is not None:
+            self.assertEquals('blt9965f5f9840923ba', entry_instance.get('uid'))
+
+    def test_entry_get_string(self):
+        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
+        entry_instance.set_locale('en-us')
+        result = entry_instance.fetch()
+        if result is not None:
+            self.assertEquals(str, type(entry_instance.get_string('description')))
+
+    def test_entry_get_boolean(self):
+        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
+        entry_instance.set_locale('en-us')
+        result = entry_instance.fetch()
+        if result is not None:
+            self.assertFalse(None, type(entry_instance.get_boolean('description')))
+
+    def test_entry_get_json(self):
+        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
+        entry_instance.set_locale('en-us')
+        result = entry_instance.fetch()
+        if result is not None:
+            json_result = entry_instance.get_json('publish_details')
+            self.assertEquals(dict, type(json_result))
+
+    def test_entry_get_int(self):
+        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
+        entry_instance.set_locale('en-us')
+        result = entry_instance.fetch()
+        if result is not None:
+            json_result = entry_instance.get_int('color')
+            self.assertFalse(None, type(json_result))
+
+    def test_entry_get_created_at(self):
+        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
+        entry_instance.set_locale('en-us')
+        result = entry_instance.fetch()
+        if result is not None:
+            created_at = entry_instance.get_created_at()
+            self.assertTrue(str, type(created_at))
+
+    def test_entry_get_created_by(self):
+        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
+        entry_instance.set_locale('en-us')
+        result = entry_instance.fetch()
+        if result is not None:
+            created_by = entry_instance.get_created_by()
+            self.assertTrue(str, type(created_by))
+
+    def test_entry_get_updated_at(self):
+        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
+        entry_instance.set_locale('en-us')
+        result = entry_instance.fetch()
+        if result is not None:
+            updated_at = entry_instance.get_updated_at()
+            self.assertTrue(str, type(updated_at))
+
+    def test_entry_get_updated_by(self):
+        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
+        entry_instance.set_locale('en-us')
+        result = entry_instance.fetch()
+        if result is not None:
+            updated_by = entry_instance.get_updated_by()
+            self.assertTrue(str, type(updated_by))
+
+    def test_entry_get_asset(self):
+        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
+        entry_instance.set_locale('en-us')
+        result = entry_instance.fetch()
+        # incomplete

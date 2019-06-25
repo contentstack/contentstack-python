@@ -78,8 +78,8 @@ class Entry(object):
 
     def fetch(self) -> dict:
         print('single_entry_url_endpoint', self._entry_url_path)
-        https_request = http_request.HTTPRequestConnection(self._entry_url_path, self._local_params,
-                                                           self._stack_headers)
+        https_request = http_request.\
+            HTTPRequestConnection(self._entry_url_path, self._local_params, self._stack_headers)
         result = https_request.http_request()
         if type(result) == dict:
             self.__configure(result)
