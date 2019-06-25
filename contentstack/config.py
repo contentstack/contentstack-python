@@ -25,40 +25,34 @@
 
 import logging
 
+
 class Config(object):
-        
 
-        def __init__(self):
-                self.host_url = 'cdn.contentstack.io'
-                self.api_version = 'v3'
-                self.environment = None
-                self.SDK_VERSION = 0.0.1
-                self.SDK_NAME = 'contentstack-python'
+    def __init__(self, host_url: str = 'cdn.contentstack.io'):
+        self.host_url = host_url
+        self.api_version: str = 'v3'
+        self.http_protocol: str = 'https://'
 
+    def set_host(self, host_url=None):
+        logging.info("set host", host_url)
+        self.host_url = host_url
+        return self
 
-        def set_host(self, host_url= 'cdn.contentstack.io'):
-                logging.info("set host")
-                if host_url != None:
-                        self.url = host_url
-                        return self
+    def get_host(self):
+        logging.info('getting host url', self.host_url)
+        return self.host_url
 
+    def get_version(self):
+        logging.info('getting api version', self.api_version)
+        return self.api_version
 
-        def set_environment(self, environment):
-                logging.info("set environment")
-                if environment != None:
-                        self.environment = environment
-                        return self
+    def get_http_protocol(self):
+        logging.info('get http protocol', self.http_protocol)
+        return self.http_protocol
 
-        def get_host(self):
-                logging.info('getting host url')
-                return self.host_url
-        
-
-        def get_version(self):
-                logging.info('getting api version')
-                return self.api_version
-
-
-        def get_environment(self):
-                logging.info('get invironment')
-                return self.environment
+    def get_endpoint(self, url_path):
+        api_version: str = self.get_version()
+        host_url = self.get_host()
+        http_protocol = self.get_http_protocol()
+        config_url = "{0}{1}/{2}/{3}".format(http_protocol, host_url, api_version, url_path)
+        return config_url
