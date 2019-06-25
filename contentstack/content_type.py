@@ -62,7 +62,7 @@ class ContentType(object):
         """
         self._entry_uid = entry_uid
         if self._entry_uid is not None:
-            self._entry_instance.set_uid(self._entry_uid)
+            self._entry_instance.set_entry_uid(self._entry_uid)
         entry_url = self._get_entry_url()
         self._entry_instance.set_content_type_instance(entry_url, self._stack_headers)
         return self._entry_instance
