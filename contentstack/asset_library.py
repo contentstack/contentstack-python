@@ -27,7 +27,6 @@ import logging
 
 
 class AssetLibrary():
-    logging.info("Asset library")
 
     def __init__(self):
         logging.info('Asset initialised')

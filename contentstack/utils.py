@@ -23,47 +23,27 @@
  *
 """
 
-
 import logging
 import urllib
 import requests
 
-try: 
+try:
     from logging import NullHandler
 except ImportError:
     class NullHandler(logging.Handler):
         def emit(self, record):
             pass
 
-
 logging.getLogger(__name__).addHandler(NullHandler())
 log = logging.getLogger(__name__)
 
-class utils:
 
+class utils:
     '''def is_internet_on():
         try: urllib.request.urlopen('http://216.58.192.142', timeout=1)
         #return True
     except urllib2.URLError as err: 
         return False'''
-
-
-
-class StackException(Exception):
-    """StackException Class"""
-    pass
-
-
-class NotSupportedException(Exception):
-    """ exception is thrown when something is not supported by the API."""
-    pass
-
-
-class retry_request(object):
-    """
-    Decorator to retry function calls in case they raise rate limit exceptions
-    """
-    pass
 
 
 
