@@ -24,6 +24,8 @@
 from unittest import TestCase
 from contentstack import config
 from contentstack.stack import Stack
+
+
 # logger = logging.getLogger('ContentstackTestcase')
 # logger.setLevel(logging.DEBUG)
 
@@ -33,8 +35,10 @@ class ContentstackTestcase(TestCase):
     def setUp(self):
         set_obj = config.Config()
         set_obj.set_host('stag-cdn.contentstack.io')
-        self.stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development', configs=set_obj)
-        self.production_stack = Stack(api_key="blt20962a819b57e233", access_token="cs18efd90468f135a3a5eda3ba", environment="production")
+        self.stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development',
+                           configs=set_obj)
+        self.production_stack = Stack(api_key="blt20962a819b57e233", access_token="cs18efd90468f135a3a5eda3ba",
+                                      environment="production")
 
     def test_stack(self):
         self.assertEqual('development', self.stack.get_environment())
@@ -51,19 +55,24 @@ class ContentstackTestcase(TestCase):
     def test_include_collaborators(self):
         is_contains = False
         self.stack.get_collaborators()
-        stack_query = self.stack.fetch()
-        if 'collaborators' in stack_query:
-            is_contains = True
-        self.assertEqual(True, is_contains)
+        result, err = self.stack.fetch()
+        if err is None:
+            result = result['stack']
+            if 'collaborators' in result:
+                is_contains = True
+            self.assertEqual(True, is_contains)
 
     def test_content_type(self):
         variable = self.stack.content_type('product')
         self.assertEqual('product', variable._content_type_uid)
 
     def test_content_types(self):
-        result = self.stack.content_types()
-        self.assertEqual(list, type(result))
-        self.assertEqual(4, len(result))
+        result, error = self.stack.content_types()
+        if error is None:
+            if 'content_types' in result:
+                result = result['content_types']
+                self.assertEqual(list, type(result))
+                self.assertEqual(4, len(result))
 
     def test_stack_fetch_collaborators(self):
         stack_fetch = self.stack.get_collaborators()
@@ -113,15 +122,16 @@ class ContentstackTestcase(TestCase):
 
     def test_init_sync(self):
         sync_stack = Stack("blt20962a819b57e233", "cs18efd90468f135a3a5eda3ba", "production")
-        stack_sync = sync_stack.sync(from_date='2018-01-14T00:00:00.000Z', content_type_uid='product',
-                                     publish_type='entry_published')
-        sync_result = stack_sync.fetch_sync()
-        self.assertEquals(list, type(sync_result))
-        self.assertEquals(7, len(sync_result))
-        for data in sync_result:
-            type_of_data = data["type"]
-            print(type_of_data, data["data"])
-            self.assertEquals('entry_published', type_of_data)
+        stack_sync = sync_stack.sync(from_date='2018-01-14T00:00:00.000Z', content_type_uid='product', publish_type='entry_published')
+        result, err = stack_sync.fetch_sync()
+        if err is None:
+            result = result['items']
+            self.assertEquals(list, type(result))
+            self.assertEquals(7, len(result))
+            for data in result:
+                type_of_data = data["type"]
+                print(type_of_data, data["data"])
+                self.assertEquals('entry_published', type_of_data)
 
     def test_sync_token(self):
         sync_stack = Stack(api_key="blt20962a819b57e233", access_token="cs18efd90468f135a3a5eda3ba",
@@ -133,7 +143,7 @@ class ContentstackTestcase(TestCase):
             self.assertEquals(141, error_code)
 
     ##############################################################
-    # [Content-Type]
+    # [ContentType class]
     ##############################################################
 
     def test_content_type_network_request(self):
@@ -145,10 +155,15 @@ class ContentstackTestcase(TestCase):
                 print(schema)
             self.assertEquals(list, type(schema_result))
 
+    ##############################################################
+    # [Entry class]
+    ##############################################################
+
     def test_get_entries_by_uid(self):
         entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        result = entry_instance.fetch()
-        if result is not None:
+        result, err = entry_instance.fetch()
+        if err is None:
+            result = result['entry']
             self.assertEquals(dict, type(result))
 
     def test_entry_title(self):

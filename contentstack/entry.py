@@ -33,7 +33,7 @@ class Entry(object):
 
         self._uid = entry_uid
         self._content_type_id = content_type_id
-        self._entry_url_path = str
+        self._entry_url = str
         self._local_params: dict = {}
         self._stack_headers: dict = {}
 
@@ -51,9 +51,9 @@ class Entry(object):
         self._version = str
 
     def set_content_type_instance(self, entry_url_path: str, stack_headers):
-        self._entry_url_path = entry_url_path
+        self._entry_url = entry_url_path
         self._stack_headers = stack_headers
-        print(self._entry_url_path)
+        print(self._entry_url)
         return self
 
     def set_headers(self, local_header: str):
@@ -75,15 +75,6 @@ class Entry(object):
     def set_locale(self, locale_code):
         self._local_params["locale"] = locale_code
         return self
-
-    def fetch(self) -> dict:
-        print('single_entry_url_endpoint', self._entry_url_path)
-        https_request = http_request.\
-            HTTPRequestConnection(self._entry_url_path, self._local_params, self._stack_headers)
-        result = https_request.http_request()
-        if type(result) == dict:
-            self.__configure(result)
-        return result
 
     def __configure(self, model: dict):
         self._result_json = model
@@ -247,3 +238,13 @@ class Entry(object):
 
     def except_with_reference_uid(sel):
         pass
+
+    def fetch(self) -> tuple:
+        print('entry_url', self._entry_url)
+        https_request = http_request. \
+            HTTPRequestConnection(self._entry_url, self._local_params, self._stack_headers)
+        (response, error) = https_request.http_request()
+        if error is None:
+            result = response['entry']
+            self.__configure(result)
+        return response, error

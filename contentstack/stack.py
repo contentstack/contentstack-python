@@ -24,6 +24,8 @@ SOFTWARE.
 """
 import urllib
 import logging
+from typing import Any
+
 import contentstack
 from contentstack import errors as err
 from contentstack import config
@@ -60,7 +62,8 @@ class Stack(object):
         :param environment:
         :param configs:
         """
-        logging.debug('initialisation attempted with: ', api_key, access_token, environment)
+        print('initialisation with api_key {0}, access_token {1}, environment {2}:'
+              .format(api_key, access_token, environment))
 
         self._api_key = api_key
         self._access_token = access_token
@@ -147,8 +150,7 @@ class Stack(object):
         logging.info('stack', 'get content types')
         content_types_query: dict = {'include_count': 'true'}
         https_request = http_request.HTTPRequestConnection('content_types', content_types_query, self._local_headers)
-        result = https_request.http_request()
-        return result
+        return https_request.http_request()
 
     def get_application_key(self):
 
@@ -317,12 +319,10 @@ class Stack(object):
         self._local_headers['access_token'] = self._access_token
         self._local_headers['environment'] = self._environment
 
-    def fetch(self) -> dict:
+    def fetch(self) -> tuple:
         https_request = http_request.HTTPRequestConnection('stacks', self._stack_query, self._local_headers)
-        result = https_request.http_request()
-        return result
+        return https_request.http_request()
 
-    def fetch_sync(self):
+    def fetch_sync(self) -> tuple:
         https_request = http_request.HTTPRequestConnection('stacks/sync', self._sync_query, self._local_headers)
-        result = https_request.http_request()
-        return result
+        return https_request.http_request()
