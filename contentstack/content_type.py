@@ -42,11 +42,12 @@ class ContentType(object):
         self._local_params: dict = {}
 
     def set_header(self, key, value):
-        self._local_params[key] = value
+        if key is not None and value is not None:
+            self._stack_headers[key] = value
 
-    def remove_header(self, header_key):
-        if header_key in self.local_header:
-            self._local_params.pop(header_key)
+    def remove_header(self, key):
+        if key in self._stack_headers:
+            self._stack_headers.pop(key)
 
     def entry(self, entry_uid: str = None):
         """
@@ -77,11 +78,9 @@ class ContentType(object):
         """
         return self._query_instance
 
-    def fetch(self) -> dict:
-        https_request = http_request.HTTPRequestConnection(self._get_content_type_url(), self._local_params,
-                                                           self._stack_headers)
-        result = https_request.http_request()
-        return result
+    def fetch(self) -> tuple:
+        ct_request = http_request.HTTPRequestConnection(self._get_content_type_url(), self._local_params, self._stack_headers)
+        return ct_request.http_request()
 
     # def find_entries(self) -> dict:
     # https_request = http_request.HTTPRequestConnection(self._get_entries_url(), self._local_params, self.stack_headers)

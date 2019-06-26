@@ -39,5 +39,5 @@ from .http_request import HTTPRequestConnection
 
 __author__ = 'contentstack - (www.github.con/contentstack)'
 __email__ = 'shailesh.mishra@contentstack.com'
-__version__ = '0.0.1'
+__version__ = '1.0.0'
 __endpoint__ = 'cdn.contentstack.io'
