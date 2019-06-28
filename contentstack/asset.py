@@ -21,14 +21,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 from contentstack import http_request
+from contentstack.stack import Stack
 
 
-class Asset:
+class Asset(Stack):
 
     def __init__(self, asset_uid: str = None):
         """ :type asset_uid: str """
 
-        self.__asset_url: str = "assets"
+        self.__asset_url_path: str = "assets"
         self.__response = dict
         self.__file_name = str
         self.__file_size = str
@@ -41,12 +42,18 @@ class Asset:
         self.__updated_at = str
         self.__updated_by = str
 
+        self.__stack = Stack
         self.__local_params = {}
         self.__local_headers = {}
         if asset_uid is not None and len(asset_uid) > 0:
             self.__asset_uid = asset_uid
             asset_url = "assets/{0}"
-            self.__asset_url = asset_url.format(self.__asset_uid)
+            self.__asset_url_path = asset_url.format(self.__asset_uid)
+
+    def set_stack_instance(self, stack):
+        self.__stack = stack
+        self.__local_headers = stack.local_headers
+        self.__local_headers = stack.get_headers()
 
     def __configure(self, response: dict):
         self.__response = response
@@ -69,7 +76,7 @@ class Asset:
                 self.__local_headers[key] = value
         return self
 
-    def add_param(self, **params):
+    def add_params(self, **params):
         if params is not None:
             self.__local_params = params
             for key, value in self.__local_params.items():
@@ -82,11 +89,49 @@ class Asset:
                 self.__local_headers.pop(key)
         return self
 
+    def set_uid(self, asset_uid: str):
+        if asset_uid is not None:
+            self.__asset_uid = asset_uid
+
+    def get_asset_uid(self):
+        return self.__asset_uid
+
+    def get_file_type(self):
+        return self.__file_type
+
+    def get_file_size(self):
+        return self.__file_size
+
+    def get_file_name(self):
+        return self.__file_name
+
+    def get_url(self):
+        return self.__file_url
+
+    def to_json(self):
+        return self.__response
+
+    def get_create_at(self):
+        return self.__created_at
+
+    def get_create_by(self):
+        return self.__created_by
+
+    def get_update_at(self):
+        return self.__updated_at
+
+    def get_update_by(self):
+        return self.__updated_by
+
+    def get_tags(self):
+        return self.__tags
+
     def fetch(self) -> tuple:
-        print('__asset_url ::', self.__asset_url)
+        print('__asset_url ::', self.__asset_url_path)
         print('__params    ::', self.__local_params)
         print('__headers   ::', self.__local_headers)
-        asset_request = http_request.HTTPRequestConnection(self.__asset_url, self.__local_params, self.__local_headers)
+        asset_request = http_request.HTTPRequestConnection(self.__asset_url_path, self.__local_params,
+                                                           self.__local_headers)
         (response, error) = asset_request.http_request()
         if error is None:
             print(response)
@@ -95,8 +140,13 @@ class Asset:
         else:
             return response, error
 
-
-asset = Asset('blt782397846923')
-kwargs = {"kwarg_1": "Val bol", "kwarg_2": "Harper mod", "kwarg_3": " ways from extremist"}
-result: Asset = asset.add_param(**kwargs)
-result.fetch()
+# asset: Asset = Asset('blt78356332423')
+# head = {'api_key': 'blt347894985', 'access_token': '734328976236', 'environment': 'dev'}
+# params = {'param1': 'Yes iam in', 'param2 ': 'Yes in', 'param3': 'Oh Yes in'}
+# asset.set_header(**head)
+# asset.add_params(**params)
+# result, err = asset.fetch()
+# if err is None:
+#    print(result)
+# else:
+#    print(err['error_message'])

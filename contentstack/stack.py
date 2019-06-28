@@ -22,14 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  
 """
-import urllib
 import logging
-from typing import Any
-
+import urllib
 import contentstack
-from contentstack import errors as err
-from contentstack import config
 from contentstack import content_type
+from contentstack import errors as err
 from contentstack import http_request
 
 """
@@ -41,6 +38,8 @@ related to the project. Read more about Stacks
 
 API Reference: [https://www.contentstack.com/docs/guide/stack]
 """
+# logger = logging.getLogger(__name__)
+# logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.DEBUG)
 
 
 class Stack(object):
@@ -50,7 +49,7 @@ class Stack(object):
 
     """
 
-    def __init__(self, api_key: str, access_token: str, environment: str, configs: config.Config = None):
+    def __init__(self, api_key: str, access_token: str, environment: str, configs: contentstack.config.Config = None):
         """
         A stack is a space that stores the content of a project (a web or mobile property).
         Within a stack, you can create content structures, content entries, users, etc.
@@ -71,12 +70,12 @@ class Stack(object):
 
         if configs is not None:
             self._configs = configs
-            self.set_config(config)
+            self.set_config(configs=configs)
 
         self._initialise_stack()
         # declare stack class variables
         self._stack_query = dict()
-        self._local_headers = dict()
+        self.local_headers = dict()
         self._setup_stack()
         # set class variables to initialise image transformation.
         self._image_transform_url = None
@@ -99,17 +98,17 @@ class Stack(object):
                 'Environment can not be Empty.'
             )
 
-    def set_config(self, configs: config.Config) -> config.Config:
+    def set_config(self, configs: contentstack.config.Config) -> contentstack.config.Config:
         """
         :type configs: object
         :param configs:
         :return:
         """
-        self._configs: config.Config = configs
+        self._configs: contentstack.config.Config = configs
         return self._configs
 
     def stack(self, api_key):
-        self._local_headers['api_key'] = api_key
+        self.local_headers['api_key'] = api_key
         return self
 
     def _get_url(self, url: str) -> object:
@@ -129,7 +128,7 @@ class Stack(object):
         :return: :class:`ContentType <contentstack.content_type.ContentType>` object.
         :return type: contentstack.content_type.ContentType
         """
-        ct_path = content_type.ContentType(content_type_id, self._local_headers)
+        ct_path = content_type.ContentType(content_type_id, self.local_headers)
         logging.info('type', type(ct_path))
         return ct_path
 
@@ -149,8 +148,42 @@ class Stack(object):
         """
         logging.info('stack', 'get content types')
         content_types_query: dict = {'include_count': 'true'}
-        https_request = http_request.HTTPRequestConnection('content_types', content_types_query, self._local_headers)
+        https_request = http_request.HTTPRequestConnection('content_types', content_types_query, self.local_headers)
         return https_request.http_request()
+
+    def asset(self, uid: str):
+        """
+        Assets refer to all the media files (images, videos, PDFs, audio files, and so on)
+        uploaded in your Contentstack repository for future use. These files can be
+        attached and used in multiple entries. Learn more about Assets.
+        API Reference : https://www.contentstack.com/docs/guide/content-management#working-with-assets
+        :param uid:
+        :return: asset
+
+
+        [All Assets]
+
+        This call fetches the list of all the assets of a particular stack.
+        It also returns the content of each asset in JSON format. You can also specify the environment of
+        which you wish to get the assets.You can apply queries to
+        filter assets/entries. Refer to the Queries [https://www.contentstack.com/docs/apis/content-delivery-api/#queries] section for more details.
+
+        [Single Asset]
+
+        This call fetches the latest version of a specific asset of a particular stack.
+        """
+        assets = contentstack.Asset(uid)
+        assets.set_stack_instance(self)
+        return assets
+
+    def asset_library(self):
+
+        """
+        :return: asset_library
+        """
+        library = contentstack.AssetLibrary()
+        library.set_stack_instance(self)
+        return library
 
     def get_application_key(self):
 
@@ -158,8 +191,8 @@ class Stack(object):
         get_application_key() returns stack API_Key
         return self
         """
-        if 'api_key' in self._local_headers:
-            app_key = self._local_headers['api_key']
+        if 'api_key' in self.local_headers:
+            app_key = self.local_headers['api_key']
             return app_key
 
     def get_access_token(self):
@@ -168,16 +201,16 @@ class Stack(object):
         get_access_token() method returns access token for the current stack
         :return self:
         """
-        if 'access_token' in self._local_headers:
-            access_token = self._local_headers['access_token']
+        if 'access_token' in self.local_headers:
+            access_token = self.local_headers['access_token']
             return access_token
 
     def remove_header(self, header_key):
         """
         remove_header() method removes existing header by key
         """
-        if header_key in self._local_headers:
-            del self._local_headers[header_key]
+        if header_key in self.local_headers:
+            del self.local_headers[header_key]
             return self
 
     def set_header(self, header_key, header_value):
@@ -185,8 +218,8 @@ class Stack(object):
         set_header() mrthod sets additinal headers to the stack
         :returns _local_headers
         """
-        self._local_headers[header_key] = header_value
-        return self._local_headers
+        self.local_headers[header_key] = header_value
+        return self.local_headers
 
     def image_transform(self, image_url: str, transform_params=dict):
 
@@ -307,22 +340,27 @@ class Stack(object):
         return self
 
     def get_environment(self):
-        return self._local_headers['environment']
+        return self.local_headers['environment']
+
+    def get_headers(self):
+        return self.local_headers
 
     def set_environment(self, environment):
-        if environment in self._local_headers:
-            self._local_headers['environment'] = environment
+        if environment in self.local_headers:
+            self.local_headers['environment'] = environment
         return self
 
     def _setup_stack(self):
-        self._local_headers['api_key'] = self._api_key
-        self._local_headers['access_token'] = self._access_token
-        self._local_headers['environment'] = self._environment
+        self.local_headers['api_key'] = self._api_key
+        self.local_headers['access_token'] = self._access_token
+        self.local_headers['environment'] = self._environment
+
+        logging.debug('contentstack logged in')
 
     def fetch(self) -> tuple:
-        https_request = http_request.HTTPRequestConnection('stacks', self._stack_query, self._local_headers)
+        https_request = http_request.HTTPRequestConnection('stacks', self._stack_query, self.local_headers)
         return https_request.http_request()
 
     def fetch_sync(self) -> tuple:
-        https_request = http_request.HTTPRequestConnection('stacks/sync', self._sync_query, self._local_headers)
+        https_request = http_request.HTTPRequestConnection('stacks/sync', self._sync_query, self.local_headers)
         return https_request.http_request()

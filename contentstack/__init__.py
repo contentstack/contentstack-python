@@ -25,6 +25,7 @@
 
 """Export module packages."""
 
+# from .stack import Stack
 from .entry import Entry
 from .asset import Asset
 from .asset_library import AssetLibrary
@@ -37,7 +38,9 @@ from .errors import HTTPError, ConfigError
 from .group import Group
 from .http_request import HTTPRequestConnection
 
-__author__ = 'contentstack - (www.github.con/contentstack)'
-__email__ = 'shailesh.mishra@contentstack.com'
-__version__ = '1.0.0'
-__endpoint__ = 'cdn.contentstack.io'
+__author__ = "Shailesh Mishra <mshaileshr@gmail.com>"
+__status__ = "debug"
+__date__ = "27 June 2019"
+__version__ = "1.0.0"
+__endpoint__ = "cdn.contentstack.io"
+
