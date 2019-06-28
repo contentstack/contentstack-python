@@ -55,7 +55,7 @@ class Asset(Stack):
         self.__local_headers = stack.local_headers
         self.__local_headers = stack.get_headers()
 
-    def __configure(self, response: dict):
+    def configure(self, response: dict):
         self.__response = response
         self.__file_name = self.__response['filename']
         self.__file_size = self.__response['file_size']
@@ -135,7 +135,7 @@ class Asset(Stack):
         (response, error) = asset_request.http_request()
         if error is None:
             print(response)
-            self.__configure(response['asset'])
+            self.configure(response['asset'])
             return response, error
         else:
             return response, error
