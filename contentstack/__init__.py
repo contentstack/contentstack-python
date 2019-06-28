@@ -30,10 +30,8 @@ from .entry import Entry
 from .asset import Asset
 from .asset_library import AssetLibrary
 from .config import Config
-from .sync_stack import SyncStack
 from .query_result import QueryResult
 from .content_type import ContentType
-from .entry_model import EntryModel
 from .errors import HTTPError, ConfigError
 from .group import Group
 from .http_request import HTTPRequestConnection

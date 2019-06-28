@@ -21,24 +21,24 @@
      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
      SOFTWARE.
  """
-import contentstack
+from contentstack.stack import Stack
 from contentstack import http_request
 from contentstack.query import Query
 from contentstack.entry import Entry
 
 
-class ContentType(object):
+class ContentType(Stack):
 
-    def __init__(self, content_type_uid: str, stack_headers):
+    def __init__(self, content_type_uid: str):
 
         self._entry_instance: Entry
         self._query_instance: Query
         self._entry_uid: str = ''
         self._content_type_uid = content_type_uid
-        self._entry_instance = contentstack.Entry(content_type_id=self._content_type_uid, entry_uid=self._entry_uid)
+        self._entry_instance = Entry(content_type_id=self._content_type_uid, entry_uid=self._entry_uid)
         self._query_instance = Query(self._content_type_uid)
 
-        self._stack_headers = stack_headers
+        self._stack_headers = Stack.get_headers()
         self._local_params: dict = {}
 
     def set_header(self, key, value):

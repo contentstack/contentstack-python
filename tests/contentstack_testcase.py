@@ -112,35 +112,38 @@ class ContentstackTestcase(TestCase):
     ##############################################################
 
     def test_sync_pagination(self):
-        sync_stack = Stack(api_key="blt20962a819b57e233", access_token="cs18efd90468f135a3a5eda3ba",
-                           environment="development")
-        stack_sync = sync_stack.sync_pagination('csfakepaginationtoken')
-        sync_result = stack_sync.fetch_sync()
-        if 'error_code' in sync_result:
-            error_code = sync_result["error_code"]
+        sync_stack = Stack(api_key="blt477ba55f9a67bcdf", access_token="cs7731f03a2feef7713546fde5", environment="web")
+        result = sync_stack.sync_pagination('bltbb61f31a70a572e6c9506a')
+        result, error = result.fetch_sync()
+        if error is None:
+            print(result)
+        else:
+            error_code = error["error_code"]
             self.assertEquals(141, error_code)
 
     def test_init_sync(self):
-        sync_stack = Stack("blt20962a819b57e233", "cs18efd90468f135a3a5eda3ba", "production")
-        stack_sync = sync_stack.sync(from_date='2018-01-14T00:00:00.000Z', content_type_uid='product', publish_type='entry_published')
+        sync_stack = Stack("blt477ba55f9a67bcdf", "cs7731f03a2feef7713546fde5", "web")
+        stack_sync = sync_stack.sync(from_date='2018-01-14T00:00:00.000Z', content_type_uid='session', publish_type='entry_published')
         result, err = stack_sync.fetch_sync()
         if err is None:
-            result = result['items']
-            self.assertEquals(list, type(result))
-            self.assertEquals(7, len(result))
-            for data in result:
-                type_of_data = data["type"]
-                print(type_of_data, data["data"])
-                self.assertEquals('entry_published', type_of_data)
+            print(result, type(result))
+            self.assertEquals(int, type(result.get_total_count()))
+
+        # if err is None:
+        # result = result['items']
+        # self.assertEquals(list, type(result))
+        # self.assertEquals(7, len(result))
+        # for data in result:
+        # type_of_data = data["type"]
+        # print(type_of_data, data["data"])
+        # self.assertEquals('entry_published', type_of_data)
 
     def test_sync_token(self):
-        sync_stack = Stack(api_key="blt20962a819b57e233", access_token="cs18efd90468f135a3a5eda3ba",
-                           environment="development")
-        stack_sync = sync_stack.sync_token('csfakepaginationtoken')
-        sync_result = stack_sync.fetch_sync()
-        if 'error_code' in sync_result:
-            error_code = sync_result["error_code"]
-            self.assertEquals(141, error_code)
+        sync_stack = Stack(api_key="blt477ba55f9a67bcdf", access_token="cs7731f03a2feef7713546fde5", environment="web")
+        stack_sync = sync_stack.sync_token('bltbb61f31a70a572e6c9506a')
+        response, error = stack_sync.fetch_sync()
+        items = response.get_total_count()
+        self.assertTrue(9, items)
 
     ##############################################################
     # [ContentType class]

@@ -38,6 +38,8 @@ related to the project. Read more about Stacks
 
 API Reference: [https://www.contentstack.com/docs/guide/stack]
 """
+
+
 # logger = logging.getLogger(__name__)
 # logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.DEBUG)
 
@@ -151,7 +153,7 @@ class Stack(object):
         https_request = http_request.HTTPRequestConnection('content_types', content_types_query, self.local_headers)
         return https_request.http_request()
 
-    def asset(self, uid: str):
+    def asset(self, uid: str = None):
         """
         Assets refer to all the media files (images, videos, PDFs, audio files, and so on)
         uploaded in your Contentstack repository for future use. These files can be
@@ -362,5 +364,50 @@ class Stack(object):
         return https_request.http_request()
 
     def fetch_sync(self) -> tuple:
+        sync_result = { }
         https_request = http_request.HTTPRequestConnection('stacks/sync', self._sync_query, self.local_headers)
-        return https_request.http_request()
+        response, error = https_request.http_request()
+        if error is None:
+            sync_result: SyncStack = SyncStack(response)
+        return sync_result, error
+
+
+class SyncStack(object):
+
+    def __init__(self, json_dict: object) -> object:
+        self.__sync_dict = json_dict
+
+        if self.__sync_dict is not None:
+            if "items" in self.__sync_dict:
+                self.__items = self.__sync_dict["items"]
+            if "skip" in self.__sync_dict:
+                self.__skip = self.__sync_dict["skip"]
+            if "limit" in self.__sync_dict:
+                self.__limit = self.__sync_dict["limit"]
+            if "total_count" in self.__sync_dict:
+                self.__total_count = self.__sync_dict["total_count"]
+            if "sync_token" in self.__sync_dict:
+                self.__sync_token = self.__sync_dict["sync_token"]
+            if "pagination_token" in self.__sync_dict:
+                self.__pagination_token = self.__sync_dict["pagination_token"]
+
+    def get_json(self):
+        return self.__sync_dict
+
+    def get_items(self):
+        return self.__items
+
+    def get_skip(self):
+        return self.__skip
+
+    def get_limit(self):
+        return self.__limit
+
+    def get_total_count(self):
+        return self.__total_count
+
+    def get_sync_token(self):
+        return self.__sync_token
+
+    def get_pagination_token(self):
+        return self.__pagination_token

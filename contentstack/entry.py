@@ -23,11 +23,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from contentstack import http_request
+from contentstack import http_request, stack, group
 import datetime
 
 
-class Entry(object):
+class Entry(stack.Stack):
 
     def __init__(self, content_type_id, entry_uid=None):
 
@@ -36,6 +36,7 @@ class Entry(object):
         self._entry_url = str
         self._local_params: dict = {}
         self._stack_headers: dict = {}
+        self.__uid_for_except = []
 
         self._result_json = dict
         self._uid = str
@@ -76,7 +77,7 @@ class Entry(object):
         self._local_params["locale"] = locale_code
         return self
 
-    def __configure(self, model: dict):
+    def configure(self, model: dict):
         self._result_json = model
         self._title = self._result_json['title']
         self._url = self._result_json['url']
@@ -172,6 +173,13 @@ class Entry(object):
         else:
             return None
 
+    def get_json_list(self, key):
+        value = self.get(key)
+        if value is not None and type(value) == list:
+            return value
+        else:
+            return None
+
     def get_int(self, key):
         value = self.get(key)
         if value is not None and type(value) == int:
@@ -209,23 +217,56 @@ class Entry(object):
     def get_updated_by(self):
         return self._updated_by
 
-    def get_asset(self, key: str):
+    def get_asset(self, key: str) -> dict:
         asset_object: dict = self.get_json(key)
+        asset = stack.Stack.asset().configure(asset_object)
+        return asset
 
-    def get_assets(self, key):
-        pass
+    def get_assets(self, key: str) -> list:
+        assets = []
+        assets_list: list = self.get_json_list(key)
+        for asset in assets_list:
+            asset_obj = stack.Stack.asset().configure(asset)
+            assets.append(asset_obj)
+        return assets
 
-    def get_group(self, key):
-        pass
+    def get_group(self, key: str):
+        if key is not None and self._result_json is not None:
+            if key in self._result_json:
+                extract_json = self._result_json[key]
+                if isinstance(extract_json, dict):
+                    return group.Group(extract_json)
+        else:
+            return None
 
     def get_groups(self, key):
-        pass
+        """
+        Get a list of group from entry.
+        :param key:
+        :return:
+        """
+        if key is not None and self._result_json is not None:
+            group_list = []
+            if key in self._result_json:
+                groups = self._result_json[key]
+                if isinstance(groups, list):
+                    for single_group in groups:
+                        group_list.append(single_group)
+                    return group_list
 
-    def get_all_entries(self, ref_key, ref_content_type):
-        pass
+    # [INCOMPLETE]
+    def get_all_entries(self, ref_key: str, ref_content_type: str):
+        if self._result_json is not None and isinstance(self._result_json[ref_key], list):
+            list_of_entries: list = self._result_json[ref_key]
+            for entry in list_of_entries:
+                if ref_content_type is not None:
+                    entry_instance = stack.content_type.ContentType(ref_content_type).entry()
 
-    def excepts(self, field_uid):
-        pass
+    def except_field_uid(self, field_uid: list) :
+        if field_uid is not None and len(field_uid) > 0:
+            for uid in field_uid:
+                self.__uid_for_except.append(uid)
+        return self
 
     def include_reference(self, reference_field=None, *reference_fields):
         pass
@@ -240,11 +281,9 @@ class Entry(object):
         pass
 
     def fetch(self) -> tuple:
-        print('entry_url', self._entry_url)
-        https_request = http_request. \
-            HTTPRequestConnection(self._entry_url, self._local_params, self._stack_headers)
+        https_request = http_request.HTTPRequestConnection(self._entry_url, self._local_params, self._stack_headers)
         (response, error) = https_request.http_request()
         if error is None:
             result = response['entry']
-            self.__configure(result)
+            self.configure(result)
         return response, error
