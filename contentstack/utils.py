@@ -24,8 +24,6 @@
 """
 
 import logging
-import urllib
-import requests
 
 try:
     from logging import NullHandler
@@ -39,6 +37,10 @@ log = logging.getLogger(__name__)
 
 
 class utils:
+
+    def __init__(self):
+        log.error('logging called in utils')
+        pass
     '''def is_internet_on():
         try: urllib.request.urlopen('http://216.58.192.142', timeout=1)
         #return True
@@ -46,4 +48,5 @@ class utils:
         return False'''
 
 
+util = utils()
 

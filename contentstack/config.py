@@ -26,7 +26,7 @@
 import logging
 
 
-class Config(object):
+class Config:
 
     def __init__(self, host_url: str = 'cdn.contentstack.io'):
         self.host_url = host_url

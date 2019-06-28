@@ -35,7 +35,7 @@ setup(
     author='Shailesh Mishra',
     author_email='shailesh.mishra@contentstack.com',
     description='Create python-based applications and use the python SDK to fetch and deliver content from Contentstack. The SDK uses Content Delivery APIs. ',
-    install_requires=['requests'],
+    install_requires=['requests', 'asset'],
     tests_require=['pytest'],
     long_description=read('README.rst'),
     include_package_data=True,
