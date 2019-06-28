@@ -23,15 +23,13 @@
  *
  """
 import logging
-
 from contentstack.stack import Stack
 
 
 class Group(Stack):
-    
-    def __init__(self, stack: Stack, dictionary: dict):
+
+    def __init__(self, dictionary: dict):
         self._result_dict = dictionary
-        self._stack_instance = stack
         logging.info('Group initialised')
 
     def to_json(self) -> dict:
@@ -63,4 +61,3 @@ class Group(Stack):
 
     def get_all_entries(self, key: str) -> list:
         pass
-
