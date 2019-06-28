@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4a5a7ca2-5e8a-4154-88e7-87aa643ea220" name="Default Changelist" comment="entry testcases added">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="4a5a7ca2-5e8a-4154-88e7-87aa643ea220" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contentstack/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contentstack/asset.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/asset.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contentstack/content_type.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/content_type.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contentstack/entry.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/entry.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contentstack/http_request.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/http_request.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contentstack/asset_library.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/asset_library.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contentstack/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contentstack/group.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/group.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contentstack/stack.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/stack.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/contentstack_testcase.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/contentstack_testcase.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contentstack/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/Test Results - pytest_for_contentstack_testcase_ContentstackTestcase.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/test results - pytest.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/Test Results.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/test results date 22-June.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/python_test_report.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/test_result date 20.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/testcase-pytest.py.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/testcase-pytest 25-June.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.idea/httpRequests/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -36,11 +41,35 @@
   <component name="ExportTestResults" outputFolder="$PROJECT_DIR$/doc" userTempatePath="" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/contentstack/group.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="432">
+              <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+              <folding>
+                <element signature="e#1147#1161#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/tests/contentstack_testcase.py">
+        <entry file="file://$PROJECT_DIR$/contentstack/stack.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="864">
+              <caret line="54" column="43" selection-start-line="54" selection-start-column="43" selection-end-line="54" selection-end-column="43" />
+              <folding>
+                <element signature="e#1090#1104#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/contentstack/asset_library.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="266">
-              <caret line="61" column="34" lean-forward="true" selection-start-line="61" selection-start-column="34" selection-end-line="61" selection-end-column="34" />
+              <caret line="33" column="37" selection-start-line="33" selection-start-column="37" selection-end-line="33" selection-end-column="37" />
             </state>
           </provider>
         </entry>
@@ -83,7 +112,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/contentstack/asser_model.py" />
-        <option value="$PROJECT_DIR$/contentstack/asset_library.py" />
         <option value="$PROJECT_DIR$/contentstack/entry_model.py" />
         <option value="$PROJECT_DIR$/contentstack/test.py" />
         <option value="$PROJECT_DIR$/contentstack/contentstack.py" />
@@ -92,28 +120,29 @@
         <option value="$PROJECT_DIR$/contentstack/test_stack.py" />
         <option value="$PROJECT_DIR$/contentstack/contentstack_testcase.py" />
         <option value="$PROJECT_DIR$/content/hey.py" />
-        <option value="$PROJECT_DIR$/contentstack/group.py" />
-        <option value="$PROJECT_DIR$/contentstack/utils.py" />
         <option value="$PROJECT_DIR$/contentstack/errors.py" />
         <option value="$PROJECT_DIR$/tests/test_functions.py" />
         <option value="$PROJECT_DIR$/content/test_functions.py" />
         <option value="$PROJECT_DIR$/contentstack/HTTPConnection.py" />
         <option value="$PROJECT_DIR$/contentstack/query_result.py" />
         <option value="$PROJECT_DIR$/contentstack/sync_stack.py" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/tests/__init__.py" />
         <option value="$PROJECT_DIR$/runtests.py" />
         <option value="$PROJECT_DIR$/contentstack/query.py" />
         <option value="$PROJECT_DIR$/setup.py" />
-        <option value="$PROJECT_DIR$/contentstack/config.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/contentstack/__init__.py" />
-        <option value="$PROJECT_DIR$/contentstack/asset.py" />
         <option value="$PROJECT_DIR$/contentstack/entry.py" />
         <option value="$PROJECT_DIR$/contentstack/http_request.py" />
         <option value="$PROJECT_DIR$/contentstack/content_type.py" />
-        <option value="$PROJECT_DIR$/contentstack/stack.py" />
         <option value="$PROJECT_DIR$/tests/contentstack_testcase.py" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/contentstack/utils.py" />
+        <option value="$PROJECT_DIR$/contentstack/config.py" />
+        <option value="$PROJECT_DIR$/contentstack/__init__.py" />
+        <option value="$PROJECT_DIR$/contentstack/asset.py" />
+        <option value="$PROJECT_DIR$/contentstack/group.py" />
+        <option value="$PROJECT_DIR$/contentstack/asset_library.py" />
+        <option value="$PROJECT_DIR$/contentstack/stack.py" />
       </list>
     </option>
   </component>
@@ -144,16 +173,7 @@
             <path>
               <item name="contentstack-python" type="b2602c69:ProjectViewProjectNode" />
               <item name="contentstack-python" type="462c0819:PsiDirectoryNode" />
-              <item name="doc" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="contentstack-python" type="b2602c69:ProjectViewProjectNode" />
-              <item name="contentstack-python" type="462c0819:PsiDirectoryNode" />
               <item name="tests" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="contentstack-python" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
           </expand>
           <select />
@@ -238,6 +258,28 @@
     </option>
   </component>
   <component name="RunManager" selected="Python tests.pytest in contentstack_testcase.py">
+    <configuration name="asset_library" type="PythonConfigurationType" factoryName="Python">
+      <module name="contentstack-python" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/contentstack" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/contentstack/asset_library.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="asset_model" type="PythonConfigurationType" factoryName="Python">
       <module name="contentstack-python" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -282,68 +324,86 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_content_types" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="group" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="contentstack-python" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/contentstack" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_keywords" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;contentstack_testcase.ContentstackTestcase.test_content_types&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/contentstack/group.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_get_entries_by_uid" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="utils" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="contentstack-python" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/contentstack" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_keywords" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;contentstack_testcase.ContentstackTestcase.test_get_entries_by_uid&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/contentstack/utils.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_include_collaborators" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="Doctests in Stack (1)" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
       <module name="contentstack-python" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/contentstack" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_keywords" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;contentstack_testcase.ContentstackTestcase.test_include_collaborators&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/contentstack/stack.py" />
+      <option name="CLASS_NAME" value="Stack" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_CLASS" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_init_sync" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="Doctests in Stack" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
       <module name="contentstack-python" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/contentstack" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_keywords" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;contentstack_testcase.ContentstackTestcase.test_init_sync&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/contentstack/stack.py" />
+      <option name="CLASS_NAME" value="Stack" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_CLASS" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
       <method v="2" />
     </configuration>
     <configuration name="pytest in contentstack_testcase.py" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
@@ -365,10 +425,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python tests.pytest in contentstack_testcase.py" />
-        <item itemvalue="Python tests.pytest for contentstack_testcase.ContentstackTestcase.test_include_collaborators" />
-        <item itemvalue="Python tests.pytest for contentstack_testcase.ContentstackTestcase.test_init_sync" />
-        <item itemvalue="Python tests.pytest for contentstack_testcase.ContentstackTestcase.test_get_entries_by_uid" />
-        <item itemvalue="Python tests.pytest for contentstack_testcase.ContentstackTestcase.test_content_types" />
+        <item itemvalue="Python tests.Doctests in Stack (1)" />
+        <item itemvalue="Python tests.Doctests in Stack" />
+        <item itemvalue="Python.group" />
+        <item itemvalue="Python.utils" />
       </list>
     </recent_temporary>
   </component>
@@ -386,7 +446,7 @@
       <workItem from="1560843156657" duration="1985000" />
       <workItem from="1560849628032" duration="92984000" />
       <workItem from="1561352659922" duration="17181000" />
-      <workItem from="1561441166535" duration="32197000" />
+      <workItem from="1561441166535" duration="47929000" />
     </task>
     <task id="LOCAL-00001" summary="stack code refactored">
       <created>1560930443683</created>
@@ -458,43 +518,50 @@
       <option name="project" value="LOCAL" />
       <updated>1561468423442</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="request tuple (result, err) added">
+      <created>1561555769133</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1561555769133</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_content_types - 2019.06.26 at 18h 45m 09s.xml">
-      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_content_types" configurationId="tests" />
+    <history-entry file="Doctests_in_Stack_(1) - 2019.06.28 at 10h 48m 53s.xml">
+      <configuration name="Doctests in Stack (1)" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_in_contentstack_testcase_py - 2019.06.26 at 18h 50m 46s.xml">
+    <history-entry file="pytest_in_contentstack_testcase_py - 2019.06.28 at 10h 49m 00s.xml">
       <configuration name="pytest in contentstack_testcase.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_get_entries_by_uid - 2019.06.26 at 18h 52m 11s.xml">
-      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_get_entries_by_uid" configurationId="tests" />
-    </history-entry>
-    <history-entry file="pytest_in_contentstack_testcase_py - 2019.06.26 at 18h 53m 04s.xml">
+    <history-entry file="pytest_in_contentstack_testcase_py - 2019.06.28 at 11h 37m 50s.xml">
       <configuration name="pytest in contentstack_testcase.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_init_sync - 2019.06.26 at 18h 54m 47s.xml">
-      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_init_sync" configurationId="tests" />
-    </history-entry>
-    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_init_sync - 2019.06.26 at 18h 55m 21s.xml">
-      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_init_sync" configurationId="tests" />
-    </history-entry>
-    <history-entry file="pytest_in_contentstack_testcase_py - 2019.06.26 at 18h 56m 11s.xml">
+    <history-entry file="pytest_in_contentstack_testcase_py - 2019.06.28 at 11h 38m 14s.xml">
       <configuration name="pytest in contentstack_testcase.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_include_collaborators - 2019.06.26 at 18h 57m 23s.xml">
-      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_include_collaborators" configurationId="tests" />
+    <history-entry file="pytest_in_contentstack_testcase_py - 2019.06.28 at 11h 38m 39s.xml">
+      <configuration name="pytest in contentstack_testcase.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_include_collaborators - 2019.06.26 at 18h 57m 42s.xml">
-      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_include_collaborators" configurationId="tests" />
+    <history-entry file="pytest_in_contentstack_testcase_py - 2019.06.28 at 11h 39m 13s.xml">
+      <configuration name="pytest in contentstack_testcase.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_in_contentstack_testcase_py - 2019.06.26 at 18h 58m 22s.xml">
+    <history-entry file="pytest_in_contentstack_testcase_py - 2019.06.28 at 11h 39m 33s.xml">
+      <configuration name="pytest in contentstack_testcase.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="pytest_in_contentstack_testcase_py - 2019.06.28 at 11h 40m 08s.xml">
+      <configuration name="pytest in contentstack_testcase.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="pytest_in_contentstack_testcase_py - 2019.06.28 at 11h 40m 33s.xml">
+      <configuration name="pytest in contentstack_testcase.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="pytest_in_contentstack_testcase_py - 2019.06.28 at 11h 41m 30s.xml">
       <configuration name="pytest in contentstack_testcase.py" configurationId="tests" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="144588000" />
+    <option name="totallyTimeSpent" value="160320000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -507,21 +574,22 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23505655" />
-      <window_info id="Structure" order="1" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23505655" />
+      <window_info id="Structure" order="1" weight="0.24959612" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32876712" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.30273974" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4983845" weight="0.30273974" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49757674" weight="0.3958904" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32876712" />
-      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32876712" />
       <window_info anchor="bottom" id="Educational.CheckDetails" order="8" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.32876712" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5024233" side_tool="true" weight="0.3958904" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5016155" side_tool="true" weight="0.30273974" />
       <window_info anchor="bottom" id="Python Console" order="11" weight="0.32876712" />
       <window_info anchor="bottom" id="Docker" order="12" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="13" />
@@ -531,8 +599,8 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Database" order="3" weight="0.32956383" />
-      <window_info anchor="right" id="R Graphics" order="4" />
-      <window_info anchor="right" id="R Packages" order="5" />
+      <window_info anchor="right" id="R Graphics" order="4" weight="0.32956383" />
+      <window_info anchor="right" id="R Packages" order="5" weight="0.32956383" />
       <window_info anchor="right" id="SciView" order="6" weight="0.32956383" />
       <window_info anchor="right" id="Coverage" order="7" side_tool="true" />
     </layout>
@@ -574,17 +642,11 @@
     <MESSAGE value="requests implemented in stack" />
     <MESSAGE value="entry functions added" />
     <MESSAGE value="entry testcases added" />
-    <option name="LAST_COMMIT_MESSAGE" value="entry testcases added" />
+    <MESSAGE value="request tuple (result, err) added" />
+    <option name="LAST_COMMIT_MESSAGE" value="request tuple (result, err) added" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/contentstack/asset.py</url>
-          <line>52</line>
-          <option name="timeStamp" value="130" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -614,7 +676,8 @@
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_split.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_split Coverage Results" MODIFIED="1560866176695" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase___init___test_isupper.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.__init__.test_isupper Coverage Results" MODIFIED="1560864482836" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_content_types.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_content_types Coverage Results" MODIFIED="1561554905914" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
-    <SUITE FILE_PATH="coverage/contentstack_python$asset.coverage" NAME="asset Coverage Results" MODIFIED="1561554252219" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/contentstack" />
+    <SUITE FILE_PATH="coverage/contentstack_python$group.coverage" NAME="group Coverage Results" MODIFIED="1561643440699" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/contentstack" />
+    <SUITE FILE_PATH="coverage/contentstack_python$asset.coverage" NAME="asset Coverage Results" MODIFIED="1561616836101" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/contentstack" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_entry_get_create_by.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_entry_get_create_by Coverage Results" MODIFIED="1561467971019" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_entry_get_int.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_entry_get_int Coverage Results" MODIFIED="1561467576964" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$Doctests_in_content_type.coverage" NAME="Doctests in content_type Coverage Results" MODIFIED="1561317160420" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/contentstack" />
@@ -630,8 +693,8 @@
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_headers_add_remove.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_headers_add_remove Coverage Results" MODIFIED="1561299358660" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_entry_tags.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_entry_tags Coverage Results" MODIFIED="1561465788204" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$__init__.coverage" NAME="__init__ Coverage Results" MODIFIED="1561284579760" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
-    <SUITE FILE_PATH="coverage/contentstack_python$Doctests_in_Stack.coverage" NAME="Doctests in Stack Coverage Results" MODIFIED="1560877134444" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/contentstack" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_content_type.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_content_type Coverage Results" MODIFIED="1561374259678" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/contentstack_python$Doctests_in_Stack.coverage" NAME="Doctests in Stack Coverage Results" MODIFIED="1561699120866" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/contentstack" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_entry_title.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_entry_title Coverage Results" MODIFIED="1561465519475" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_entry_uid.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_entry_uid Coverage Results" MODIFIED="1561465914064" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_test_stack_TestStack.coverage" NAME="pytest for test_stack.TestStack Coverage Results" MODIFIED="1560843653735" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/contentstack" />
@@ -644,22 +707,23 @@
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_TestStack.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.TestStack Coverage Results" MODIFIED="1560843887274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test Coverage Results" MODIFIED="1560864206044" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_get_entries_by_uid.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_get_entries_by_uid Coverage Results" MODIFIED="1561555328279" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
-    <SUITE FILE_PATH="coverage/contentstack_python$pytest_in_contentstack_testcase_py.coverage" NAME="pytest in contentstack_testcase.py Coverage Results" MODIFIED="1561555668327" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/contentstack_python$pytest_in_contentstack_testcase_py.coverage" NAME="pytest in contentstack_testcase.py Coverage Results" MODIFIED="1561702250517" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_entry_get_string.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_entry_get_string Coverage Results" MODIFIED="1561466804956" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_http_request.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_http_request Coverage Results" MODIFIED="1561045341517" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_content_type_network_request.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_content_type_network_request Coverage Results" MODIFIED="1561445699428" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_entry_get.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_entry_get Coverage Results" MODIFIED="1561467129427" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
-    <SUITE FILE_PATH="coverage/contentstack_python$utils.coverage" NAME="utils Coverage Results" MODIFIED="1560923629975" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/contentstack" />
+    <SUITE FILE_PATH="coverage/contentstack_python$utils.coverage" NAME="utils Coverage Results" MODIFIED="1561630177645" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/contentstack" />
     <SUITE FILE_PATH="coverage/contentstack_python$Doctests_in_ContentType__2_.coverage" NAME="Doctests in ContentType (2) Coverage Results" MODIFIED="1561317364118" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/contentstack" />
     <SUITE FILE_PATH="coverage/contentstack_python$__init____1_.coverage" NAME="__init__ (1) Coverage Results" MODIFIED="1560844398729" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_stack_fetch_collaborators.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_stack_fetch_collaborators Coverage Results" MODIFIED="1561286093507" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_entry_get_create_at.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_entry_get_create_at Coverage Results" MODIFIED="1561467783901" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_stack.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_stack Coverage Results" MODIFIED="1560946992494" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/contentstack_python$asset_library.coverage" NAME="asset_library Coverage Results" MODIFIED="1561638883384" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/contentstack" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_endpoint.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_endpoint Coverage Results" MODIFIED="1560947236718" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_entry_to_json.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_entry_to_json Coverage Results" MODIFIED="1561466307896" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_in_test_functions_py.coverage" NAME="pytest in test_functions.py Coverage Results" MODIFIED="1560930412834" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase_test_entry_get_locale.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.test_entry_get_locale Coverage Results" MODIFIED="1561466208838" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
-    <SUITE FILE_PATH="coverage/contentstack_python$Doctests_in_Stack__1_.coverage" NAME="Doctests in Stack (1) Coverage Results" MODIFIED="1560877142524" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/contentstack" />
+    <SUITE FILE_PATH="coverage/contentstack_python$Doctests_in_Stack__1_.coverage" NAME="Doctests in Stack (1) Coverage Results" MODIFIED="1561699133193" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/contentstack" />
     <SUITE FILE_PATH="coverage/contentstack_python$pytest_for_contentstack_testcase_ContentstackTestcase___init___test_upper.coverage" NAME="pytest for contentstack_testcase.ContentstackTestcase.__init__.test_upper Coverage Results" MODIFIED="1560864858936" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
   </component>
   <component name="debuggerHistoryManager">
@@ -717,78 +781,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/json/decoder.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="293">
-          <caret line="354" selection-start-line="354" selection-end-line="354" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/contentstack/asset_model.py" />
-    <entry file="file://$PROJECT_DIR$/contentstack/entry_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="6" column="29" lean-forward="true" selection-start-line="6" selection-start-column="29" selection-end-line="6" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/contentstack/query_result.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/contentstack/sync_stack.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Library/Caches/PyCharm2019.1/python_stubs/642330568/builtins.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="5574" column="12" lean-forward="true" selection-start-line="5574" selection-start-column="12" selection-end-line="5574" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/venv/lib/python3.7/site-packages/_pytest/runner.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="122" selection-start-line="122" selection-end-line="122" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/venv/lib/python3.7/site-packages/_pytest/unittest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="223" selection-start-line="223" selection-end-line="223" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/venv/lib/python3.7/site-packages/requests/api.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="349">
-          <caret line="52" column="20" selection-start-line="52" selection-start-column="20" selection-end-line="52" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/.pytest_cache/v/cache/lastfailed">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/.pytest_cache/v/cache/nodeids">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/.pytest_cache/v/cache/stepwise">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/.pytest_cache/.gitignore">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/.pytest_cache/CACHEDIR.TAG">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/tests/.pytest_cache/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -800,13 +792,6 @@
     <entry file="file://$PROJECT_DIR$/content/test_functions.py" />
     <entry file="file://$PROJECT_DIR$/content/__init__.py" />
     <entry file="file://$PROJECT_DIR$/tests/__init__.py" />
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="6" column="1" lean-forward="true" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CHANGELOGS.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -824,9 +809,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/urllib/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/urllib/error.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="455">
@@ -841,14 +823,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/urllib/request.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-18719" />
-      </provider>
-    </entry>
-    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/urllib/response.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/urllib/robotparser.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1777" />
@@ -858,9 +832,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-4085" />
       </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/python-skeletons/py/error.py">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/LICENSE">
       <provider selected="true" editor-type-id="text-editor">
@@ -883,30 +854,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/setup.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="16" column="21" lean-forward="true" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#43#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/logging/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-274">
-          <caret line="1033" selection-start-line="1033" selection-end-line="1033" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/contentstack/config.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="624">
-          <caret line="39" lean-forward="true" selection-start-line="39" selection-end-line="39" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/unittest/case.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="138">
@@ -918,19 +865,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="418">
           <caret line="30" column="69" lean-forward="true" selection-start-line="30" selection-start-column="69" selection-end-line="30" selection-end-column="69" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/doc/testcase_screenshot.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/contentstack/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="27" selection-start-line="27" selection-end-line="27" />
-          <folding>
-            <element signature="e#1255#1279#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -976,9 +910,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/tests/contentstack_testcase.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="65" column="22" selection-start-line="65" selection-start-column="22" selection-end-line="65" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/contentstack/entry.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="321">
+        <state relative-caret-position="736">
           <caret line="247" column="38" lean-forward="true" selection-start-line="247" selection-start-column="38" selection-end-line="247" selection-end-column="38" />
           <folding>
             <element signature="e#1221#1258#0" expanded="true" />
@@ -986,27 +927,169 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/venv/lib/python3.7/site-packages/asset/resource.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-452">
+          <caret line="163" column="6" selection-start-line="163" selection-start-column="6" selection-end-line="163" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="5" column="3" lean-forward="true" selection-start-line="5" selection-start-column="3" selection-end-line="5" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/setup.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="161">
+          <caret line="22" selection-start-line="22" selection-end-line="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/doc/testcase_screenshot.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/doc/testcase_py date 26-june.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-12988" />
+      </provider>
+    </entry>
+    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/re.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1200">
+          <caret line="191" column="16" lean-forward="true" selection-start-line="191" selection-start-column="16" selection-end-line="191" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/python-skeletons/py/error.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/python-skeletons/pytest/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1714" />
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/python-skeletons/alembic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/python-skeletons/AUTHORS.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/python-skeletons/sys.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/contentstack/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="555">
+          <caret line="50" column="14" lean-forward="true" selection-start-line="50" selection-start-column="14" selection-end-line="50" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/logging/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="413">
+          <caret line="41" selection-start-line="41" selection-end-line="45" selection-end-column="32" />
+          <folding>
+            <element signature="e#1189#1260#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/_strptime.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="587">
+          <caret line="588" lean-forward="true" selection-start-line="588" selection-end-line="588" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/os.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-9583" />
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Caches/PyCharm2019.1/python_stubs/642330568/_json.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/urllib/response.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1152">
+          <caret line="72" column="22" lean-forward="true" selection-start-line="72" selection-start-column="22" selection-end-line="72" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/urllib/request.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7989">
+          <caret line="404" column="45" lean-forward="true" selection-start-line="404" selection-start-column="45" selection-end-line="404" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/urllib/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/contentstack/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="145">
+          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/contentstack/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="28" column="24" lean-forward="true" selection-start-line="28" selection-start-column="24" selection-end-line="28" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/contentstack/asset.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="481">
-          <caret line="94" column="10" selection-start-line="94" selection-start-column="10" selection-end-line="94" selection-end-column="10" />
+        <state relative-caret-position="707">
+          <caret line="55" column="50" lean-forward="true" selection-start-line="55" selection-start-column="50" selection-end-line="55" selection-end-column="50" />
+          <folding>
+            <element signature="e#1195#1232#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Caches/PyCharm2019.1/python_stubs/642330568/builtins.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="235">
+          <caret line="5274" column="8" selection-start-line="5274" selection-start-column="8" selection-end-line="5274" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/contentstack/group.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+          <folding>
+            <element signature="e#1147#1161#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/contentstack/asset_library.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="33" column="37" selection-start-line="33" selection-start-column="37" selection-end-line="33" selection-end-column="37" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/contentstack/stack.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="372">
-          <caret line="327" column="31" selection-start-line="327" selection-start-column="31" selection-end-line="327" selection-end-column="31" />
+        <state relative-caret-position="864">
+          <caret line="54" column="43" selection-start-line="54" selection-start-column="43" selection-end-line="54" selection-end-column="43" />
           <folding>
-            <element signature="e#1090#1103#0" expanded="true" />
+            <element signature="e#1090#1104#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/contentstack_testcase.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="61" column="34" lean-forward="true" selection-start-line="61" selection-start-column="34" selection-end-line="61" selection-end-column="34" />
         </state>
       </provider>
     </entry>

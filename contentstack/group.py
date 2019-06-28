@@ -24,11 +24,43 @@
  """
 import logging
 
+from contentstack.stack import Stack
 
-class Group:
+
+class Group(Stack):
     
-    def __init__(self):
+    def __init__(self, stack: Stack, dictionary: dict):
+        self._result_dict = dictionary
+        self._stack_instance = stack
         logging.info('Group initialised')
 
-    def callme(self):
+    def to_json(self) -> dict:
+        return self._result_dict
+
+    def get(self, key: str):
+        if self._result_dict is not None and key is not None:
+            if key in self._result_dict:
+                return self._result_dict[key]
+        else:
+            return None
+
+    def get_list(self, key: str) -> list:
+        is_list = self.get(key)
+        if list == type(is_list):
+            return is_list
+
+    def get_asset(self, key: str):
         pass
+
+    def get_assets(self, key: str) -> list:
+        pass
+
+    def get_group(self, key: str):
+        pass
+
+    def get_groups(self, key: str) -> list:
+        pass
+
+    def get_all_entries(self, key: str) -> list:
+        pass
+
