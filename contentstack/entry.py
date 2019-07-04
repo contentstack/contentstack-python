@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# Entry.py
-# Contentstack
 # Created by Shailesh on 22/06/19.
 # Copyright (c) 2012 - 2019 Contentstack. All rights reserved.
 
@@ -23,8 +19,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+
 from contentstack import http_request, stack, group
-import datetime
+
+"""
+contentstack.entry
+~~~~~~~~~~~~~~~~~~
+This module implements the Entry class.
+API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#entries
+"""
 
 
 class Entry(stack.Stack):
@@ -36,7 +39,14 @@ class Entry(stack.Stack):
         self._entry_url = str
         self._local_params: dict = {}
         self._stack_headers: dict = {}
-        self.__uid_for_except = []
+
+        self.__uid_for_except: list = []
+        self.__uid_for_only: list = []
+        self.__only_dict: dict = {}
+        self.__except_dic: list = []
+
+        self.__other_post_dict: list = {}
+        self.__reference_list: list = []
 
         self._result_json = dict
         self._uid = str
@@ -79,16 +89,17 @@ class Entry(stack.Stack):
 
     def configure(self, model: dict):
         self._result_json = model
-        self._title = self._result_json['title']
-        self._url = self._result_json['url']
-        self._uid = self._result_json['uid']
-        self._tags = self._result_json['tags']
-        self._created_by = self._result_json['created_by']
-        self._created_at = self._result_json['created_at']
-        self._updated_at = self._result_json['updated_at']
-        self._updated_by = self._result_json['updated_by']
-        self._locale = self._result_json['locale']
-        self._version = self._result_json['_version']
+        if self._result_json is not None:
+            self._title = self._result_json['title']
+            self._url = self._result_json['url']
+            self._uid = self._result_json['uid']
+            self._tags = self._result_json['tags']
+            self._created_by = self._result_json['created_by']
+            self._created_at = self._result_json['created_at']
+            self._updated_at = self._result_json['updated_at']
+            self._updated_by = self._result_json['updated_by']
+            self._locale = self._result_json['locale']
+            self._version = self._result_json['_version']
         return self
 
     def set_header(self, key, value):
@@ -154,49 +165,42 @@ class Entry(stack.Stack):
 
     def get_string(self, key):
         value = self.get(key)
-        if value is not None and type(value) == str:
+        if isinstance(value, str):
             return value
         else:
             return None
 
     def get_boolean(self, key):
         value = self.get(key)
-        if value is not None and type(value) == bool:
+        if isinstance(value, bool):
             return value
         else:
             return None
 
     def get_json(self, key):
         value = self.get(key)
-        if value is not None and type(value) == dict:
+        if isinstance(value, dict):
             return value
         else:
             return None
 
     def get_json_list(self, key):
         value = self.get(key)
-        if value is not None and type(value) == list:
+        if isinstance(value, list):
             return value
         else:
             return None
 
     def get_int(self, key):
         value = self.get(key)
-        if value is not None and type(value) == int:
+        if isinstance(value, int):
             return value
         else:
             return None
 
     def get_float(self, key):
         value = self.get(key)
-        if value is not None and type(value) == float:
-            return value
-        else:
-            return None
-
-    def get_date(self, key):
-        value = self.get(key)
-        if value is not None and type(value) == datetime.date:
+        if isinstance(value, float):
             return value
         else:
             return None
@@ -206,23 +210,58 @@ class Entry(stack.Stack):
         # return ''
 
     def get_created_at(self):
+        """
+        value of creation time of entry.
+     * [ Uses ]created_at = entry.get_created_at()
+     * </pre>
+        :return:
+        """
         return self._created_at
 
     def get_created_by(self):
+        """
+        Get uid who created this entry.
+        created_by = entry.get_created_by()
+        :return: str:
+        """
         return self._created_by
 
     def get_updated_at(self):
+        """
+        value of updating time of entry.
+        [Uses] updated_at = entry.get_updated_at()
+        :returns str:
+        """
         return self._updated_at
 
     def get_updated_by(self):
+        """
+        Get uid who updated this entry.
+        [Uses]  updated_by = entry.get_updated_by()
+        :return str:
+        """
         return self._updated_by
 
-    def get_asset(self, key: str) -> dict:
-        asset_object: dict = self.get_json(key)
-        asset = stack.Stack.asset().configure(asset_object)
+    def get_asset(self, key: str):
+        """
+        Get an asset from the entry
+        [Uses]
+        asset = entry.get_asset("key")
+        :param field_uid as key:
+        :return: asset
+        """
+        if key is not None:
+            asset_object = self.get_json(key)
+            asset = stack.Stack.asset().configure(asset_object)
         return asset
 
     def get_assets(self, key: str) -> list:
+        """
+        Get an assets from the entry. This works with multiple true fields
+        [Uses] assets = entry.get_assets("key")
+        :param key: str key
+        :return: list of Assets
+        """
         assets = []
         assets_list: list = self.get_json_list(key)
         for asset in assets_list:
@@ -231,6 +270,12 @@ class Entry(stack.Stack):
         return assets
 
     def get_group(self, key: str):
+        """
+        Get a group from entry.
+        [USES]: Group innerGroup = entry.getGroup("key")
+        :param key: field_uid as key.
+        :return: None
+        """
         if key is not None and self._result_json is not None:
             if key in self._result_json:
                 extract_json = self._result_json[key]
@@ -242,8 +287,10 @@ class Entry(stack.Stack):
     def get_groups(self, key):
         """
         Get a list of group from entry.
-        :param key:
-        :return:
+        This will work when group is multiple true.
+        :param key field_uid as key.
+        :return  list of group from entry
+        [Uses]: Group inner_group = entry.get_groups("key")
         """
         if key is not None and self._result_json is not None:
             group_list = []
@@ -256,29 +303,146 @@ class Entry(stack.Stack):
 
     # [INCOMPLETE]
     def get_all_entries(self, ref_key: str, ref_content_type: str):
+        """
+        :param ref_key: key of a reference field.
+        :param ref_content_type: class uid.
+        :return: list of  @Entry instances. Also specified contentType value will be set as class uid for all  :Entry instance.
+        #'blt5d4sample2633b' is a dummy Stack API key
+        #'blt6d0240b5sample254090d' is dummy access token.
+
+        Uses:
+
+        # stack = contentstack.Stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
+        # cs_query = stack.contentType("content_type_uid").query()
+        # cs_query.include_reference("for_bug")
+        # (resp, err) = csQuery.find()
+        # if err is None:
+        # list_query = cs_query.get_dict()
+        # for entry in list_query:
+        #      task_entry = entry.get_all_entries("for_task", "task")
+
+
+        """
         if self._result_json is not None and isinstance(self._result_json[ref_key], list):
             list_of_entries: list = self._result_json[ref_key]
             for entry in list_of_entries:
                 if ref_content_type is not None:
                     entry_instance = stack.content_type.ContentType(ref_content_type).entry()
 
-    def except_field_uid(self, field_uid: list) :
+    def except_field_uid(self, field_uid: list):
+        """
+        Specifies list of field uids that would be &#39excluded&#39 from the response.
+        //'blt5d4sample2633b' is a dummy Stack API key
+        //'blt6d0240b5sample254090d' is dummy access token.
+        stack = contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
+        entry = stack.content_type.ContentType("content_type_uid").entry("entry_uid")
+        entry.except(["name", "description"])
+        :param field_uid: field uid  which get &#39excluded&#39 from the response.
+        :return: entry object, so you can chain this call
+        """
         if field_uid is not None and len(field_uid) > 0:
             for uid in field_uid:
                 self.__uid_for_except.append(uid)
         return self
 
-    def include_reference(self, reference_field=None, *reference_fields):
+    def include_reference(self, *reference_fields):
+        """
+        Add a constraint that requires a particular reference key details.
+        //'blt5d4sample2633b' is a dummy Stack API key
+        //'blt6d0240b5sample254090d' is dummy access token.
+        [Uses]
+        stack = contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
+        entry = stack.contentType("content_type_uid").entry("entry_uid")
+        entry.includeReference("referenceUid")
+        :param reference_fields: list of reference_field key that to be constrained.
+        :return: entry object, so you can chain this call.
+        """
+        # if reference_field is not None:
+        #    self.__reference_list.append(reference_field)
+        #    self.__other_post_dict["include[]"] = self.__reference_list
+        if reference_fields is not None:
+            for field in reference_fields:
+                self.__reference_list.append(field)
+            self.__other_post_dict["include[]"] = self.__reference_list
         pass
 
-    def only(self, *field_uid):
-        pass
+    def only(self, field_uid: list):
+        """
+        # Specifies an array of &#39;only&#39; keys in BASE object that would be &#39;included&#39; in the response.
+        # 'blt5d4sample2633b' is a dummy Stack API key
+        # 'blt6d0240b5sample254090d' is dummy access token.
 
-    def only_with_reference_uid(self):
-        pass
+        [USES]
+        # stack = contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
+        # entry = stack.contentType("content_type_uid").entry("entry_uid")
+        # entry.only(["name", "description"])
+        # :param field_uid: list  of the &#39;only&#39; reference keys to be included in response.
+        # :return: Entry object, so you can chain this call.
+        """
+        if field_uid is not None and len(field_uid) > 0:
+            for field in field_uid:
+                self.__uid_for_only.append(field)
+            return self
 
-    def except_with_reference_uid(sel):
-        pass
+    def only_with_reference_uid(self, field_uid: list, reference_field_uid: str):
+        """
+        :param field_uid: list of the &#39;only&#39; reference keys to be included in response.
+        :param reference_field_uid: Key who has reference to some other class object..
+        :return: Entry object, so you can chain this call.
+
+        Uses:
+        //'blt5d4sample2633b' is a dummy Stack API key
+        //'blt6d0240b5sample254090d' is dummy access token.
+        stack = contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
+        entry = stack.content_type.ContentType("content_type_uid").entry("entry_uid")
+        array.append("description")
+        array.append("name")
+        entry.only_with_reference_uid(array, "reference_uid")
+        """
+        if field_uid is not None and reference_field_uid is not None:
+            field_value_list: list = []
+            for field in field_uid:
+                field_value_list.append(field)
+            self.__only_dict[reference_field_uid] = field_value_list
+            self.include_reference(reference_field_uid)
+
+    def except_with_reference_uid(self, field_uid: list, reference_field_uid: str):
+        """
+        :param field_uid: field_uid list of the &#39;except&#39; reference keys to be excluded in response.
+        :param reference_field_uid: Key who has reference to some other class object.
+        :return: Entry object, so you can chain this call.
+
+        Uses:
+
+        stack = contentstack.stack( "blt5d4sample2633b", "blt6d0240b5sample254090d", "stag");
+        entry = stack.contentType("content_type_uid").entry("entry_uid")
+        array.append("description")
+        array.append("name")
+        entry.except_with_reference_uid(array, "reference_uid");
+        """
+        if field_uid is not None and reference_field_uid is not None:
+            field_value_list: list = []
+            for field in field_uid:
+                field_value_list.append(field)
+            self.__uid_for_except[reference_field_uid] = field_value_list
+            self.include_reference(reference_field_uid)
+
+    def set_include_dict(self, main_dict: dict):
+
+        for key, value in self.__other_post_dict:
+            main_dict[key] = value
+        if self.__uid_for_only is not None and len(self.__uid_for_only) > 0:
+            main_dict["only[BASE][]"] = self.__uid_for_only
+            self.__uid_for_only = None
+        if self.__uid_for_except is not None and len(self.__uid_for_except) > 0:
+            main_dict["except[BASE][]"] = self.__uid_for_except
+            self.__uid_for_except = None
+        if self.__except_dic is not None and len(self.__except_dic) > 0:
+            main_dict["except"] = self.__except_dic
+            self.__except_dic = None
+        if self.__only_dict is not None and len(self.__only_dict) > 0:
+            main_dict["only"] = self.__only_dict
+            self.__only_dict = None
 
     def fetch(self) -> tuple:
         https_request = http_request.HTTPRequestConnection(self._entry_url, self._local_params, self._stack_headers)
@@ -287,3 +451,8 @@ class Entry(stack.Stack):
             result = response['entry']
             self.configure(result)
         return response, error
+
+
+entry = Entry('session', "blt343434343434")
+include = ['dewdewd', 'ewdwedw', 'ewdwwdwd', 'wdwdwqdwd', 'dwdwdwdwd']
+entry.include_reference(include)

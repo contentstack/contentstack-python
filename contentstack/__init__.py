@@ -23,8 +23,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Export module packages."""
-
 # from .stack import Stack
 from .entry import Entry
 from .asset import Asset
@@ -38,7 +36,7 @@ from .http_request import HTTPRequestConnection
 
 __author__ = "Shailesh Mishra <mshaileshr@gmail.com>"
 __status__ = "debug"
-__date__ = "27 June 2019"
+__date__ = "01 July 2019"
 __version__ = "1.0.0"
 __endpoint__ = "cdn.contentstack.io"
 

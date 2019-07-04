@@ -176,7 +176,7 @@ class Stack(object):
         """
         assets = contentstack.Asset(uid)
         assets.set_stack_instance(self)
-        return assets
+        return assets, self
 
     def asset_library(self):
 
@@ -184,8 +184,7 @@ class Stack(object):
         :return: asset_library
         """
         library = contentstack.AssetLibrary()
-        library.set_stack_instance(self)
-        return library
+        return library, self
 
     def get_application_key(self):
 

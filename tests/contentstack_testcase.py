@@ -287,5 +287,6 @@ class ContentstackTestcase(TestCase):
     def test_entry_get_asset(self):
         entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
         entry_instance.set_locale('en-us')
+        entry_instance.get_asset("key")
         result = entry_instance.fetch()
         # incomplete
