@@ -1,6 +1,9 @@
+import urllib.parse
 from urllib import parse
+
 import requests
 from requests import Response
+
 from contentstack import config
 
 
@@ -19,11 +22,11 @@ class HTTPRequestConnection(object):
             self._query_prams['environment'] = self._local_headers['environment']
 
     def http_request(self) -> tuple:
+        print("prams", self._query_prams.__str__())
         payload = parse.urlencode(query=self._query_prams, encoding='UTF-8')
         print("encoded prams", payload)
         response: Response = requests.get(self.url_path, params=payload, headers=self._local_headers)
         var_url = response.url
-
         if response.ok:
             self.result = response.json()
         else:

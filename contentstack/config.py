@@ -20,39 +20,41 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
- """
 
-import logging
+ """
 
 
 class Config:
 
-    def __init__(self, host_url: str = 'cdn.contentstack.io'):
-        self.host_url = host_url
-        self.api_version: str = 'v3'
-        self.http_protocol: str = 'https://'
+    def __init__(self):
+        self.default_config = dict(protocol="https", host="cdn.contentstack.io", port=443, version="v3", urls={
+            "sync": "/stacks/sync",
+            "content_types": "/content_types/",
+            "entries": "/entries/",
+            "assets": "/assets/",
+            "environments": "/environments/"
+        })
 
-    def set_host(self, host_url=None):
-        logging.info("set host", host_url)
-        self.host_url = host_url
-        return self
+    def host(self, host_url=None):
+        if host_url is not None:
+            self.default_config["host"] = host_url
+        return self.default_config["host"]
 
-    def get_host(self):
-        logging.info('getting host url', self.host_url)
-        return self.host_url
+    def version(self):
+        return self.default_config["host"]
 
-    def get_version(self):
-        logging.info('getting api version', self.api_version)
-        return self.api_version
-
-    def get_http_protocol(self):
-        logging.info('get http protocol', self.http_protocol)
-        return self.http_protocol
+    def protocol(self):
+        return self.default_config["protocol"]
 
     def get_endpoint(self, url_path):
-        api_version: str = self.get_version()
-        host_url = self.get_host()
-        http_protocol = self.get_http_protocol()
-        config_url = "{0}{1}/{2}/{3}".format(http_protocol, host_url, api_version, url_path)
+        config_url = "{0}{1}/{2}/{3}".format(self.protocol(), self.host(), self.version(), url_path)
         return config_url
+
+    def hiShailesh(self):
+        print("Something")
+
+
+config = Config()
+host = config.host("stag-cdn.contentstack.io")
+print(host)
+
