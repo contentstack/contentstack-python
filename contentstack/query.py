@@ -474,7 +474,6 @@ class Query:  # (Stack):
             self._urlQueries["asc"] = key
         return self
 
-
     def descending(self, key):
 
         """
@@ -563,7 +562,6 @@ class Query:  # (Stack):
             self._objectUidForInclude.append(reference_field_uid)
 
         return self
-
 
     def except_with_reference_uid(self, field_uid: list, reference_field_uid: str):
 
@@ -843,11 +841,9 @@ class Query:  # (Stack):
         pass
 
 
-
 query_cs = Query('product')
 query_cs.set_header('api_key', 'blt20962a819b57e233')
 query_cs.set_header('access_token', 'blt01638c90cc28fb6f')
 query_cs.set_header('environment', 'production')
 query_cs.set_locale("en-us")
 query_cs.contained_in('contain', ["shailesh", "Ramesh", "Suresh"])
-

@@ -25,8 +25,16 @@
 
 import logging
 
+"""
+    contentstack.error
+    ~~~~~~~~~~~~~~~~~~
+    This module implements the Error class.
+    API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#error
+
+"""
 
 class HTTPError(Exception):
+
     errors_str = {
 
         'error_invalid_json': "Please provide valid JSON.",

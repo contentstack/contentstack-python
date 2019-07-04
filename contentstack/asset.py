@@ -178,7 +178,7 @@ class Asset(Stack):
         (response, error) = asset_request.http_request()
         if error is None:
             response = response['asset']
-            response = AssetModel(response)
+            #response = AssetModel(response)
             return response, error
         else:
             return response, error
