@@ -21,10 +21,10 @@
      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
      SOFTWARE.
  """
-from contentstack.stack import Stack
-from contentstack import http_request
+from contentstack import http_request, Entry
 from contentstack.query import Query
-from contentstack.entry import Entry
+# from contentstack.entry import Entry
+from contentstack.stack import Stack
 
 
 class ContentType(Stack):

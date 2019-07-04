@@ -1,8 +1,7 @@
+from urllib import parse
 import requests
-from urllib3.util import timeout
+from requests import Response
 from contentstack import config
-import urllib.parse
-import logging
 
 
 class HTTPRequestConnection(object):
@@ -20,7 +19,11 @@ class HTTPRequestConnection(object):
             self._query_prams['environment'] = self._local_headers['environment']
 
     def http_request(self) -> tuple:
-        response = requests.get(self.url_path, params=self._query_prams, headers=self._local_headers)
+        payload = parse.urlencode(query=self._query_prams, encoding='UTF-8')
+        print("encoded prams", payload)
+        response: Response = requests.get(self.url_path, params=payload, headers=self._local_headers)
+        var_url = response.url
+
         if response.ok:
             self.result = response.json()
         else:

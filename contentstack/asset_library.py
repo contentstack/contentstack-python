@@ -25,6 +25,15 @@
 
 from contentstack import http_request
 
+"""
+contentstack.asset_library
+~~~~~~~~~~~~~~~~~~
+This module implements the AssetLibrary class.
+API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#assets
+
+"""
+
+
 
 class AssetLibrary():
 
