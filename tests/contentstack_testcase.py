@@ -1,4 +1,5 @@
 # __init__.py
+
 # Contentstack testcases
 # Created by Shailesh on 22/06/19.
 # Copyright (c) 2012 - 2019 Contentstack. All rights reserved.
@@ -22,8 +23,9 @@
 # SOFTWARE.
 
 from unittest import TestCase
-from contentstack import config
+from contentstack import config, Asset
 from contentstack.stack import Stack
+import logging
 
 
 # logger = logging.getLogger('ContentstackTestcase')
@@ -290,3 +292,13 @@ class ContentstackTestcase(TestCase):
         entry_instance.get_asset("key")
         result = entry_instance.fetch()
         # incomplete
+
+
+
+    # [ASSETS]
+
+    def test_init_asset(self):
+        asset: Asset = self.production_stack.asset('some_uid')
+        asset.add_params('ewqweed')
+
+

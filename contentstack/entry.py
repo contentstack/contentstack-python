@@ -20,7 +20,7 @@
 # SOFTWARE.
 
 
-from contentstack import http_request, stack, group
+from contentstack import http_request, stack, group, Asset
 
 """
 contentstack.entry
@@ -34,6 +34,8 @@ class Entry(stack.Stack):
 
     def __init__(self, content_type_id, entry_uid=None):
 
+        self.asset = Asset()
+
         self._uid = entry_uid
         self._content_type_id = content_type_id
         self._entry_url = str
@@ -44,7 +46,6 @@ class Entry(stack.Stack):
         self.__uid_for_only: list = []
         self.__only_dict: dict = {}
         self.__except_dic: list = []
-
         self.__other_post_dict: list = {}
         self.__reference_list: list = []
 
@@ -61,73 +62,86 @@ class Entry(stack.Stack):
         self._updated_by = str
         self._version = str
 
-    def set_content_type_instance(self, entry_url_path: str, stack_headers):
-        self._entry_url = entry_url_path
-        self._stack_headers = stack_headers
-        print(self._entry_url)
+    def set_content_type_instance(self, entry_url_path: str, stack_headers: dict):
+        if entry_url_path is not None and stack_headers is not None:
+            if isinstance(entry_url_path, str) and isinstance(stack_headers, dict):
+                self._entry_url = entry_url_path
+                for key, value in stack_headers:
+                    self._stack_headers[key] = value
+                self._stack_headers = stack_headers
         return self
 
-    def set_headers(self, local_header: str):
-        self._stack_headers = local_header
+    def set_headers(self, local_header: dict):
+        if local_header is not None and isinstance(local_header, dict):
+            for key, value in local_header:
+                self._stack_headers[key] = value
         return self
 
     def set_entry_uid(self, entry_uid: str):
-        if entry_uid is not None:
+        if entry_uid is not None and isinstance(entry_uid, str):
             self._uid = entry_uid
+        return self
 
     def add_params(self, key: str, value):
-        self._local_params[key] = value
+        if key is not None and value is not None:
+            if isinstance(key, str) and isinstance(value, str):
+                self._local_params[key] = value
         return self
 
     def set_version(self, version: str):
-        self._local_params["version"] = version
+        if version is not None and isinstance(version, str):
+            self._local_params["version"] = version
         return self
 
     def set_locale(self, locale_code):
-        self._local_params["locale"] = locale_code
+        if locale_code is not None and isinstance(locale_code, str):
+            self._local_params["locale"] = locale_code
         return self
 
     def configure(self, model: dict):
-        self._result_json = model
-        if self._result_json is not None:
-            self._title = self._result_json['title']
-            self._url = self._result_json['url']
-            self._uid = self._result_json['uid']
-            self._tags = self._result_json['tags']
-            self._created_by = self._result_json['created_by']
-            self._created_at = self._result_json['created_at']
-            self._updated_at = self._result_json['updated_at']
-            self._updated_by = self._result_json['updated_by']
-            self._locale = self._result_json['locale']
-            self._version = self._result_json['_version']
+        if model is not None and isinstance(model, dict):
+            self._result_json = model
+
+            if self._result_json is not None:
+
+                self._title = self._result_json['title']
+                self._url = self._result_json['url']
+                self._uid = self._result_json['uid']
+                self._tags = self._result_json['tags']
+                self._created_by = self._result_json['created_by']
+                self._created_at = self._result_json['created_at']
+                self._updated_at = self._result_json['updated_at']
+                self._updated_by = self._result_json['updated_by']
+                self._locale = self._result_json['locale']
+                self._version = self._result_json['_version']
+
         return self
 
     def set_header(self, key, value):
-        """
-        [Uses]: header = set_header('key', 'value')
-        """
+        """ [Uses]: header = set_header('key', 'value') """
         if key is not None and value is not None:
-            self._stack_headers[key] = value
+            if isinstance(key, str) and isinstance(value, str):
+                self._stack_headers[key] = value
+
+        return self
 
     def remove_header(self, key):
         """
         [Uses]: header = remove_header('key')
+        :param key:
+        :return Entry:
         """
-        if key in self._stack_headers:
-            self._stack_headers.pop(key)
+        if key is not None and isinstance(key, str):
+            if key in self._stack_headers:
+                self._stack_headers.pop(key)
+        return self
 
     def get_title(self):
-
-        """
-        [Uses]: title = get_title()
-        """
+        """ title = entry.get_title() """
         return self._title
 
     def get_url(self):
-
-        """
-        [Uses]: url = get_url()
-        """
+        """ [Uses]: url = entry.get_url() """
         return self._url
 
     def get_tags(self):
@@ -205,16 +219,12 @@ class Entry(stack.Stack):
         else:
             return None
 
-        # def parse_date(self, raw_date, timezone=None):
-        # x = datetime.datetime(2018, 6, 1)
-        # return ''
 
     def get_created_at(self):
         """
         value of creation time of entry.
-     * [ Uses ]created_at = entry.get_created_at()
-     * </pre>
-        :return:
+        [Uses] created_at = entry.get_created_at()
+        :return: str
         """
         return self._created_at
 
@@ -251,9 +261,10 @@ class Entry(stack.Stack):
         :return: asset
         """
         if key is not None:
-            asset_object = self.get_json(key)
-            asset = stack.Stack.asset().configure(asset_object)
-        return asset
+            asset_response = self.get_json(key)
+            if asset_response is not None and isinstance(asset_response, dict):
+                self.asset = self.asset.configure(asset_response)
+        return self.asset
 
     def get_assets(self, key: str) -> list:
         """
@@ -263,10 +274,13 @@ class Entry(stack.Stack):
         :return: list of Assets
         """
         assets = []
-        assets_list: list = self.get_json_list(key)
-        for asset in assets_list:
-            asset_obj = stack.Stack.asset().configure(asset)
-            assets.append(asset_obj)
+        if key is not None and isinstance(key, str):
+            assets_list = self.get_json_list(key)
+            if isinstance(assets_list, list):
+                for asset in assets_list:
+                    if isinstance(asset, dict):
+                        self.asset = self.asset.configure(asset)
+                        assets.append(self.asset)
         return assets
 
     def get_group(self, key: str):
@@ -451,8 +465,3 @@ class Entry(stack.Stack):
             result = response['entry']
             self.configure(result)
         return response, error
-
-
-entry = Entry('session', "blt343434343434")
-include = ['dewdewd', 'ewdwedw', 'ewdwwdwd', 'wdwdwqdwd', 'dwdwdwdwd']
-entry.include_reference(include)

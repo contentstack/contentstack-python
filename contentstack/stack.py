@@ -25,7 +25,7 @@ SOFTWARE.
 import logging
 import urllib
 import contentstack
-from contentstack import content_type
+from contentstack import content_type, Asset
 from contentstack import errors as err
 from contentstack import http_request
 
@@ -174,9 +174,9 @@ class Stack(object):
 
         This call fetches the latest version of a specific asset of a particular stack.
         """
-        assets = contentstack.Asset(uid)
+        assets = Asset(uid)
         assets.set_stack_instance(self)
-        return assets, self
+        return assets
 
     def asset_library(self):
 
