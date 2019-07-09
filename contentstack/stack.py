@@ -24,9 +24,7 @@ SOFTWARE.
 """
 import logging
 import contentstack
-from contentstack import errors as err
-import contentstack.content_type
-import contentstack.asset
+from contentstack import errors as err, ContentType
 import contentstack.entry
 from contentstack import http_request
 
@@ -41,16 +39,7 @@ API Reference: [https://www.contentstack.com/docs/guide/stack]
 """
 
 
-# logger = logging.getLogger(__name__)
-# logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.DEBUG)
-
-
 class Stack(object):
-
-    """
-    # >>> import contentstack
-    # >>> stack = contentstack.Stack('blt20962a819b57e233', 'blt01638c90cc28fb6f', 'development')
-    """
 
     def __init__(self, api_key: str, access_token: str, environment: str, configs: contentstack.config.Config = None):
         """
@@ -64,8 +53,7 @@ class Stack(object):
         :param environment:
         :param configs:
         """
-        print('initialisation with api_key {0}, access_token {1}, environment {2}:'
-              .format(api_key, access_token, environment))
+        print('init with api_key {0}, access_token {1}, environment {2}:'.format(api_key, access_token, environment))
 
         self._api_key = api_key
         self._access_token = access_token
@@ -115,6 +103,7 @@ class Stack(object):
         return self
 
     def content_type(self, content_type_id: str):
+
         """
         Fetches a Content Type by content_type_id.
         Content type defines the structure or schema of a page or a section of your web or mobile property.
@@ -125,8 +114,9 @@ class Stack(object):
         :return: :class:`ContentType <contentstack.content_type.ContentType>` object.
         :return type: contentstack.content_type.ContentType
         """
-        ct_path = contentstack.ContentType(content_type_id, self.local_headers)
-        logging.info('type', type(ct_path))
+        from contentstack import ContentType
+        ct_path = ContentType(content_type_id)
+        ct_path._headers(self.local_headers)
         return ct_path
 
     def content_types(self):
@@ -169,17 +159,16 @@ class Stack(object):
 
         This call fetches the latest version of a specific asset of a particular stack.
         """
+        from contentstack import Asset
+
         assets = Asset(uid)
         assets.set_stack_instance(self)
         return assets
 
-    def asset_library(self):
-
-        """
-        :return: asset_library
-        """
-        library = AssetLibrary()
-        return library
+    @staticmethod
+    def asset_library():
+        from contentstack import AssetLibrary
+        return AssetLibrary()
 
     def get_application_key(self):
 
@@ -241,11 +230,12 @@ class Stack(object):
             self._image_transform_url += '?{0}'.format('&'.join(args))
         return self._image_transform_url
 
-
     def get_collaborators(self):
+
         """
         collaborators with whom the stacks are shared.
         A detailed information about each collaborator is returned.
+
         """
         self._stack_query['include_collaborators'] = 'true'
         return self
@@ -260,6 +250,7 @@ class Stack(object):
         return self
 
     def get_included_discrete_variables(self):
+
         """
         view the access token of your stack.
         """
@@ -267,6 +258,7 @@ class Stack(object):
         return self
 
     def include_count(self):
+
         """
         the total count of entries available in a content type.
         """
@@ -274,6 +266,7 @@ class Stack(object):
         return self
 
     def sync_pagination(self, pagination_token: str):
+
         """
         If the result of the initial sync (or subsequent sync) contains more than 100 records,
         the response would be paginated. It provides pagination token in the response. However,
@@ -292,6 +285,7 @@ class Stack(object):
         return sync_result, error
 
     def sync_token(self, sync_token):
+
         """
         You can use the sync token (that you receive after initial sync)
         to get the updated content next time.
@@ -361,23 +355,17 @@ class Stack(object):
         self.local_headers['api_key'] = self._api_key
         self.local_headers['access_token'] = self._access_token
         self.local_headers['environment'] = self._environment
-
         logging.debug('contentstack logged in')
 
     def fetch(self) -> tuple:
         https_request = http_request.HTTPRequestConnection('stacks', self._stack_query, self.local_headers)
         return https_request.http_request()
 
-check_image_tans = Stack('blt3749375','763289364364', 'dev')
-check_image_tans.image_transform('www.contenstack.com/args', Firstname="Sita", Lastname="Sharma", Age=22, Phone=1234567890)
-
-
 
 class SyncStack(object):
 
     def __init__(self, json_dict: object) -> object:
         self.__sync_dict = json_dict
-
         if self.__sync_dict is not None:
             if "items" in self.__sync_dict:
                 self.__items = self.__sync_dict["items"]
