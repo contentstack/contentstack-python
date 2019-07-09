@@ -20,9 +20,12 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
 import contentstack
 from contentstack import http_request
-from contentstack.stack import Stack
+import requests
+import platform
+
 
 """
 contentstack.asset
@@ -33,7 +36,7 @@ API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#asse
 """
 
 
-class Asset(Stack):
+class Asset():
 
     """
     Assets refer to all the media files (images, videos, PDFs, audio files, and so on) uploaded
@@ -58,9 +61,8 @@ class Asset(Stack):
     def __init__(self, asset_uid: str = None):
         self.__response = None
         self.__asset_url_path: str = "assets"
-        self.__stack = Stack
         self.__local_params = {}
-        self.__local_headers = Stack.get_headers()
+        self.__local_headers = {}
 
         self.__file_name = None
         self.__file_size = None
@@ -79,7 +81,8 @@ class Asset(Stack):
             self.__asset_url_path = asset_url.format(self.__asset_uid)
 
     def set_stack_instance(self, stack):
-        self.__stack = stack
+        from .stack import Stack
+        self.__stack = Stack()
         self.__local_headers = stack.local_headers
         self.__local_headers = stack.get_headers()
 

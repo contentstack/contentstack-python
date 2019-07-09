@@ -20,7 +20,7 @@
 # SOFTWARE.
 
 
-from contentstack import http_request, stack, group, Asset
+
 
 """
 contentstack.entry
@@ -30,11 +30,11 @@ API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#entr
 """
 
 
-class Entry(stack.Stack):
+
+class Entry():
 
     def __init__(self, content_type_id, entry_uid=None):
 
-        self.asset = Asset()
 
         self._uid = entry_uid
         self._content_type_id = content_type_id
@@ -46,7 +46,7 @@ class Entry(stack.Stack):
         self.__uid_for_only: list = []
         self.__only_dict: dict = {}
         self.__except_dic: list = []
-        self.__other_post_dict: list = {}
+        self.__other_post_dict: list = []
         self.__reference_list: list = []
 
         self._result_json = dict
@@ -290,11 +290,12 @@ class Entry(stack.Stack):
         :param key: field_uid as key.
         :return: None
         """
+        from contentstack import Group
         if key is not None and self._result_json is not None:
             if key in self._result_json:
                 extract_json = self._result_json[key]
                 if isinstance(extract_json, dict):
-                    return group.Group(extract_json)
+                    return Group(extract_json)
         else:
             return None
 
@@ -337,11 +338,14 @@ class Entry(stack.Stack):
 
 
         """
+        from contentstack import ContentType
+
         if self._result_json is not None and isinstance(self._result_json[ref_key], list):
             list_of_entries: list = self._result_json[ref_key]
             for entry in list_of_entries:
                 if ref_content_type is not None:
-                    entry_instance = stack.content_type.ContentType(ref_content_type).entry()
+                    entry_instance = ContentType(ref_content_type).entry()
+
 
     def except_field_uid(self, field_uid: list):
         """
@@ -459,7 +463,8 @@ class Entry(stack.Stack):
             self.__only_dict = None
 
     def fetch(self) -> tuple:
-        https_request = http_request.HTTPRequestConnection(self._entry_url, self._local_params, self._stack_headers)
+        from contentstack import HTTPRequestConnection
+        https_request = HTTPRequestConnection(self._entry_url, self._local_params, self._stack_headers)
         (response, error) = https_request.http_request()
         if error is None:
             result = response['entry']
