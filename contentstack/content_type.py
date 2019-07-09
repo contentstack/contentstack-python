@@ -17,24 +17,21 @@
    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
  """
-from contentstack import http_request, Entry
+from contentstack import http_request
 from contentstack.query import Query
-from contentstack.stack import Stack
 
 
-class ContentType(Stack):
+class ContentType():
 
     def __init__(self, content_type_uid: str):
-
-        self._entry_instance: Entry
         self._query_instance: Query
         self._entry_uid = None
         self._content_type_uid = content_type_uid
-        self._entry_instance = Entry(content_type_id=self._content_type_uid, entry_uid=self._entry_uid)
         self._query_instance = Query(self._content_type_uid)
 
-        self._stack_headers = Stack.get_headers()
+        # self._stack_headers = Stack.get_headers()
         self._local_params: dict = {}
 
     def set_header(self, key, value):
@@ -59,12 +56,15 @@ class ContentType(Stack):
         :return: {Entry}
 
         """
+        from contentstack import Entry
+
+        _entry_instance: Entry = Entry(content_type_id=self._content_type_uid, entry_uid=self._entry_uid)
         self._entry_uid = entry_uid
         if self._entry_uid is not None:
-            self._entry_instance.set_entry_uid(self._entry_uid)
+            _entry_instance.set_entry_uid(self._entry_uid)
         entry_url = self.__get_entry_url()
-        self._entry_instance.set_content_type_instance(entry_url, self._stack_headers)
-        return self._entry_instance
+        _entry_instance.set_content_type_instance(entry_url, self._stack_headers)
+        return _entry_instance
 
     def query(self):
 

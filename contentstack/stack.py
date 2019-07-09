@@ -23,10 +23,11 @@ SOFTWARE.
  
 """
 import logging
-import urllib
 import contentstack
-from contentstack import content_type, Asset
 from contentstack import errors as err
+import contentstack.content_type
+import contentstack.asset
+import contentstack.entry
 from contentstack import http_request
 
 """
@@ -45,10 +46,10 @@ API Reference: [https://www.contentstack.com/docs/guide/stack]
 
 
 class Stack(object):
-    """
-    >>> import contentstack
-    >>> stack = contentstack.Stack('blt20962a819b57e233', 'blt01638c90cc28fb6f', 'development')
 
+    """
+    # >>> import contentstack
+    # >>> stack = contentstack.Stack('blt20962a819b57e233', 'blt01638c90cc28fb6f', 'development')
     """
 
     def __init__(self, api_key: str, access_token: str, environment: str, configs: contentstack.config.Config = None):
@@ -72,7 +73,7 @@ class Stack(object):
 
         if configs is not None:
             self._configs = configs
-            self.set_config(configs=configs)
+            self.config(configs=configs)
 
         self._initialise_stack()
         # declare stack class variables
@@ -100,7 +101,7 @@ class Stack(object):
                 'Environment can not be Empty.'
             )
 
-    def set_config(self, configs: contentstack.config.Config) -> contentstack.config.Config:
+    def config(self, configs: contentstack.config.Config) -> contentstack.config.Config:
         """
         :type configs: object
         :param configs:
@@ -113,12 +114,6 @@ class Stack(object):
         self.local_headers['api_key'] = api_key
         return self
 
-    def _get_url(self, url: str) -> object:
-        api_version: str = self._configs.get_version()
-        host_url = self._configs.get_host()
-        http_protocol = self._configs.get_http_protocol()
-        return "/{0}/{1}/{2}/{3}".format(http_protocol, host_url, api_version, url)
-
     def content_type(self, content_type_id: str):
         """
         Fetches a Content Type by content_type_id.
@@ -130,7 +125,7 @@ class Stack(object):
         :return: :class:`ContentType <contentstack.content_type.ContentType>` object.
         :return type: contentstack.content_type.ContentType
         """
-        ct_path = content_type.ContentType(content_type_id, self.local_headers)
+        ct_path = contentstack.ContentType(content_type_id, self.local_headers)
         logging.info('type', type(ct_path))
         return ct_path
 
@@ -145,8 +140,8 @@ class Stack(object):
         :rtype: List of contentful.content_type.ContentType
 
         Usage:
-            >>> stack = Stack('blt20962a819b57e233', 'blt01638c90cc28fb6f', 'development')
-            >>> content_types = stack.content_types()
+        # >>> stack = Stack('blt20962a819b57e233', 'blt01638c90cc28fb6f', 'development')
+        # >>> content_types = stack.content_types()
         """
         logging.info('stack', 'get content types')
         content_types_query: dict = {'include_count': 'true'}
@@ -183,8 +178,8 @@ class Stack(object):
         """
         :return: asset_library
         """
-        library = contentstack.AssetLibrary()
-        return library, self
+        library = AssetLibrary()
+        return library
 
     def get_application_key(self):
 
@@ -222,7 +217,7 @@ class Stack(object):
         self.local_headers[header_key] = header_value
         return self.local_headers
 
-    def image_transform(self, image_url: str, transform_params=dict):
+    def image_transform(self, image_url: str, **kwargs):
 
         """
         @contentstack is a headless, API-first content management system (CMS)
@@ -240,16 +235,12 @@ class Stack(object):
 
         """
         self._image_transform_url = image_url
-        self._image_params = transform_params
-        return self._get_image_url()
+        self._image_params = kwargs
+        args = ['{0}={1}'.format(k, v) for k, v in kwargs.items()]
+        if args:
+            self._image_transform_url += '?{0}'.format('&'.join(args))
+        return self._image_transform_url
 
-    def _get_image_url(self):
-        image_param_counter = len(self._image_params)
-        if image_param_counter > 0:
-            _url = urllib.parse.urlencode(self._image_params)
-            return self._get_url(_url)
-        else:
-            return self._image_transform_url
 
     def get_collaborators(self):
         """
@@ -293,7 +284,12 @@ class Stack(object):
         In such cases, this token can be used to restart the sync process from where it was interrupted.
         """
         self._sync_query = {'init': 'true', 'pagination_token': pagination_token}
-        return self
+        sync_result = {}
+        https_request = http_request.HTTPRequestConnection('stacks/sync', self._sync_query, self.local_headers)
+        response, error = https_request.http_request()
+        if error is None:
+            sync_result: SyncStack = SyncStack(response)
+        return sync_result, error
 
     def sync_token(self, sync_token):
         """
@@ -303,7 +299,12 @@ class Stack(object):
         and the details of the content that was deleted or updated.
         """
         self._sync_query = {'init': 'true', 'sync_token': sync_token}
-        return self
+        sync_result = {}
+        https_request = http_request.HTTPRequestConnection('stacks/sync', self._sync_query, self.local_headers)
+        response, error = https_request.http_request()
+        if error is None:
+            sync_result: SyncStack = SyncStack(response)
+        return sync_result, error
 
     def sync(self, from_date=None, content_type_uid=None, publish_type=None, language_code='en-us'):
 
@@ -338,7 +339,12 @@ class Stack(object):
         if language_code is not None:
             self._sync_query["locale"] = language_code
 
-        return self
+        sync_result = {}
+        https_request = http_request.HTTPRequestConnection('stacks/sync', self._sync_query, self.local_headers)
+        response, error = https_request.http_request()
+        if error is None:
+            sync_result: SyncStack = SyncStack(response)
+        return sync_result, error
 
     def get_environment(self):
         return self.local_headers['environment']
@@ -362,13 +368,9 @@ class Stack(object):
         https_request = http_request.HTTPRequestConnection('stacks', self._stack_query, self.local_headers)
         return https_request.http_request()
 
-    def fetch_sync(self) -> tuple:
-        sync_result = { }
-        https_request = http_request.HTTPRequestConnection('stacks/sync', self._sync_query, self.local_headers)
-        response, error = https_request.http_request()
-        if error is None:
-            sync_result: SyncStack = SyncStack(response)
-        return sync_result, error
+check_image_tans = Stack('blt3749375','763289364364', 'dev')
+check_image_tans.image_transform('www.contenstack.com/args', Firstname="Sita", Lastname="Sharma", Age=22, Phone=1234567890)
+
 
 
 class SyncStack(object):

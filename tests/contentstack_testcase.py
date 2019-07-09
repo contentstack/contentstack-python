@@ -23,25 +23,21 @@
 # SOFTWARE.
 
 from unittest import TestCase
-from contentstack import config, Asset
+from contentstack import config
 from contentstack.stack import Stack
-import logging
-
-
-# logger = logging.getLogger('ContentstackTestcase')
-# logger.setLevel(logging.DEBUG)
 
 
 class ContentstackTestcase(TestCase):
 
     def setUp(self):
         set_obj = config.Config()
-        set_obj.set_host('stag-cdn.contentstack.io')
+        set_obj.host('stag-cdn.contentstack.io')
         self.stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development',
                            configs=set_obj)
         self.production_stack = Stack(api_key="blt20962a819b57e233", access_token="cs18efd90468f135a3a5eda3ba",
                                       environment="production")
 
+    # ["Stack Testcases Implementation"]
     def test_stack(self):
         self.assertEqual('development', self.stack.get_environment())
         self.assertEqual('blt01638c90cc28fb6f', self.stack.get_access_token())
@@ -49,10 +45,9 @@ class ContentstackTestcase(TestCase):
 
     def test_config(self):
         conf = config.Config()
-        self.assertEqual('v3', conf.get_version())
-        self.assertEqual('https://', conf.get_http_protocol())
-        self.assertEqual('cdn.contentstack.io', conf.get_host())
-        self.assertEqual('https://cdn.contentstack.io/v3/stacks', conf.get_endpoint('stacks'))
+        self.assertEqual('v3', conf.version())
+        self.assertEqual('cdn.contentstack.io', conf.host())
+        self.assertEqual('https://cdn.contentstack.io/v3/stacks', conf.endpoint('stacks'))
 
     def test_include_collaborators(self):
         is_contains = False
@@ -108,6 +103,9 @@ class ContentstackTestcase(TestCase):
             stack_variables = result["stack_variables"]
             print("stack_variables", stack_variables)
             self.assertTrue(True)
+
+    def test_image_transform(self):
+        self.stack.image_transform("www.contenstatck.com/arga", Firstname="Sita", Lastname="Sharma", Age=22, Phone=1234567890)
 
     ##############################################################
     # [Sync-testcases]
@@ -297,8 +295,8 @@ class ContentstackTestcase(TestCase):
 
     # [ASSETS]
 
-    def test_init_asset(self):
-        asset: Asset = self.production_stack.asset('some_uid')
-        asset.add_params('ewqweed')
+    # def test_init_asset(self):
+    # asset: Asset = self.production_stack.asset('some_uid')
+    # asset.add_params('ewqweed')
 
 

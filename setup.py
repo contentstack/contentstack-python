@@ -18,7 +18,6 @@ package = 'contentstack'
 
 
 def read(fname):
-    """Read description from local file."""
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
@@ -47,7 +46,15 @@ setup(
         "Operating System :: OS Independent",
         'Intended Audience :: Developers',
         'Natural Language :: English',
-        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.1',
+        'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
+    test_suite='tests',
+
 )
