@@ -30,14 +30,12 @@ from contentstack.stack import Stack
 class ContentstackTestcase(TestCase):
 
     def setUp(self):
-        set_obj = config.Config()
-        set_obj.host('stag-cdn.contentstack.io')
-        self.stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development',
-                           configs=set_obj)
-        self.production_stack = Stack(api_key="blt20962a819b57e233", access_token="cs18efd90468f135a3a5eda3ba",
-                                      environment="production")
+        self.stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development')
+        self.production_stack = Stack(api_key="blt20962a819b57e233", access_token="cs18efd90468f135a3a5eda3ba", environment="production")
 
-    # ["Stack Testcases Implementation"]
+    ####################################
+    # [Stack-testcases]
+    ####################################
     def test_stack(self):
         self.assertEqual('development', self.stack.get_environment())
         self.assertEqual('blt01638c90cc28fb6f', self.stack.get_access_token())
@@ -105,11 +103,13 @@ class ContentstackTestcase(TestCase):
             self.assertTrue(True)
 
     def test_image_transform(self):
-        self.stack.image_transform("www.contenstatck.com/arga", Firstname="Sita", Lastname="Sharma", Age=22, Phone=1234567890)
+        urlreturn = self.stack.image_transform("www.contentstack.io/endpoint", firstname="sita", lastname="sharma", age=22, phone=1234567890)
+        if 'age' in urlreturn:
+            self.assertTrue()
 
-    ##############################################################
-    # [Sync-testcases]
-    ##############################################################
+    ####################################
+    #[Sync-testcases]
+    ####################################
 
     def test_sync_pagination(self):
         sync_stack = Stack(api_key="blt477ba55f9a67bcdf", access_token="cs7731f03a2feef7713546fde5", environment="web")

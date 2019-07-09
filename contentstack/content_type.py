@@ -23,16 +23,19 @@ from contentstack import http_request
 from contentstack.query import Query
 
 
-class ContentType():
+class ContentType:
 
     def __init__(self, content_type_uid: str):
         self._query_instance: Query
         self._entry_uid = None
         self._content_type_uid = content_type_uid
         self._query_instance = Query(self._content_type_uid)
-
-        # self._stack_headers = Stack.get_headers()
+        self._stack_headers = {}
         self._local_params: dict = {}
+
+    def _headers(self, local_headers: dict):
+        if local_headers is not None:
+            self._stack_headers = local_headers.copy()
 
     def set_header(self, key, value):
         if key is not None and value is not None:
