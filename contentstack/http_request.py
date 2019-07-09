@@ -1,3 +1,4 @@
+import platform
 import urllib.parse
 from urllib import parse
 
@@ -17,7 +18,7 @@ class HTTPRequestConnection(object):
         self._local_headers = local_headers
         self._local_headers['X-User-Agent'] = self._contentstack_user_agent()
         self._local_headers['Content-Type'] = 'application/json'
-        self.url_path = config.Config().get_endpoint(self.url_path)
+        self.url_path = config.Config().endpoint(self.url_path)
         if 'environment' in self._local_headers:
             self._query_prams['environment'] = self._local_headers['environment']
 
@@ -43,20 +44,17 @@ class HTTPRequestConnection(object):
             'name': 'contentstack.python',
             'version': "1.0.0"
         }}
-        # from contentstack import __version__
-        # from sys import platform as cs_plateforom
-        # os_name = cs_plateforom.system()
-        # if os_name == 'Darwin':
-        #    os_name = 'macOS'
-        # elif not os_name or os_name == 'Java':
-        #    os_name = None
-        # elif os_name and os_name not in ['macOS', 'Windows']:
-        #    os_name = 'Linux'
-        # header['os'] = {
-        #    'name': os_name,
-        #    'version': cs_plateforom.release()
-        # }
-
+        os_name = platform.system()
+        if os_name == 'Darwin':
+            os_name = 'macOS'
+        elif not os_name or os_name == 'Java':
+            os_name = None
+        elif os_name and os_name not in ['macOS', 'Windows']:
+            os_name = 'Linux'
+        header['os'] = {
+            'name': os_name,
+            'version': platform.release()
+        }
         return header.__str__()
 
     def set_entry_model(self):
