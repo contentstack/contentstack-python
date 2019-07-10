@@ -19,28 +19,31 @@
    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  """
-from contentstack import http_request
-from contentstack.query import Query
 
 
 class ContentType:
 
     def __init__(self, content_type_uid: str):
-        self._query_instance: Query
-        self._entry_uid = None
-        self._content_type_uid = content_type_uid
-        self._query_instance = Query(self._content_type_uid)
+        if isinstance(content_type_uid, str):
+            self._content_type_uid = content_type_uid
+        else:
+            raise TypeError('Please provide a valid content_type_uid')
         self._stack_headers = {}
-        self._local_params: dict = {}
 
-    def _headers(self, local_headers: dict):
+    @property
+    def headers(self):
+        return self._stack_headers
+
+    @headers.setter
+    def headers(self, local_headers: dict):
         if local_headers is not None:
             self._stack_headers = local_headers.copy()
 
-    def set_header(self, key, value):
+    def header(self, key, value):
         if key is not None and value is not None:
             if isinstance(key, str) and isinstance(value, str):
                 self._stack_headers[key] = value
+            return self._stack_headers
 
     def remove_header(self, key):
         if key is not None and isinstance(key, str):
@@ -60,14 +63,12 @@ class ContentType:
 
         """
         from contentstack import Entry
+        entry: Entry = Entry(content_type_id=self._content_type_uid)
+        entry.headers = self._stack_headers
+        if entry_uid is not None:
+            entry.uid = entry_uid
 
-        _entry_instance: Entry = Entry(content_type_id=self._content_type_uid, entry_uid=self._entry_uid)
-        self._entry_uid = entry_uid
-        if self._entry_uid is not None:
-            _entry_instance.set_entry_uid(self._entry_uid)
-        entry_url = self.__get_entry_url()
-        _entry_instance.set_content_type_instance(entry_url, self._stack_headers)
-        return _entry_instance
+        return entry
 
     def query(self):
 
@@ -77,22 +78,29 @@ class ContentType:
         and provide a query in JSON format as the value.
         To learn more about the queries, refer to the Queries section.
         """
-        return self._query_instance
+        from contentstack.query import Query
+        query = Query(self._content_type_uid)
+        query._headers(self._stack_headers)
+        return query
 
     def fetch(self) -> tuple:
-        ct_request = http_request.HTTPRequestConnection(self.__get_content_type_url(), self._local_params, self._stack_headers)
-        return ct_request.http_request()
 
-    # def find_entries(self) -> dict:
-    # https_request = http_request.HTTPRequestConnection(self._get_entries_url(), self._local_params, self.stack_headers)
-    # result = https_request.http_request()
-    # return result
+        global error
+        import requests
+        import contentstack
+        payload: dict = {}
 
-    def __get_content_type_url(self) -> str:
-        return 'content_types/{0}'.format(self._content_type_uid)
+        endpoint = contentstack.config.Config().endpoint('content_types')
+        url = '{0}/{1}'.format(endpoint, self._content_type_uid)
+        error = None
+        response = requests.get(url, params=payload, headers=self._stack_headers)
+        url = response.url
+        print(url, response)
+        if response.ok:
+            response = response.json()
+        else:
+            error = response.json()
 
-    def __get_entry_url(self) -> str:
-        return 'content_types/{0}/entries/{1}'.format(self._content_type_uid, self._entry_uid)
+        return response, error
 
-    # def _get_entries_url(self) -> str:
-    #    return 'content_types/{0}/entries'.format(self.content_type_uid)
+

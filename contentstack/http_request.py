@@ -1,10 +1,6 @@
-import platform
-import urllib.parse
 from urllib import parse
-
 import requests
 from requests import Response
-
 from contentstack import config
 
 
@@ -16,7 +12,7 @@ class HTTPRequestConnection(object):
         self.url_path = url_path
         self._query_prams = query
         self._local_headers = local_headers
-        self._local_headers['X-User-Agent'] = self._contentstack_user_agent()
+        self._local_headers['X-User-Agent'] = 'contentstack-python version-1.0.0'  # self.__user_agent()
         self._local_headers['Content-Type'] = 'application/json'
         self.url_path = config.Config().endpoint(self.url_path)
         if 'environment' in self._local_headers:
@@ -35,50 +31,30 @@ class HTTPRequestConnection(object):
 
         return self.result, self.error
 
-    @staticmethod
-    def _contentstack_user_agent() -> str:
-        """
-        X-Contentstack-User-Agent header.
-        """
-        header = {'sdk': {
-            'name': 'contentstack.python',
-            'version': "1.0.0"
-        }}
-        os_name = platform.system()
-        if os_name == 'Darwin':
-            os_name = 'macOS'
-        elif not os_name or os_name == 'Java':
-            os_name = None
-        elif os_name and os_name not in ['macOS', 'Windows']:
-            os_name = 'Linux'
-        header['os'] = {
-            'name': os_name,
-            'version': platform.release()
-        }
-        return header.__str__()
 
-    def set_entry_model(self):
-        pass
+def __user_agent():
+    import contentstack
+    import platform
+    """
+    X-Contentstack-User-Agent header.
+    """
+    header = {'sdk': {
+        'name': contentstack.__package__,
+        'version': contentstack.__version__
+    }}
+    os_name = platform.system()
+    if os_name == 'Darwin':
+        os_name = 'macOS'
+    elif not os_name or os_name == 'Java':
+        os_name = None
+    elif os_name and os_name not in ['macOS', 'Windows']:
+        os_name = 'Linux'
+    header['os'] = {
+        'name': os_name,
+        'version': platform.release()
+    }
+    return header
 
-    def set_content_type_model(self):
-        pass
 
-    def set_query_model(self):
-        pass
-
-    def set_asset_model(self):
-        pass
-
-    def request_api(self, urls: str):
-        try:
-            r = requests.get(urls, timeout=3)
-            r.raise_for_status()
-        except requests.exceptions.HTTPError as errh:
-            print("Http Error:", errh)
-        except requests.exceptions.ConnectionError as errc:
-            print("Error Connecting:", errc)
-        except requests.exceptions.Timeout as errt:
-            print("Timeout Error:", errt)
-        except requests.exceptions.RequestException as err:
-            print("OOps: Something Else", err)
-        pass
+if __name__ == '__main__':
+    __user_agent()

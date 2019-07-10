@@ -25,7 +25,7 @@
 from contentstack import http_request
 
 
-class Query:  # (Stack):
+class Query:
 
     """
     Contentstack provides certain queries that you can use to fetch filtered results.
@@ -35,8 +35,8 @@ class Query:  # (Stack):
     """
 
     def __init__(self, content_type_id: str):
-        self._local_header = {}  # Stack.get_headers()
 
+        self._stack_headers = {}
         self._objectUidForInclude: list = []
         self._objectUidForExcept: list = []
         self._objectUidForOnly: list = []
@@ -54,12 +54,16 @@ class Query:  # (Stack):
     def set_content_type(self, content_type):
         self._content_type_id = content_type
 
-    def set_header(self, key, value):
-        self._local_header[key] = value
+    def _headers(self, local_headers: dict):
+        if local_headers is not None:
+            self._stack_headers = local_headers.copy()
+
+    def header(self, key, value):
+        self._stack_headers[key] = value
 
     def remove_header(self, key):
-        if key in self._local_header:
-            self._local_header.pop(key)
+        if key in self._stack_headers:
+            self._stack_headers.pop(key)
 
     def set_locale(self, locale_code):
         if locale_code is not None:
@@ -829,10 +833,10 @@ class Query:  # (Stack):
         else:
             raise Exception("content_type_id is not found, "
                             " HELP: ContentTypeID can be set by calling method [query.set_content_type('your_content_type')]")
-        if len(self._local_header) < 1:
+        if len(self._stack_headers) < 1:
             raise Exception("You must called contentstack.Stack() first")
         payload = {"query", self._urlQueries}
-        https_request = http_request.HTTPRequestConnection(self._entry_url, payload, self._local_header)
+        https_request = http_request.HTTPRequestConnection(self._entry_url, payload, self._stack_headers)
         resp, err = https_request.http_request()
         if err is None:
             resp = resp['entries']
