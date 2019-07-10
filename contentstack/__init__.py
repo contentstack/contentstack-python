@@ -38,5 +38,6 @@ __author__ = "Shailesh Mishra <mshaileshr@gmail.com>"
 __status__ = "debug"
 __date__ = "01 July 2019"
 __version__ = "1.0.0"
+__package__ = "contentstack.python"
 __endpoint__ = "cdn.contentstack.io"
 
