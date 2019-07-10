@@ -23,8 +23,6 @@
 """
 
 import logging
-import os
-
 import requests
 
 try:
@@ -60,14 +58,4 @@ class Util:
             pass
         return False
 
-    def findUserAgent(self):
-        url = 'https://www.contentful.com'
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-        response = requests.get(url, headers=headers)
-        print(response.content)
 
-
-utils = Util()
-status = utils.findUserAgent()
-print(status)

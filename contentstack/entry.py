@@ -20,109 +20,107 @@
 # SOFTWARE.
 
 
-
-
 """
 contentstack.entry
 ~~~~~~~~~~~~~~~~~~
 This module implements the Entry class.
 API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#entries
 """
+from contentstack import http_request
+from contentstack.http_request import __user_agent
 
 
+class Entry:
 
-class Entry():
+    def __init__(self, content_type_id):
 
-    def __init__(self, content_type_id, entry_uid=None):
-
-
-        self._uid = entry_uid
-        self._content_type_id = content_type_id
-        self._entry_url = str
-        self._local_params: dict = {}
-        self._stack_headers: dict = {}
+        self.__content_type_id = content_type_id
+        self.__local_params: dict = {}
+        self.__stack_headers: dict = {}
+        self.__only_dict: dict = {}
 
         self.__uid_for_except: list = []
         self.__uid_for_only: list = []
-        self.__only_dict: dict = {}
         self.__except_dic: list = []
         self.__other_post_dict: list = []
         self.__reference_list: list = []
 
-        self._result_json = dict
-        self._uid = str
-        self._tags = list
-        self._title = str
-        self._description = str
-        self._url = str
-        self._locale = str
-        self._created_at = str
-        self._created_by = str
-        self._updated_at = str
-        self._updated_by = str
-        self._version = str
+        self.__result_json = dict
+        self.__entry_uid = str
+        self.__tags = list
+        self.__title = str
+        self.__description = str
+        self.__url = str
+        self.__locale = str
+        self.__created_at = str
+        self.__created_by = str
+        self.__updated_at = str
+        self.__updated_by = str
+        self.__version = str
 
-    def set_content_type_instance(self, entry_url_path: str, stack_headers: dict):
-        if entry_url_path is not None and stack_headers is not None:
-            if isinstance(entry_url_path, str) and isinstance(stack_headers, dict):
-                self._entry_url = entry_url_path
-                for key, value in stack_headers:
-                    self._stack_headers[key] = value
-                self._stack_headers = stack_headers
-        return self
+    @property
+    def headers(self):
+        return self.__stack_headers
 
-    def set_headers(self, local_header: dict):
-        if local_header is not None and isinstance(local_header, dict):
-            for key, value in local_header:
-                self._stack_headers[key] = value
-        return self
+    @headers.setter
+    def headers(self, local_headers: dict):
+        if local_headers is not None:
+            self.__stack_headers = local_headers.copy()
 
-    def set_entry_uid(self, entry_uid: str):
+    @property
+    def uid(self):
+        return self.__entry_uid
+
+    @uid.setter
+    def uid(self, entry_uid: str):
         if entry_uid is not None and isinstance(entry_uid, str):
-            self._uid = entry_uid
-        return self
+            self.__entry_uid = entry_uid
 
-    def add_params(self, key: str, value):
+    def params(self, key: str, value):
         if key is not None and value is not None:
             if isinstance(key, str) and isinstance(value, str):
-                self._local_params[key] = value
+                self.__local_params[key] = value
         return self
 
-    def set_version(self, version: str):
+    def version(self, version: str):
         if version is not None and isinstance(version, str):
-            self._local_params["version"] = version
+            self.__local_params["version"] = version
         return self
 
-    def set_locale(self, locale_code):
+    @property
+    def locale(self):
+        if 'locale' in self.__result_json:
+            return self.__result_json['locale']
+        else:
+            return self.__locale
+
+    @locale.setter
+    def locale(self, locale_code: str):
         if locale_code is not None and isinstance(locale_code, str):
-            self._local_params["locale"] = locale_code
-        return self
+            self.__local_params["locale"] = locale_code
 
     def configure(self, model: dict):
         if model is not None and isinstance(model, dict):
-            self._result_json = model
+            self.__result_json = model
 
-            if self._result_json is not None:
-
-                self._title = self._result_json['title']
-                self._url = self._result_json['url']
-                self._uid = self._result_json['uid']
-                self._tags = self._result_json['tags']
-                self._created_by = self._result_json['created_by']
-                self._created_at = self._result_json['created_at']
-                self._updated_at = self._result_json['updated_at']
-                self._updated_by = self._result_json['updated_by']
-                self._locale = self._result_json['locale']
-                self._version = self._result_json['_version']
+            if self.__result_json is not None:
+                self.__title = self.__result_json['title']
+                self.__url = self.__result_json['url']
+                self.__entry_uid = self.__result_json['uid']
+                self.__tags = self.__result_json['tags']
+                self.__created_by = self.__result_json['created_by']
+                self.__created_at = self.__result_json['created_at']
+                self.__updated_at = self.__result_json['updated_at']
+                self.__updated_by = self.__result_json['updated_by']
+                self.__locale = self.__result_json['locale']
+                self.__version = self.__result_json['_version']
 
         return self
 
-    def set_header(self, key, value):
-        """ [Uses]: header = set_header('key', 'value') """
+    def set_header(self, key: str, value: str):
         if key is not None and value is not None:
             if isinstance(key, str) and isinstance(value, str):
-                self._stack_headers[key] = value
-
+                self.__stack_headers[key] = value
         return self
 
     def remove_header(self, key):
@@ -132,48 +130,42 @@ class Entry():
         :return Entry:
         """
         if key is not None and isinstance(key, str):
-            if key in self._stack_headers:
-                self._stack_headers.pop(key)
+            if key in self.__stack_headers:
+                self.__stack_headers.pop(key)
         return self
 
     def get_title(self):
         """ title = entry.get_title() """
-        return self._title
+        return self.__title
 
     def get_url(self):
         """ [Uses]: url = entry.get_url() """
-        return self._url
+        return self.__url
 
     def get_tags(self):
         """
         [Uses]: tags = get_tags()
         """
-        return self._tags
+        return self.__tags
 
     def get_content_type(self):
         """
          [Uses]: content_type = get_content_type()
         """
-        return self._content_type_id
+        return self.__content_type_id
 
     def get_uid(self):
         """ [Uses]: uid = get_uid() """
-        return self._uid
-
-    def get_locale(self):
-        if 'locale' in self._result_json:
-            return self._result_json['locale']
-        else:
-            return self._locale
+        return self.__entry_uid
 
     def to_json(self):
-        if self._result_json is not None:
-            return self._result_json
+        if self.__result_json is not None:
+            return self.__result_json
 
     def get(self, key: str):
-        if self._result_json is not None and key is not None:
-            if key in self._result_json:
-                return self._result_json[key]
+        if self.__result_json is not None and key is not None:
+            if key in self.__result_json:
+                return self.__result_json[key]
             else:
                 return None
 
@@ -219,14 +211,13 @@ class Entry():
         else:
             return None
 
-
     def get_created_at(self):
         """
         value of creation time of entry.
         [Uses] created_at = entry.get_created_at()
         :return: str
         """
-        return self._created_at
+        return self.__created_at
 
     def get_created_by(self):
         """
@@ -234,7 +225,7 @@ class Entry():
         created_by = entry.get_created_by()
         :return: str:
         """
-        return self._created_by
+        return self.__created_by
 
     def get_updated_at(self):
         """
@@ -242,7 +233,7 @@ class Entry():
         [Uses] updated_at = entry.get_updated_at()
         :returns str:
         """
-        return self._updated_at
+        return self.__updated_at
 
     def get_updated_by(self):
         """
@@ -250,7 +241,7 @@ class Entry():
         [Uses]  updated_by = entry.get_updated_by()
         :return str:
         """
-        return self._updated_by
+        return self.__updated_by
 
     def get_asset(self, key: str):
         """
@@ -291,9 +282,9 @@ class Entry():
         :return: None
         """
         from contentstack import Group
-        if key is not None and self._result_json is not None:
-            if key in self._result_json:
-                extract_json = self._result_json[key]
+        if key is not None and self.__result_json is not None:
+            if key in self.__result_json:
+                extract_json = self.__result_json[key]
                 if isinstance(extract_json, dict):
                     return Group(extract_json)
         else:
@@ -307,10 +298,10 @@ class Entry():
         :return  list of group from entry
         [Uses]: Group inner_group = entry.get_groups("key")
         """
-        if key is not None and self._result_json is not None:
+        if key is not None and self.__result_json is not None:
             group_list = []
-            if key in self._result_json:
-                groups = self._result_json[key]
+            if key in self.__result_json:
+                groups = self.__result_json[key]
                 if isinstance(groups, list):
                     for single_group in groups:
                         group_list.append(single_group)
@@ -340,12 +331,11 @@ class Entry():
         """
         from contentstack import ContentType
 
-        if self._result_json is not None and isinstance(self._result_json[ref_key], list):
-            list_of_entries: list = self._result_json[ref_key]
+        if self.__result_json is not None and isinstance(self.__result_json[ref_key], list):
+            list_of_entries: list = self.__result_json[ref_key]
             for entry in list_of_entries:
                 if ref_content_type is not None:
                     entry_instance = ContentType(ref_content_type).entry()
-
 
     def except_field_uid(self, field_uid: list):
         """
@@ -463,10 +453,56 @@ class Entry():
             self.__only_dict = None
 
     def fetch(self) -> tuple:
-        from contentstack import HTTPRequestConnection
-        https_request = HTTPRequestConnection(self._entry_url, self._local_params, self._stack_headers)
-        (response, error) = https_request.http_request()
-        if error is None:
-            result = response['entry']
-            self.configure(result)
+        import requests
+        import contentstack
+        error = None
+
+        url = contentstack.config.Config().endpoint('entries')
+        if self.__entry_uid is not None:
+            url = '{0}/{1}'.format(url, self.__entry_uid)
+
+        if len(self.__stack_headers) > 0 and 'environment' in self.__stack_headers:
+            self.__local_params['environment'] = self.__stack_headers['environment']
+
+        response = requests.get(url=url, data=self.__local_params, headers=self.__stack_headers)
+        print('request url is {} '.format(response.url))
+        if response.ok:
+            response = response.json()
+            if error is None:
+                response = response['entry']
+                self.configure(response)
+        else:
+            error = response.json()
+
         return response, error
+
+    def __user_agent(self) -> dict:
+        import contentstack
+        import platform
+
+        """
+        Contentstack-User-Agent header.
+        """
+        self.__stack_headers["X-User-Agent"] = contentstack.__package__
+        self.__stack_headers["Content-Type"] = 'application/json'
+        self.__stack_headers["sdk"] = {
+            'name': contentstack.__package__,
+            'version': contentstack.__version__
+        }
+
+        header = {'sdk': {
+            'name': contentstack.__package__,
+            'version': contentstack.__version__
+        }}
+        os_name = platform.system()
+        if os_name == 'Darwin':
+            os_name = 'macOS'
+        elif not os_name or os_name == 'Java':
+            os_name = None
+        elif os_name and os_name not in ['macOS', 'Windows']:
+            os_name = 'Linux'
+        header['os'] = {
+            'name': os_name,
+            'version': platform.release()
+        }
+        return header

@@ -2,12 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4a5a7ca2-5e8a-4154-88e7-87aa643ea220" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contentstack/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contentstack/content_type.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/content_type.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contentstack/errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/errors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contentstack/entry.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/entry.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contentstack/http_request.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/http_request.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contentstack/query.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/query.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contentstack/stack.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/stack.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contentstack/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/contentstack/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/test results - pytest.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/test results - pytest.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/contentstack_testcase.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/contentstack_testcase.py" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.idea/httpRequests/" />
@@ -34,11 +37,11 @@
   <component name="ExportTestResults" outputFolder="$PROJECT_DIR$/doc" userTempatePath="" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tests/contentstack_testcase.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="110">
-              <caret line="98" column="34" lean-forward="true" selection-start-line="98" selection-start-column="34" selection-end-line="98" selection-end-column="34" />
+            <state relative-caret-position="126">
+              <caret line="175" column="31" selection-start-line="175" selection-start-column="31" selection-end-line="175" selection-end-column="31" />
               <folding>
                 <element signature="e#1210#1239#0" expanded="true" />
               </folding>
@@ -46,13 +49,13 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/contentstack/content_type.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/contentstack/entry.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="267">
-              <caret line="37" column="26" lean-forward="true" selection-start-line="37" selection-start-column="26" selection-end-line="37" selection-end-column="26" />
+            <state relative-caret-position="215">
+              <caret line="471" column="44" lean-forward="true" selection-start-line="471" selection-start-column="44" selection-end-line="471" selection-end-column="44" />
               <folding>
-                <element signature="e#1132#1169#0" expanded="true" />
+                <element signature="e#1341#1378#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -90,6 +93,11 @@
       <find>_post_params</find>
       <find>__other_post_dict</find>
       <find>asset</find>
+      <find>_local_params</find>
+      <find>prepare_url</find>
+      <find>_content_type_id</find>
+      <find>locale</find>
+      <find>version</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -99,6 +107,7 @@
         <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
+    <option name="PREVIEW_PUSH_PROTECTED_ONLY" value="true" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -122,22 +131,23 @@
         <option value="$PROJECT_DIR$/LICENSE" />
         <option value="$PROJECT_DIR$/contentstack/sync_stack.py" />
         <option value="$PROJECT_DIR$/contentstack/group.py" />
-        <option value="$PROJECT_DIR$/contentstack/__init__.py" />
         <option value="$PROJECT_DIR$/contentstack/asset_library.py" />
         <option value="$PROJECT_DIR$/package.json" />
-        <option value="$PROJECT_DIR$/contentstack/query.py" />
         <option value="$PROJECT_DIR$/setup.py" />
-        <option value="$PROJECT_DIR$/contentstack/config.py" />
         <option value="$PROJECT_DIR$/contentstack/resource.py" />
+        <option value="$PROJECT_DIR$/contentstack/asset.py" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/contentstack/errors.py" />
+        <option value="$PROJECT_DIR$/contentstack/config.py" />
+        <option value="$PROJECT_DIR$/doc/test results - pytest.html" />
+        <option value="$PROJECT_DIR$/contentstack/query.py" />
+        <option value="$PROJECT_DIR$/contentstack/stack.py" />
+        <option value="$PROJECT_DIR$/contentstack/content_type.py" />
+        <option value="$PROJECT_DIR$/contentstack/__init__.py" />
         <option value="$PROJECT_DIR$/contentstack/utils.py" />
         <option value="$PROJECT_DIR$/contentstack/http_request.py" />
-        <option value="$PROJECT_DIR$/contentstack/asset.py" />
-        <option value="$PROJECT_DIR$/contentstack/entry.py" />
-        <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/contentstack/content_type.py" />
-        <option value="$PROJECT_DIR$/contentstack/errors.py" />
-        <option value="$PROJECT_DIR$/contentstack/stack.py" />
         <option value="$PROJECT_DIR$/tests/contentstack_testcase.py" />
+        <option value="$PROJECT_DIR$/contentstack/entry.py" />
       </list>
     </option>
   </component>
@@ -153,6 +163,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -170,15 +181,10 @@
               <item name="contentstack-python" type="462c0819:PsiDirectoryNode" />
               <item name="tests" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="contentstack-python" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Course" />
     </panes>
   </component>
@@ -257,7 +263,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python tests.pytest for contentstack_testcase.ContentstackTestcase.test_image_transform">
+  <component name="RunManager" selected="Python tests.pytest for contentstack_testcase.ContentstackTestcase.test_get_entries_by_uid">
     <configuration name="asset_library" type="PythonConfigurationType" factoryName="Python">
       <module name="contentstack-python" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -324,7 +330,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="stack" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="http_request" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="contentstack-python" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -336,7 +342,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/contentstack/stack.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/contentstack/http_request.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -345,7 +351,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_image_transform" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="utils" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="contentstack-python" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/contentstack" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/contentstack/utils.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_content_type_headers" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="contentstack-python" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -356,11 +383,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;contentstack_testcase.ContentstackTestcase.test_image_transform&quot;" />
+      <option name="_new_target" value="&quot;contentstack_testcase.ContentstackTestcase.test_content_type_headers&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_stack_fetch_stack_variables" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_get_entries_by_uid" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="contentstack-python" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -371,11 +398,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;contentstack_testcase.ContentstackTestcase.test_stack_fetch_stack_variables&quot;" />
+      <option name="_new_target" value="&quot;contentstack_testcase.ContentstackTestcase.test_get_entries_by_uid&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_stack_include_count" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest in contentstack_testcase.py" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="contentstack-python" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -386,32 +413,17 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;contentstack_testcase.ContentstackTestcase.test_stack_include_count&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_sync_pagination" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
-      <module name="contentstack-python" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_keywords" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;contentstack_testcase.ContentstackTestcase.test_sync_pagination&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests/contentstack_testcase.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.pytest for contentstack_testcase.ContentstackTestcase.test_image_transform" />
-        <item itemvalue="Python.stack" />
-        <item itemvalue="Python tests.pytest for contentstack_testcase.ContentstackTestcase.test_sync_pagination" />
-        <item itemvalue="Python tests.pytest for contentstack_testcase.ContentstackTestcase.test_stack_include_count" />
-        <item itemvalue="Python tests.pytest for contentstack_testcase.ContentstackTestcase.test_stack_fetch_stack_variables" />
+        <item itemvalue="Python tests.pytest for contentstack_testcase.ContentstackTestcase.test_get_entries_by_uid" />
+        <item itemvalue="Python.http_request" />
+        <item itemvalue="Python tests.pytest in contentstack_testcase.py" />
+        <item itemvalue="Python.utils" />
+        <item itemvalue="Python tests.pytest for contentstack_testcase.ContentstackTestcase.test_content_type_headers" />
       </list>
     </recent_temporary>
   </component>
@@ -541,39 +553,46 @@
       <option name="project" value="LOCAL" />
       <updated>1562247853640</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="config changes">
+      <created>1562680069749</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1562680069749</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_stack_fetch_stack_variables - 2019.07.09 at 19h 01m 44s.xml">
-      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_stack_fetch_stack_variables" configurationId="tests" />
+    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_get_entries_by_uid - 2019.07.10 at 18h 32m 14s.xml">
+      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_get_entries_by_uid" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_stack_include_count - 2019.07.09 at 19h 01m 49s.xml">
-      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_stack_include_count" configurationId="tests" />
+    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_get_entries_by_uid - 2019.07.10 at 18h 33m 23s.xml">
+      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_get_entries_by_uid" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_image_transform - 2019.07.09 at 19h 01m 52s.xml">
-      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_image_transform" configurationId="tests" />
+    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_get_entries_by_uid - 2019.07.10 at 18h 34m 22s.xml">
+      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_get_entries_by_uid" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_image_transform - 2019.07.09 at 19h 03m 02s.xml">
-      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_image_transform" configurationId="tests" />
+    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_get_entries_by_uid - 2019.07.10 at 18h 36m 44s.xml">
+      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_get_entries_by_uid" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_sync_pagination - 2019.07.09 at 19h 03m 12s.xml">
-      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_sync_pagination" configurationId="tests" />
+    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_get_entries_by_uid - 2019.07.10 at 18h 37m 21s.xml">
+      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_get_entries_by_uid" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_image_transform - 2019.07.09 at 19h 06m 08s.xml">
-      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_image_transform" configurationId="tests" />
+    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_get_entries_by_uid - 2019.07.10 at 18h 37m 25s.xml">
+      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_get_entries_by_uid" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_image_transform - 2019.07.09 at 19h 07m 25s.xml">
-      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_image_transform" configurationId="tests" />
+    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_get_entries_by_uid - 2019.07.10 at 18h 39m 20s.xml">
+      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_get_entries_by_uid" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_image_transform - 2019.07.09 at 19h 08m 04s.xml">
-      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_image_transform" configurationId="tests" />
+    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_get_entries_by_uid - 2019.07.10 at 18h 46m 00s.xml">
+      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_get_entries_by_uid" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_image_transform - 2019.07.09 at 19h 08m 46s.xml">
-      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_image_transform" configurationId="tests" />
+    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_get_entries_by_uid - 2019.07.10 at 18h 54m 44s.xml">
+      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_get_entries_by_uid" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_image_transform - 2019.07.09 at 19h 16m 40s.xml">
-      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_image_transform" configurationId="tests" />
+    <history-entry file="pytest_for_contentstack_testcase_ContentstackTestcase_test_get_entries_by_uid - 2019.07.10 at 18h 54m 48s.xml">
+      <configuration name="pytest for contentstack_testcase.ContentstackTestcase.test_get_entries_by_uid" configurationId="tests" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
@@ -597,16 +616,16 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32765958" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.4983845" visible="true" weight="0.39716312" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49757674" weight="0.39432624" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4983845" weight="0.39716312" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.49757674" visible="true" weight="0.39432624" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.32876712" />
-      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32784638" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32765958" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32765958" />
       <window_info anchor="bottom" id="Educational.CheckDetails" order="8" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.32784638" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.32765958" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5016155" side_tool="true" weight="0.30178326" />
-      <window_info anchor="bottom" id="Python Console" order="11" weight="0.32784638" />
+      <window_info anchor="bottom" id="Python Console" order="11" weight="0.32765958" />
       <window_info anchor="bottom" id="Docker" order="12" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="13" />
       <window_info anchor="bottom" id="REST Client" order="14" weight="0.42739725" />
@@ -666,6 +685,13 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/contentstack/entry.py</url>
+          <line>476</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -802,109 +828,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/LICENSE">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="4" column="32" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/contentstack/sync_stack.py" />
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/python-skeletons/logging.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/urllib/request.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6080">
-          <caret line="404" column="45" lean-forward="true" selection-start-line="404" selection-start-column="45" selection-end-line="404" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/contentstack/entry_model.py" />
-    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/json/decoder.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="354" selection-start-line="354" selection-end-line="354" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/urllib/parse.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="122">
-          <caret line="585" column="40" lean-forward="true" selection-start-line="585" selection-start-column="35" selection-end-line="585" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/venv/lib/python3.7/site-packages/setuptools-40.8.0-py3.7.egg!/setuptools/__init__.py" />
-    <entry file="file://$PROJECT_DIR$/runtests.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48">
-          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="24" column="37" lean-forward="true" selection-start-line="24" selection-start-column="37" selection-end-line="24" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/cookiejar.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1558">
-          <caret line="219" column="20" lean-forward="true" selection-start-line="219" selection-start-column="20" selection-end-line="219" selection-end-column="20" />
-          <folding>
-            <element signature="e#1098#1109#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/contentstack/group.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="571">
-          <caret line="51" lean-forward="true" selection-start-line="51" selection-end-line="51" />
-          <folding>
-            <element signature="e#1147#1161#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/contentstack/query_result.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/contentstack/query.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="487">
-          <caret line="824" column="28" selection-start-line="824" selection-start-column="28" selection-end-line="824" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5522">
-          <caret line="787" lean-forward="true" selection-start-line="787" selection-end-line="787" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/codecs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="137">
-          <caret line="309" selection-start-line="309" selection-end-line="309" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Library/Caches/PyCharm2019.1/python_stubs/642330568/builtins.py" />
     <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/logging/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -954,16 +877,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tests/contentstack.log" />
-    <entry file="file://$PROJECT_DIR$/contentstack/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="337">
-          <caret line="40" column="12" selection-start-line="40" selection-end-line="40" selection-end-column="12" />
-          <folding>
-            <element signature="e#1251#1275#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/pycharm/docrunner.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="128">
@@ -991,16 +904,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/contentstack/http_request.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="720">
-          <caret line="55" column="41" selection-start-line="55" selection-start-column="41" selection-end-line="55" selection-end-column="41" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/contentstack/asset.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1260">
@@ -1011,37 +914,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/contentstack/entry.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7080">
-          <caret line="472" selection-start-line="472" selection-end-line="472" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/contentstack/contentstack.log">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/contentstack/contentstack.log" />
     <entry file="file://$USER_HOME$/PycharmProjects/contentstack-python/venv/lib/python3.7/site-packages/_pytest/logging.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="98">
           <caret line="226" selection-start-line="226" selection-end-line="226" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/contentstack/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="321">
-          <caret line="34" column="16" lean-forward="true" selection-start-line="34" selection-start-column="16" selection-end-line="34" selection-end-column="16" />
-          <folding>
-            <element signature="e#1147#1161#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/unittest/case.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="333">
-          <caret line="627" selection-start-line="627" selection-end-line="627" />
         </state>
       </provider>
     </entry>
@@ -1059,10 +936,93 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/doc/test results - pytest.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3384">
+          <caret line="314" column="13" lean-forward="true" selection-start-line="314" selection-start-column="13" selection-end-line="314" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/PycharmProjects/contentstack-python/venv/lib/python3.7/site-packages/urllib3/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="11">
+          <caret line="44" column="21" lean-forward="true" selection-start-line="44" selection-start-column="21" selection-end-line="44" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1127">
+          <caret line="24" column="37" lean-forward="true" selection-start-line="24" selection-start-column="37" selection-end-line="24" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/PycharmProjects/contentstack-python/venv/lib/python3.7/site-packages/requests/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="84">
+          <caret line="42" column="12" lean-forward="true" selection-start-line="42" selection-start-column="12" selection-end-line="42" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/server.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1458">
+          <caret line="35" column="1" lean-forward="true" selection-start-line="35" selection-start-column="1" selection-end-line="35" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/cookies.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="512">
+          <caret line="36" column="4" lean-forward="true" selection-start-line="36" selection-start-column="4" selection-end-line="36" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/cookiejar.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="454">
+          <caret line="912" column="27" lean-forward="true" selection-start-line="912" selection-start-column="27" selection-end-line="912" selection-end-column="27" />
+          <folding>
+            <element signature="e#1098#1109#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/PycharmProjects/contentstack-python/venv/lib/python3.7/site-packages/requests/api.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="62" column="11" selection-start-line="62" selection-start-column="8" selection-end-line="62" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/http/client.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1616">
+          <caret line="211" column="7" lean-forward="true" selection-start-line="211" selection-start-column="7" selection-end-line="211" selection-end-column="7" />
+          <folding>
+            <element signature="e#2731#2750#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/contentstack/query.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="370">
+          <caret line="63" column="33" lean-forward="true" selection-start-line="63" selection-start-column="33" selection-end-line="63" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Caches/PyCharmCE2019.1/python_stubs/1540942546/builtins.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-5728">
+          <caret line="265" column="7" lean-forward="true" selection-start-line="265" selection-start-column="7" selection-end-line="265" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/contentstack/stack.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="433">
-          <caret line="393" lean-forward="true" selection-start-line="393" selection-end-line="393" />
+        <state relative-caret-position="454">
+          <caret line="132" column="51" selection-start-line="132" selection-start-column="36" selection-end-line="132" selection-end-column="51" />
           <folding>
             <element signature="e#1090#1104#0" expanded="true" />
           </folding>
@@ -1071,27 +1031,113 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/contentstack/config.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="388">
-          <caret line="66" selection-start-line="66" selection-end-line="66" />
+        <state relative-caret-position="382">
+          <caret line="38" column="33" lean-forward="true" selection-start-line="38" selection-start-column="33" selection-end-line="38" selection-end-column="33" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/contentstack/content_type.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="267">
-          <caret line="37" column="26" lean-forward="true" selection-start-line="37" selection-start-column="26" selection-end-line="37" selection-end-column="26" />
+        <state relative-caret-position="256">
+          <caret line="68" column="33" lean-forward="true" selection-start-line="68" selection-start-column="33" selection-end-line="68" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/contentstack/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="295">
+          <caret line="41" column="36" lean-forward="true" selection-start-line="41" selection-start-column="36" selection-end-line="41" selection-end-column="36" />
           <folding>
-            <element signature="e#1132#1169#0" expanded="true" />
+            <element signature="e#1251#1275#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/contentstack/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="273">
+          <caret line="60" selection-start-line="60" selection-end-line="60" />
+          <folding>
+            <element signature="e#1147#1161#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/contentstack/http_request.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="568">
+          <caret line="60" lean-forward="true" selection-start-line="60" selection-end-line="60" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/PycharmProjects/contentstack-python/venv/lib/python3.7/site-packages/_pytest/unittest.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="134">
+          <caret line="199" selection-start-line="199" selection-end-line="199" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/PycharmProjects/contentstack-python/venv/lib/python3.7/site-packages/pluggy/callers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="321">
+          <caret line="207" selection-start-line="207" selection-end-line="207" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/PycharmProjects/contentstack-python/venv/lib/python3.7/site-packages/pluggy/manager.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="86" selection-start-line="86" selection-end-line="86" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/PycharmProjects/contentstack-python/venv/lib/python3.7/site-packages/pluggy/hooks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="134">
+          <caret line="288" selection-start-line="288" selection-end-line="288" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/PycharmProjects/contentstack-python/venv/lib/python3.7/site-packages/_pytest/runner.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="26" column="21" lean-forward="true" selection-start-line="26" selection-start-column="21" selection-end-line="26" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/PycharmProjects/contentstack-python/venv/lib/python3.7/site-packages/requests/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="70">
+          <caret line="926" column="31" selection-start-line="926" selection-start-column="31" selection-end-line="926" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/unittest/case.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="134">
+          <caret line="627" selection-start-line="627" selection-end-line="627" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tests/contentstack_testcase.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="98" column="34" lean-forward="true" selection-start-line="98" selection-start-column="34" selection-end-line="98" selection-end-column="34" />
+        <state relative-caret-position="126">
+          <caret line="175" column="31" selection-start-line="175" selection-start-column="31" selection-end-line="175" selection-end-column="31" />
           <folding>
             <element signature="e#1210#1239#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/contentstack/entry.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="215">
+          <caret line="471" column="44" lean-forward="true" selection-start-line="471" selection-start-column="44" selection-end-line="471" selection-end-column="44" />
+          <folding>
+            <element signature="e#1341#1378#0" expanded="true" />
           </folding>
         </state>
       </provider>

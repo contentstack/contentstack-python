@@ -24,7 +24,7 @@ SOFTWARE.
 """
 import logging
 import contentstack
-from contentstack import errors as err, ContentType
+from contentstack import errors as err, Config
 import contentstack.entry
 from contentstack import http_request
 
@@ -41,13 +41,14 @@ API Reference: [https://www.contentstack.com/docs/guide/stack]
 
 class Stack(object):
 
-    def __init__(self, api_key: str, access_token: str, environment: str, configs: contentstack.config.Config = None):
+    def __init__(self, api_key: str, access_token: str, environment: str, configs: Config = None):
+
         """
         A stack is a space that stores the content of a project (a web or mobile property).
         Within a stack, you can create content structures, content entries, users, etc.
         related to the project. Read more about Stacks
         API Reference: [https://www.contentstack.com/docs/guide/stack]
-        :type configs: config.Config
+        :type configs: Config
         :param api_key:
         :param access_token:
         :param environment:
@@ -55,41 +56,47 @@ class Stack(object):
         """
         print('init with api_key {0}, access_token {1}, environment {2}:'.format(api_key, access_token, environment))
 
-        self._api_key = api_key
-        self._access_token = access_token
-        self._environment = environment
+        self.__api_key = api_key
+        self.__access_token = access_token
+        self.__environment = environment
 
-        if configs is not None:
+        if configs is not None and isinstance(configs, Config):
             self._configs = configs
-            self.config(configs=configs)
+            self.config(configs=self._configs)
 
-        self._initialise_stack()
+        self.__initialise_stack()
         # declare stack class variables
-        self._stack_query = dict()
-        self.local_headers = dict()
-        self._setup_stack()
+        self.__stack_query = dict()
+        self.__local_headers = dict()
+        self.__setup_stack()
         # set class variables to initialise image transformation.
-        self._image_transform_url = None
-        self._image_params = dict
+        self.__image_transform_url = None
+        self.__image_params = dict
         # set sync variables
-        self._sync_query = dict()
+        self.__sync_query = dict()
 
-    def _initialise_stack(self):
+    def __initialise_stack(self):
 
-        if not self._api_key:
+        if not self.__api_key:
             raise err.StackException(
                 'Please enter the API key of stack of which you wish to retrieve the content types.'
             )
-        if not self._access_token:
+        if not self.__access_token:
             raise err.StackException(
                 'Enter the access token of your stack.'
             )
-        if not self._environment:
+        if not self.__environment:
             raise err.StackException(
                 'Environment can not be Empty.'
             )
 
+    @property
+    def config(self):
+        return contentstack.config.Config
+
+    @config.setter
     def config(self, configs: contentstack.config.Config) -> contentstack.config.Config:
+
         """
         :type configs: object
         :param configs:
@@ -98,8 +105,15 @@ class Stack(object):
         self._configs: contentstack.config.Config = configs
         return self._configs
 
+    @property
+    def stack(self):
+        if 'api_key' in self.__local_headers:
+            return self.__local_headers['api_key']
+
+    @stack.setter
     def stack(self, api_key):
-        self.local_headers['api_key'] = api_key
+        if 'api_key' in self.__local_headers:
+            self.__local_headers['api_key'] = api_key
         return self
 
     def content_type(self, content_type_id: str):
@@ -115,9 +129,9 @@ class Stack(object):
         :return type: contentstack.content_type.ContentType
         """
         from contentstack import ContentType
-        ct_path = ContentType(content_type_id)
-        ct_path._headers(self.local_headers)
-        return ct_path
+        content_type = ContentType(content_type_id)
+        content_type.headers = self.__local_headers
+        return content_type
 
     def content_types(self):
         """Fetches all Content Types from the Stack.
@@ -135,7 +149,7 @@ class Stack(object):
         """
         logging.info('stack', 'get content types')
         content_types_query: dict = {'include_count': 'true'}
-        https_request = http_request.HTTPRequestConnection('content_types', content_types_query, self.local_headers)
+        https_request = http_request.HTTPRequestConnection('content_types', content_types_query, self.__local_headers)
         return https_request.http_request()
 
     def asset(self, uid: str = None):
@@ -160,7 +174,6 @@ class Stack(object):
         This call fetches the latest version of a specific asset of a particular stack.
         """
         from contentstack import Asset
-
         assets = Asset(uid)
         assets.set_stack_instance(self)
         return assets
@@ -170,41 +183,32 @@ class Stack(object):
         from contentstack import AssetLibrary
         return AssetLibrary()
 
-    def get_application_key(self):
+    @property
+    def application_key(self):
+        """ :returns API_key: str """
 
-        """
-        get_application_key() returns stack API_Key
-        return self
-        """
-        if 'api_key' in self.local_headers:
-            app_key = self.local_headers['api_key']
+        if 'api_key' in self.__local_headers:
+            app_key = self.__local_headers['api_key']
             return app_key
 
-    def get_access_token(self):
+    @property
+    def access_token(self):
 
         """
         get_access_token() method returns access token for the current stack
         :return self:
         """
-        if 'access_token' in self.local_headers:
-            access_token = self.local_headers['access_token']
+        if 'access_token' in self.__local_headers:
+            access_token = self.__local_headers['access_token']
             return access_token
 
     def remove_header(self, header_key):
         """
         remove_header() method removes existing header by key
         """
-        if header_key in self.local_headers:
-            del self.local_headers[header_key]
+        if header_key in self.__local_headers:
+            del self.__local_headers[header_key]
             return self
-
-    def set_header(self, header_key, header_value):
-        """
-        set_header() mrthod sets additinal headers to the stack
-        :returns _local_headers
-        """
-        self.local_headers[header_key] = header_value
-        return self.local_headers
 
     def image_transform(self, image_url: str, **kwargs):
 
@@ -223,38 +227,38 @@ class Stack(object):
         transform_params in second parameter in array form
 
         """
-        self._image_transform_url = image_url
-        self._image_params = kwargs
+        self.__image_transform_url = image_url
+        self.__image_params = kwargs
         args = ['{0}={1}'.format(k, v) for k, v in kwargs.items()]
         if args:
-            self._image_transform_url += '?{0}'.format('&'.join(args))
-        return self._image_transform_url
+            self.__image_transform_url += '?{0}'.format('&'.join(args))
+        return self.__image_transform_url
 
-    def get_collaborators(self):
+    def collaborators(self):
 
         """
         collaborators with whom the stacks are shared.
         A detailed information about each collaborator is returned.
 
         """
-        self._stack_query['include_collaborators'] = 'true'
+        self.__stack_query['include_collaborators'] = 'true'
         return self
 
-    def get_included_stack_variables(self):
+    def include_stack_variables(self):
         """
         Stack variables are extra information about the stack,
         such as the description, format of date,
         format of time, and so on. Users can include or exclude stack variables in the response.
         """
-        self._stack_query['include_stack_variables'] = 'true'
+        self.__stack_query['include_stack_variables'] = 'true'
         return self
 
-    def get_included_discrete_variables(self):
+    def include_discrete_variables(self):
 
         """
         view the access token of your stack.
         """
-        self._stack_query['include_discrete_variables'] = 'true'
+        self.__stack_query['include_discrete_variables'] = 'true'
         return self
 
     def include_count(self):
@@ -262,10 +266,10 @@ class Stack(object):
         """
         the total count of entries available in a content type.
         """
-        self._stack_query['include_count'] = "true"
+        self.__stack_query['include_count'] = "true"
         return self
 
-    def sync_pagination(self, pagination_token: str):
+    def pagination(self, pagination_token: str):
 
         """
         If the result of the initial sync (or subsequent sync) contains more than 100 records,
@@ -276,13 +280,12 @@ class Stack(object):
         It is especially useful if the sync process is interrupted midway (due to network issues, etc.).
         In such cases, this token can be used to restart the sync process from where it was interrupted.
         """
-        self._sync_query = {'init': 'true', 'pagination_token': pagination_token}
-        sync_result = {}
-        https_request = http_request.HTTPRequestConnection('stacks/sync', self._sync_query, self.local_headers)
+        self.__sync_query = {'init': 'true', 'pagination_token': pagination_token}
+        https_request = http_request.HTTPRequestConnection('sync', self.__sync_query, self.__local_headers)
         response, error = https_request.http_request()
         if error is None:
-            sync_result: SyncStack = SyncStack(response)
-        return sync_result, error
+            response: SyncStack = SyncStack(response)
+        return response, error
 
     def sync_token(self, sync_token):
 
@@ -292,9 +295,9 @@ class Stack(object):
         The sync token fetches only the content that was added after your last sync,
         and the details of the content that was deleted or updated.
         """
-        self._sync_query = {'init': 'true', 'sync_token': sync_token}
+        self.__sync_query = {'init': 'true', 'sync_token': sync_token}
         sync_result = {}
-        https_request = http_request.HTTPRequestConnection('stacks/sync', self._sync_query, self.local_headers)
+        https_request = http_request.HTTPRequestConnection('sync', self.__sync_query, self.__local_headers)
         response, error = https_request.http_request()
         if error is None:
             sync_result: SyncStack = SyncStack(response)
@@ -323,42 +326,52 @@ class Stack(object):
         If you do not specify any value, it will bring all published entries and published assets.
         """
 
-        self._sync_query["init"] = 'true'
+        self.__sync_query["init"] = 'true'
         if from_date is not None:
-            self._sync_query["start_from"] = from_date
+            self.__sync_query["start_from"] = from_date
         if content_type_uid is not None:
-            self._sync_query["content_type_uid"] = content_type_uid
+            self.__sync_query["content_type_uid"] = content_type_uid
         if publish_type is not None:
-            self._sync_query["type"] = publish_type
+            self.__sync_query["type"] = publish_type
         if language_code is not None:
-            self._sync_query["locale"] = language_code
+            self.__sync_query["locale"] = language_code
 
-        sync_result = {}
-        https_request = http_request.HTTPRequestConnection('stacks/sync', self._sync_query, self.local_headers)
+        sync_result = None
+        https_request = http_request.HTTPRequestConnection('sync', self.__sync_query, self.__local_headers)
         response, error = https_request.http_request()
         if error is None:
             sync_result: SyncStack = SyncStack(response)
         return sync_result, error
 
-    def get_environment(self):
-        return self.local_headers['environment']
+    @property
+    def environment(self):
+        if 'environment' in self.__local_headers:
+            return self.__local_headers['environment']
 
-    def get_headers(self):
-        return self.local_headers
+    @environment.setter
+    def environment(self, environment):
+        if environment in self.__local_headers:
+            self.__local_headers['environment'] = environment
 
-    def set_environment(self, environment):
-        if environment in self.local_headers:
-            self.local_headers['environment'] = environment
-        return self
+    @property
+    def headers(self):
+        return self.__local_headers
 
-    def _setup_stack(self):
-        self.local_headers['api_key'] = self._api_key
-        self.local_headers['access_token'] = self._access_token
-        self.local_headers['environment'] = self._environment
+    def set_header(self, key, value):
+        """
+        set_header() mrthod sets additinal headers to the stack
+        :returns _local_headers
+        """
+        self.__local_headers[key] = value
+
+    def __setup_stack(self):
+        self.__local_headers['api_key'] = self.__api_key
+        self.__local_headers['access_token'] = self.__access_token
+        self.__local_headers['environment'] = self.__environment
         logging.debug('contentstack logged in')
 
     def fetch(self) -> tuple:
-        https_request = http_request.HTTPRequestConnection('stacks', self._stack_query, self.local_headers)
+        https_request = http_request.HTTPRequestConnection('stacks', self.__stack_query, self.__local_headers)
         return https_request.http_request()
 
 
