@@ -473,7 +473,6 @@ class Entry:
                 self.configure(response)
         else:
             error = response.json()
-
         return response, error
 
     def __user_agent(self) -> dict:
