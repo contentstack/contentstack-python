@@ -36,7 +36,7 @@ class Config():
             "stacks": "stacks",
             "sync": "stacks/sync",
             "content_types": "content_types",
-            "entries": "entries",
+            "entries": "content_types",
             "assets": "assets",
             "environments": "environments"
         })
@@ -73,6 +73,6 @@ class Config():
 
 config = Config()
 config.host("cdn.contentstack.io")
-result_url = config.endpoint('assets')
+result_url = config.endpoint('entries')
 print(result_url)
 
