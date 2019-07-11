@@ -25,9 +25,11 @@
 from unittest import TestCase
 from contentstack import config
 from contentstack.stack import Stack
+import logging
 
 
 class ContentstackTestcase(TestCase):
+    log = logging.getLogger(__name__)
 
     def setUp(self):
         self.stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development')
@@ -118,30 +120,17 @@ class ContentstackTestcase(TestCase):
                                       publish_type='entry_published')
         if err is None:
             print(result, type(result))
-            self.assertEquals(int, type(result.get_total_count()))
-
-        # if err is None:
-        # result = result['items']
-        # self.assertEquals(list, type(result))
-        # self.assertEquals(7, len(result))
-        # for data in result:
-        # type_of_data = data["type"]
-        # print(type_of_data, data["data"])
-        # self.assertEquals('entry_published', type_of_data)
+            self.assertEquals(int, type(result.get_total_count))
 
     def test_sync_token(self):
         sync_stack = Stack(api_key="blt477ba55f9a67bcdf", access_token="cs7731f03a2feef7713546fde5", environment="web")
         response, error = sync_stack.sync_token('bltbb61f31a70a572e6c9506a')
-        items = response.get_total_count()
+        items = response.get_total_count
         self.assertTrue(9, items)
 
     ##############################################################
     # [ContentType class]
     ##############################################################
-
-    def test_content_type_uid(self):
-        variable = self.stack.content_type('product')
-        self.assertEqual('product', variable._content_type_uid)
 
     def test_content_type_headers(self):
         variable = self.stack.content_type('product')
@@ -171,11 +160,10 @@ class ContentstackTestcase(TestCase):
     # [Entry class]
     ##############################################################
 
-    def test_get_entries_by_uid(self):
+    def test_entry_by_uid(self):
         entry = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
         result, err = entry.fetch()
         if err is None:
-            result = result['entry']
             self.assertEquals(dict, type(result))
 
     def test_entry_title(self):
@@ -202,60 +190,59 @@ class ContentstackTestcase(TestCase):
         if result is not None:
             self.assertEquals('product', entry_instance.get_content_type())
 
-    def test_entry_get_uid(self):
+    def test_is_entry_uid_correct(self):
         entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
         result = entry_instance.fetch()
         if result is not None:
             self.assertEquals('blt9965f5f9840923ba', entry_instance.get_uid())
 
-    def test_entry_get_locale(self):
+    def test_entry_locale(self):
         entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale('en-us')
+        entry_instance.locale = 'en-us'
         result = entry_instance.fetch()
         if result is not None:
-            if '-' in entry_instance.get_locale():
-                self.assertEquals('en-us', entry_instance.get_locale())
+            if '-' in entry_instance.locale:
+                self.assertEquals('en-us', entry_instance.locale)
 
     def test_entry_to_json(self):
         entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale('en-us')
+        entry_instance.locale = 'en-us'
         result = entry_instance.fetch()
         if result is not None:
             self.assertEquals(dict, type(entry_instance.to_json()))
 
     def test_entry_get(self):
         entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale('en-us')
+        entry_instance.locale = 'en-us'
         result = entry_instance.fetch()
-        print(result)
         if result is not None:
             self.assertEquals('blt9965f5f9840923ba', entry_instance.get('uid'))
 
-    def test_entry_get_string(self):
+    def test_entry_string(self):
         entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale('en-us')
+        entry_instance.locale = 'en-us'
         result = entry_instance.fetch()
         if result is not None:
             self.assertEquals(str, type(entry_instance.get_string('description')))
 
-    def test_entry_get_boolean(self):
+    def test_entry_boolean(self):
         entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale('en-us')
+        entry_instance.locale = 'en-us'
         result = entry_instance.fetch()
         if result is not None:
             self.assertFalse(None, type(entry_instance.get_boolean('description')))
 
-    def test_entry_get_json(self):
+    def test_entry_json(self):
         entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale('en-us')
+        entry_instance.locale = 'en-us'
         result = entry_instance.fetch()
         if result is not None:
-            json_result = entry_instance.get_json('publish_details')
+            json_result = entry_instance.json('publish_details')
             self.assertEquals(dict, type(json_result))
 
     def test_entry_get_int(self):
         entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale('en-us')
+        entry_instance.locale = 'en-us'
         result = entry_instance.fetch()
         if result is not None:
             json_result = entry_instance.get_int('color')
@@ -263,7 +250,7 @@ class ContentstackTestcase(TestCase):
 
     def test_entry_get_created_at(self):
         entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale('en-us')
+        entry_instance.locale = 'en-us'
         result = entry_instance.fetch()
         if result is not None:
             created_at = entry_instance.get_created_at()
@@ -271,7 +258,7 @@ class ContentstackTestcase(TestCase):
 
     def test_entry_get_created_by(self):
         entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale('en-us')
+        entry_instance.locale = 'en-us'
         result = entry_instance.fetch()
         if result is not None:
             created_by = entry_instance.get_created_by()
@@ -279,7 +266,7 @@ class ContentstackTestcase(TestCase):
 
     def test_entry_get_updated_at(self):
         entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale('en-us')
+        entry_instance.locale = 'en-us'
         result = entry_instance.fetch()
         if result is not None:
             updated_at = entry_instance.get_updated_at()
@@ -287,7 +274,7 @@ class ContentstackTestcase(TestCase):
 
     def test_entry_get_updated_by(self):
         entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale('en-us')
+        entry_instance.locale = 'en-us'
         result = entry_instance.fetch()
         if result is not None:
             updated_by = entry_instance.get_updated_by()
@@ -295,8 +282,7 @@ class ContentstackTestcase(TestCase):
 
     def test_entry_get_asset(self):
         entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale('en-us')
-        entry_instance.get_asset("key")
+        entry_instance.locale = 'en-us'
         result = entry_instance.fetch()
         # incomplete
 

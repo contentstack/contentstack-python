@@ -25,30 +25,30 @@ class ContentType:
 
     def __init__(self, content_type_uid: str):
         if isinstance(content_type_uid, str):
-            self._content_type_uid = content_type_uid
+            self.__content_type_uid = content_type_uid
         else:
             raise TypeError('Please provide a valid content_type_uid')
-        self._stack_headers = {}
+        self.__stack_headers = {}
 
     @property
     def headers(self):
-        return self._stack_headers
+        return self.__stack_headers
 
     @headers.setter
     def headers(self, local_headers: dict):
         if local_headers is not None:
-            self._stack_headers = local_headers.copy()
+            self.__stack_headers = local_headers.copy()
 
     def header(self, key, value):
         if key is not None and value is not None:
             if isinstance(key, str) and isinstance(value, str):
-                self._stack_headers[key] = value
-            return self._stack_headers
+                self.__stack_headers[key] = value
+            return self.__stack_headers
 
     def remove_header(self, key):
         if key is not None and isinstance(key, str):
-            if key in self._stack_headers:
-                self._stack_headers.pop(key)
+            if key in self.__stack_headers:
+                self.__stack_headers.pop(key)
 
     def entry(self, entry_uid: str = None):
 
@@ -63,8 +63,8 @@ class ContentType:
 
         """
         from contentstack import Entry
-        entry: Entry = Entry(content_type_id=self._content_type_uid)
-        entry.headers = self._stack_headers
+        entry: Entry = Entry(content_type_id=self.__content_type_uid)
+        entry.headers = self.__stack_headers
         if entry_uid is not None:
             entry.uid = entry_uid
 
@@ -79,8 +79,8 @@ class ContentType:
         To learn more about the queries, refer to the Queries section.
         """
         from contentstack.query import Query
-        query = Query(self._content_type_uid)
-        query._headers(self._stack_headers)
+        query = Query(self.__content_type_uid)
+        query._headers(self.__stack_headers)
         return query
 
     def fetch(self) -> tuple:
@@ -91,9 +91,9 @@ class ContentType:
         payload: dict = {}
 
         endpoint = contentstack.config.Config().endpoint('content_types')
-        url = '{0}/{1}'.format(endpoint, self._content_type_uid)
+        url = '{0}/{1}'.format(endpoint, self.__content_type_uid)
         error = None
-        response = requests.get(url, params=payload, headers=self._stack_headers)
+        response = requests.get(url, params=payload, headers=self.__stack_headers)
         url = response.url
         print(url, response)
         if response.ok:

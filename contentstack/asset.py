@@ -26,7 +26,6 @@ from contentstack import http_request
 import requests
 import platform
 
-
 """
 contentstack.asset
 ~~~~~~~~~~~~~~~~~~
@@ -36,8 +35,7 @@ API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#asse
 """
 
 
-class Asset():
-
+class Asset:
     """
     Assets refer to all the media files (images, videos, PDFs, audio files, and so on) uploaded
     in your Contentstack repository for future use. These files can be attached and used in multiple entries.
@@ -52,13 +50,12 @@ class Asset():
 
     [Single Asset]
     This call fetches the latest version of a specific asset of a particular stack.
-    Uses:
-    >>> stack = contentstack.Stack('api_key', 'access_token', 'environment')
-    >>> asset = stack.asset('asset_uid')
-    >>> result, error = asset.fetch()
+
     """
 
     def __init__(self, asset_uid: str = None):
+        from .stack import Stack
+        self.__stack = Stack()
         self.__response = None
         self.__asset_url_path: str = "assets"
         self.__local_params = {}
@@ -81,8 +78,6 @@ class Asset():
             self.__asset_url_path = asset_url.format(self.__asset_uid)
 
     def set_stack_instance(self, stack):
-        from .stack import Stack
-        self.__stack = Stack()
         self.__local_headers = stack.local_headers
         self.__local_headers = stack.get_headers()
 
@@ -133,7 +128,6 @@ class Asset():
         def get_tags(self):
             return self.__tags
 
-
     def set_header(self, **headers):
         if headers is not None:
             self.__local_headers = headers
@@ -177,11 +171,12 @@ class Asset():
         print('__params    ::', self.__local_params)
         print('__headers   ::', self.__local_headers)
 
-        asset_request = http_request.HTTPRequestConnection(self.__asset_url_path, self.__local_params, self.__local_headers)
+        asset_request = http_request.HTTPRequestConnection(self.__asset_url_path, self.__local_params,
+                                                           self.__local_headers)
         (response, error) = asset_request.http_request()
         if error is None:
             response = response['asset']
-            #response = AssetModel(response)
+            # response = AssetModel(response)
             return response, error
         else:
             return response, error

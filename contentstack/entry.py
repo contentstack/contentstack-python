@@ -26,23 +26,28 @@ contentstack.entry
 This module implements the Entry class.
 API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#entries
 """
-from contentstack import http_request
-from contentstack.http_request import __user_agent
+from typing import List, Any
+
+import contentstack
 
 
 class Entry:
 
     def __init__(self, content_type_id):
 
+        self.url = contentstack.config.Config().endpoint('entries')
         self.__content_type_id = content_type_id
+        if self.__content_type_id is not None:
+            self.url = '{}/{}/entries/'.format(self.url, self.__content_type_id)
+
         self.__local_params: dict = {}
         self.__stack_headers: dict = {}
         self.__only_dict: dict = {}
+        self.__other_post_dict: dict = {}
 
         self.__uid_for_except: list = []
         self.__uid_for_only: list = []
         self.__except_dic: list = []
-        self.__other_post_dict: list = []
         self.__reference_list: list = []
 
         self.__result_json = dict
@@ -183,7 +188,7 @@ class Entry:
         else:
             return None
 
-    def get_json(self, key):
+    def json(self, key):
         value = self.get(key)
         if isinstance(value, dict):
             return value
@@ -243,7 +248,7 @@ class Entry:
         """
         return self.__updated_by
 
-    def get_asset(self, key: str):
+    def asset(self, key: str):
         """
         Get an asset from the entry
         [Uses]
@@ -251,11 +256,12 @@ class Entry:
         :param field_uid as key:
         :return: asset
         """
+        global asset
         if key is not None:
-            asset_response = self.get_json(key)
-            if asset_response is not None and isinstance(asset_response, dict):
-                self.asset = self.asset.configure(asset_response)
-        return self.asset
+            result = self.json(key)
+            if result is not None and isinstance(result, dict):
+                asset = self.asset.configure(result)
+        return asset
 
     def get_assets(self, key: str) -> list:
         """
@@ -264,14 +270,14 @@ class Entry:
         :param key: str key
         :return: list of Assets
         """
-        assets = []
+        assets: List[Any] = []
         if key is not None and isinstance(key, str):
             assets_list = self.get_json_list(key)
             if isinstance(assets_list, list):
                 for asset in assets_list:
                     if isinstance(asset, dict):
-                        self.asset = self.asset.configure(asset)
-                        assets.append(self.asset)
+                        asset = self.asset.configure(asset)
+                        assets.append(asset)
         return assets
 
     def get_group(self, key: str):
@@ -453,20 +459,32 @@ class Entry:
             self.__only_dict = None
 
     def fetch(self) -> tuple:
+
+        '''
+        [sample url be like]
+        https://cdn.contentstack.io/v3/content_types/product/entries/blt9965f5f9840923ba?version=7&environment=production&locale=en-us
+        :return:
+        '''
         import requests
+        from urllib import parse
+        from requests import Response
         import contentstack
         error = None
 
-        url = contentstack.config.Config().endpoint('entries')
+        self.__stack_headers["X-User-Agent"] = contentstack.__package__ + '-' + contentstack.__version__
+        content_agent = 'application/json - ' + self.__user_agent
+        self.__stack_headers["Content-Type"] = content_agent
+
         if self.__entry_uid is not None:
-            url = '{0}/{1}'.format(url, self.__entry_uid)
+            self.url = '{0}{1}'.format(self.url, self.__entry_uid)
 
         if len(self.__stack_headers) > 0 and 'environment' in self.__stack_headers:
             self.__local_params['environment'] = self.__stack_headers['environment']
 
-        response = requests.get(url=url, data=self.__local_params, headers=self.__stack_headers)
-        print('request url is {} '.format(response.url))
+        payload = parse.urlencode(query=self.__local_params, encoding='UTF-8')
+        response: Response = requests.get(self.url, params=payload, headers=self.__stack_headers)
         if response.ok:
+
             response = response.json()
             if error is None:
                 response = response['entry']
@@ -475,20 +493,13 @@ class Entry:
             error = response.json()
         return response, error
 
-    def __user_agent(self) -> dict:
+    @property
+    def __user_agent(self):
         import contentstack
         import platform
-
         """
         Contentstack-User-Agent header.
         """
-        self.__stack_headers["X-User-Agent"] = contentstack.__package__
-        self.__stack_headers["Content-Type"] = 'application/json'
-        self.__stack_headers["sdk"] = {
-            'name': contentstack.__package__,
-            'version': contentstack.__version__
-        }
-
         header = {'sdk': {
             'name': contentstack.__package__,
             'version': contentstack.__version__
@@ -504,4 +515,5 @@ class Entry:
             'name': os_name,
             'version': platform.release()
         }
-        return header
+
+        return header.__str__()
