@@ -449,7 +449,7 @@ class Query:
         :param tags:
         :return: Query
         """
-        tagalog: str = None
+        tagalog: str = ''
         if tags is not None and len(tags) > 0:
             for tag in tags:
                 tagalog += ",{0}".format(tag)

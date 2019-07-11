@@ -32,8 +32,8 @@ except ImportError:
         def emit(self, record):
             pass
 
-logging.basicConfig(filename='contentstack.log', format='%(asctime)s - %(message)s', level=logging.INFO)
-logging.getLogger("Config")
+#logging.basicConfig(filename='contentstack.log', format='%(asctime)s - %(message)s', level=logging.INFO)
+#logging.getLogger("Config")
 
 
 class Util:

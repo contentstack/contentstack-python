@@ -38,6 +38,8 @@ related to the project. Read more about Stacks
 API Reference: [https://www.contentstack.com/docs/guide/stack]
 """
 
+log = logging.getLogger(__name__)
+
 
 class Stack(object):
 
@@ -54,7 +56,7 @@ class Stack(object):
         :param environment:
         :param configs:
         """
-        print('init with api_key {0}, access_token {1}, environment {2}:'.format(api_key, access_token, environment))
+        log.error('API_key - {0}, access_token - {1}, environment - {2}:'.format(api_key, access_token, environment))
 
         self.__api_key = api_key
         self.__access_token = access_token
@@ -147,7 +149,7 @@ class Stack(object):
         # >>> stack = Stack('blt20962a819b57e233', 'blt01638c90cc28fb6f', 'development')
         # >>> content_types = stack.content_types()
         """
-        logging.info('stack', 'get content types')
+        logging.info('Get content types')
         content_types_query: dict = {'include_count': 'true'}
         https_request = http_request.HTTPRequestConnection('content_types', content_types_query, self.__local_headers)
         return https_request.http_request()
@@ -296,7 +298,7 @@ class Stack(object):
         and the details of the content that was deleted or updated.
         """
         self.__sync_query = {'init': 'true', 'sync_token': sync_token}
-        sync_result = {}
+        sync_result = None
         https_request = http_request.HTTPRequestConnection('sync', self.__sync_query, self.__local_headers)
         response, error = https_request.http_request()
         if error is None:
@@ -379,6 +381,7 @@ class SyncStack(object):
 
     def __init__(self, json_dict: object) -> object:
         self.__sync_dict = json_dict
+
         if self.__sync_dict is not None:
             if "items" in self.__sync_dict:
                 self.__items = self.__sync_dict["items"]
@@ -393,23 +396,17 @@ class SyncStack(object):
             if "pagination_token" in self.__sync_dict:
                 self.__pagination_token = self.__sync_dict["pagination_token"]
 
-    def get_json(self):
-        return self.__sync_dict
-
-    def get_items(self):
-        return self.__items
-
-    def get_skip(self):
-        return self.__skip
-
-    def get_limit(self):
-        return self.__limit
-
-    def get_total_count(self):
-        return self.__total_count
-
-    def get_sync_token(self):
-        return self.__sync_token
-
-    def get_pagination_token(self):
-        return self.__pagination_token
+    @property
+    def get_json(self): return self.__sync_dict
+    @property
+    def get_items(self): return self.__items
+    @property
+    def get_skip(self): return self.__skip
+    @property
+    def get_limit(self): return self.__limit
+    @property
+    def get_total_count(self): return self.__total_count
+    @property
+    def get_sync_token(self): return self.__sync_token
+    @property
+    def get_pagination_token(self):return self.__pagination_token
