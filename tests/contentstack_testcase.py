@@ -405,6 +405,6 @@ class ContentstackTestcase(TestCase):
 
     def test_assets(self):
         _asset = self.stack_asset.asset('blt91af1e5af9c3639f')
-        result, error = _asset.fetch()
+        result, error = _asset.fetch_all()
         if error is None:
             self.assertEqual(list, type(_asset.tags))

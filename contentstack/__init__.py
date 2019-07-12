@@ -11,7 +11,6 @@ from .entry import Entry
 from .asset import Asset
 from .asset_library import AssetLibrary
 from .config import Config
-from .query_result import QueryResult
 from .content_type import ContentType
 from .errors import HTTPError, ConfigError
 from .group import Group
