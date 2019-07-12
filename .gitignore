@@ -5,8 +5,7 @@ __pycache__/
 
 # C extensions
 *.so
-.idea/
-.DS_Store
+
 # Distribution / packaging
 .Python
 build/
@@ -105,3 +104,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+.idea/
+.DS_Store
