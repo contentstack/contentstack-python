@@ -34,7 +34,7 @@ API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#asse
 """
 
 
-class AssetLibrary():
+class AssetLibrary:
 
     def __init__(self):
         self.count = 0
