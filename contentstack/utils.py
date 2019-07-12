@@ -23,7 +23,6 @@
 """
 
 import logging
-import requests
 
 try:
     from logging import NullHandler
@@ -32,21 +31,14 @@ except ImportError:
         def emit(self, record):
             pass
 
-#logging.basicConfig(filename='contentstack.log', format='%(asctime)s - %(message)s', level=logging.INFO)
-#logging.getLogger("Config")
 
+    # logging.basicConfig(filename='contentstack.log', format='%(asctime)s - %(message)s', level=logging.INFO)
+    # logging.getLogger("Config")
 
-class Util:
-
-    def __init__(self):
-        logging.error('logging called in utils')
-        pass
-
-    @staticmethod
     def log(message: str):
         logging.debug(message)
 
-    @classmethod
+
     def is_connected(cls):
         import socket
         try:
@@ -59,3 +51,29 @@ class Util:
         return False
 
 
+    def header_agents() -> dict:
+
+        import contentstack
+        import platform
+
+        """
+        Contentstack-User-Agent header.
+        """
+        header = {'sdk': {
+            'name': contentstack.__package__,
+            'version': contentstack.__version__
+        }}
+        os_name = platform.system()
+        if os_name == 'Darwin':
+            os_name = 'macOS'
+        elif not os_name or os_name == 'Java':
+            os_name = None
+        elif os_name and os_name not in ['macOS', 'Windows']:
+            os_name = 'Linux'
+        header['os'] = {
+            'name': os_name,
+            'version': platform.release()
+        }
+
+        local_headers = {'X-User-Agent': header, "Content-Type": 'application/json'}
+        return local_headers

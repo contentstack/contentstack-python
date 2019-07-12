@@ -66,7 +66,7 @@ class ContentType:
         entry: Entry = Entry(content_type_id=self.__content_type_uid)
         entry.headers = self.__stack_headers
         if entry_uid is not None:
-            entry.uid = entry_uid
+            entry.set_uid(entry_uid)
 
         return entry
 

@@ -21,10 +21,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import contentstack
-from contentstack import http_request
-import requests
-import platform
 
 """
 contentstack.asset
@@ -36,6 +32,7 @@ API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#asse
 
 
 class Asset:
+
     """
     Assets refer to all the media files (images, videos, PDFs, audio files, and so on) uploaded
     in your Contentstack repository for future use. These files can be attached and used in multiple entries.
@@ -50,14 +47,12 @@ class Asset:
 
     [Single Asset]
     This call fetches the latest version of a specific asset of a particular stack.
-
     """
 
     def __init__(self, asset_uid: str = None):
-        from .stack import Stack
-        self.__stack = Stack()
+
+        self.__asset_uid = asset_uid
         self.__response = None
-        self.__asset_url_path: str = "assets"
         self.__local_params = {}
         self.__local_headers = {}
 
@@ -65,17 +60,14 @@ class Asset:
         self.__file_size = None
         self.__file_type = None
         self.__file_url = None
-        self.__uid = None
-        self.__tags = None
         self.__created_at = None
         self.__created_by = None
         self.__updated_at = None
         self.__updated_by = None
-
-        if asset_uid is not None and len(asset_uid) > 0:
-            self.__asset_uid = asset_uid
-            asset_url = "assets/{0}"
-            self.__asset_url_path = asset_url.format(self.__asset_uid)
+        self.__version = None
+        self.__dimension = None
+        self.__uid = None
+        self.__tags = None
 
     def set_stack_instance(self, stack):
         self.__local_headers = stack.local_headers
@@ -94,48 +86,141 @@ class Asset:
             self.__created_by = self.__response['created_by']
             self.__updated_at = self.__response['updated_at']
             self.__updated_by = self.__response['updated_by']
+            self.__version = self.__response['_version']
+            if 'dimension' in self.__response:
+                self.__dimension = self.__response['dimension']
 
-        def get_asset_uid(self):
-            return self.__uid
+    @property
+    def asset_uid(self):
 
-        def get_file_type(self):
-            return self.__file_type
+        """
+        uid = asset.asset_uid
+        :return: str of asset_uid
+        """
+        return self.__uid
 
-        def get_file_size(self):
-            return self.__file_size
+    @property
+    def filetype(self):
 
-        def get_filename(self):
-            return self.__file_name
+        """
+        file = asset.filetype
+        :return: str of filetype
+        """
+        return self.__file_type
 
-        def get_url(self):
-            return self.__file_url
+    @property
+    def filesize(self):
 
-        def to_json(self):
-            return self.__response
+        """
+        size = asset.file_size
+        :return: file_size
+        """
+        return self.__file_size
 
-        def get_create_at(self):
-            return self.__created_at
+    @property
+    def filename(self):
 
-        def get_create_by(self):
-            return self.__created_by
+        """
+        filename = asset.filename
+        :return: filename
+        """
+        return self.__file_name
 
-        def get_update_at(self):
-            return self.__updated_at
+    @property
+    def url(self):
 
-        def get_update_by(self):
-            return self.__updated_by
+        """
+        file_url = asset.file_url
+        :return: file_url
+        """
+        return self.__file_url
 
-        def get_tags(self):
-            return self.__tags
+    @property
+    def to_json(self):
 
-    def set_header(self, **headers):
-        if headers is not None:
+        """
+        response = asset.to_json
+        :return: dict response
+        """
+        return self.__response
+
+    @property
+    def create_at(self):
+
+        """
+        created_at = asset.created_at
+        :return: str created_at
+        """
+        return self.__created_at
+
+    @property
+    def create_by(self):
+
+        """
+        created_by = asset.created_by
+        :return: str created_by
+        """
+        return self.__created_by
+
+    @property
+    def update_at(self):
+
+        """
+        updated_at = asset.updated_at
+        :return: str updated_at
+        """
+        return self.__updated_at
+
+    @property
+    def update_by(self):
+
+        """
+        updated_by = asset.updated_by
+        :return: str updated_by
+        """
+        return self.__updated_by
+
+    @property
+    def tags(self):
+
+        """
+        tags = asset.tags
+        :return: list tags
+        """
+        return self.__tags
+
+    @property
+    def get_version(self):
+
+        """
+        tags = asset.tags
+        :return: list tags
+        """
+        return self.__version
+
+    @property
+    def dimension(self) -> tuple:
+
+        """
+        tags = asset.tags
+        :return: list tags
+        """
+        global width, height
+        if self.__dimension is not None and isinstance(self.__dimension, dict):
+            dim: dict = self.__dimension
+            height, width = dim.values()
+        return height, width
+
+    def set_header(self, headers: dict):
+        if headers is not None and isinstance(headers, dict):
             self.__local_headers = headers
             for key, value in self.__local_headers.items():
+                if key == 'environment':
+                    self.__local_params["environment"] = value
                 self.__local_headers[key] = value
         return self
 
-    def add_params(self, **params):
+    def add_params(self, params: dict):
         if params is not None:
             self.__local_params = params
             for key, value in self.__local_params.items():
@@ -143,17 +228,16 @@ class Asset:
         return self
 
     def relative_urls(self):
-        self.__local_params["relative_urls"] = "true"
+        self.__local_params['relative_urls'] = "true"
         return self
 
-    def get_version(self, version):
+    def version(self, version):
         if version is not None:
-            self.__local_params["environment"] = ''
-            self.__local_params["version"] = version
+            self.__local_params['version'] = version
         return self
 
     def include_dimension(self):
-        self.__local_params["include_dimension"] = "true"
+        self.__local_params['include_dimension'] = "true"
         return self
 
     def remove_header(self, key):
@@ -166,17 +250,53 @@ class Asset:
         if asset_uid is not None:
             self.__asset_uid = asset_uid
 
-    def fetch(self) -> tuple:
-        print('__asset_url ::', self.__asset_url_path)
-        print('__params    ::', self.__local_params)
-        print('__headers   ::', self.__local_headers)
+    @classmethod
+    def all_assets(cls):
 
-        asset_request = http_request.HTTPRequestConnection(self.__asset_url_path, self.__local_params,
-                                                           self.__local_headers)
-        (response, error) = asset_request.http_request()
-        if error is None:
-            response = response['asset']
-            # response = AssetModel(response)
-            return response, error
+        pass
+
+    def fetch(self) -> tuple:
+
+        import requests
+        from urllib import parse
+        from requests import Response
+        from contentstack import Config
+        error = None
+
+        # endpoint = Config().endpoint('assets')
+        asset_url = '{}/{}'.format(Config().endpoint('assets'), self.__asset_uid)
+
+        self.__local_headers.update(self.header_agents())
+        payload = parse.urlencode(query=self.__local_params, encoding='UTF-8')
+        response: Response = requests.get(asset_url, params=payload, headers=self.__local_headers)
+        if response.ok:
+            response: dict = response.json()['asset']
+            self.configure(response)
         else:
-            return response, error
+            error = response.json()
+        return response, error
+
+    @classmethod
+    def header_agents(cls) -> dict:
+
+        import contentstack
+        import platform
+
+        """
+        Contentstack-User-Agent header.
+        """
+        header = {'sdk': dict(name=contentstack.__package__, version=contentstack.__version__)}
+        os_name = platform.system()
+        if os_name == 'Darwin':
+            os_name = 'macOS'
+        elif not os_name or os_name == 'Java':
+            os_name = None
+        elif os_name and os_name not in ['macOS', 'Windows']:
+            os_name = 'Linux'
+        header['os'] = {
+            'name': os_name,
+            'version': platform.release()
+        }
+
+        local_headers = {'X-User-Agent': str(header), "Content-Type": 'application/json'}
+        return local_headers
