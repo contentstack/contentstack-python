@@ -32,7 +32,6 @@ API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#asse
 
 
 class Asset:
-
     """
     Assets refer to all the media files (images, videos, PDFs, audio files, and so on) uploaded
     in your Contentstack repository for future use. These files can be attached and used in multiple entries.
@@ -250,8 +249,26 @@ class Asset:
         if asset_uid is not None:
             self.__asset_uid = asset_uid
 
-    @classmethod
-    def all_assets(cls):
+    def fetch_all(self) -> tuple:
+
+        import requests
+        from urllib import parse
+        from requests import Response
+        from contentstack import Config
+        error = None
+
+        # endpoint = Config().endpoint('assets')
+        asset_url = Config().endpoint('assets')
+        self.__local_headers.update(self.header_agents())
+        payload = parse.urlencode(query=self.__local_params, encoding='UTF-8')
+        response: Response = requests.get(asset_url, params=payload, headers=self.__local_headers)
+        if response.ok:
+            response: dict = response.json()['assets']
+            print(response)
+            # self.configure(response)
+        else:
+            error = response.json()
+        return response, error
 
         pass
 
