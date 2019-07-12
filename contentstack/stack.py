@@ -155,6 +155,7 @@ class Stack(object):
         return https_request.http_request()
 
     def asset(self, uid: str = None):
+
         """
         Assets refer to all the media files (images, videos, PDFs, audio files, and so on)
         uploaded in your Contentstack repository for future use. These files can be
@@ -176,8 +177,10 @@ class Stack(object):
         This call fetches the latest version of a specific asset of a particular stack.
         """
         from contentstack import Asset
-        assets = Asset(uid)
-        assets.set_stack_instance(self)
+        assets = Asset(asset_uid=uid)
+        assets.set_header(self.__local_headers)
+        if uid is not None:
+            assets.set_uid(asset_uid=uid)
         return assets
 
     @staticmethod

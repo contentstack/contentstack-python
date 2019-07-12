@@ -33,12 +33,13 @@ class ContentstackTestcase(TestCase):
 
     def setUp(self):
         self.stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development')
-        self.production_stack = Stack(api_key="blt20962a819b57e233", access_token="cs18efd90468f135a3a5eda3ba",
-                                      environment="production")
+        self.stack_asset = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f',
+                                 environment='production')
+        self.stack_entry = Stack(api_key="blt20962a819b57e233", access_token="cs18efd90468f135a3a5eda3ba",
+                                 environment="production")
 
-    ####################################
-    # [Stack-testcases]
-    ####################################
+    # [Stack]
+
     def test_stack(self):
         self.assertEqual('development', self.stack.environment)
         self.assertEqual('blt01638c90cc28fb6f', self.stack.access_token)
@@ -101,9 +102,7 @@ class ContentstackTestcase(TestCase):
         else:
             self.assertTrue(False)
 
-    ####################################
-    # [Sync-testcases]
-    ####################################
+    # [Sync]
 
     def test_sync_pagination(self):
         sync_stack = Stack(api_key="blt477ba55f9a67bcdf", access_token="cs7731f03a2feef7713546fde5", environment="web")
@@ -128,9 +127,7 @@ class ContentstackTestcase(TestCase):
         items = response.get_total_count
         self.assertTrue(9, items)
 
-    ##############################################################
     # [ContentType class]
-    ##############################################################
 
     def test_content_type_headers(self):
         variable = self.stack.content_type('product')
@@ -147,8 +144,8 @@ class ContentstackTestcase(TestCase):
                 self.assertEqual(4, len(result))
 
     def test_content_type(self):
-        ct = self.stack.content_type('product')
-        result, error = ct.fetch()
+        content_type = self.stack.content_type('product')
+        result, error = content_type.fetch()
         if error is None:
             if 'schema' in result:
                 schema_result = result['schema']
@@ -156,138 +153,258 @@ class ContentstackTestcase(TestCase):
                     print(schema)
                 self.assertEquals(list, type(schema_result))
 
-    ##############################################################
-    # [Entry class]
-    ##############################################################
+    # [Entry]
 
     def test_entry_by_uid(self):
-        entry = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        result, err = entry.fetch()
+        _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
+        result, err = _entry.fetch()
         if err is None:
             self.assertEquals(dict, type(result))
 
     def test_entry_title(self):
-        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        result = entry_instance.fetch()
+        _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
+        result = _entry.fetch()
         if result is not None:
-            self.assertEquals("Redmi Note 3", entry_instance.get_title())
+            self.assertEquals("Redmi Note 3", _entry.title)
 
     def test_entry_url(self):
-        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        result = entry_instance.fetch()
+        _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
+        result = _entry.fetch()
         if result is not None:
-            self.assertEquals("", entry_instance.get_url())
+            self.assertEquals("", _entry.urls)
 
     def test_entry_tags(self):
-        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        result = entry_instance.fetch()
+        _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
+        result = _entry.fetch()
         if result is not None:
-            self.assertEquals(list, type(entry_instance.get_tags()))
+            self.assertEquals(list, type(_entry.tags))
 
     def test_entry_content_type(self):
-        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        result = entry_instance.fetch()
+        _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
+        result = _entry.fetch()
         if result is not None:
-            self.assertEquals('product', entry_instance.get_content_type())
+            self.assertEquals('product', _entry.content_type)
 
     def test_is_entry_uid_correct(self):
-        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        result = entry_instance.fetch()
+        entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
+        result = entry.fetch()
         if result is not None:
-            self.assertEquals('blt9965f5f9840923ba', entry_instance.get_uid())
+            self.assertEquals('blt9965f5f9840923ba', entry.uid)
 
     def test_entry_locale(self):
-        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale = 'en-us'
-        result = entry_instance.fetch()
+        _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
+        _entry.locale = 'en-us'
+        result = _entry.fetch()
         if result is not None:
-            if '-' in entry_instance.locale:
-                self.assertEquals('en-us', entry_instance.locale)
+            if '-' in _entry.locale:
+                self.assertEquals('en-us', _entry.locale)
 
     def test_entry_to_json(self):
-        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale = 'en-us'
-        result = entry_instance.fetch()
+        _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
+        _entry.locale = 'en-us'
+        result = _entry.fetch()
         if result is not None:
-            self.assertEquals(dict, type(entry_instance.to_json()))
+            self.assertEquals(dict, type(_entry.to_json))
 
     def test_entry_get(self):
-        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale = 'en-us'
-        result = entry_instance.fetch()
+        _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
+        _entry.locale = 'en-us'
+        result = _entry.fetch()
         if result is not None:
-            self.assertEquals('blt9965f5f9840923ba', entry_instance.get('uid'))
+            self.assertEquals('blt9965f5f9840923ba', _entry.get('uid'))
 
     def test_entry_string(self):
-        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale = 'en-us'
-        result = entry_instance.fetch()
+        _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
+        _entry.locale = 'en-us'
+        result = _entry.fetch()
         if result is not None:
-            self.assertEquals(str, type(entry_instance.get_string('description')))
+            self.assertEquals(str, type(_entry.get_string('description')))
 
     def test_entry_boolean(self):
-        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale = 'en-us'
-        result = entry_instance.fetch()
+        entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
+        entry.locale = 'en-us'
+        result = entry.fetch()
         if result is not None:
-            self.assertFalse(None, type(entry_instance.get_boolean('description')))
+            self.assertFalse(None, type(entry.get_boolean('description')))
 
     def test_entry_json(self):
-        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale = 'en-us'
-        result = entry_instance.fetch()
+        _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
+        _entry.locale = 'en-us'
+        result = _entry.fetch()
         if result is not None:
-            json_result = entry_instance.json('publish_details')
+            json_result = _entry.get_json('publish_details')
             self.assertEquals(dict, type(json_result))
 
     def test_entry_get_int(self):
-        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale = 'en-us'
-        result = entry_instance.fetch()
+        _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
+        _entry.locale = 'en-us'
+        result = _entry.fetch()
         if result is not None:
-            json_result = entry_instance.get_int('color')
+            json_result = _entry.get_int('color')
             self.assertFalse(None, type(json_result))
 
     def test_entry_get_created_at(self):
-        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale = 'en-us'
-        result = entry_instance.fetch()
+        _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
+        _entry.locale = 'en-us'
+        result = _entry.fetch()
         if result is not None:
-            created_at = entry_instance.get_created_at()
+            created_at = _entry.created_at
             self.assertTrue(str, type(created_at))
 
     def test_entry_get_created_by(self):
-        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale = 'en-us'
-        result = entry_instance.fetch()
+        _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
+        _entry.locale = 'en-us'
+        result = _entry.fetch()
         if result is not None:
-            created_by = entry_instance.get_created_by()
+            created_by = _entry.created_by
             self.assertTrue(str, type(created_by))
 
     def test_entry_get_updated_at(self):
-        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale = 'en-us'
-        result = entry_instance.fetch()
+        _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
+        _entry.locale = 'en-us'
+        result = _entry.fetch()
         if result is not None:
-            updated_at = entry_instance.get_updated_at()
+            updated_at = _entry.updated_at
             self.assertTrue(str, type(updated_at))
 
     def test_entry_get_updated_by(self):
-        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale = 'en-us'
-        result = entry_instance.fetch()
+        _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
+        _entry.locale = 'en-us'
+        result = _entry.fetch()
         if result is not None:
-            updated_by = entry_instance.get_updated_by()
+            updated_by = _entry.updated_by
             self.assertTrue(str, type(updated_by))
 
     def test_entry_get_asset(self):
-        entry_instance = self.production_stack.content_type('product').entry('blt9965f5f9840923ba')
-        entry_instance.locale = 'en-us'
-        result = entry_instance.fetch()
+        _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
+        _entry.locale = 'en-us'
         # incomplete
+        # some more testcases required
+
+        # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        # #############################################
+        # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
     # [ASSETS]
+    def test_asset(self):
+        _asset = self.stack_asset.asset('blt91af1e5af9c3639f')
+        _asset.version(1)
+        _asset.relative_urls()
+        _asset.include_dimension()
+        result, error = _asset.fetch()
+        if error is None:
+            self.assertEqual(16, len(result))
+            logging.debug(result)
 
-    # def test_init_asset(self):
-    # asset: Asset = self.production_stack.asset('some_uid')
-    # asset.add_params('ewqweed')
+    def test_asset_relative_urls(self):
+        _asset = self.stack_asset.asset('blt91af1e5af9c3639f')
+        _asset.relative_urls()
+        result, error = _asset.fetch()
+        if error is None:
+            self.assertNotIn('images.contentstack.io/', _asset.url)
+            logging.debug(result)
+
+    def test_asset_version(self):
+        _asset = self.stack_asset.asset('blt91af1e5af9c3639f')
+        _asset.version(1)
+        result, error = _asset.fetch()
+        if error is None:
+            self.assertEqual(1, _asset.get_version)
+            logging.debug(result)
+
+    def test_asset_include_dimension(self):
+        _asset = self.stack_asset.asset('blt91af1e5af9c3639f')
+        _asset.include_dimension()
+        result, error = _asset.fetch()
+        if error is None:
+            self.assertEqual(tuple, type(_asset.dimension))
+            logging.debug('tuple dimension is %s ' + _asset.dimension.__str__())
+
+    def test_asset_remove_header(self):
+        _asset = self.stack_asset.asset('blt91af1e5af9c3639f')
+        _asset.remove_header('access_token')
+        result, error = _asset.fetch()
+        if error is None:
+            self.assertEqual(2, 22)
+        else:
+            self.assertEqual(105, error['error_code'], 'mean to fail. Fail is expected output')
+
+    def test_asset_uid(self):
+        _asset = self.stack_asset.asset('blt91af1e5af9c3639f')
+        result, error = _asset.fetch()
+        if error is None:
+            self.assertEqual('blt91af1e5af9c3639f', _asset.asset_uid)
+
+    def test_asset_filetype(self):
+        _asset = self.stack_asset.asset('blt91af1e5af9c3639f')
+        result, error = _asset.fetch()
+        if error is None:
+            self.assertEqual('image/png', _asset.filetype)
+
+    def test_asset_file_size(self):
+        _asset = self.stack_asset.asset('blt91af1e5af9c3639f')
+        result, error = _asset.fetch()
+        if error is None:
+            self.assertEqual('63430', _asset.filesize)
+
+    def test_asset_filename(self):
+        _asset = self.stack_asset.asset('blt91af1e5af9c3639f')
+        result, error = _asset.fetch()
+        if error is None:
+            self.assertEqual('.png', _asset.filename[-4:])
+
+    def test_asset_url(self):
+        _asset = self.stack_asset.asset('blt91af1e5af9c3639f')
+        result, error = _asset.fetch()
+        if error is None:
+            self.assertEqual('.png', _asset.url[-4:])
+
+    def test_asset_to_json(self):
+        _asset = self.stack_asset.asset('blt91af1e5af9c3639f')
+        result, error = _asset.fetch()
+        if error is None:
+            self.assertEqual(dict, type(_asset.to_json))
+
+    def test_asset_create_at(self):
+        _asset = self.stack_asset.asset('blt91af1e5af9c3639f')
+        result, error = _asset.fetch()
+        if error is None:
+            sallie: str = _asset.create_at
+            var_shailesh, fileid = sallie.split('T')
+            self.assertEqual('2017-01-10', var_shailesh)
+
+    def test_asset_create_by(self):
+        _asset = self.stack_asset.asset('blt91af1e5af9c3639f')
+        result, error = _asset.fetch()
+        if error is None:
+            sallie: str = _asset.create_by
+            var_shailesh, fileid = sallie.split('_')
+            self.assertEqual('sys', var_shailesh)
+
+    def test_asset_update_at(self):
+        _asset = self.stack_asset.asset('blt91af1e5af9c3639f')
+        result, error = _asset.fetch()
+        if error is None:
+            sallie: str = _asset.update_at
+            var_shailesh, fileid = sallie.split('T')
+            self.assertEqual('2017-01-10', var_shailesh)
+
+    def test_asset_update_by(self):
+        _asset = self.stack_asset.asset('blt91af1e5af9c3639f')
+        result, error = _asset.fetch()
+        if error is None:
+            sallie: str = _asset.update_by
+            var_shailesh, fileid = sallie.split('_')
+            self.assertEqual('sys', var_shailesh)
+
+    def test_asset_tags(self):
+        _asset = self.stack_asset.asset('blt91af1e5af9c3639f')
+        result, error = _asset.fetch()
+        if error is None:
+            self.assertEqual(list, type(_asset.tags))
+
+    def test_assets(self):
+        _asset = self.stack_asset.asset('blt91af1e5af9c3639f')
+        result, error = _asset.fetch()
+        if error is None:
+            self.assertEqual(list, type(_asset.tags))

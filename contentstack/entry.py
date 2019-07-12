@@ -39,6 +39,8 @@ class Entry:
         self.__content_type_id = content_type_id
         if self.__content_type_id is not None:
             self.url = '{}/{}/entries/'.format(self.url, self.__content_type_id)
+        else:
+            raise AssertionError('content_type id can not be None!')
 
         self.__local_params: dict = {}
         self.__stack_headers: dict = {}
@@ -76,8 +78,7 @@ class Entry:
     def uid(self):
         return self.__entry_uid
 
-    @uid.setter
-    def uid(self, entry_uid: str):
+    def set_uid(self, entry_uid):
         if entry_uid is not None and isinstance(entry_uid, str):
             self.__entry_uid = entry_uid
 
@@ -139,30 +140,37 @@ class Entry:
                 self.__stack_headers.pop(key)
         return self
 
-    def get_title(self):
+    @property
+    def title(self):
         """ title = entry.get_title() """
         return self.__title
 
-    def get_url(self):
+    @property
+    def urls(self):
         """ [Uses]: url = entry.get_url() """
         return self.__url
 
-    def get_tags(self):
+    @property
+    def tags(self):
         """
         [Uses]: tags = get_tags()
         """
         return self.__tags
 
-    def get_content_type(self):
+    @property
+    def content_type(self):
+
         """
          [Uses]: content_type = get_content_type()
         """
         return self.__content_type_id
 
-    def get_uid(self):
+    @property
+    def uid(self):
         """ [Uses]: uid = get_uid() """
         return self.__entry_uid
 
+    @property
     def to_json(self):
         if self.__result_json is not None:
             return self.__result_json
@@ -188,14 +196,14 @@ class Entry:
         else:
             return None
 
-    def json(self, key):
+    def get_json(self, key):
         value = self.get(key)
         if isinstance(value, dict):
             return value
         else:
             return None
 
-    def get_json_list(self, key):
+    def get_list(self, key):
         value = self.get(key)
         if isinstance(value, list):
             return value
@@ -216,7 +224,8 @@ class Entry:
         else:
             return None
 
-    def get_created_at(self):
+    @property
+    def created_at(self):
         """
         value of creation time of entry.
         [Uses] created_at = entry.get_created_at()
@@ -224,7 +233,8 @@ class Entry:
         """
         return self.__created_at
 
-    def get_created_by(self):
+    @property
+    def created_by(self):
         """
         Get uid who created this entry.
         created_by = entry.get_created_by()
@@ -232,7 +242,8 @@ class Entry:
         """
         return self.__created_by
 
-    def get_updated_at(self):
+    @property
+    def updated_at(self):
         """
         value of updating time of entry.
         [Uses] updated_at = entry.get_updated_at()
@@ -240,7 +251,8 @@ class Entry:
         """
         return self.__updated_at
 
-    def get_updated_by(self):
+    @property
+    def updated_by(self):
         """
         Get uid who updated this entry.
         [Uses]  updated_by = entry.get_updated_by()
@@ -256,11 +268,11 @@ class Entry:
         :param field_uid as key:
         :return: asset
         """
-        global asset
+        asset = contentstack.asset.Asset
         if key is not None:
-            result = self.json(key)
+            result = self.get_json(key)
             if result is not None and isinstance(result, dict):
-                asset = self.asset.configure(result)
+                asset = asset.configure(result)
         return asset
 
     def get_assets(self, key: str) -> list:
@@ -272,12 +284,12 @@ class Entry:
         """
         assets: List[Any] = []
         if key is not None and isinstance(key, str):
-            assets_list = self.get_json_list(key)
-            if isinstance(assets_list, list):
-                for asset in assets_list:
-                    if isinstance(asset, dict):
-                        asset = self.asset.configure(asset)
-                        assets.append(asset)
+            assetlist = self.get_list(key)
+            if isinstance(assetlist, list):
+                for assetobj in assetlist:
+                    if isinstance(assetobj, dict):
+                        assetmodel = self.asset.configure(assetobj)
+                        assets.append(assetmodel)
         return assets
 
     def get_group(self, key: str):
@@ -460,11 +472,6 @@ class Entry:
 
     def fetch(self) -> tuple:
 
-        '''
-        [sample url be like]
-        https://cdn.contentstack.io/v3/content_types/product/entries/blt9965f5f9840923ba?version=7&environment=production&locale=en-us
-        :return:
-        '''
         import requests
         from urllib import parse
         from requests import Response
@@ -495,6 +502,7 @@ class Entry:
 
     @property
     def __user_agent(self):
+
         import contentstack
         import platform
         """
