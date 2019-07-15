@@ -73,8 +73,11 @@ class Asset:
         self.__local_headers = stack.get_headers()
 
     def configure(self, response: dict):
+
         self.__response = response
+
         if self.__response is not None:
+
             self.__file_name = self.__response['filename']
             self.__file_size = self.__response['file_size']
             self.__file_type = self.__response['content_type']
@@ -88,6 +91,8 @@ class Asset:
             self.__version = self.__response['_version']
             if 'dimension' in self.__response:
                 self.__dimension = self.__response['dimension']
+
+        return self
 
     @property
     def asset_uid(self):
@@ -255,22 +260,34 @@ class Asset:
         from urllib import parse
         from requests import Response
         from contentstack import Config
-        error = None
+        from contentstack import Error
 
-        # endpoint = Config().endpoint('assets')
+        error = None
         asset_url = Config().endpoint('assets')
         self.__local_headers.update(self.header_agents())
         payload = parse.urlencode(query=self.__local_params, encoding='UTF-8')
-        response: Response = requests.get(asset_url, params=payload, headers=self.__local_headers)
-        if response.ok:
-            response: dict = response.json()['assets']
-            print(response)
-            # self.configure(response)
-        else:
-            error = response.json()
-        return response, error
 
-        pass
+        try:
+            response: Response = requests.get(asset_url, params=payload, headers=self.__local_headers)
+            list_asset: list[Asset] = []
+
+            if response.ok:
+
+                response: dict = response.json()['assets']
+                print(response)
+                for asset in response:
+                    asset_resp: Asset = self.configure(asset)
+                    list_asset.append(asset_resp)
+            else:
+
+                error_dict = response.json()
+                Error().error(error_dict)
+
+            return list_asset, error
+
+        except requests.exceptions.RequestException as e:
+            raise ConnectionError(e.response)
+            pass
 
     def fetch(self) -> tuple:
 
@@ -280,18 +297,30 @@ class Asset:
         from contentstack import Config
         error = None
 
-        # endpoint = Config().endpoint('assets')
         asset_url = '{}/{}'.format(Config().endpoint('assets'), self.__asset_uid)
+
+        if self.__asset_uid is None or len(self.__asset_uid) == 0:
+            raise KeyError('Please provide asset uid to process to fetch response')
 
         self.__local_headers.update(self.header_agents())
         payload = parse.urlencode(query=self.__local_params, encoding='UTF-8')
-        response: Response = requests.get(asset_url, params=payload, headers=self.__local_headers)
-        if response.ok:
-            response: dict = response.json()['asset']
-            self.configure(response)
-        else:
-            error = response.json()
-        return response, error
+
+        try:
+            response: Response = requests.get(asset_url, params=payload, headers=self.__local_headers)
+
+            if response.ok:
+                response: dict = response.json()['asset']
+                self.configure(response)
+
+            else:
+
+                error = response.json()
+
+            return response, error
+
+        except requests.exceptions.RequestException as e:
+            raise ConnectionError(e.response)
+            pass
 
     @classmethod
     def header_agents(cls) -> dict:
@@ -304,12 +333,16 @@ class Asset:
         """
         header = {'sdk': dict(name=contentstack.__package__, version=contentstack.__version__)}
         os_name = platform.system()
+
         if os_name == 'Darwin':
             os_name = 'macOS'
+
         elif not os_name or os_name == 'Java':
             os_name = None
+
         elif os_name and os_name not in ['macOS', 'Windows']:
             os_name = 'Linux'
+
         header['os'] = {
             'name': os_name,
             'version': platform.release()

@@ -23,53 +23,52 @@
  *
  """
 
-from contentstack import http_request
-
-"""
-contentstack.asset_library
-~~~~~~~~~~~~~~~~~~
-This module implements the AssetLibrary class.
-API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#assets
-
-"""
-
 
 class AssetLibrary:
+    """
+    contentstack.asset_library
+    ~~~~~~~~~~~~~~~~~~
+    This module implements the AssetLibrary class.
+    API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#assets
+
+    """
 
     def __init__(self):
         self.count = 0
-        self.__local_header: dict = {}
-        self.__post_params: dict = {}
+        self.__local_headers = {}
+        self.__query_params = {}
 
     def set_header(self, key: str, value):
         if key is not None and value is not None:
-            self.__local_header[key] = value
+            self.__local_headers[key] = value
             return self
 
-    def set_headers(self, **headers):
-        if headers is not None:
-            self.__local_header = headers
-            for key, value in self.__local_header.items():
-                self.__local_header[key] = value
+    def headers(self, headers: dict):
+        if headers is not None and len(headers) > 0 and isinstance(headers, dict):
+            self.__local_headers = headers
+            if 'environment' in self.__local_headers:
+                env_value = self.__local_headers['environment']
+                self.__query_params["environment"] = env_value
         return self
 
     def remove_header(self, key):
         if key is not None:
-            if key in self.__local_header:
-                self.__local_header.pop(key)
+            if key in self.__local_headers:
+                self.__local_headers.pop(key)
         return self
 
     def include_count(self):
-        self.__post_params['include_count'] = 'true'
+        self.__query_params['include_count'] = 'true'
         return self
 
     def include_relative_url(self):
-        self.__post_params['relative_urls'] = 'true'
+        self.__query_params['relative_urls'] = 'true'
         return self
 
     def get_count(self) -> int:
         return self.count
 
+    # Color = enumerate(RED="ASCENDING", GREEN='DESCENDING')
     # [PENDING], Need to add
     # order_by = Enum('ORDER_BY', 'ASCENDING DESCENDING')
     #   def sort(self, key: str, order_by):
@@ -79,18 +78,68 @@ class AssetLibrary:
     #       self.__post_params['desc'] = key
     #   return self.__post_params
 
-    def fetch(self) -> tuple:
-        print('__params  ::', self.__post_params)
-        print('__headers ::', self.__local_header)
-        asset_request = http_request.HTTPRequestConnection('assets', self.__post_params, self.__local_header)
-        (response, error) = asset_request.http_request()
-        if error is None:
-            print(response)
-            self.__set_response(response['assets'])
-            return response, error
-        else:
-            return response, error
+    def fetch_all(self) -> tuple:
 
-    def __set_response(self, param):
+        import requests
+        from urllib import parse
+        from requests import Response
+        from contentstack import Config
+        from contentstack import Error
+        from contentstack import Asset
 
-        pass
+        error = None
+        asset_url = Config().endpoint('assets')
+        self.__local_headers.update(self.header_agents())
+        payload = parse.urlencode(query=self.__query_params, encoding='UTF-8')
+
+        try:
+            response: Response = requests.get(asset_url, params=payload, headers=self.__local_headers)
+            list_asset: list[Asset] = []
+
+            if response.ok:
+
+                response: dict = response.json()['assets']
+
+                for asset in response:
+                    asset_instance = Asset()
+                    asset_resp: Asset = asset_instance.configure(response=asset)
+                    list_asset.append(asset_resp)
+            else:
+
+                error_dict = response.json()
+                Error().error(error_dict)
+
+            return list_asset, error
+
+        except requests.exceptions.RequestException as e:
+            raise ConnectionError(e.response)
+            pass
+
+    @classmethod
+    def header_agents(cls) -> dict:
+
+        import contentstack
+        import platform
+
+        """
+        Contentstack-User-Agent header.
+        """
+        header = {'sdk': dict(name=contentstack.__package__, version=contentstack.__version__)}
+        os_name = platform.system()
+
+        if os_name == 'Darwin':
+            os_name = 'macOS'
+
+        elif not os_name or os_name == 'Java':
+            os_name = None
+
+        elif os_name and os_name not in ['macOS', 'Windows']:
+            os_name = 'Linux'
+
+        header['os'] = {
+            'name': os_name,
+            'version': platform.release()
+        }
+
+        local_headers = {'X-User-Agent': str(header), "Content-Type": 'application/json'}
+        return local_headers

@@ -23,9 +23,7 @@ SOFTWARE.
  
 """
 import logging
-import contentstack
-from contentstack import errors as err, Config
-import contentstack.entry
+from contentstack import errors as err
 from contentstack import http_request
 
 """
@@ -42,6 +40,7 @@ log = logging.getLogger(__name__)
 
 
 class Stack(object):
+    from contentstack import Config
 
     def __init__(self, api_key: str, access_token: str, environment: str, configs: Config = None):
 
@@ -57,14 +56,13 @@ class Stack(object):
         :param configs:
         """
         log.error('API_key - {0}, access_token - {1}, environment - {2}:'.format(api_key, access_token, environment))
-
+        from contentstack import Config
         self.__api_key = api_key
         self.__access_token = access_token
         self.__environment = environment
 
         if configs is not None and isinstance(configs, Config):
             self._configs = configs
-            self.config(configs=self._configs)
 
         self.__initialise_stack()
         # declare stack class variables
@@ -94,18 +92,19 @@ class Stack(object):
 
     @property
     def config(self):
-        return contentstack.config.Config
+
+        return self._configs
 
     @config.setter
-    def config(self, configs: contentstack.config.Config) -> contentstack.config.Config:
-
+    def config(self, configs_instance):
+        from contentstack import Config
         """
         :type configs: object
         :param configs:
         :return:
         """
-        self._configs: contentstack.config.Config = configs
-        return self._configs
+        if isinstance(configs_instance, Config):
+            self._configs = configs_instance
 
     @property
     def stack(self):
@@ -114,9 +113,8 @@ class Stack(object):
 
     @stack.setter
     def stack(self, api_key):
-        if 'api_key' in self.__local_headers:
+        if api_key is not None and len(api_key) > 0:
             self.__local_headers['api_key'] = api_key
-        return self
 
     def content_type(self, content_type_id: str):
 
@@ -131,8 +129,12 @@ class Stack(object):
         :return type: contentstack.content_type.ContentType
         """
         from contentstack import ContentType
-        content_type = ContentType(content_type_id)
-        content_type.headers = self.__local_headers
+        if content_type_id is not None and len(content_type_id) > 0 and isinstance(content_type_id, str):
+            content_type = ContentType(content_type_id)
+            content_type.headers = self.__local_headers
+        else:
+            raise KeyError('Please provide a valid content_type')
+
         return content_type
 
     def content_types(self):
@@ -183,14 +185,18 @@ class Stack(object):
             assets.set_uid(asset_uid=uid)
         return assets
 
-    @staticmethod
-    def asset_library():
+    def asset_library(self):
         from contentstack import AssetLibrary
-        return AssetLibrary()
+        asset_library = AssetLibrary()
+        asset_library.headers(self.__local_headers)
+        return asset_library
 
     @property
     def application_key(self):
-        """ :returns API_key: str """
+
+        """
+        :returns API_key: str
+        """
 
         if 'api_key' in self.__local_headers:
             app_key = self.__local_headers['api_key']
@@ -286,11 +292,12 @@ class Stack(object):
         In such cases, this token can be used to restart the sync process from where it was interrupted.
         """
         self.__sync_query = {'init': 'true', 'pagination_token': pagination_token}
-        https_request = http_request.HTTPRequestConnection('sync', self.__sync_query, self.__local_headers)
-        response, error = https_request.http_request()
-        if error is None:
-            response: SyncStack = SyncStack(response)
-        return response, error
+        return self.__sync_request()
+        # https_request = http_request.HTTPRequestConnection('sync', self.__sync_query, self.__local_headers)
+        # response, error = https_request.http_request()
+        # if error is None:
+        #    response: SyncStack = SyncStack(response)
+        # return response, error
 
     def sync_token(self, sync_token):
 
@@ -301,12 +308,13 @@ class Stack(object):
         and the details of the content that was deleted or updated.
         """
         self.__sync_query = {'init': 'true', 'sync_token': sync_token}
-        sync_result = None
-        https_request = http_request.HTTPRequestConnection('sync', self.__sync_query, self.__local_headers)
-        response, error = https_request.http_request()
-        if error is None:
-            sync_result: SyncStack = SyncStack(response)
-        return sync_result, error
+        return self.__sync_request()
+        # sync_result = None
+        # https_request = http_request.HTTPRequestConnection('sync', self.__sync_query, self.__local_headers)
+        # response, error = https_request.http_request()
+        # if error is None:
+        #    sync_result: SyncStack = SyncStack(response)
+        # return sync_result, error
 
     def sync(self, from_date=None, content_type_uid=None, publish_type=None, language_code='en-us'):
 
@@ -341,12 +349,14 @@ class Stack(object):
         if language_code is not None:
             self.__sync_query["locale"] = language_code
 
-        sync_result = None
-        https_request = http_request.HTTPRequestConnection('sync', self.__sync_query, self.__local_headers)
-        response, error = https_request.http_request()
-        if error is None:
-            sync_result: SyncStack = SyncStack(response)
-        return sync_result, error
+        return self.__sync_request()
+
+        # sync_result = None
+        # https_request = http_request.HTTPRequestConnection('sync', self.__sync_query, self.__local_headers)
+        # response, error = https_request.http_request()
+        # if error is None:
+        #    sync_result: SyncStack = SyncStack(response)
+        # return sync_result, error
 
     @property
     def environment(self):
@@ -373,43 +383,137 @@ class Stack(object):
         self.__local_headers['api_key'] = self.__api_key
         self.__local_headers['access_token'] = self.__access_token
         self.__local_headers['environment'] = self.__environment
-        logging.debug('contentstack logged in')
+
+    def __sync_request(self) -> tuple:
+
+        import requests
+        from urllib import parse
+        from requests import Response
+        from contentstack import Config
+        error = None
+
+        sync_url = Config().endpoint('sync')
+        self.__local_headers.update(self.header_agents())
+        payload = parse.urlencode(query=self.__sync_query, encoding='UTF-8')
+
+        try:
+            response: Response = requests.get(sync_url, params=payload, headers=self.__local_headers)
+
+            if response.ok:
+                response: dict = response.json()
+                response: SyncStack = SyncStack(response)
+
+            else:
+                error = response.json()
+
+            return response, error
+
+        except requests.exceptions.RequestException as e:
+            raise ConnectionError(e.response)
+            pass
 
     def fetch(self) -> tuple:
-        https_request = http_request.HTTPRequestConnection('stacks', self.__stack_query, self.__local_headers)
-        return https_request.http_request()
+
+        import requests
+        from urllib import parse
+        from requests import Response
+        from contentstack import Config
+        error = None
+
+        stack_url = Config().endpoint('stacks')
+        self.__local_headers.update(self.header_agents())
+        payload = parse.urlencode(query=self.__stack_query, encoding='UTF-8')
+
+        try:
+            response: Response = requests.get(stack_url, params=payload, headers=self.__local_headers)
+
+            if response.ok:
+                response = response.json()
+
+            else:
+                error = response.json()
+
+            return response, error
+
+        except requests.exceptions.RequestException as e:
+            raise ConnectionError(e.response)
+            pass
+
+    @classmethod
+    def header_agents(cls) -> dict:
+
+        import contentstack
+        import platform
+
+        """
+        Contentstack-User-Agent header.
+        """
+        header = {'sdk': dict(name=contentstack.__package__, version=contentstack.__version__)}
+        os_name = platform.system()
+
+        if os_name == 'Darwin':
+            os_name = 'macOS'
+
+        elif not os_name or os_name == 'Java':
+            os_name = None
+
+        elif os_name and os_name not in ['macOS', 'Windows']:
+            os_name = 'Linux'
+
+        header['os'] = {
+            'name': os_name,
+            'version': platform.release()
+        }
+
+        local_headers = {'X-User-Agent': str(header), "Content-Type": 'application/json'}
+        return local_headers
 
 
-class SyncStack(object):
+class SyncStack:
 
-    def __init__(self, json_dict: object) -> object:
+    def __init__(self, json_dict: dict):
+
         self.__sync_dict = json_dict
 
         if self.__sync_dict is not None:
+
             if "items" in self.__sync_dict:
-                self.__items = self.__sync_dict["items"]
+                self.__items = self.__sync_dict['items']
             if "skip" in self.__sync_dict:
-                self.__skip = self.__sync_dict["skip"]
+                self.__skip = self.__sync_dict['skip']
             if "limit" in self.__sync_dict:
-                self.__limit = self.__sync_dict["limit"]
+                self.__limit = self.__sync_dict['limit']
             if "total_count" in self.__sync_dict:
-                self.__total_count = self.__sync_dict["total_count"]
+                self.__total_count = self.__sync_dict['total_count']
             if "sync_token" in self.__sync_dict:
-                self.__sync_token = self.__sync_dict["sync_token"]
+                self.__sync_token = self.__sync_dict['sync_token']
             if "pagination_token" in self.__sync_dict:
-                self.__pagination_token = self.__sync_dict["pagination_token"]
+                self.__pagination_token = self.__sync_dict['pagination_token']
 
     @property
-    def get_json(self): return self.__sync_dict
+    def json(self):
+        return self.__sync_dict
+
     @property
-    def get_items(self): return self.__items
+    def items(self):
+        return self.__items
+
     @property
-    def get_skip(self): return self.__skip
+    def skip(self):
+        return self.__skip
+
     @property
-    def get_limit(self): return self.__limit
+    def limit(self):
+        return self.__limit
+
     @property
-    def get_total_count(self): return self.__total_count
+    def count(self):
+        return self.__total_count
+
     @property
-    def get_sync_token(self): return self.__sync_token
+    def sync_token(self):
+        return self.__sync_token
+
     @property
-    def get_pagination_token(self):return self.__pagination_token
+    def pagination_token(self):
+        return self.__pagination_token
