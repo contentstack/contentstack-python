@@ -33,14 +33,12 @@ import contentstack
 
 class Entry:
 
-    def __init__(self, content_type_id):
+    def __init__(self, content_type_id: str = None):
 
         self.url = contentstack.config.Config().endpoint('entries')
         self.__content_type_id = content_type_id
         if self.__content_type_id is not None:
             self.url = '{}/{}/entries/'.format(self.url, self.__content_type_id)
-        else:
-            raise AssertionError('content_type id can not be None!')
 
         self.__local_params: dict = {}
         self.__stack_headers: dict = {}

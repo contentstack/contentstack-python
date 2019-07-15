@@ -23,14 +23,20 @@
 """
 
 
-class HTTPError(Exception):
+class Error(Exception):
 
     """
     contentstack.error
     ~~~~~~~~~~~~~~~~~~
     This module implements the Error class.
     API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#error
+
     """
+
+    def __init__(self):
+        self.error_code = ''
+        self.msg = ''
+        self.cause_err = ''
 
     errors_str = {
 
@@ -98,10 +104,16 @@ class HTTPError(Exception):
 
     }
 
-    def get_error(self, response):
-        print('Error')
+    def error(self, response: dict) -> tuple:
+        if response is not None and isinstance(response, dict):
+            self.error_code = response['error_code']
+            self.msg = response['error_message']
+            self.cause_err = response['errors']
 
-    def set_logging_config(self, level):
+        return self.error_code, self.msg, self.cause_err
+
+    @staticmethod
+    def logging_config(level):
         print('level ' + level)
 
 

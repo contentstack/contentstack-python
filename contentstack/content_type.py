@@ -80,7 +80,7 @@ class ContentType:
         """
         from contentstack.query import Query
         query = Query(self.__content_type_uid)
-        query._headers(self.__stack_headers)
+        query.headers = self.__stack_headers
         return query
 
     def fetch(self) -> tuple:

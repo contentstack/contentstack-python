@@ -22,21 +22,23 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from unittest import TestCase
-from contentstack import config
-from contentstack.stack import Stack
 import logging
+from unittest import TestCase
+from contentstack.stack import Stack
 
 
 class ContentstackTestcase(TestCase):
     log = logging.getLogger(__name__)
 
     def setUp(self):
+
         self.stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development')
         self.stack_asset = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f',
                                  environment='production')
         self.stack_entry = Stack(api_key="blt20962a819b57e233", access_token="cs18efd90468f135a3a5eda3ba",
                                  environment="production")
+        self.stack_query = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f',
+                                 environment='production')
 
     # [Stack]
 
@@ -46,7 +48,8 @@ class ContentstackTestcase(TestCase):
         self.assertEqual('blt20962a819b57e233', self.stack.application_key)
 
     def test_config(self):
-        conf = config.Config()
+        from contentstack import Config
+        conf = Config()
         self.assertEqual('v3', conf.version())
         self.assertEqual('cdn.contentstack.io', conf.host())
         self.assertEqual('https://cdn.contentstack.io/v3/stacks', conf.endpoint('stacks'))
@@ -119,12 +122,12 @@ class ContentstackTestcase(TestCase):
                                       publish_type='entry_published')
         if err is None:
             print(result, type(result))
-            self.assertEquals(int, type(result.get_total_count))
+            self.assertEquals(int, type(result.count))
 
     def test_sync_token(self):
         sync_stack = Stack(api_key="blt477ba55f9a67bcdf", access_token="cs7731f03a2feef7713546fde5", environment="web")
         response, error = sync_stack.sync_token('bltbb61f31a70a572e6c9506a')
-        items = response.get_total_count
+        items = response.count
         self.assertTrue(9, items)
 
     # [ContentType class]
@@ -404,7 +407,44 @@ class ContentstackTestcase(TestCase):
             self.assertEqual(list, type(_asset.tags))
 
     def test_assets(self):
-        _asset = self.stack_asset.asset('blt91af1e5af9c3639f')
+        _asset = self.stack_asset.asset()
         result, error = _asset.fetch_all()
         if error is None:
-            self.assertEqual(list, type(_asset.tags))
+            self.assertEqual(list, type(result))
+
+    # [Asset Library]
+
+    def test_asset_library(self):
+        _asset_library = self.stack_asset.asset_library()
+        result, error = _asset_library.fetch_all()
+        if error is None:
+            self.assertEqual(list, type(result))
+
+    # [QUERY]
+
+    def test_query_content_type(self):
+        query = self.stack_query.content_type('product').query()
+        self.assertEqual('product', query.content_type)
+
+    def test_query_headers(self):
+        query = self.stack_query.content_type('product').query()
+        headers = query.headers
+        self.assertEqual(3, len(headers))
+
+    def test_query_remove_headers(self):
+        query = self.stack_query.content_type('product').query()
+        headers = query.remove_header('environment')
+        self.assertEqual(2, len(headers))
+
+    def test_query_add_headers(self):
+        query = self.stack_query.content_type('product').query()
+        headers = query.add_header('env', 'mishra')
+        self.assertEqual(4, len(headers))
+
+    def test_query_where(self):
+        # from contentstack import Entry
+        query = self.stack_query.content_type('product').query()
+        query.locale('en-us').where("title", "Redmi 3S")
+        result, error = query.find()
+        if error is None:
+            print(result)

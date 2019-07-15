@@ -12,7 +12,7 @@ from .asset import Asset
 from .asset_library import AssetLibrary
 from .config import Config
 from .content_type import ContentType
-from .errors import HTTPError, ConfigError
+from .errors import Error, ConfigError
 from .group import Group
 from .http_request import HTTPRequestConnection
 

@@ -22,11 +22,10 @@
  * SOFTWARE.
  *
  """
-from contentstack import http_request
+from urllib.request import urlretrieve
 
 
 class Query:
-
     """
     Contentstack provides certain queries that you can use to fetch filtered results.
     You can use queries for Entries and Assets API requests.
@@ -36,66 +35,86 @@ class Query:
 
     def __init__(self, content_type_id: str):
 
-        self._stack_headers = {}
-        self._objectUidForInclude: list = []
-        self._objectUidForExcept: list = []
-        self._objectUidForOnly: list = []
+        import contentstack
+        if content_type_id is not None and len(content_type_id) > 0:
+            self.__content_type_id = content_type_id
+            self.__entry_url = contentstack.config.Config().endpoint('entries')
+            self.__entry_url = '{}/{}/entries'.format(self.__entry_url, self.__content_type_id)
+        else:
+            ValueError('Invalid content_type_id, content_type_id could not be None or empty')
 
-        self._urlQueries = {}
-        self._queryValue = {}
-        self._onlyJsonObject = {}
-        self._queryValueJSON = {}
-        self._exceptJsonObject = {}
-        self._mainJSON = {}
+        self.__stack_headers = {}
+        self.__query_params = {}
 
-        self._content_type_id = content_type_id
-        self._entry_url = None
+        self.__uid_include: list = []
+        self.__uid_except: list = []
+        self.__uid_only: list = []
 
-    def set_content_type(self, content_type):
-        self._content_type_id = content_type
+        self.__query_value = {}
+        self.__only_json = {}
+        self.__query_dict = {}
+        self.__except_Json = {}
+        self.__main_json = {}
 
-    def _headers(self, local_headers: dict):
-        if local_headers is not None:
-            self._stack_headers = local_headers.copy()
+    @property
+    def content_type(self):
+        return self.__content_type_id
 
-    def header(self, key, value):
-        self._stack_headers[key] = value
+    @content_type.setter
+    def content_type(self, content_type_id):
+        if content_type_id is not None and len(content_type_id) > 0:
+            self.__content_type_id = content_type_id
+        else:
+            ValueError('Invalid content_type_id, '
+                       'content_type_id could not be None or empty')
+
+    @property
+    def headers(self):
+        return self.__stack_headers
+
+    @headers.setter
+    def headers(self, headers: dict):
+        if headers is not None and isinstance(headers, dict):
+            self.__stack_headers = headers
+            if 'environment' in headers:
+                env_value = self.__stack_headers['environment']
+                self.__query_params['environment'] = env_value
 
     def remove_header(self, key):
-        if key in self._stack_headers:
-            self._stack_headers.pop(key)
+        if key in self.__stack_headers:
+            self.__stack_headers.pop(key)
+        return self.__stack_headers
 
-    def set_locale(self, locale_code):
-        if locale_code is not None:
-            self._urlQueries["locale"] = locale_code
+    def add_header(self, key, value):
+        if key is not None and value is not None:
+            self.__stack_headers[key] = value
+        return self.__stack_headers
+
+    def locale(self, locale_code='en-us'):
+        self.__query_params["locale"] = locale_code
         return self
 
-    def get_content_type(self):
-        return self._content_type_id
-
     def where(self, key: str, value):
+
         """
+        :param key: field_UID
+        :param value: provide value as str
+        :return: self
+
         Equals Operator
         Get entries containing the field values matching the condition in the query.
         Example: In the Products content type, you have a field named Title ("uid":"title") field.
         If, for instance, you want to retrieve all the entries in which the value for
         the Title field is 'Redmi 3S', you can set the parameters as:
 
-        {kay = "title": value= "Redmi 3S"}
+        {:key = "title": value= "Redmi 3S"}
 
-        Let’s consider another example. You want to retrieve all the entries that have their
-        start date as 8th December, 2017. Now, you need to set this parameter with the date
-        in the ISO Date format as below:
-
-        { kay = "start_date": value = "2017-12-08T00:00:00.000Z"  }
-
-        This will give you all the entries where the start date is 8th December, 2017.
-        :return: self
+        :returns url : https://cdn.contentstack.io/v3/content_types/product/entries?environment=production&locale=en-us&query={"title": "Redmi 3S"}
 
         """
-        if key is not None and value is not None:
-            self._queryValueJSON[key] = value
 
+        if key is not None and value is not None and len(key) > 0 and len(value) > 0:
+            self.__query_dict[key] = value
         return self
 
     def add_query(self, key: str, value):
@@ -115,7 +134,7 @@ class Query:
 
         """
         if key is not None and value is not None:
-            self._urlQueries[key] = value
+            self.__query_params[key] = value
 
         return self
 
@@ -128,8 +147,8 @@ class Query:
         projectQuery.removeQuery("query_key");
         """
 
-        if key is not None and key in self._urlQueries:
-            self._urlQueries.pop(key)
+        if key is not None and key in self.__query_params:
+            self.__query_params.pop(key)
 
         return self
 
@@ -162,7 +181,7 @@ class Query:
             or_value_json: list = []
             for query in query_objects:
                 or_value_json.append(query)
-            self._queryValueJSON["$and"] = or_value_json
+            self.__query_dict["$and"] = or_value_json
 
         return self
 
@@ -198,7 +217,7 @@ class Query:
             or_value_json: list = []
             for query in query_objects:
                 or_value_json.append(query)
-            self._queryValueJSON["$or"] = or_value_json
+            self.__query_dict["$or"] = or_value_json
 
         return self
 
@@ -220,8 +239,8 @@ class Query:
 
         """
         if key is not None and value is not None:
-            self._queryValue["$lt"] = value
-            self._queryValueJSON[key] = self._queryValue
+            self.__query_value["$lt"] = value
+            self.__query_dict[key] = self.__query_value
 
         return self
 
@@ -243,8 +262,8 @@ class Query:
         """
 
         if key is not None and value is not None:
-            self._queryValue["$lte"] = value
-            self._queryValueJSON[key] = self._queryValue
+            self.__query_value["$lte"] = value
+            self.__query_dict[key] = self.__query_value
 
         return self
 
@@ -266,8 +285,8 @@ class Query:
         """
 
         if key is not None and value is not None:
-            self._queryValue["$gt"] = value
-            self._queryValueJSON[key] = self._queryValue
+            self.__query_value["$gt"] = value
+            self.__query_dict[key] = self.__query_value
 
         return self
 
@@ -289,8 +308,8 @@ class Query:
         """
 
         if key is not None and value is not None:
-            self._queryValue["$gte"] = value
-            self._queryValueJSON[key] = self._queryValue
+            self.__query_value["$gte"] = value
+            self.__query_dict[key] = self.__query_value
 
         return self
 
@@ -317,8 +336,8 @@ class Query:
         """
 
         if key is not None and value is not None:
-            self._queryValue["$ne"] = value
-            self._queryValueJSON[key] = self._queryValue
+            self.__query_value["$ne"] = value
+            self.__query_dict[key] = self.__query_value
 
         return self
 
@@ -343,8 +362,8 @@ class Query:
 
             if isinstance(values, list):
                 values_array = ','.join(map(str, values))
-                self._queryValue["$in"] = values_array
-            self._queryValueJSON[key] = self._queryValue
+                self.__query_value["$in"] = values_array
+            self.__query_dict[key] = self.__query_value
 
         return self
 
@@ -372,8 +391,8 @@ class Query:
                 values_array: list = []
                 for val in values:
                     values_array.append(val)
-            self._queryValue["$nin"] = values_array
-            self._queryValueJSON[key] = self._queryValue
+            self.__query_value["$nin"] = values_array
+            self.__query_dict[key] = self.__query_value
 
         return self
 
@@ -391,8 +410,8 @@ class Query:
         :return: Query object, so you can chain this call.
         """
         if key is not None:
-            self._queryValue["$exists"] = 'true'
-            self._queryValueJSON[key] = self._queryValue
+            self.__query_value["$exists"] = 'true'
+            self.__query_dict[key] = self.__query_value
 
         return self
 
@@ -411,8 +430,8 @@ class Query:
 
         """
         if key is not None:
-            self._queryValue["$exists"] = 'false'
-            self._queryValueJSON[key] = self._queryValue
+            self.__query_value["$exists"] = 'false'
+            self.__query_dict[key] = self.__query_value
 
         return self
 
@@ -430,7 +449,7 @@ class Query:
         :return: Query object, so you can chain this call.
         """
         if key is not None:
-            self._objectUidForInclude.append(key)
+            self.__uid_include.append(key)
 
         return self
 
@@ -453,7 +472,7 @@ class Query:
         if tags is not None and len(tags) > 0:
             for tag in tags:
                 tagalog += ",{0}".format(tag)
-            self._urlQueries["tags"] = tagalog
+            self.__query_params["tags"] = tagalog
 
         return self
 
@@ -475,7 +494,7 @@ class Query:
 
         """
         if key is not None:
-            self._urlQueries["asc"] = key
+            self.__query_params["asc"] = key
         return self
 
     def descending(self, key):
@@ -496,7 +515,7 @@ class Query:
 
         """
         if key is not None:
-            self._urlQueries["desc"] = key
+            self.__query_params["desc"] = key
         return self
 
     def except_field_uid(self, field_uid: list):
@@ -516,7 +535,7 @@ class Query:
         """
         if field_uid is not None and len(field_uid) > 0:
             for uid in field_uid:
-                self._objectUidForExcept.append(uid)
+                self.__uid_except.append(uid)
         return self
 
     def only_field_uid(self, field_uid: list):
@@ -535,7 +554,7 @@ class Query:
         """
         if field_uid is not None and len(field_uid) > 0:
             for uid in field_uid:
-                self._objectUidForOnly.append(uid)
+                self.__uid_only.append(uid)
 
         return self
 
@@ -562,8 +581,8 @@ class Query:
             field_value_container: list = []
             for uid in field_uid:
                 field_value_container.append(uid)
-            self._onlyJsonObject[reference_field_uid] = field_value_container
-            self._objectUidForInclude.append(reference_field_uid)
+            self.__only_json[reference_field_uid] = field_value_container
+            self.__uid_include.append(reference_field_uid)
 
         return self
 
@@ -588,8 +607,8 @@ class Query:
             field_value_container: list = []
             for uid in field_uid:
                 field_value_container.append(uid)
-            self._exceptJsonObject[reference_field_uid] = field_value_container
-            self._objectUidForInclude.append(reference_field_uid)
+            self.__except_Json[reference_field_uid] = field_value_container
+            self.__uid_include.append(reference_field_uid)
 
         return self
 
@@ -607,7 +626,7 @@ class Query:
         cs_query.count()
 
         """
-        self._urlQueries["count"] = "true"
+        self.__query_params["count"] = "true"
         return self
 
     def include_count(self):
@@ -624,7 +643,7 @@ class Query:
         csQuery.include_count();
 
         """
-        self._urlQueries["include_count"] = "true"
+        self.__query_params["include_count"] = "true"
         return self
 
     def include_content_type(self):
@@ -641,9 +660,9 @@ class Query:
         cs_query.include_content_type()
 
         """
-        if "include_schema" in self._urlQueries:
-            self._urlQueries.pop("include_count")
-        self._urlQueries["include_content_type"] = "true"
+        if "include_schema" in self.__query_params:
+            self.__query_params.pop("include_count")
+        self.__query_params["include_content_type"] = "true"
 
         return self
 
@@ -660,7 +679,7 @@ class Query:
         cs_query.include_owner()
 
         """
-        self._urlQueries["include_owner"] = "true"
+        self.__query_params["include_owner"] = "true"
         return self
 
     def before_uid(self, uid: str):
@@ -677,7 +696,7 @@ class Query:
 
         """
         if uid is not None:
-            self._urlQueries["before_uid"] = uid
+            self.__query_params["before_uid"] = uid
         return self
 
     def after_uid(self, uid: str):
@@ -694,7 +713,7 @@ class Query:
 
         """
         if uid is not None:
-            self._urlQueries["after_uid"] = uid
+            self.__query_params["after_uid"] = uid
         return self
 
     def skip(self, number: int):
@@ -712,7 +731,7 @@ class Query:
 
         """
         if number is not None and isinstance(number, int):
-            self._urlQueries["skip"] = number
+            self.__query_params["skip"] = number
         return self
 
     def limit(self, number: int):
@@ -729,7 +748,7 @@ class Query:
 
         """
         if number is not None and isinstance(number, int):
-            self._urlQueries["limit"] = number
+            self.__query_params["limit"] = number
         return self
 
     def regex(self, key: str, regex: str, modifiers: str = None):
@@ -755,12 +774,12 @@ class Query:
 
         """
         if key is not None and regex is not None:
-            if len(self._queryValue) > 0:
-                self._queryValue.clear()
-            self._queryValue["$regex"] = regex
+            if len(self.__query_value) > 0:
+                self.__query_value.clear()
+            self.__query_value["$regex"] = regex
             if modifiers is not None:
-                self._queryValue["$options"] = modifiers
-            self._queryValueJSON[key] = self._queryValue
+                self.__query_value["$options"] = modifiers
+            self.__query_dict[key] = self.__query_value
 
         return self
 
@@ -777,77 +796,117 @@ class Query:
         cs_query.set_locale("en_eu");
         """
         if locale_code is not None:
-            self._urlQueries["locale"] = locale_code
+            self.__query_params["locale"] = locale_code
         return self
 
     def search(self, value: str):
         if value is not None:
-            self._urlQueries["typeahead"] = value
+            self.__query_params["typeahead"] = value
         return self
 
     def add_param(self, key: str, value: str):
         if key is not None and value is not None:
-            self._urlQueries[key] = value
+            self.__query_params[key] = value
         return self
 
     def __setup_queries(self):
 
-        if self._queryValueJSON is not None and len(self._queryValueJSON) > 0:
-            self._urlQueries["query"] = self._queryValueJSON
-        if self._objectUidForExcept is not None and len(self._objectUidForExcept) > 0:
-            self._urlQueries["except[BASE][]"] = self._objectUidForExcept
-            self._objectUidForExcept = None
-        if self._objectUidForOnly is not None and len(self._objectUidForOnly) > 0:
-            self._urlQueries["only[BASE][]"] = self._objectUidForOnly
-            self._objectUidForOnly = None
-        if self._onlyJsonObject is not None and len(self._onlyJsonObject) > 0:
-            self._urlQueries["only"] = self._onlyJsonObject
-            self._onlyJsonObject = None
-        if self._exceptJsonObject is not None and len(self._exceptJsonObject) > 0:
-            self._urlQueries["except"] = self._exceptJsonObject
-            self._exceptJsonObject = None
-        if self._objectUidForInclude is not None and len(self._objectUidForInclude) > 0:
-            self._urlQueries["include[]"] = self._objectUidForInclude
-            self._objectUidForInclude = None
+        if self.__query_dict is not None and len(self.__query_dict) > 0:
+            self.__query_params["query"] = self.__query_dict
+        if self.__uid_except is not None and len(self.__uid_except) > 0:
+            self.__query_params["except[BASE][]"] = self.__uid_except
+            self.__uid_except = None
+        if self.__uid_only is not None and len(self.__uid_only) > 0:
+            self.__query_params["only[BASE][]"] = self.__uid_only
+            self.__uid_only = None
+        if self.__only_json is not None and len(self.__only_json) > 0:
+            self.__query_params["only"] = self.__only_json
+            self.__only_json = None
+        if self.__except_Json is not None and len(self.__except_Json) > 0:
+            self.__query_params["except"] = self.__except_Json
+            self.__except_Json = None
+        if self.__uid_include is not None and len(self.__uid_include) > 0:
+            self.__query_params["include[]"] = self.__uid_include
+            self.__uid_include = None
         return self
 
     def find(self):
-        if self._content_type_id is not None and len(self._content_type_id) > 0:
-            self.__execute_query()
+        if self.__content_type_id is not None and len(self.__content_type_id) > 0:
+            return self.__execute_query()
+        else:
+            raise KeyError('Invalid content_type id ')
 
     def find_one(self):
         limit = -1
-        if self._content_type_id is not None and len(self._content_type_id) > 0:
-            if self._urlQueries is not None and "limit" in self._urlQueries:
-                limit = self._urlQueries["limit"]
-            self._urlQueries["limit"] = 1
+        if self.__content_type_id is not None and len(self.__content_type_id) > 0:
+            if self.__query_params is not None and "limit" in self.__query_params:
+                limit = self.__query_params["limit"]
+            self.__query_params["limit"] = 1
             self.__execute_query()
             if limit != -1:
-                self._urlQueries["limit"] = limit
-        pass
-
-    def __execute_query(self):
-        if self._content_type_id is not None:
-            self._entry_url = "content_types/{0}/entries".format(self._content_type_id)
-            self.__setup_queries()
+                self.__query_params["limit"] = limit
         else:
-            raise Exception("content_type_id is not found, "
-                            " HELP: ContentTypeID can be set by calling method [query.set_content_type('your_content_type')]")
-        if len(self._stack_headers) < 1:
-            raise Exception("You must called contentstack.Stack() first")
-        payload = {"query", self._urlQueries}
-        https_request = http_request.HTTPRequestConnection(self._entry_url, payload, self._stack_headers)
-        resp, err = https_request.http_request()
-        if err is None:
-            resp = resp['entries']
-            print(resp, len(resp))
-        return resp, err
+            raise KeyError('Invalid content_type id ')
+
         pass
 
+    def __execute_query(self) -> tuple:
 
-query_cs = Query('product')
-query_cs.set_header('api_key', 'blt20962a819b57e233')
-query_cs.set_header('access_token', 'blt01638c90cc28fb6f')
-query_cs.set_header('environment', 'production')
-query_cs.set_locale("en-us")
-query_cs.contained_in('contain', ["shailesh", "Ramesh", "Suresh"])
+        import requests
+        from urllib import parse
+        from requests import Response
+        from contentstack import Entry
+        error = None
+
+        self.__setup_queries()
+        self.__stack_headers.update(self.header_agents())
+        payload = parse.urlencode(query=self.__query_params, encoding='UTF-8')
+
+        try:
+            response: Response = requests.get(self.__entry_url, params=payload, headers=self.__stack_headers)
+            entries: list[Entry] = []
+
+            if response.ok:
+
+                response: dict = response.json()['entries']
+                for entry_obj in response:
+                    entry = Entry()
+                    entry.configure(entry_obj)
+                    entries.append(entry)
+            else:
+                error = response.json()
+
+            return entries, error
+
+        except requests.exceptions.RequestException as e:
+            raise ConnectionError(e.response)
+            pass
+
+    @classmethod
+    def header_agents(cls) -> dict:
+
+        import contentstack
+        import platform
+
+        """
+        Contentstack-User-Agent header.
+        """
+        header = {'sdk': dict(name=contentstack.__package__, version=contentstack.__version__)}
+        os_name = platform.system()
+
+        if os_name == 'Darwin':
+            os_name = 'macOS'
+
+        elif not os_name or os_name == 'Java':
+            os_name = None
+
+        elif os_name and os_name not in ['macOS', 'Windows']:
+            os_name = 'Linux'
+
+        header['os'] = {
+            'name': os_name,
+            'version': platform.release()
+        }
+
+        local_headers = {'X-User-Agent': str(header), "Content-Type": 'application/json'}
+        return local_headers
