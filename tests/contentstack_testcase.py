@@ -114,7 +114,7 @@ class ContentstackTestcase(TestCase):
             print(result)
         else:
             error_code = error["error_code"]
-            self.assertEquals(141, error_code)
+            self.assertEqual(141, error_code)
 
     def test_init_sync(self):
         sync_stack = Stack("blt477ba55f9a67bcdf", "cs7731f03a2feef7713546fde5", "web")
@@ -122,7 +122,7 @@ class ContentstackTestcase(TestCase):
                                       publish_type='entry_published')
         if err is None:
             print(result, type(result))
-            self.assertEquals(int, type(result.count))
+            self.assertEqual(int, type(result.count))
 
     def test_sync_token(self):
         sync_stack = Stack(api_key="blt477ba55f9a67bcdf", access_token="cs7731f03a2feef7713546fde5", environment="web")
@@ -154,7 +154,7 @@ class ContentstackTestcase(TestCase):
                 schema_result = result['schema']
                 for schema in schema_result:
                     print(schema)
-                self.assertEquals(list, type(schema_result))
+                self.assertEqual(list, type(schema_result))
 
     # [Entry]
 
@@ -162,37 +162,37 @@ class ContentstackTestcase(TestCase):
         _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
         result, err = _entry.fetch()
         if err is None:
-            self.assertEquals(dict, type(result))
+            self.assertEqual(dict, type(result))
 
     def test_entry_title(self):
         _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
         result = _entry.fetch()
         if result is not None:
-            self.assertEquals("Redmi Note 3", _entry.title)
+            self.assertEqual("Redmi Note 3", _entry.title)
 
     def test_entry_url(self):
         _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
         result = _entry.fetch()
         if result is not None:
-            self.assertEquals("", _entry.urls)
+            self.assertEqual("", _entry.urls)
 
     def test_entry_tags(self):
         _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
         result = _entry.fetch()
         if result is not None:
-            self.assertEquals(list, type(_entry.tags))
+            self.assertEqual(list, type(_entry.tags))
 
     def test_entry_content_type(self):
         _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
         result = _entry.fetch()
         if result is not None:
-            self.assertEquals('product', _entry.content_type)
+            self.assertEqual('product', _entry.content_type)
 
     def test_is_entry_uid_correct(self):
         entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
         result = entry.fetch()
         if result is not None:
-            self.assertEquals('blt9965f5f9840923ba', entry.uid)
+            self.assertEqual('blt9965f5f9840923ba', entry.uid)
 
     def test_entry_locale(self):
         _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
@@ -200,28 +200,28 @@ class ContentstackTestcase(TestCase):
         result = _entry.fetch()
         if result is not None:
             if '-' in _entry.locale:
-                self.assertEquals('en-us', _entry.locale)
+                self.assertEqual('en-us', _entry.locale)
 
     def test_entry_to_json(self):
         _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
         _entry.locale = 'en-us'
         result = _entry.fetch()
         if result is not None:
-            self.assertEquals(dict, type(_entry.to_json))
+            self.assertEqual(dict, type(_entry.to_json))
 
     def test_entry_get(self):
         _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
         _entry.locale = 'en-us'
         result = _entry.fetch()
         if result is not None:
-            self.assertEquals('blt9965f5f9840923ba', _entry.get('uid'))
+            self.assertEqual('blt9965f5f9840923ba', _entry.get('uid'))
 
     def test_entry_string(self):
         _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
         _entry.locale = 'en-us'
         result = _entry.fetch()
         if result is not None:
-            self.assertEquals(str, type(_entry.get_string('description')))
+            self.assertEqual(str, type(_entry.get_string('description')))
 
     def test_entry_boolean(self):
         entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
@@ -236,7 +236,7 @@ class ContentstackTestcase(TestCase):
         result = _entry.fetch()
         if result is not None:
             json_result = _entry.get_json('publish_details')
-            self.assertEquals(dict, type(json_result))
+            self.assertEqual(dict, type(json_result))
 
     def test_entry_get_int(self):
         _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
@@ -442,9 +442,166 @@ class ContentstackTestcase(TestCase):
         self.assertEqual(4, len(headers))
 
     def test_query_where(self):
-        # from contentstack import Entry
         query = self.stack_query.content_type('product').query()
         query.locale('en-us').where("title", "Redmi 3S")
         result, error = query.find()
         if error is None:
-            print(result)
+            self.assertEqual(1, len(result))
+
+    def test_query_add_query(self):
+        query = self.stack_query.content_type('product').query()
+        query.locale('en-us')
+        query.add_query("limit", "8")
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(7, len(result))
+
+    def test_query_remove_query(self):
+        query = self.stack_query.content_type('product').query()
+        query.locale('en-us')
+        query.add_query("limit", "3")
+        query.remove_query('limit')
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(7, len(result))
+
+    def test_query_and_query(self):
+
+        content_type = self.stack_query.content_type('product')
+        base_query = content_type.query()
+        base_query.locale('en-us')
+        # query where title is equals to Redmi Note 3
+        query = content_type.query()
+        query.where("title", "Redmi Note 3")
+        # query where color is equals to Gold
+        sub_query = content_type.query()
+        sub_query.where("color", "Gold")
+        # adding query in list
+        list_array = [query, sub_query]
+        # passing query list in and_query
+        base_query.and_query(list_array)
+        result, error = base_query.find()
+        if error is None:
+            self.assertEqual(1, len(result))
+
+    def test_query_or_query(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        # query where title is equals to Redmi Note 3
+        query1 = content_type.query()
+        query1.where("color", "Black")
+        # query where color is equals to Gold
+        query2 = content_type.query()
+        query2.where("color", "Gold")
+        # adding query in list
+        list_array = [query1, query2]
+        # passing query list in and_query
+        query.or_query(list_array)
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(5, len(result))
+
+    def test_query_less_than(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        query.less_than('price_in_usd', 600)
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(5, len(result))
+
+    def test_query_less_than_or_equal_to(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        query.less_than_or_equal_to('price_in_usd', 146)
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(4, len(result))
+
+    def test_query_greater_than(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        query.greater_than('price_in_usd', 146)
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(3, len(result))
+
+    def test_query_greater_than_or_equal_to(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        query.greater_than_or_equal_to('price_in_usd', 146)
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(4, len(result))
+
+    def test_query_not_equal_to(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        query.not_equal_to('price_in_usd', 146)
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(6, len(result))
+
+    def test_query_contained_in(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        in_list = [101, 749]
+        query.contained_in('price_in_usd', in_list)
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(2, len(result))
+
+    def test_query_not_contained_in(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        in_list = [101, 749]
+        query.not_contained_in('price_in_usd', in_list)
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(5, len(result))
+
+    def test_query_exists(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        query.exists('price_in_usd')
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(7, len(result))
+
+    def test_query_not_exists(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        query.not_exists('price_in_usd')
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(7, len(result))
+
+    def test_query_include_reference(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        query.include_reference('categories')
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(7, len(result))
+

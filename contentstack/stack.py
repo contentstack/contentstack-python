@@ -40,6 +40,7 @@ log = logging.getLogger(__name__)
 
 
 class Stack(object):
+
     from contentstack import Config
 
     def __init__(self, api_key: str, access_token: str, environment: str, configs: Config = None):

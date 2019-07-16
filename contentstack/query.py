@@ -22,15 +22,14 @@
  * SOFTWARE.
  *
  """
-from urllib.request import urlretrieve
 
 
 class Query:
+
     """
     Contentstack provides certain queries that you can use to fetch filtered results.
     You can use queries for Entries and Assets API requests.
     [API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#queries]
-
     """
 
     def __init__(self, content_type_id: str):
@@ -101,143 +100,163 @@ class Query:
         :param value: provide value as str
         :return: self
 
-        Equals Operator
+        [Equals Operator]
         Get entries containing the field values matching the condition in the query.
         Example: In the Products content type, you have a field named Title ("uid":"title") field.
         If, for instance, you want to retrieve all the entries in which the value for
         the Title field is 'Redmi 3S', you can set the parameters as:
 
-        {:key = "title": value= "Redmi 3S"}
-
-        :returns url : https://cdn.contentstack.io/v3/content_types/product/entries?environment=production&locale=en-us&query={"title": "Redmi 3S"}
+        [Example]
+        query = stack.contentType("content_type_id").query();
+        query.where('title', 'Redmi 3S')
+        result, error = query.find()
 
         """
 
         if key is not None and value is not None and len(key) > 0 and len(value) > 0:
             self.__query_dict[key] = value
+        else:
+            raise TypeError('Kindly provide valid parameters')
         return self
 
     def add_query(self, key: str, value):
 
         """
-        [Uses]:
-
-        #'blt5d4sample2633b' is a dummy Stack API key
-        #'blt6d0240b5sample254090d' is dummy access token.
-        stack = contentstack.Stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag");
-        query = stack.contentType("contentType_name").query();
-        query.addQuery("query_param_key", "query_param_value");
-
         :param value value:
         :param key key:
         :returns Query object, so you can chain this call.
 
+        [Uses]:
+        query = stack.contentType("content_type_id").query()
+        query.add_query("query_param_key", "query_param_value")
+        result, error = query.find()
+        if error is None:
+            print(result)
         """
+
         if key is not None and value is not None:
             self.__query_params[key] = value
-
+        else:
+            raise TypeError('Kindly provide valid parameters')
         return self
 
     def remove_query(self, key: str):
+
         """
         Remove provided query key from custom query if exist.
         :param key Query name to remove.
         :return: Query object, so you can chain this call.
 
-        projectQuery.removeQuery("query_key");
+        [Uses]:
+        query = stack.contentType("content_type_id").query();
+        projectQuery.remove_query("query_key")
+        result, error = query.find()
+        if error is None:
+            print(result)
         """
 
         if key is not None and key in self.__query_params:
             self.__query_params.pop(key)
-
+        else:
+            raise TypeError('Kindly provide valid parameters')
         return self
 
-    def and_query(self, query_objects: list):
+    def and_query(self, queries: list):
 
         """
         Combines all the queries together using AND operator
-        :param query_objects: list of Query instances on which AND query executes.
-        :return: Query
+        :param queries: list of Query instances on which AND query executes.
+        :return: self
 
-        # blt5d4sample2633b' is a dummy Stack API key
-        #'blt6d0240b5sample254090d' is dummy access token.
-        Stack stack = contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.contentType("contentType_name").query()
+        [Uses]:
+        query = stack.content_type("content_type_id").query()
 
-        query = project_class.query()
-        query.where('username','something')
+        query = content_type.query()
+        query.where("title", "Redmi Note 3")
 
-        Query sub_query = project_class.query()
-        subQuery.where('email_address','something@email.com')
+        sub_query = content_type.query()
+        sub_query.where("color", "Gold")
 
-        list of Query if this is named array
-        array.add(query)
-        array.add(subQuery)
-        project_query.and(array)
+        list_array = [query, sub_query]
+        base_query.and_query(list_array)
+        result, error = query.find()
+        if error is None:
+            print(result)
 
         """
 
-        if query_objects is not None and len(query_objects) > 0:
-            or_value_json: list = []
-            for query in query_objects:
-                or_value_json.append(query)
-            self.__query_dict["$and"] = or_value_json
+        if queries is not None and len(queries) > 0 and isinstance(queries, list):
+            query_list: list = []
+            for query in queries:
+                query_list.append(query.__query_dict)
+            self.__query_dict["$and"] = query_list
+        else:
+            raise TypeError('Kindly provide valid parameters')
 
         return self
 
-    def or_query(self, query_objects: list):
+    def or_query(self, queries: list):
+
         """
-        Add a constraint to fetch all entries which satisfy <b> any </b> queries.
-        :param query_objects list of Query instances on which OR query executes.
-        :returns Query object, so you can chain this call.
+        :param queries: list
+        :return: self
 
-       [Example :]
+        Get all entries that satisfy at least one
+        of the given conditions provided in the '$or' query.
 
-        # 'blt5d4sample2633b' is a dummy Stack API key
-        # 'blt6d0240b5sample254090d' is dummy access token.
-        stack = Contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.contentType("contentType_name").query()
+        [Example]: Let’s say you want to retrieve
+        entries in which either the value for the
+        Color field is 'Gold' or 'Black'.
+        The query to be used for such a case would be:
 
-        query = project_class.query();
-        query.where('username','something')
+        cs_query = stack.content_type("content_type_id").query()
 
-        aub_query = project_class.query()
-        subQuery.where('email_address','something@email.com')
+        query1 = content_type.query()
+        query1.where("color", "Black")
 
-        list of Query class instances
-        array.add(query);
-        array.add(subQuery)
-        csQuery.or(array)
+        query2 = content_type.query()
+        query2.where("color", "Gold")
 
-        :param query_objects:
-        :return:
+        list_array = [query1, query2]
+
+        cs_query.or_query(list_array)
+        result, error = cs_query.find()
+
         """
 
-        if query_objects is not None and len(query_objects) > 0:
-            or_value_json: list = []
-            for query in query_objects:
-                or_value_json.append(query)
-            self.__query_dict["$or"] = or_value_json
+        if queries is not None and len(queries) > 0:
+            query_list: list = []
+            for query in queries:
+                query_list.append(query.__query_dict)
+            self.__query_dict["$or"] = query_list
+        else:
+            raise TypeError('Kindly provide valid parameters')
 
         return self
 
     def less_than(self, key: str, value):
-        """
 
-        Add a constraint to the query that requires a particular key entry to be less than the provided value.
+        """
+        Get entries in which the value of a field is lesser
+        than the value provided in the condition.
+
+        [Example]: Let’s say you want to retrieve all the
+        entries that have value of the Price in USD
+        field set to a value that is less than but not
+        equal to 600. You can send the parameter as:
+
         :param key the key to be constrained.
         :param value the value that provides an upper bound.
         :returns  Query object, so you can chain this call.
 
         [Example :]
-
-        # 'blt5d4sample2633b' is a dummy Stack API key
-        # 'blt6d0240b5sample254090d' is dummy access token.
-        stack = Contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.content_type("contentType_name").query()
-        csQuery.lessThan("due_date", "2013-06-25T00:00:00+05:30")
-
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        query.less_than('price_in_usd', 600)
+        result, error = query.find()
         """
+
         if key is not None and value is not None:
             self.__query_value["$lt"] = value
             self.__query_dict[key] = self.__query_value
@@ -247,17 +266,22 @@ class Query:
     def less_than_or_equal_to(self, key: str, value):
 
         """
-        Add a constraint to the query that requires a particular key entry to be less than or equal to the provided value.
+        Get entries in which the value of a field is
+        lesser than or equal to the value
+        provided in the condition.
+
+        Example: Let’s say you want to retrieve
+        all the entries that have value of the Price in USD field set to a value that
+        is less than or equal to 146. To achieve this, send the parameter as:
+
         :param key The key to be constrained
         :param value The value that must be equalled.
         :returns Query object, so you can chain this call.
 
         [ Example :]
-        # blt5d4sample2633b' is a dummy Stack API key
-        # blt6d0240b5sample254090d' is dummy access token.
-        # stack = Contentstack.stack(context, "blt5d4sample2633b", "blt6d0240b5sample254090d", "stag", false);
-        # cs_query = stack.contentType("contentType_name").query();
-        # cs_query.lessThanOrEqualTo("due_date", "2013-06-25T00:00:00+05:30");
+        cs_query = stack.content_type("content_type_id").query();
+        query.less_than_or_equal_to('price_in_usd', 146)
+        result, error = query.find()
 
         """
 
@@ -272,15 +296,14 @@ class Query:
         """
         Add a constraint to the query that requires a particular key entry to be greater than the provided value.
         :param key The key to be constrained.
+
         :param value The value that provides an lower bound.
         :return  Query object, so you can chain this call.
 
-        [Example :]
-        //'blt5d4sample2633b' is a dummy Stack API key
-        //'blt6d0240b5sample254090d' is dummy access token.
-        stack = Contentstack.stack(context, "blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.content_type("contentType_name").query()
-        cs_query.greater_than("due_date", "2013-06-25T00:00:00+05:30")
+        [ Example :]
+        cs_query = stack.content_type("content_type_id").query();
+        query.greater_than('price_in_usd', 146)
+        result, error = query.find()
 
         """
 
@@ -295,15 +318,14 @@ class Query:
         """
         Add a constraint to the query that requires a particular key entry to be greater than or equal to the provided value.
         :param key The key to be constrained.
+
         :param value The value that provides an lower bound.
         :return  Query object, so you can chain this call.
 
-        [Example :]
-        # 'blt5d4sample2633b' is a dummy Stack API key
-        # 'blt6d0240b5sample254090d' is dummy access token.
-        # stack = Contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        # cs_query = stack.content_type("contentType_name").query()
-        # cs_query.greaterThanOrEqualTo("due_date", "2013-06-25T00:00:00+05:30")
+        [ Example :]
+        cs_query = stack.content_type("content_type_id").query();
+        query.greater_than_or_equal_to('price_in_usd', 146)
+        result, error = query.find()
 
         """
 
@@ -316,16 +338,6 @@ class Query:
     def not_equal_to(self, key: str, value):
 
         """
-
-        [USES]
-
-        # 'blt5d4sample2633b' is a dummy Stack API key
-        # 'blt6d0240b5sample254090d' is dummy access token.
-        stack = Contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.content_type("contentType_name").query()
-        cs_query.notEqualTo("due_date", "2013-06-25T00:00:00+05:30");
-
-
         Add a constraint to the query that requires a particular key&#39;s
         entry to be not equal to the provided value.
 
@@ -333,6 +345,10 @@ class Query:
         :param value: value The object that must not be equaled
         :return: Query object, so you can chain this call.
 
+        [ Example :]
+        cs_query = stack.content_type("content_type_id").query();
+        query.not_equal_to('price_in_usd', 146)
+        result, error = query.find()
         """
 
         if key is not None and value is not None:
@@ -344,25 +360,24 @@ class Query:
     def contained_in(self, key: str, values: list):
 
         """
-        [Example :]
-        # 'blt5d4sample2633b' is a dummy Stack API key
-        # 'blt6d0240b5sample254090d' is dummy access token.
-        stack = Contentstack.stack( "blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.contentType("contentType_name").query()
-        cs_query.contained_in("severity", ["Show Stopper", "Critical"])
-
         Add a constraint to the query that requires a particular key&#39;s entry to be contained
         in the provided array.
+
         :param key The key to be constrained.
         :param values The possible values for the key&#39;s object.
         :return  Query object, so you can chain this call.
 
+        [ Example :]
+        query = content_type.query()
+        query.locale('en-us')
+        in_list = [101, 749]
+        query.contained_in('price_in_usd', in_list)
+        result, error = query.find()
+
         """
         if key is not None and values is not None:
-
             if isinstance(values, list):
-                values_array = ','.join(map(str, values))
-                self.__query_value["$in"] = values_array
+                self.__query_value["$in"] = values
             self.__query_dict[key] = self.__query_value
 
         return self
@@ -370,18 +385,19 @@ class Query:
     def not_contained_in(self, key: str, values: list):
 
         """
-        [Example :]
-        # 'blt5d4sample2633b' is a dummy Stack API key
-        # 'blt6d0240b5sample254090d' is dummy access token.
-        stack = Contentstack.stack( "blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.contentType("contentType_name").query()
-        cs_query.contained_in("severity", ["Show Stopper", "Critical"])
-
         Add a constraint to the query that requires a particular key entry&#39;s
         value not be contained in the provided array.
+
         :param key The key to be constrained.
         :param values The possible values for the key&#39;s object.
         :return  Query object, so you can chain this call.
+
+        [ Example :]
+        query = content_type.query()
+        query.locale('en-us')
+        in_list = [101, 749]
+        query.not_contained_in('price_in_usd', in_list)
+        result, error = query.find()
 
         """
 
@@ -399,15 +415,15 @@ class Query:
     def exists(self, key: str):
 
         """
-        # 'blt5d4sample2633b' is a dummy Stack API key
-        # 'blt6d0240b5sample254090d' is dummy access token.
-        # stack = Contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        # cs_query = stack.content_type("contentType_name").query()
-        cs_query.exists("status");
 
         Add a constraint that requires, a specified key exists in response.
         :param key: key The key to be constrained.
         :return: Query object, so you can chain this call.
+
+        [ Example :]
+        query = content_type.query()
+        query.exists('price_in_usd')
+        result, error = query.find()
         """
         if key is not None:
             self.__query_value["$exists"] = 'true'
@@ -418,19 +434,19 @@ class Query:
     def not_exists(self, key: str):
 
         """
-        # 'blt5d4sample2633b' is a dummy Stack API key
-        # 'blt6d0240b5sample254090d' is dummy access token.
-        stack = Contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.content_type("contentType_name").query()
-        cs_query.not_exists("status")
 
         Add a constraint that requires, a specified key does not exists in response.
         :param key: key The key to be constrained.
         :return: Query object, so you can chain this call.
 
+        [ Example :]
+        query = content_type.query()
+        query.not_exists('price_in_usd')
+        result, error = query.find()
+
         """
         if key is not None:
-            self.__query_value["$exists"] = 'false'
+            self.__query_value["$exists"] = "false"
             self.__query_dict[key] = self.__query_value
 
         return self
@@ -438,17 +454,15 @@ class Query:
     def include_reference(self, key: str):
 
         """
-        # //'blt5d4sample2633b' is a dummy Stack API key
-        # //'blt6d0240b5sample254090d' is dummy access token.
-        stack = contentstack.Stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.content_type("contentType_name").query();
-        cs_query.include_reference("for_bug");
+        When you fetch an entry of a content type that has a reference field,
+        by default, the content of the referred entry is not fetched. It only
+        fetches the UID of the referred entry, along with the content of the
+        specified entry.
 
-        Add a constraint that requires a particular reference key details.
-        :param key: key key that to be constrained.
-        :return: Query object, so you can chain this call.
+        :param key: str key that to be constrained.
+        :return: self
         """
-        if key is not None:
+        if key is not None and isinstance(key, str):
             self.__uid_include.append(key)
 
         return self
@@ -812,22 +826,29 @@ class Query:
     def __setup_queries(self):
 
         if self.__query_dict is not None and len(self.__query_dict) > 0:
-            self.__query_params["query"] = self.__query_dict
+            self.__query_params["query"] = self.__query_dict.__str__().replace("\'", "\"")
+
         if self.__uid_except is not None and len(self.__uid_except) > 0:
-            self.__query_params["except[BASE][]"] = self.__uid_except
+            self.__query_params["except[BASE][]"] = self.__uid_except.__str__().replace("\'", "\"")
             self.__uid_except = None
+
         if self.__uid_only is not None and len(self.__uid_only) > 0:
-            self.__query_params["only[BASE][]"] = self.__uid_only
+            self.__query_params["only[BASE][]"] = self.__uid_only.__str__().replace("\'", "\"")
             self.__uid_only = None
+
         if self.__only_json is not None and len(self.__only_json) > 0:
-            self.__query_params["only"] = self.__only_json
+            self.__query_params["only"] = self.__only_json.__str__().replace("\'", "\"")
             self.__only_json = None
+
         if self.__except_Json is not None and len(self.__except_Json) > 0:
-            self.__query_params["except"] = self.__except_Json
+            self.__query_params["except"] = self.__except_Json.__str__().replace("\'", "\"")
             self.__except_Json = None
+
         if self.__uid_include is not None and len(self.__uid_include) > 0:
-            self.__query_params["include[]"] = self.__uid_include
+            var = ', '.join(self.__uid_include)
+            self.__query_params["include[]"] = var.replace("\'", "\"")
             self.__uid_include = None
+
         return self
 
     def find(self):
