@@ -605,3 +605,181 @@ class ContentstackTestcase(TestCase):
         if error is None:
             self.assertEqual(7, len(result))
 
+    def test_query_tags(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        taglist = ['Black', 'Gold', 'Silver']
+        query.tags(taglist)
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(0, len(result))
+
+    def test_query_ascending(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        query.ascending('price_in_usd')
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(7, len(result))
+
+    def test_query_descending(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        query.descending('price_in_usd')
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(7, len(result))
+
+    def test_query_except_field_uid(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        listfield = {'gold', 'silver'}
+        query.except_field_uid(listfield)
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(7, len(result))
+
+    def test_query_only_field_uid(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        listfield = {'gold', 'silver'}
+        query.only_field_uid(listfield)
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(7, len(result))
+
+    def test_query_only_with_reference_uid(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        fields = ['gold', 'silver']
+        query.only_with_reference_uid(fields, 'reference_field_uid')
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(7, len(result))
+        else:
+            self.assertEqual(141, error['error_code'])
+
+    def test_query_except_with_reference_uid(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        listfield = ['gold', 'silver']
+        query.except_with_reference_uid(listfield, 'reference_field_uid')
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(7, len(result))
+
+    def test_query_count(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        query.count()
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(7, result)
+
+    def test_query_include_count(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        query.include_count()
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(7, len(result))
+
+    def test_query_include_content_type(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale('en-us')
+        query.include_content_type()
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(7, len(result))
+
+    def test_query_include_owner(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.include_owner()
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(7, len(result))
+
+    def test_query_before_uid(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.before_uid('')
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(7, len(result))
+
+    def test_query_after_uid(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.after_uid('')
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(7, len(result))
+
+    def test_query_skip(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.skip(3)
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(4, len(result))
+
+    def test_query_limit(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.limit(3)
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(3, len(result))
+
+    def test_query_regex(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.regex('key', 'regex', 'modifiers')
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(0, len(result))
+
+    def test_query_search(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.search('somekey')
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(0, len(result))
+
+    def test_query_param(self):
+
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.param('somekey', 'somevalue')
+        result, error = query.find()
+        if error is None:
+            self.assertEqual(7, len(result))

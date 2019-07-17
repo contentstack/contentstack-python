@@ -25,7 +25,6 @@
 
 
 class Query:
-
     """
     Contentstack provides certain queries that you can use to fetch filtered results.
     You can use queries for Entries and Assets API requests.
@@ -260,6 +259,8 @@ class Query:
         if key is not None and value is not None:
             self.__query_value["$lt"] = value
             self.__query_dict[key] = self.__query_value
+        else:
+            raise TypeError('Kindly provide valid parameters')
 
         return self
 
@@ -288,6 +289,8 @@ class Query:
         if key is not None and value is not None:
             self.__query_value["$lte"] = value
             self.__query_dict[key] = self.__query_value
+        else:
+            raise TypeError('Kindly provide valid parameters')
 
         return self
 
@@ -310,6 +313,8 @@ class Query:
         if key is not None and value is not None:
             self.__query_value["$gt"] = value
             self.__query_dict[key] = self.__query_value
+        else:
+            raise TypeError('Kindly provide valid parameters')
 
         return self
 
@@ -332,6 +337,8 @@ class Query:
         if key is not None and value is not None:
             self.__query_value["$gte"] = value
             self.__query_dict[key] = self.__query_value
+        else:
+            raise TypeError('Kindly provide valid parameters')
 
         return self
 
@@ -354,6 +361,8 @@ class Query:
         if key is not None and value is not None:
             self.__query_value["$ne"] = value
             self.__query_dict[key] = self.__query_value
+        else:
+            raise TypeError('Kindly provide valid parameters')
 
         return self
 
@@ -378,7 +387,9 @@ class Query:
         if key is not None and values is not None:
             if isinstance(values, list):
                 self.__query_value["$in"] = values
-            self.__query_dict[key] = self.__query_value
+                self.__query_dict[key] = self.__query_value
+        else:
+            raise TypeError('Kindly provide valid parameters')
 
         return self
 
@@ -401,14 +412,14 @@ class Query:
 
         """
 
-        if key is not None and values is not None:
-
-            if isinstance(values, list):
-                values_array: list = []
-                for val in values:
-                    values_array.append(val)
+        if key is not None and values is not None and isinstance(values, list):
+            values_array: list = []
+            for val in values:
+                values_array.append(val)
             self.__query_value["$nin"] = values_array
             self.__query_dict[key] = self.__query_value
+        else:
+            raise TypeError('Kindly provide valid parameters')
 
         return self
 
@@ -428,6 +439,8 @@ class Query:
         if key is not None:
             self.__query_value["$exists"] = 'true'
             self.__query_dict[key] = self.__query_value
+        else:
+            raise TypeError('Kindly provide valid parameters')
 
         return self
 
@@ -448,22 +461,36 @@ class Query:
         if key is not None:
             self.__query_value["$exists"] = "false"
             self.__query_dict[key] = self.__query_value
+        else:
+            raise TypeError('Kindly provide valid parameters')
 
         return self
 
     def include_reference(self, key: str):
 
         """
-        When you fetch an entry of a content type that has a reference field,
-        by default, the content of the referred entry is not fetched. It only
-        fetches the UID of the referred entry, along with the content of the
-        specified entry.
+       When you fetch an entry of a content type that has a reference field, by default,
+       the content of the referred entry is not fetched. It only fetches the UID of the referred entry,
+       along with the content of the specified entry.
 
-        :param key: str key that to be constrained.
-        :return: self
-        """
+       If you wish to fetch the content of the entry that is included in the reference field,
+       you need to use the include[] parameter, and specify the UID of the reference field as value.
+       This informs Contentstack that the request also includes fetching the entry used in the
+       specified reference field.
+
+       :param key: str key that to be constrained.
+       :return: self
+
+       [ Example :]
+       query = content_type.query()
+       query.include_reference('categories')
+       result, error = query.find()
+
+       """
         if key is not None and isinstance(key, str):
             self.__uid_include.append(key)
+        else:
+            raise TypeError('Kindly provide valid parameters')
 
         return self
 
@@ -471,209 +498,215 @@ class Query:
 
         """
         Include tags with which to search entries.
-        :param tags Comma separated array of tags with which to search entries.
-        :return {@link Query} object, so you can chain this call.
+        :param tags: Comma separated list of tags with which to search entries.
+        :return self.
+
         [Example :]
-        # 'blt5d4sample2633b' is a dummy Stack API key
-        #'blt6d0240b5sample254090d' is dummy access token.
-        stack = Contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.content_type("contentType_name").query();
-        cs_query.tags(;"tag1","tag2"]);
-        :param tags:
-        :return: Query
+        query = content_type.query()
+        tags = ['black', 'gold', 'silver']
+        query.tags(tags)
+        result, error = query.find()
+
         """
-        tagalog: str = ''
-        if tags is not None and len(tags) > 0:
-            for tag in tags:
-                tagalog += ",{0}".format(tag)
-            self.__query_params["tags"] = tagalog
+        if tags is not None and len(tags) > 0 and isinstance(tags, list):
+            tag_string = ",".join(tags)
+            self.__query_params["tags"] = tag_string
+        else:
+            raise TypeError('Kindly provide valid parameters')
 
         return self
 
     def ascending(self, key: str):
 
         """
-        Sort the results in ascending order with the given key.
-        Sort the returned entries in ascending order of the provided key.
-        :param key The key to order by.
-        :return  Query object, so you can chain this call.
-        ~~~~~~~~~~Example :~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # 'blt5d4sample2633b' is a dummy Stack API key
-        # 'blt6d0240b5sample254090d' is dummy access token.
-        # stack = Contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        # cs_query = stack.content_type("contentType_name").query();
-        # cs_query.ascending("name");
+        When fetching entries, you can sort them in the ascending order
+        with respect to the value of a specific field in the response body.
 
-        :return: Query
+        :param key The key to order by.
+        :return  self
+
+        [Example :]
+        query = content_type.query()
+        query.ascending('price_in_usd')
+        result, error = query.find()
 
         """
         if key is not None:
             self.__query_params["asc"] = key
+        else:
+            raise TypeError('Kindly provide valid parameters')
+
         return self
 
     def descending(self, key):
 
         """
-        Sort the results in descending order with the given key..
         Sort the returned entries in ascending order of the provided key.
-        :param key The key to order by.
-        :return  Query object, so you can chain this call.
-        ~~~~~~~~~~Example :~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # 'blt5d4sample2633b' is a dummy Stack API key
-        # 'blt6d0240b5sample254090d' is dummy access token.
-        # stack = Contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        # cs_query = stack.content_type("contentType_name").query();
-        # cs_query.descending("name");
 
-        :return: Query
+        :key key to order by.
+        :return  self
+
+        [Example]
+        query = content_type.query()
+        query.descending('price_in_usd')
+        result, error = query.find()
 
         """
         if key is not None:
             self.__query_params["desc"] = key
+        else:
+            raise TypeError('Kindly provide valid parameters')
+
         return self
 
     def except_field_uid(self, field_uid: list):
 
         """
-        Specifies list of field uids that would be &#39;excluded&#39; from the response.
-        :param field_uid field uid  which get &#39;excluded&#39; from the response.
+        Specifies list of field uids that would be excluded from the response.
+
+        :field_uid field_uid field uid  which get excluded from the response.
         :return  Query object, so you can chain this call.
-        ~~~~~~~~~~~~Example :~~~~~~~~~~~~~~~~~
-        #'blt5d4sample2633b' is a dummy Stack API key
-        #'blt6d0240b5sample254090d' is dummy access token.
-        stack = Contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.content_type("contentType_name").query()
-        array.add("name")
-        array.add("description")>
-        cs_query.except(array)
+
+        [Example]
+        query = stack.content_type("content_type_id").query()
+        query.except_field_uid(fields)
+        result, error = query.find()
+
         """
+
         if field_uid is not None and len(field_uid) > 0:
             for uid in field_uid:
                 self.__uid_except.append(uid)
+        else:
+            raise TypeError('Kindly provide valid parameters')
+
         return self
 
     def only_field_uid(self, field_uid: list):
 
         """
-        Specifies an list of only_field_uid keys in BASE object that would be &#39;included&#39; in the response.
-        :param field_uid list of the &#39;only&#39; reference keys to be included in response.
+        Specifies an list of only_field_uid keys in BASE object that would be included in the response.
+
+        :field_uid field_uid list of the only reference keys to be included in response.
         :return  Query object, so you can chain this call.
-        ~~~~~~~~~~~~~~~Example :~~~~~~~~~~~~~
-        # 'blt5d4sample2633b' is a dummy Stack API key
-        # 'blt6d0240b5sample254090d' is dummy access token.
-        # stack = Contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        # cs_query = stack.contentType("contentType_name").query()
-        # cs_query.only(["name", "company", ""user])
+
+        [Example]
+        query = stack.content_type("content_type_id").query()
+        fields: list = ['A', 'B', 'C']
+        query.except(fields)
+        result, error = query.find()
 
         """
         if field_uid is not None and len(field_uid) > 0:
             for uid in field_uid:
                 self.__uid_only.append(uid)
+        else:
+            raise TypeError('Kindly provide valid parameters')
 
         return self
 
     def only_with_reference_uid(self, field_uid: list, reference_field_uid: str):
 
         """
-        Specifies an array of &#39;only&#39; keys that would be &#39;included&#39; in the response.
-        :param field_uid: field_uid list of the &#39;only&#39; reference keys to be included in response.
+        Specifies an array of only keys that would be included in the response.
+
+        :param field_uid: field_uid list of the only reference keys to be included in response.
         :param reference_field_uid: reference_field_uid Key who has reference to some other class object.
         :return: Query object, so you can chain this call.
 
-        ~~~~~~~Example :~~~~~~~~~~~
-
-        #'blt5d4sample2633b' is a dummy Stack API key
-        #'blt6d0240b5sample254090d' is dummy access token.
-        stack = contentstack.Stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.contentType("contentType_name").query()
-        list.add("description")
-        list.add("name")
-        cs_query.only_with_reference_uid(list, "for_bug")
+        [Example]
+        query = stack.content_type("content_type_id").query()
+        fields: list = ['A', 'B', 'C']
+        query.only_with_reference_uid(fields, 'gold')
+        result, error = query.find()
 
         """
         if field_uid is not None and reference_field_uid is not None:
-            field_value_container: list = []
-            for uid in field_uid:
-                field_value_container.append(uid)
-            self.__only_json[reference_field_uid] = field_value_container
-            self.__uid_include.append(reference_field_uid)
+            if isinstance(field_uid, list) and isinstance(reference_field_uid, str):
+                field_value_container: list = []
+                for uid in field_uid:
+                    field_value_container.append(uid)
+                self.__only_json[reference_field_uid] = field_value_container
+                self.__uid_include.append(reference_field_uid)
+            else:
+                raise TypeError('Kindly provide valid parameters')
+        else:
+            raise TypeError('Kindly provide valid parameters')
 
         return self
 
     def except_with_reference_uid(self, field_uid: list, reference_field_uid: str):
 
         """
-        Specifies an array of &#39;except&#39; keys that would be &#39;excluded&#39; in the response.
-        :param field_uid Array of the &#39;except&#39; reference keys to be excluded in response.
+        Specifies an array of except keys that would be excluded in the response.
+        :param field_uid Array of the except reference keys to be excluded in response.
         :param reference_field_uid Key who has reference to some other class object.
         :return  Query object, so you can chain this call.
-        ~~~~~~~~~Example :~~~~~~~~~~~~~~~
-        #'blt5d4sample2633b' is a dummy Stack API key
-        #'blt6d0240b5sample254090d' is dummy access token.
-        stack = contentstack.Stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.content_type("contentType_name").query()
-        list.add("description")
-        list.add("name")
-        cs_query.exceptWithReferenceUid(list, "for_bug");
 
+        [Example]
+        query = stack.content_type("content_type_id").query()
+        fields: list = ['description', 'name']
+        query.only_with_reference_uid(fields, 'for_bug')
+        result, error = query.find()
         """
+
         if field_uid is not None and reference_field_uid is not None:
-            field_value_container: list = []
-            for uid in field_uid:
-                field_value_container.append(uid)
-            self.__except_Json[reference_field_uid] = field_value_container
-            self.__uid_include.append(reference_field_uid)
+            if isinstance(field_uid, list) and isinstance(reference_field_uid, str):
+                field_value_container: list = []
+                for uid in field_uid:
+                    field_value_container.append(uid)
+                self.__except_Json[reference_field_uid] = field_value_container
+                self.__uid_include.append(reference_field_uid)
+            else:
+                raise TypeError('Kindly provide valid parameters')
+        else:
+            raise TypeError('Kindly provide valid parameters')
 
         return self
 
     def count(self):
+
         """
         Retrieve only count of entries in result.
         :return  Query object, so you can chain this call.
-        ~~~~~~~ Note ~~~~~~~~~~~
-        Call {@link QueryResult#getCount()} method in the success to get count of objects.
-        ~~~~~~~~Example :~~~~~~~~~~`
-        #'blt5d4sample2633b' is a dummy Stack API key
-        # 'blt6d0240b5sample254090d' is dummy access token.
-        stack = contentstack.Stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.contentType("contentType_name").query()
-        cs_query.count()
 
+        [Example]
+        query = stack.content_type("content_type_id").query()
+        query.count()
+        result, error = query.find()
+        result will be integer
         """
         self.__query_params["count"] = "true"
+
         return self
 
     def include_count(self):
+
         """
         Retrieve count and data of objects in result
         :return  Query object, so you can chain this call.
-        ~~~~~~~ Note ~~~~~~~~~~~
-        Call {@link QueryResult#getCount()} method in the success to get count of objects.
-        ~~~~~~~~Example :~~~~~~~~~~`
-        #'blt5d4sample2633b' is a dummy Stack API key
-        # 'blt6d0240b5sample254090d' is dummy access token.
-        stack = contentstack.Stack( "blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.contentType("contentType_name").query()
-        csQuery.include_count();
 
+        [Example]
+        query = stack.content_type("content_type_id").query()
+        query.include_count()
+        result, error = query.find()
         """
         self.__query_params["include_count"] = "true"
+
         return self
 
     def include_content_type(self):
+
         """
         Include Content Type of all returned objects along with objects themselves.
         :return  Query object, so you can chain this call.
-        ~~~~~~~ Note ~~~~~~~~~~~
-        Call {@link QueryResult#getCount()} method in the success to get count of objects.
-        ~~~~~~~~Example :~~~~~~~~~~`
-        #'blt5d4sample2633b' is a dummy Stack API key
-        # 'blt6d0240b5sample254090d' is dummy access token.
-        stack = contentstack.Stack( "blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.contentType("contentType_name").query()
-        cs_query.include_content_type()
 
+        [Example]
+        query = stack.content_type("content_type_id").query()
+        query.include_content_type()
+        result, error = query.find()
         """
+
         if "include_schema" in self.__query_params:
             self.__query_params.pop("include_count")
         self.__query_params["include_content_type"] = "true"
@@ -685,49 +718,49 @@ class Query:
         """
         Include Content Type of all returned objects along with objects themselves.
         :return  Query object, so you can chain this call.
-        ~~~~~~~~Example :~~~~~~~~~~`
-        #'blt5d4sample2633b' is a dummy Stack API key
-        # 'blt6d0240b5sample254090d' is dummy access token.
-        stack = contentstack.Stack( "blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.contentType("contentType_name").query()
-        cs_query.include_owner()
+
+        [Example]
+        query = stack.content_type("content_type_id").query()
+        query.include_owner()
+        result, error = query.find()
 
         """
         self.__query_params["include_owner"] = "true"
+
         return self
 
     def before_uid(self, uid: str):
 
         """
         Fetches all the objects before specified uid.
-        @param uid  uid before which objects should be returned.
-        ~~~~~~~~Example :~~~~~~~~~~`
-        #'blt5d4sample2633b' is a dummy Stack API key
-        # 'blt6d0240b5sample254090d' is dummy access token.
-        stack = contentstack.Stack( "blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.contentType("contentType_name").query()
-        cs_query.before_uid()
+        :return uid  uid before which objects should be returned.
+
+        [Example]
+        query = stack.content_type("content_type_id").query()
+        query.before_uid()
+        result, error = query.find()
 
         """
-        if uid is not None:
+        if uid is not None and isinstance(uid, str):
             self.__query_params["before_uid"] = uid
+
         return self
 
     def after_uid(self, uid: str):
 
         """
         Fetches all the objects after specified uid.
-        @param uid  uid before which objects should be returned.
-        ~~~~~~~~Example :~~~~~~~~~~`
-        #'blt5d4sample2633b' is a dummy Stack API key
-        # 'blt6d0240b5sample254090d' is dummy access token.
-        stack = contentstack.Stack( "blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.contentType("contentType_name").query()
-        cs_query.after_uid()
+        :return uid  uid before which objects should be returned.
+
+        [Example]
+        query = stack.content_type("content_type_id").query()
+        query.after_uid()
+        result, error = query.find()
 
         """
-        if uid is not None:
+        if uid is not None and isinstance(uid, str):
             self.__query_params["after_uid"] = uid
+
         return self
 
     def skip(self, number: int):
@@ -736,16 +769,16 @@ class Query:
         the number of objects to skip before returning any.
         :param number:
         :param No of objects to skip from returned objects.
-        ~~~~~~~~Example :~~~~~~~~~~`
-        #'blt5d4sample2633b' is a dummy Stack API key
-        #'blt6d0240b5sample254090d' is dummy access token.
-        stack = contentstack.Stack( "blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.contentType("contentType_name").query()
-        cs_query.limit(2)
+
+        [Example]
+        query = stack.content_type("content_type_id").query()
+        query.skip(3)
+        result, error = query.find()
 
         """
         if number is not None and isinstance(number, int):
             self.__query_params["skip"] = number
+
         return self
 
     def limit(self, number: int):
@@ -753,12 +786,11 @@ class Query:
         """
         A limit on the number of objects to return.
         :param number No of objects to limit.
-        ~~~~~~~~Example :~~~~~~~~~~`
-        #'blt5d4sample2633b' is a dummy Stack API key
-        #'blt6d0240b5sample254090d' is dummy access token.
-        stack = contentstack.Stack( "blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.contentType("contentType_name").query()
-        cs_query.limit(2)
+
+        [Example]
+        query = stack.content_type("content_type_id").query()
+        query.limit(3)
+        result, error = query.find()
 
         """
         if number is not None and isinstance(number, int):
@@ -770,24 +802,21 @@ class Query:
         """
         Add a regular expression constraint for finding string values that match the provided regular expression.
         This may be slow for large data sets.
-        :param modifiers: Optional
-        Any of the following supported Regular expression modifiers.
-        <p>use <b> i </b> for case-insensitive matching.</p>
-        <p>use <b> m </b> for making dot match newlines.</p>
-        <p>use <b> x </b> for ignoring whitespace in regex</p>
 
+        :param modifiers:
         :param key The key to be constrained.
         :param regex The regular expression pattern to match.
         :return Query object, so you can chain this call.
-        ~~~~~~~~Example :~~~~~~~~~~`
-        #'blt5d4sample2633b' is a dummy Stack API key
-        #'blt6d0240b5sample254090d' is dummy access token.
-        stack = contentstack.Stack( "blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.contentType("contentType_name").query()
-        cs_query.regex("name", "^browser");
 
+        [Example]
+
+        query = stack.content_type("content_type_id").query()
+        query.regex("name", "browser")
+        result, error = query.find()
         """
-        if key is not None and regex is not None:
+        if key is not None and regex is not None and modifiers is not None \
+                and isinstance(key, str) and isinstance(regex, str) \
+                and isinstance(modifiers, str):
             if len(self.__query_value) > 0:
                 self.__query_value.clear()
             self.__query_value["$regex"] = regex
@@ -797,30 +826,40 @@ class Query:
 
         return self
 
-    def set_locale(self, locale_code: str):
-        """
-
-        :param locale_code: Language code value
-        :return: Query instance
-
-        #'blt5d4sample2633b' is a dummy Stack API key
-        #'blt6d0240b5sample254090d' is dummy access token.
-        stack = contentstack.Stack( "blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        cs_query = stack.contentType("contentType_name").query()
-        cs_query.set_locale("en_eu");
-        """
-        if locale_code is not None:
-            self.__query_params["locale"] = locale_code
-        return self
-
     def search(self, value: str):
-        if value is not None:
+
+        """
+        :param value:
+        :return: self
+
+        [Example]
+
+        query = stack.content_type("content_type_id").query()
+        query.regex("name", "browser")
+        result, error = query.find()
+
+        """
+        if value is not None and isinstance(value, str):
             self.__query_params["typeahead"] = value
         return self
 
-    def add_param(self, key: str, value: str):
+    def param(self, key: str, value: str):
+
+        """
+        :param key:
+        :param value:
+        :return: self
+
+        [Example]
+
+        query = stack.content_type("content_type_id").query()
+        query.param("key", "value")
+        result, error = query.find()
+
+        """
         if key is not None and value is not None:
-            self.__query_params[key] = value
+            if isinstance(key, str) and isinstance(value, str):
+                self.__query_params[key] = value
         return self
 
     def __setup_queries(self):
@@ -829,11 +868,13 @@ class Query:
             self.__query_params["query"] = self.__query_dict.__str__().replace("\'", "\"")
 
         if self.__uid_except is not None and len(self.__uid_except) > 0:
-            self.__query_params["except[BASE][]"] = self.__uid_except.__str__().replace("\'", "\"")
+            var = ', '.join(self.__uid_except)
+            self.__query_params["except[BASE][]"] = var.replace("\'", "\"")
             self.__uid_except = None
 
         if self.__uid_only is not None and len(self.__uid_only) > 0:
-            self.__query_params["only[BASE][]"] = self.__uid_only.__str__().replace("\'", "\"")
+            var = ', '.join(self.__uid_only)
+            self.__query_params["only[BASE][]"] = var.replace("\'", "\"")
             self.__uid_only = None
 
         if self.__only_json is not None and len(self.__only_json) > 0:
@@ -889,11 +930,18 @@ class Query:
 
             if response.ok:
 
-                response: dict = response.json()['entries']
-                for entry_obj in response:
-                    entry = Entry()
-                    entry.configure(entry_obj)
-                    entries.append(entry)
+                result = response.json()
+                if 'entries' in result:
+                    resp: dict = result['entries']
+                    if isinstance(resp, list):
+                        for obj in resp:
+                            entry = Entry()
+                            entry.configure(obj)
+                            entries.append(entry)
+                    else:
+                        entries = resp
+                else:
+                    pass
             else:
                 error = response.json()
 
@@ -901,7 +949,6 @@ class Query:
 
         except requests.exceptions.RequestException as e:
             raise ConnectionError(e.response)
-            pass
 
     @classmethod
     def header_agents(cls) -> dict:
