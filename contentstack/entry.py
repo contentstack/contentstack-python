@@ -108,16 +108,26 @@ class Entry:
             self.__result_json = model
 
             if self.__result_json is not None:
-                self.__title = self.__result_json['title']
-                self.__url = self.__result_json['url']
-                self.__entry_uid = self.__result_json['uid']
-                self.__tags = self.__result_json['tags']
-                self.__created_by = self.__result_json['created_by']
-                self.__created_at = self.__result_json['created_at']
-                self.__updated_at = self.__result_json['updated_at']
-                self.__updated_by = self.__result_json['updated_by']
-                self.__locale = self.__result_json['locale']
-                self.__version = self.__result_json['_version']
+                if 'title' in self.__result_json:
+                    self.__title = self.__result_json['title']
+                if 'url' in self.__result_json:
+                    self.__url = self.__result_json['url']
+                if 'uid' in self.__result_json:
+                    self.__entry_uid = self.__result_json['uid']
+                if 'tags' in self.__result_json:
+                    self.__tags = self.__result_json['tags']
+                if 'created_by' in self.__result_json:
+                    self.__created_by = self.__result_json['created_by']
+                if 'created_at' in self.__result_json:
+                    self.__created_at = self.__result_json['created_at']
+                if 'updated_at' in self.__result_json:
+                    self.__updated_at = self.__result_json['updated_at']
+                if 'updated_by' in self.__result_json:
+                    self.__updated_by = self.__result_json['updated_by']
+                if 'locale' in self.__result_json:
+                    self.__locale = self.__result_json['locale']
+                if '_version' in self.__result_json:
+                    self.__version = self.__result_json['_version']
 
         return self
 
