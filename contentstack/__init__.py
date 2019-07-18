@@ -19,7 +19,7 @@ from .http_request import HTTPRequestConnection
 
 # Set a default logger to prevent "No handler found" warnings
 import logging
-try:  # Python >=2.7
+try:
     from logging import NullHandler
 except ImportError:
     class NullHandler(logging.Handler):
