@@ -50,7 +50,7 @@ class Entry:
         self.__except_dic: list = []
         self.__reference_list: list = []
 
-        self.__result_json = dict
+        self.__result_json: dict = {}
         self.__entry_uid = str
         self.__tags = list
         self.__title = str
@@ -184,9 +184,10 @@ class Entry:
             return self.__result_json
 
     def get(self, key: str):
-        if self.__result_json is not None and key is not None:
-            if key in self.__result_json:
-                return self.__result_json[key]
+        if self.__result_json is not None:
+            if key is not None and isinstance(key, str):
+                if key in self.__result_json:
+                    return self.__result_json[key]
             else:
                 return None
 
@@ -197,7 +198,7 @@ class Entry:
         else:
             return None
 
-    def get_boolean(self, key):
+    def get_boolean(self, key: str):
         value = self.get(key)
         if isinstance(value, bool):
             return value
@@ -506,6 +507,7 @@ class Entry:
                 self.configure(response)
         else:
             error = response.json()
+
         return response, error
 
     @property

@@ -59,34 +59,32 @@ class ContentstackTestcase(TestCase):
         self.stack.collaborators()
         result, err = self.stack.fetch()
         if err is None:
-            result = result['stack']
+
             if 'collaborators' in result:
                 is_contains = True
             self.assertEqual(True, is_contains)
 
     def test_stack_fetch_collaborators(self):
         stack_fetch = self.stack.collaborators()
-        result = stack_fetch.fetch()
-        if 'collaborators' in result:
-            collaborators = result["collaborators"]
-            print("collaborators", collaborators)
-            print("collaborators count", len(collaborators))
-            self.assertTrue(True)
+        result, error = stack_fetch.fetch()
+        if error is None:
+            if 'collaborators' in result:
+                collaborators = result["collaborators"]
+                self.assertTrue(True)
 
     def test_stack_fetch_discrete_variables(self):
         discrete_var = self.stack.include_discrete_variables()
-        result = discrete_var.fetch()
-        if 'discrete_variables' in result:
-            discrete_variables = result["discrete_variables"]
-            print("discrete_var", discrete_variables)
-            self.assertTrue(True)
+        result, error = discrete_var.fetch()
+        if error is None:
+            if 'discrete_variables' in result:
+                discrete_variables = result["discrete_variables"]
+                self.assertTrue(True)
 
     def test_stack_fetch_stack_variables(self):
         stack_var = self.stack.include_stack_variables()
         result = stack_var.fetch()
         if 'stack_variables' in result:
             stack_variables = result["stack_variables"]
-            print("stack_variables", stack_variables)
             self.assertTrue(True)
 
     def test_stack_include_count(self):
@@ -94,7 +92,6 @@ class ContentstackTestcase(TestCase):
         result = stack_var.fetch()
         if 'stack_variables' in result:
             stack_variables = result["stack_variables"]
-            print("stack_variables", stack_variables)
             self.assertTrue(True)
 
     def test_image_transform(self):
@@ -139,7 +136,7 @@ class ContentstackTestcase(TestCase):
         self.assertEqual(len(var_ct), len(var_head))
 
     def test_content_types(self):
-        result, error = self.stack.content_types()
+        result, error = self.stack.get_content_types()
         if error is None:
             if 'content_types' in result:
                 result = result['content_types']
@@ -214,7 +211,7 @@ class ContentstackTestcase(TestCase):
         _entry.locale = 'en-us'
         result = _entry.fetch()
         if result is not None:
-            self.assertEqual('blt9965f5f9840923ba', _entry.get('uid'))
+            self.assertEqual("blt9965f5f9840923ba", _entry.get('uid'))
 
     def test_entry_string(self):
         _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
@@ -233,7 +230,7 @@ class ContentstackTestcase(TestCase):
     def test_entry_json(self):
         _entry = self.stack_entry.content_type('product').entry('blt9965f5f9840923ba')
         _entry.locale = 'en-us'
-        result = _entry.fetch()
+        result, error = _entry.fetch()
         if result is not None:
             json_result = _entry.get_json('publish_details')
             self.assertEqual(dict, type(json_result))
