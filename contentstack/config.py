@@ -29,7 +29,7 @@ logging.basicConfig(filename='contentstack.log', format='%(asctime)s - %(message
 logging.getLogger("Config")
 
 
-class Config():
+class Config:
 
     def __init__(self):
         self.defaultConfig = dict(protocol="https://", host="cdn.contentstack.io", port=443, version="v3", path={

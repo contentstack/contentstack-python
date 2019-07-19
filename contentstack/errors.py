@@ -34,9 +34,9 @@ class Error(Exception):
     """
 
     def __init__(self):
-        self.error_code = ''
-        self.msg = ''
-        self.cause_err = ''
+        self.error_code = str
+        self.msg = str
+        self.cause_err = str
 
     errors_str = {
 

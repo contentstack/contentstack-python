@@ -25,6 +25,7 @@
 
 
 class AssetLibrary:
+
     """
     contentstack.asset_library
     ~~~~~~~~~~~~~~~~~~

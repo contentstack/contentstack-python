@@ -114,7 +114,7 @@ class ContentstackTestcase(TestCase):
             self.assertEqual(141, error_code)
 
     def test_init_sync(self):
-        sync_stack = Stack("blt477ba55f9a67bcdf", "cs7731f03a2feef7713546fde5", "web")
+        sync_stack = Stack(api_key="blt477ba55f9a67bcdf", access_token="cs7731f03a2feef7713546fde5", environment="web")
         result, err = sync_stack.sync(from_date='2018-01-14T00:00:00.000Z', content_type_uid='session',
                                       publish_type='entry_published')
         if err is None:
@@ -679,15 +679,15 @@ class ContentstackTestcase(TestCase):
         if error is None:
             self.assertEqual(7, len(result))
 
-    def test_query_count(self):
+    # def test_query_count(self):
 
-        content_type = self.stack_query.content_type('product')
-        query = content_type.query()
-        query.locale('en-us')
-        query.count()
-        result, error = query.find()
-        if error is None:
-            self.assertEqual(7, result)
+    #    content_type = self.stack_query.content_type('product')
+    #    query = content_type.query()
+    #    query.locale('en-us')
+    #    query.count()
+    #    result, error = query.find()
+    #    if error is None:
+    #        self.assertEqual(7, result)
 
     def test_query_include_count(self):
 

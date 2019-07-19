@@ -22,38 +22,26 @@
 # SOFTWARE.
 
 
-"""
-contentstack.asset
-~~~~~~~~~~~~~~~~~~
-This module implements the Asset class.
-API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#assets
-
-"""
-
-
 class Asset:
+
     """
     Assets refer to all the media files (images, videos, PDFs, audio files, and so on) uploaded
-    in your Contentstack repository for future use. These files can be attached and used in multiple entries.
-    Learn more about Assets [https://www.contentstack.com/docs/guide/content-management#working-with-assets].
+    in your Contentstack repository for future use.
+    These files can be attached and used in multiple entries.
 
-    [All Assets]
+    contentstack.asset
+    ~~~~~~~~~~~~~~~~~~
+    This module implements the Asset class.
+    API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#assets
 
-    This call fetches the list of all the assets of a particular stack.
-    It also returns the content of each asset in JSON format.
-    You can also specify the environment of which you wish to get the assets.
-    You can apply queries to filter assets/entries. Refer to the Queries section for more details.
-
-    [Single Asset]
-    This call fetches the latest version of a specific asset of a particular stack.
     """
 
     def __init__(self, asset_uid: str = None):
 
         self.__asset_uid = asset_uid
         self.__response = None
-        self.__local_params = {}
-        self.__local_headers = {}
+        self.__query_params = {}
+        self.__stack_headers = {}
 
         self.__file_name = None
         self.__file_size = None
@@ -68,27 +56,33 @@ class Asset:
         self.__uid = None
         self.__tags = None
 
-    def set_stack_instance(self, stack):
-        self.__local_headers = stack.local_headers
-        self.__local_headers = stack.get_headers()
-
     def configure(self, response: dict):
-
-        self.__response = response
-
-        if self.__response is not None:
-
-            self.__file_name = self.__response['filename']
-            self.__file_size = self.__response['file_size']
-            self.__file_type = self.__response['content_type']
-            self.__file_url = self.__response['url']
-            self.__uid = self.__response['uid']
-            self.__tags = self.__response['tags']
-            self.__created_at = self.__response['created_at']
-            self.__created_by = self.__response['created_by']
-            self.__updated_at = self.__response['updated_at']
-            self.__updated_by = self.__response['updated_by']
-            self.__version = self.__response['_version']
+        # response is dictionary that check None and length
+        if response is not None and len(response) > 0:
+            # if response dictionary is Not None
+            self.__response = response
+            if 'filename' in self.__response:
+                self.__file_name = self.__response['filename']
+            if 'file_size' in self.__response:
+                self.__file_size = self.__response['file_size']
+            if 'content_type' in self.__response:
+                self.__file_type = self.__response['content_type']
+            if 'url' in self.__response:
+                self.__file_url = self.__response['url']
+            if 'uid' in self.__response:
+                self.__uid = self.__response['uid']
+            if 'tags' in self.__response:
+                self.__tags = self.__response['tags']
+            if 'created_at' in self.__response:
+                self.__created_at = self.__response['created_at']
+            if 'created_by' in self.__response:
+                self.__created_by = self.__response['created_by']
+            if 'updated_at' in self.__response:
+                self.__updated_at = self.__response['updated_at']
+            if 'updated_by' in self.__response:
+                self.__updated_by = self.__response['updated_by']
+            if '_version' in self.__response:
+                self.__version = self.__response['_version']
             if 'dimension' in self.__response:
                 self.__dimension = self.__response['dimension']
 
@@ -98,6 +92,7 @@ class Asset:
     def asset_uid(self):
 
         """
+        [Example]
         uid = asset.asset_uid
         :return: str of asset_uid
         """
@@ -107,6 +102,7 @@ class Asset:
     def filetype(self):
 
         """
+        [Example]
         file = asset.filetype
         :return: str of filetype
         """
@@ -116,6 +112,7 @@ class Asset:
     def filesize(self):
 
         """
+        [Example]
         size = asset.file_size
         :return: file_size
         """
@@ -125,6 +122,7 @@ class Asset:
     def filename(self):
 
         """
+        [Example]
         filename = asset.filename
         :return: filename
         """
@@ -134,6 +132,7 @@ class Asset:
     def url(self):
 
         """
+        [Example]
         file_url = asset.file_url
         :return: file_url
         """
@@ -143,6 +142,7 @@ class Asset:
     def to_json(self):
 
         """
+        [Example]
         response = asset.to_json
         :return: dict response
         """
@@ -152,6 +152,7 @@ class Asset:
     def create_at(self):
 
         """
+        [Example]
         created_at = asset.created_at
         :return: str created_at
         """
@@ -161,6 +162,7 @@ class Asset:
     def create_by(self):
 
         """
+        [Example]
         created_by = asset.created_by
         :return: str created_by
         """
@@ -170,6 +172,7 @@ class Asset:
     def update_at(self):
 
         """
+        [Example]
         updated_at = asset.updated_at
         :return: str updated_at
         """
@@ -179,6 +182,7 @@ class Asset:
     def update_by(self):
 
         """
+        [Example]
         updated_by = asset.updated_by
         :return: str updated_by
         """
@@ -188,6 +192,7 @@ class Asset:
     def tags(self):
 
         """
+        [Example]
         tags = asset.tags
         :return: list tags
         """
@@ -197,6 +202,7 @@ class Asset:
     def get_version(self):
 
         """
+        [Example]
         tags = asset.tags
         :return: list tags
         """
@@ -206,8 +212,9 @@ class Asset:
     def dimension(self) -> tuple:
 
         """
-        tags = asset.tags
-        :return: list tags
+        [Example]
+        dimension = asset.dimension
+        :return: tuple (height, width)
         """
         global width, height
         if self.__dimension is not None and isinstance(self.__dimension, dict):
@@ -215,39 +222,52 @@ class Asset:
             height, width = dim.values()
         return height, width
 
-    def set_header(self, headers: dict):
-        if headers is not None and isinstance(headers, dict):
-            self.__local_headers = headers
-            for key, value in self.__local_headers.items():
-                if key == 'environment':
-                    self.__local_params["environment"] = value
-                self.__local_headers[key] = value
+    def headers(self, headers: dict):
+
+        """
+        [Example]
+        headers = asset.headers(dict)
+        :return: self, that help to chaining the request.
+
+        """
+
+        if isinstance(headers, dict) and len(headers) > 0:
+            self.__stack_headers = headers.copy()
+            if 'environment' in self.__stack_headers:
+                env = self.__stack_headers['environment']
+                self.__query_params["environment"] = env
+                self.__stack_headers.pop('environment', None)
+
         return self
 
     def add_params(self, params: dict):
-        if params is not None:
-            self.__local_params = params
-            for key, value in self.__local_params.items():
-                self.__local_params[key] = value
+
+        """
+        add param method allows to add query param dictionary to the asset
+        :param params:
+        :return: self
+        """
+        if params is not None and isinstance(params, dict) and len(params) > 0:
+            self.__query_params = params.copy()
         return self
 
     def relative_urls(self):
-        self.__local_params['relative_urls'] = "true"
+        self.__query_params['relative_urls'] = "true"
         return self
 
     def version(self, version):
         if version is not None:
-            self.__local_params['version'] = version
+            self.__query_params['version'] = version
         return self
 
     def include_dimension(self):
-        self.__local_params['include_dimension'] = "true"
+        self.__query_params['include_dimension'] = "true"
         return self
 
     def remove_header(self, key):
         if key is not None:
-            if key in self.__local_headers:
-                self.__local_headers.pop(key)
+            if key in self.__stack_headers:
+                self.__stack_headers.pop(key)
         return self
 
     def set_uid(self, asset_uid: str):
@@ -264,11 +284,11 @@ class Asset:
 
         error = None
         asset_url = Config().endpoint('assets')
-        self.__local_headers.update(self.header_agents())
-        payload = parse.urlencode(query=self.__local_params, encoding='UTF-8')
+        self.__stack_headers.update(self.header_agents())
+        payload = parse.urlencode(query=self.__query_params, encoding='UTF-8')
 
         try:
-            response: Response = requests.get(asset_url, params=payload, headers=self.__local_headers)
+            response: Response = requests.get(asset_url, params=payload, headers=self.__stack_headers)
             list_asset: list[Asset] = []
 
             if response.ok:
@@ -302,11 +322,11 @@ class Asset:
         if self.__asset_uid is None or len(self.__asset_uid) == 0:
             raise KeyError('Please provide asset uid to process to fetch response')
 
-        self.__local_headers.update(self.header_agents())
-        payload = parse.urlencode(query=self.__local_params, encoding='UTF-8')
+        self.__stack_headers.update(self.header_agents())
+        payload = parse.urlencode(query=self.__query_params, encoding='UTF-8')
 
         try:
-            response: Response = requests.get(asset_url, params=payload, headers=self.__local_headers)
+            response: Response = requests.get(asset_url, params=payload, headers=self.__stack_headers)
 
             if response.ok:
                 response: dict = response.json()['asset']

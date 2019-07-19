@@ -664,22 +664,6 @@ class Query:
 
         return self
 
-    def count(self):
-
-        """
-        Retrieve only count of entries in result.
-        :return  Query object, so you can chain this call.
-
-        [Example]
-        query = stack.content_type("content_type_id").query()
-        query.count()
-        result, error = query.find()
-        result will be integer
-        """
-        self.__query_params["count"] = "true"
-
-        return self
-
     def include_count(self):
 
         """
