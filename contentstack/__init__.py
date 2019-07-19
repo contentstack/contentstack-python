@@ -13,8 +13,7 @@ from .asset_library import AssetLibrary
 from .config import Config
 from .content_type import ContentType
 from .errors import Error, ConfigError
-from .group import Group
-from .http_request import HTTPRequestConnection
+from .http_connection import HTTPConnection
 
 
 # Set a default logger to prevent "No handler found" warnings

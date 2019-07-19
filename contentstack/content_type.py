@@ -23,7 +23,8 @@
 
 class ContentType:
 
-    def __init__(self, content_type_uid: str):
+    def __init__(self, http_request, content_type_uid: str):
+        self.http_request = http_request
         if isinstance(content_type_uid, str):
             self.__content_type_uid = content_type_uid
         else:

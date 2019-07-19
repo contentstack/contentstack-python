@@ -392,9 +392,6 @@ class Entry:
         :param reference_fields: list of reference_field key that to be constrained.
         :return: entry object, so you can chain this call.
         """
-        # if reference_field is not None:
-        #    self.__reference_list.append(reference_field)
-        #    self.__other_post_dict["include[]"] = self.__reference_list
         if reference_fields is not None:
             for field in reference_fields:
                 self.__reference_list.append(field)
@@ -407,7 +404,7 @@ class Entry:
         # 'blt5d4sample2633b' is a dummy Stack API key
         # 'blt6d0240b5sample254090d' is dummy access token.
 
-        [USES]
+
         # stack = contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
         # entry = stack.contentType("content_type_uid").entry("entry_uid")
         # entry.only(["name", "description"])
@@ -420,12 +417,13 @@ class Entry:
             return self
 
     def only_with_reference_uid(self, field_uid: list, reference_field_uid: str):
+
         """
         :param field_uid: list of the &#39;only&#39; reference keys to be included in response.
         :param reference_field_uid: Key who has reference to some other class object..
         :return: Entry object, so you can chain this call.
 
-        Uses:
+
         //'blt5d4sample2633b' is a dummy Stack API key
         //'blt6d0240b5sample254090d' is dummy access token.
         stack = contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
@@ -442,12 +440,11 @@ class Entry:
             self.include_reference(reference_field_uid)
 
     def except_with_reference_uid(self, field_uid: list, reference_field_uid: str):
+
         """
         :param field_uid: field_uid list of the &#39;except&#39; reference keys to be excluded in response.
         :param reference_field_uid: Key who has reference to some other class object.
         :return: Entry object, so you can chain this call.
-
-        Uses:
 
         stack = contentstack.stack( "blt5d4sample2633b", "blt6d0240b5sample254090d", "stag");
         entry = stack.contentType("content_type_uid").entry("entry_uid")
