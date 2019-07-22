@@ -57,41 +57,36 @@ class ContentstackTestcase(TestCase):
     def test_include_collaborators(self):
         is_contains = False
         self.stack.collaborators()
-        result, err = self.stack.fetch()
-        if err is None:
-
+        result = self.stack.fetch()
+        if result is not None:
             if 'collaborators' in result:
                 is_contains = True
             self.assertEqual(True, is_contains)
 
     def test_stack_fetch_collaborators(self):
         stack_fetch = self.stack.collaborators()
-        result, error = stack_fetch.fetch()
-        if error is None:
+        result = stack_fetch.fetch()
+        if result is not None:
             if 'collaborators' in result:
-                collaborators = result["collaborators"]
                 self.assertTrue(True)
 
     def test_stack_fetch_discrete_variables(self):
         discrete_var = self.stack.include_discrete_variables()
-        result, error = discrete_var.fetch()
-        if error is None:
+        result = discrete_var.fetch()
+        if result is not None:
             if 'discrete_variables' in result:
-                discrete_variables = result["discrete_variables"]
                 self.assertTrue(True)
 
     def test_stack_fetch_stack_variables(self):
         stack_var = self.stack.include_stack_variables()
         result = stack_var.fetch()
         if 'stack_variables' in result:
-            stack_variables = result["stack_variables"]
             self.assertTrue(True)
 
     def test_stack_include_count(self):
         stack_var = self.stack.include_count()
         result = stack_var.fetch()
         if 'stack_variables' in result:
-            stack_variables = result["stack_variables"]
             self.assertTrue(True)
 
     def test_image_transform(self):
@@ -106,24 +101,24 @@ class ContentstackTestcase(TestCase):
 
     def test_sync_pagination(self):
         sync_stack = Stack(api_key="blt477ba55f9a67bcdf", access_token="cs7731f03a2feef7713546fde5", environment="web")
-        result, error = sync_stack.pagination('bltbb61f31a70a572e6c9506a')
-        if error is None:
+        result = sync_stack.pagination('bltbb61f31a70a572e6c9506a')
+        if result is not None:
             print(result)
-        else:
-            error_code = error["error_code"]
+            error_code = result["error_code"]
             self.assertEqual(141, error_code)
 
     def test_init_sync(self):
+        from contentstack.stack import SyncResult
         sync_stack = Stack(api_key="blt477ba55f9a67bcdf", access_token="cs7731f03a2feef7713546fde5", environment="web")
-        result, err = sync_stack.sync(from_date='2018-01-14T00:00:00.000Z', content_type_uid='session',
+        result = sync_stack.sync(from_date='2018-01-14T00:00:00.000Z', content_type_uid='session',
                                       publish_type='entry_published')
-        if err is None:
-            print(result, type(result))
-            self.assertEqual(int, type(result.count))
+        if result is not None:
+            print(SyncResult, type(result))
+            self.assertEqual(31, result.count)
 
     def test_sync_token(self):
         sync_stack = Stack(api_key="blt477ba55f9a67bcdf", access_token="cs7731f03a2feef7713546fde5", environment="web")
-        response, error = sync_stack.sync_token('bltbb61f31a70a572e6c9506a')
+        response = sync_stack.sync_token('bltbb61f31a70a572e6c9506a')
         items = response.count
         self.assertTrue(9, items)
 
@@ -136,12 +131,9 @@ class ContentstackTestcase(TestCase):
         self.assertEqual(len(var_ct), len(var_head))
 
     def test_content_types(self):
-        result, error = self.stack.get_content_types()
-        if error is None:
-            if 'content_types' in result:
-                result = result['content_types']
-                self.assertEqual(list, type(result))
-                self.assertEqual(4, len(result))
+        result = self.stack.get_content_types()
+        if result is not None:
+            self.assertEqual(4, len(result))
 
     def test_content_type(self):
         content_type = self.stack.content_type('product')
