@@ -92,7 +92,6 @@ class Stack:
         :return ContentType
 
         [Example]
-        >>> stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development')
         >>> content_type:ContentType = stack.content_type('product')
         """
         from contentstack import ContentType
@@ -114,11 +113,12 @@ class Stack:
         :return: ContentTypes response
 
         [Usage]:
-        >>>> stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development')
         >>>> content_types = stack.get_content_types()
         """
         ct_query: dict = {'include_count': 'true'}
-        result = self.http_request.get_result('urls', ct_query, self.__stack_headers)
+        from contentstack import Config
+        ct_url = Config().endpoint('content_types')
+        result = self.http_request.get_result(ct_url, ct_query, self.__stack_headers)
         return result
 
     def asset(self, uid: str = None):
@@ -142,7 +142,6 @@ class Stack:
         This call fetches the latest version of a specific asset of a particular stack.
 
         [Usage]:
-        >>>> stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development')
         >>>> asset = stack.asset('uid')
 
         """
@@ -162,7 +161,6 @@ class Stack:
         :return: asset_library
 
         [Usage]:
-        >>>> stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development')
         >>>> asset_lib: AssetLibrary = stack.asset_library()
 
         """
@@ -178,7 +176,6 @@ class Stack:
         :return: application_key as str
 
         [Usage]:
-        >>>> stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development')
         >>>> api_key: str = stack.application_key
 
         """
@@ -196,7 +193,6 @@ class Stack:
         :return:str access token of the stack
 
         [Usage]:
-        >>>> stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development')
         >>>> access_token: str = stack.access_token
 
         """
@@ -222,7 +218,6 @@ class Stack:
         :return: url:str
 
         [Usage]:
-        >>>> stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development')
         >>>> image_url: str = stack.image_transform('endpoint', query_key='query_value', query_key1='query_value', query_key2='query_value')
 
         """
@@ -238,15 +233,13 @@ class Stack:
         """
         collaborators with whom the stacks are shared.
         A detailed information about each collaborator is returned.
-
         :returns list of stack collaborators in response
 
         [Usage]:
-        >>>> stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development')
         >>>> stack = stack.collaborators()
 
-
         """
+
         self.__query_params['include_collaborators'] = 'true'
         return self
 
@@ -256,10 +249,8 @@ class Stack:
         Stack variables are extra information about the stack,
         such as the description, format of date,
         format of time, and so on. Users can include or exclude stack variables in the response.
-
         :returns stack_variables
         [Usage]:
-        >>>> stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development')
         >>>> stack = stack.include_stack_variables()
         """
 
@@ -271,9 +262,7 @@ class Stack:
 
         """
         :returns discrete variables of the stack
-
         [Usage]:
-        >>>> stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development')
         >>>> stack = stack.include_discrete_variables()
 
         """
@@ -285,9 +274,7 @@ class Stack:
 
         """
         :returns Total Count of stack response
-
         [Usage]:
-        >>>> stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development')
         >>>> stack = stack.include_count()
         """
         self.__query_params['include_count'] = "true"
@@ -310,6 +297,7 @@ class Stack:
         """
 
         self.__sync_query = {'pagination_token': pagination_token}
+
         return self.__sync_request()
 
     def sync_token(self, sync_token):
@@ -325,6 +313,7 @@ class Stack:
         """
 
         self.__sync_query = {'sync_token': sync_token}
+
         return self.__sync_request()
 
     def sync(self, **kwargs):
@@ -389,7 +378,7 @@ class Stack:
         if env is not None and isinstance(env, str):
             self.__stack_headers['environment'] = env
         else:
-            raise KeyError('Argument should be a String.')
+            raise KeyError('Kindly provide valid Argument')
 
     @property
     def headers(self):
@@ -398,7 +387,6 @@ class Stack:
         :return:dict headers
 
         [Uses]
-        >>>> stack = contentstack.Stack(api_key='blt62378466467', access_token='3789787878345785', environment='dev')
         >>>> headers:dict = stack.headers
 
         """
