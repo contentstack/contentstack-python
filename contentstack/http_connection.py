@@ -3,12 +3,9 @@ class HTTPConnection:
     def __init__(self, url: str, query: dict, headers: dict):
 
         if url is not None and query is not None and headers is not None:
-            if len(url) > 0 and len(query) > 0 and len(headers) > 0:
-                self.url = url
-                self.query = query
-                self.headers = headers
-            else:
-                raise TypeError('Arguments can not be empty')
+            self.url = url
+            self.query = query
+            self.headers = headers
         else:
             raise TypeError('Invalid Arguments')
 
@@ -62,6 +59,10 @@ class HTTPConnection:
                 # If result contains content_type, return content_type json
                 if 'content_type' in result:
                     return result['content_type']
+                # If result contains content_types, return content_types json
+                if 'content_types' in result:
+                    return result['content_types']
+                # If result contains items, return SyncResult json
                 # If result contains items, return SyncResult json
                 if 'items' in result:
                     sync_result = SyncResult().configure(result)
