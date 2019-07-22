@@ -29,6 +29,7 @@ log = logging.getLogger(__name__)
 
 
 class Stack:
+
     """
     contentstack.stack
     ~~~~~~~~~~~~~~~~~~
@@ -344,7 +345,6 @@ class Stack:
 
         """
 
-        # from_date as str, content_type_uid as str, publish_type as str and locale as str):
         self.__sync_query["init"] = 'true'
         for key, value in kwargs.items():
             self.__sync_query[key] = value

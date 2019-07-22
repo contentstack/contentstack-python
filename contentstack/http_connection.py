@@ -1,3 +1,4 @@
+
 class HTTPConnection:
 
     def __init__(self, url: str, query: dict, headers: dict):
@@ -7,7 +8,7 @@ class HTTPConnection:
             self.query = query
             self.headers = headers
         else:
-            raise TypeError('Invalid Arguments')
+            raise TypeError('Kindly provide valid Arguments')
 
     def get_result(self, url: str, query: dict, headers: dict) -> tuple:
 
@@ -15,6 +16,7 @@ class HTTPConnection:
         from urllib import parse
         from requests import Response
         from contentstack.stack import SyncResult
+        from contentstack import Error
 
         if url is not None and len(url) > 0:
             self.url = url
@@ -29,7 +31,6 @@ class HTTPConnection:
         payload = parse.urlencode(query=self.query, encoding='UTF-8')
 
         try:
-
             # requesting for url, payload and headers
             response: Response = requests.get(self.url, params=payload, headers=self.headers)
             # if response.status_code = 200
@@ -40,37 +41,44 @@ class HTTPConnection:
                 # If result contains stack, return json response
                 if 'stack' in result:
                     return result['stack']
+
                 # If result contains entry, return Entry
                 if 'entry' in result:
                     dict_entry = result['entry']
                     return self.__parse_entries(dict_entry)
+
                 # If result contains entries, return list[Entry]
                 if 'entries' in result:
                     entry_list = result['entries']
                     return self.__parse_entries(entry_list)
+
                 # If result contains asset, return Asset
                 if 'asset' in result:
                     dict_asset = result['asset']
                     return self.__parse_assets(dict_asset)
+
                 # If result contains assets, return list[Asset]
                 if 'assets' in result:
                     asset_list = result['assets']
                     return self.__parse_assets(asset_list)
-                # If result contains content_type, return content_type json
+
+                # If result contains content_type,return content_type json
                 if 'content_type' in result:
                     return result['content_type']
-                # If result contains content_types, return content_types json
+
+                # If result contains content_types,return content_types json
                 if 'content_types' in result:
                     return result['content_types']
-                # If result contains items, return SyncResult json
+
                 # If result contains items, return SyncResult json
                 if 'items' in result:
                     sync_result = SyncResult().configure(result)
                     return sync_result
-
             else:
                 # Decode byte response to json
-                return response.json()
+                err = response.json()
+                if err is not None:
+                    return Error().config(err)
 
         except requests.RequestException as err:
             raise ConnectionError(err)
@@ -88,6 +96,7 @@ class HTTPConnection:
                 for entry_obj in result:
                     each_entry = Entry().configure(entry_obj)
                     entries.append(each_entry)
+
                 return entries
 
     @staticmethod
@@ -103,6 +112,7 @@ class HTTPConnection:
                 for asset_obj in result:
                     itr_asset = asset.configure(asset_obj)
                     assets.append(itr_asset)
+
                 return assets
 
     @staticmethod
@@ -131,5 +141,6 @@ class HTTPConnection:
             'name': os_name,
             'version': platform.release()
         }
+
         local_headers = {'X-User-Agent': str(header), "Content-Type": 'application/json'}
         return local_headers

@@ -28,17 +28,21 @@ from contentstack.stack import Stack
 
 
 class ContentstackTestcase(TestCase):
+
     log = logging.getLogger(__name__)
 
     def setUp(self):
 
-        self.stack = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f', environment='development')
-        self.stack_asset = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f',
-                                 environment='production')
-        self.stack_entry = Stack(api_key="blt20962a819b57e233", access_token="cs18efd90468f135a3a5eda3ba",
-                                 environment="production")
-        self.stack_query = Stack(api_key='blt20962a819b57e233', access_token='blt01638c90cc28fb6f',
-                                 environment='production')
+        api_key: str = 'blt20962a819b57e233'
+        access_token: str = 'blt01638c90cc28fb6f'
+        delivery_token: str = 'cs18efd90468f135a3a5eda3ba'
+        env_prod: str = 'production'
+        env_dev: str = 'development'
+
+        self.stack = Stack(api_key=api_key, access_token=access_token, environment=env_dev)
+        self.stack_asset = Stack(api_key=api_key, access_token=access_token, environment=env_prod)
+        self.stack_entry = Stack(api_key=api_key, access_token=delivery_token, environment=env_prod)
+        self.stack_query = Stack(api_key=api_key, access_token=access_token, environment=env_prod)
 
     # [Stack]
 
@@ -90,8 +94,8 @@ class ContentstackTestcase(TestCase):
             self.assertTrue(True)
 
     def test_image_transform(self):
-        url = self.stack.image_transform("www.contentstack.io/endpoint", firstname="sita", lastname="sharma", age=22,
-                                         phone=1234567890)
+        url = self.stack.image_transform("www.contentstack.io/endpoint",
+                                         firstname="sita", lastname="sharma", age=22, phone=1234567890)
         if 'age' in url:
             self.assertTrue(True)
         else:

@@ -23,39 +23,73 @@
 """
 
 
-class Error(Exception):
-
+class Error:
     """
     contentstack.error
     ~~~~~~~~~~~~~~~~~~
     This module implements the Error class.
     API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#error
-
     """
 
     def __init__(self):
-        self.error_code = str
-        self.msg = str
-        self.cause_err = str
+        self.__error_dict = {}
+        self.__error_code = str
+        self.__msg = str
+        self.__cause_err = str
+
+    def config(self, result: dict):
+        if result is not None and len(result) > 0:
+            self.__error_dict = result
+            self.__error_code = self.__error_dict['error_code']
+            self.__msg = self.__error_dict['error_message']
+            self.__cause_err = self.__error_dict['errors']
+
+    @property
+    def error_code(self):
+        """
+        :return: error_code as int
+        """
+        return self.__error_code
+
+    @property
+    def error_message(self):
+        """
+        :return: error_message
+        """
+        return self.__msg
+
+    @property
+    def error(self):
+        """
+        :return: error dict
+        """
+        return self.__cause_err
+
+    @property
+    def error_info(self) -> dict:
+
+        """
+        :return: dict, error information
+        """
+        return self.__error_dict
 
     errors_str = {
 
-        'error_invalid_json': "Please provide valid JSON.",
-        'error_message_stack_api_key_is_null': "Stack api key can not be null.",
-        'error_form_name': "Please set contentType name.",
-        'error_stack_access_token_is_null': "Access token can not be null.",
-        'error_stack_environment_is_null': "Environment can not be null.",
-        'Error_Connection_Error': "Connection error",
-        'Error_Auth_Failure_Error': "Authentication Not present.",
-        'Error_Parse_Error': "Parsing Error.",
-        'Error_Server_Error': "Server interaction went wrong, Please try again.",
-        'Error_Default': "Oops! Something went wrong. Please try again.",
-        'Error_No_Network': "Network not available.",
-        'Error_Called_Default_Method': "You must called Contentstack.stack() first",
-        'Error_Query_Filter_Exception': "Please provide valid params."
+        'invalid_json': "Please provide valid JSON.",
+        'api_key_is_none': "Stack api key can not be None.",
+        'empty_content_type': "Please set contentType name.",
+        'access_token_error': "Access token can not be None.",
+        'environment_error': "Environment can not be None.",
+        'connection_error': "Connection error",
+        'auth_failure': "Authentication Not present.",
+        'parse_error': "Parsing Error.",
+        'server_error': "Server interaction went wrong, Please try again.",
+        'error_default': "Oops! Something went wrong. Please try again.",
+        'no_network': "Network not available.",
+        'query_error': "Please provide valid params."
     }
 
-    error_code = {
+    __error_code = {
 
         400: "The request was incorrect or corrupted.",
         401: "The login credentials are invalid.",
@@ -69,70 +103,19 @@ class Error(Exception):
         504: "A server did not receive a timely response from another server that it was accessing while attempting to load the web page or fill another request by the browser."
     }
 
-    exceptions = {
-
-        AssertionError: "Raised when the assert statement fails.",
-        AttributeError: "Raised on the attribute assignment or reference fails.",
-        EOFError: "Raised when the input() function hits the end-of-file condition.",
-        FloatingPointError: "Raised when a floating point operation fails.",
-        GeneratorExit: "Raised when a generator's close() method is called.",
-        ImportError: "Raised when the imported module is not found.",
-        IndexError: "Raised when the index of a sequence is out of range.",
-        KeyError: "Raised when a key is not found in a dictionary.",
-        KeyboardInterrupt: "Raised when the user hits the interrupt key (Ctrl+c or delete).",
-        MemoryError: "Raised when an operation runs out of memory.",
-        NameError: "Raised when a variable is not found in the local or global scope.",
-        NotImplementedError: "Raised by abstract methods.",
-        OSError: "Raised when a system operation causes a system-related error.",
-        OverflowError: "Raised when the result of an arithmetic operation is too large to be represented.",
-        ReferenceError: "Raised when a weak reference proxy is used to access a garbage collected referent.",
-        RuntimeError: "Raised when an error does not fall under any other category.",
-        StopIteration: "Raised by the next() function to indicate that there is no further item to be returned by the iterator.",
-        SyntaxError: "Raised by the parser when a syntax error is encountered.",
-        IndentationError: "Raised when there is an incorrect indentation.",
-        TabError: "Raised when the indentation consists of inconsistent tabs and spaces.",
-        SystemError: "Raised when the interpreter detects internal error.",
-        SystemExit: "Raised by the sys.exit() function.",
-        TypeError: "Raised when a function or operation is applied to an object of an incorrect type.",
-        UnboundLocalError: "Raised when a reference is made to a local variable in a function or method, but no value has been bound to that variable.",
-        UnicodeError: "Raised when a Unicode-related encoding or decoding error occurs.",
-        UnicodeEncodeError: "Raised when a Unicode-related error occurs during encoding.",
-        UnicodeDecodeError: "Raised when a Unicode-related error occurs during decoding.",
-        UnicodeTranslateError: "Raised when a Unicode-related error occurs during translation.",
-        ValueError: "Raised when a function gets an argument of correct type but improper value.",
-        ZeroDivisionError: "Raised when the second operand of a division or module operation is zero."
-
-    }
-
-    def error(self, response: dict) -> tuple:
-        if response is not None and isinstance(response, dict):
-            self.error_code = response['error_code']
-            self.msg = response['error_message']
-            self.cause_err = response['errors']
-
-        return self.error_code, self.msg, self.cause_err
-
     @staticmethod
     def logging_config(level):
+
         print('level ' + level)
 
 
 class ConfigError(Exception):
-    """Configuration Error Class"""
     pass
 
 
 class StackException(Exception):
-    """StackException Class"""
     pass
 
 
 class NotSupportedException(Exception):
-    """ exception is thrown when something is not supported by the API."""
     pass
-
-
-class retry_request(object):
-    """
-    Decorator to retry function calls in case they raise rate limit exceptions
-    """
