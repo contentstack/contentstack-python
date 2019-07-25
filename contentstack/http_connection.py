@@ -16,7 +16,7 @@ class HTTPConnection:
         from urllib import parse
         from requests import Response
         from contentstack.stack import SyncResult
-        from contentstack import Error
+        from contentstack.errors import ContentstackError
 
         if url is not None and len(url) > 0:
             self.url = url
@@ -78,7 +78,10 @@ class HTTPConnection:
                 # Decode byte response to json
                 err = response.json()
                 if err is not None:
-                    return Error().config(err)
+                    error_code = err['error_code']
+                    error_message = err['error_message']
+                    raise ContentstackError('Server Error Code {} Message: {}'.format(error_code, error_message))
+                    # return Error().config(err)
 
         except requests.RequestException as err:
             raise ConnectionError(err)
