@@ -27,7 +27,6 @@ This module implements the Entry class.
 API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#entries
 """
 from typing import List, Any
-
 import contentstack
 
 
@@ -35,6 +34,7 @@ class Entry:
 
     def __init__(self, content_type_id: str = None):
 
+        self.http_request = None
         self.url = contentstack.config.Config().endpoint('entries')
         self.__content_type_id = content_type_id
         if self.__content_type_id is not None:
@@ -301,59 +301,57 @@ class Entry:
                         assets.append(assetmodel)
         return assets
 
-    def get_group(self, key: str):
-        """
-        Get a group from entry.
-        [USES]: Group innerGroup = entry.getGroup("key")
-        :param key: field_uid as key.
-        :return: None
-        """
-        from contentstack import Group
-        if key is not None and self.__result_json is not None:
-            if key in self.__result_json:
-                extract_json = self.__result_json[key]
-                if isinstance(extract_json, dict):
-                    return Group(extract_json)
-        else:
-            return None
+    # def get_group(self, key: str):
+    #    """
+    #    Get a group from entry.
+    #    [USES]: Group innerGroup = entry.getGroup("key")
+    #    :param key: field_uid as key.
+    #    :return: None
+    #    """
+    #    from contentstack import Group
+    #    if key is not None and self.__result_json is not None:
+    #        if key in self.__result_json:
+    #            extract_json = self.__result_json[key]
+    #            if isinstance(extract_json, dict):
+    #                return Group(extract_json)
+    #    else:
+    #        return None
 
-    def get_groups(self, key):
-        """
-        Get a list of group from entry.
-        This will work when group is multiple true.
-        :param key field_uid as key.
-        :return  list of group from entry
-        [Uses]: Group inner_group = entry.get_groups("key")
-        """
-        if key is not None and self.__result_json is not None:
-            group_list = []
-            if key in self.__result_json:
-                groups = self.__result_json[key]
-                if isinstance(groups, list):
-                    for single_group in groups:
-                        group_list.append(single_group)
-                    return group_list
+    # def get_groups(self, key):
+    #    """
+    #    Get a list of group from entry.
+    #    This will work when group is multiple true.
+    #   :param key field_uid as key.
+    #    :return  list of group from entry
+    #    [Uses]: Group inner_group = entry.get_groups("key")
+    #    """
+    #    if key is not None and self.__result_json is not None:
+    #        group_list = []
+    #        if key in self.__result_json:
+    #            groups = self.__result_json[key]
+    #            if isinstance(groups, list):
+    #                for single_group in groups:
+    #                    group_list.append(single_group)
+    #                return group_list
 
     # [INCOMPLETE]
     def get_all_entries(self, ref_key: str, ref_content_type: str):
         """
         :param ref_key: key of a reference field.
         :param ref_content_type: class uid.
-        :return: list of  @Entry instances. Also specified contentType value will be set as class uid for all  :Entry instance.
-        #'blt5d4sample2633b' is a dummy Stack API key
-        #'blt6d0240b5sample254090d' is dummy access token.
+        :return: list of  :Entry instances. Also specified content_type value will be set as class uid for all  :Entry instance.
+
 
         Uses:
 
-        # stack = contentstack.Stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        # cs_query = stack.contentType("content_type_uid").query()
-        # cs_query.include_reference("for_bug")
-        # (resp, err) = csQuery.find()
-        # if err is None:
-        # list_query = cs_query.get_dict()
-        # for entry in list_query:
-        #      task_entry = entry.get_all_entries("for_task", "task")
-
+        stack = contentstack.Stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
+        cs_query = stack.contentType("content_type_uid").query()
+        cs_query.include_reference("for_bug")
+        (resp, err) = csQuery.find()
+        if err is None:
+        list_query = cs_query.get_dict()
+        for entry in list_query:
+             task_entry = entry.get_all_entries("for_task", "task")
 
         """
         from contentstack import ContentType
@@ -367,8 +365,6 @@ class Entry:
     def except_field_uid(self, field_uid: list):
         """
         Specifies list of field uids that would be &#39excluded&#39 from the response.
-        //'blt5d4sample2633b' is a dummy Stack API key
-        //'blt6d0240b5sample254090d' is dummy access token.
         stack = contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
         entry = stack.content_type.ContentType("content_type_uid").entry("entry_uid")
         entry.except(["name", "description"])
@@ -424,10 +420,8 @@ class Entry:
         :return: Entry object, so you can chain this call.
 
 
-        //'blt5d4sample2633b' is a dummy Stack API key
-        //'blt6d0240b5sample254090d' is dummy access token.
-        stack = contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        entry = stack.content_type.ContentType("content_type_uid").entry("entry_uid")
+        stack = contentstack.Stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
+        entry = stack.ContentType("content_type_uid").entry("entry_uid")
         array.append("description")
         array.append("name")
         entry.only_with_reference_uid(array, "reference_uid")
@@ -477,58 +471,11 @@ class Entry:
             self.__only_dict = None
 
     def fetch(self) -> tuple:
-
-        import requests
-        from urllib import parse
-        from requests import Response
-        import contentstack
-        error = None
-
-        self.__stack_headers["X-User-Agent"] = contentstack.__package__ + '-' + contentstack.__version__
-        content_agent = 'application/json - ' + self.__user_agent
-        self.__stack_headers["Content-Type"] = content_agent
-
+        from contentstack.errors import ContentstackError
         if self.__entry_uid is not None:
             self.url = '{0}{1}'.format(self.url, self.__entry_uid)
-
-        if len(self.__stack_headers) > 0 and 'environment' in self.__stack_headers:
-            self.__local_params['environment'] = self.__stack_headers['environment']
-
-        payload = parse.urlencode(query=self.__local_params, encoding='UTF-8')
-        response: Response = requests.get(self.url, params=payload, headers=self.__stack_headers)
-        if response.ok:
-
-            response = response.json()
-            if error is None:
-                response = response['entry']
-                self.configure(response)
         else:
-            error = response.json()
+            raise ContentstackError('Kindly provide entry uid')
+        result = self.http_request.get_result(self.url, self.__local_params, self.__stack_headers)
+        return result
 
-        return response, error
-
-    @property
-    def __user_agent(self):
-
-        import contentstack
-        import platform
-        """
-        Contentstack-User-Agent header.
-        """
-        header = {'sdk': {
-            'name': contentstack.__package__,
-            'version': contentstack.__version__
-        }}
-        os_name = platform.system()
-        if os_name == 'Darwin':
-            os_name = 'macOS'
-        elif not os_name or os_name == 'Java':
-            os_name = None
-        elif os_name and os_name not in ['macOS', 'Windows']:
-            os_name = 'Linux'
-        header['os'] = {
-            'name': os_name,
-            'version': platform.release()
-        }
-
-        return header.__str__()

@@ -67,7 +67,6 @@ class Error:
 
     @property
     def error_info(self) -> dict:
-
         """
         :return: dict, error information
         """
@@ -100,12 +99,12 @@ class Error:
         429: "The number of requests exceeds the allowed limit for the given time period.",
         500: "The server is malfunctioning and is not specific on what the problem is.",
         502: "A server received an invalid response from another server.",
-        504: "A server did not receive a timely response from another server that it was accessing while attempting to load the web page or fill another request by the browser."
+        504: "A server did not receive a timely response from another server that it was accessing while attempting "
+             "to load the web page or fill another request by the browser. "
     }
 
     @staticmethod
     def logging_config(level):
-
         print('level ' + level)
 
 
@@ -114,6 +113,10 @@ class ConfigError(Exception):
 
 
 class StackException(Exception):
+    pass
+
+
+class ContentstackError(Exception):
     pass
 
 

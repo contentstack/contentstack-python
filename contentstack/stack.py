@@ -278,7 +278,7 @@ class Stack:
         [Usage]:
         >>>> stack = stack.include_count()
         """
-        self.__query_params['include_count'] = "true"
+        self.__query_params['include_count'] = 'true'
 
         return self
 
