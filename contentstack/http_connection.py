@@ -1,4 +1,3 @@
-
 class HTTPConnection:
 
     def __init__(self, url: str, query: dict, headers: dict):
@@ -10,13 +9,13 @@ class HTTPConnection:
         else:
             raise TypeError('Kindly provide valid Arguments')
 
-    def get_result(self, url: str, query: dict, headers: dict) -> tuple:
+    def get_result(self, url: str, query: dict, headers: dict):
 
         import requests
         from urllib import parse
         from requests import Response
         from contentstack.stack import SyncResult
-        from contentstack.errors import ContentstackError
+        from contentstack import Error
 
         if url is not None and len(url) > 0:
             self.url = url
@@ -27,7 +26,6 @@ class HTTPConnection:
 
         # Adding user agent to headers
         self.headers.update(self.__user_agents())
-        # Encoding query to string
         payload = parse.urlencode(query=self.query, encoding='UTF-8')
 
         try:
@@ -78,12 +76,11 @@ class HTTPConnection:
                 # Decode byte response to json
                 err = response.json()
                 if err is not None:
-                    error_code = err['error_code']
-                    error_message = err['error_message']
-                    raise ContentstackError('Server Error Code {} Message: {}'.format(error_code, error_message))
-                    # return Error().config(err)
+                    return Error().config(err)
+                    # raise ContentstackError('Server Error Code {} Message: {}'.format(error_code, error_message))
 
         except requests.RequestException as err:
+            # Error().config(err)
             raise ConnectionError(err)
 
     @staticmethod
@@ -126,7 +123,6 @@ class HTTPConnection:
 
         """
         Contentstack-User-Agent.
-        
         """
         header = {'sdk': dict(name=contentstack.__package__, version=contentstack.__version__)}
         os_name = platform.system()

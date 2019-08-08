@@ -36,26 +36,33 @@ class AssetLibrary:
 
     def __init__(self):
         self.count = 0
-        self.__local_headers = {}
+        self.__stack_instance = None
+        self.__http_request = None
+        self.__stack_headers = {}
         self.__query_params = {}
+
+    def instance(self, stack_instance):
+        self.__stack_instance = stack_instance
+        self.__stack_headers.update(self.__stack_instance.headers)
+        self.__http_request = self.__stack_instance.http_request
 
     def set_header(self, key: str, value):
         if key is not None and value is not None:
-            self.__local_headers[key] = value
+            self.__stack_headers[key] = value
             return self
 
     def headers(self, headers: dict):
         if headers is not None and len(headers) > 0 and isinstance(headers, dict):
-            self.__local_headers = headers
-            if 'environment' in self.__local_headers:
-                env_value = self.__local_headers['environment']
+            self.__stack_headers = headers
+            if 'environment' in self.__stack_headers:
+                env_value = self.__stack_headers['environment']
                 self.__query_params["environment"] = env_value
         return self
 
     def remove_header(self, key):
         if key is not None:
-            if key in self.__local_headers:
-                self.__local_headers.pop(key)
+            if key in self.__stack_headers:
+                self.__stack_headers.pop(key)
         return self
 
     def include_count(self):
@@ -79,7 +86,7 @@ class AssetLibrary:
     #       self.__post_params['desc'] = key
     #   return self.__post_params
 
-    def fetch_all(self) -> tuple:
+    def fetch_all(self):
 
         import requests
         from urllib import parse
@@ -90,11 +97,11 @@ class AssetLibrary:
 
         error = None
         asset_url = Config().endpoint('assets')
-        self.__local_headers.update(self.header_agents())
+        self.__stack_headers.update(self.header_agents())
         payload = parse.urlencode(query=self.__query_params, encoding='UTF-8')
 
         try:
-            response: Response = requests.get(asset_url, params=payload, headers=self.__local_headers)
+            response: Response = requests.get(asset_url, params=payload, headers=self.__stack_headers)
             list_asset: list[Asset] = []
 
             if response.ok:
@@ -105,16 +112,15 @@ class AssetLibrary:
                     asset_instance = Asset()
                     asset_resp: Asset = asset_instance.configure(response=asset)
                     list_asset.append(asset_resp)
+
+                return list_asset
             else:
-
                 error_dict = response.json()
-                Error().error(error_dict)
-
-            return list_asset, error
+                return Error().error(error_dict)
 
         except requests.exceptions.RequestException as e:
             raise ConnectionError(e.response)
-            pass
+
 
     @classmethod
     def header_agents(cls) -> dict:
