@@ -46,7 +46,7 @@ A publishing environment corresponds to one or more deployment servers or a cont
 
 
 
-### Contentstack Java SDK: 5-minute Quickstart
+### Contentstack Python SDK: 5-minute Quickstart
 
 #### Initializing your SDK
 

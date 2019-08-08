@@ -7,6 +7,7 @@ __package__ = 'contentstack'
 __endpoint__ = 'cdn.contentstack.io'
 
 # from .stack import Stack
+# from .stack import Stack
 from .entry import Entry
 from .asset import Asset
 from .asset_library import AssetLibrary
@@ -26,6 +27,3 @@ except ImportError:
             pass
 
 logging.getLogger(__name__).addHandler(NullHandler())
-
-
-

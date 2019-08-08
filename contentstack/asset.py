@@ -1,8 +1,8 @@
 # Asset.py
 # Contentstack
 # Created by Shailesh on 22/06/19.
-# Copyright (c) 2012 - 2019 Contentstack. All rights reserved.
 
+# Copyright (c) 2012 - 2019 Contentstack. All rights reserved.
 # [MIT License] :: Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files (the "Software"),
 # to deal in the Software without restriction, including without limitation the rights
@@ -15,7 +15,7 @@
 
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -28,7 +28,6 @@ class Asset:
     Assets refer to all the media files (images, videos, PDFs, audio files, and so on) uploaded
     in your Contentstack repository for future use.
     These files can be attached and used in multiple entries.
-
     contentstack.asset
     ~~~~~~~~~~~~~~~~~~
     This module implements the Asset class.
@@ -39,7 +38,9 @@ class Asset:
     def __init__(self, asset_uid: str = None):
 
         self.__asset_uid = asset_uid
+        self.__stack_instance = None
         self.__response = None
+        self.__http_request = None
         self.__query_params = {}
         self.__stack_headers = {}
 
@@ -55,6 +56,11 @@ class Asset:
         self.__dimension = None
         self.__uid = None
         self.__tags = None
+
+    def instance(self, stack_instance):
+        self.__stack_instance = stack_instance
+        self.__stack_headers.update(self.__stack_instance.headers)
+        self.__http_request = self.__stack_instance.http_request
 
     def configure(self, response: dict):
         # response is dictionary that check None and length
@@ -85,7 +91,6 @@ class Asset:
                 self.__version = self.__response['_version']
             if 'dimension' in self.__response:
                 self.__dimension = self.__response['dimension']
-
         return self
 
     @property
@@ -222,7 +227,7 @@ class Asset:
             height, width = dim.values()
         return height, width
 
-    def headers(self, headers: dict):
+    def headers(self, http_request, headers: dict):
 
         """
         [Example]
@@ -230,6 +235,10 @@ class Asset:
         :return: self, that help to chaining the request.
 
         """
+        if http_request is not None:
+            self.__http_request = http_request
+        else:
+            raise Exception("Error! We Don't Have HTTP Instance")
 
         if isinstance(headers, dict) and len(headers) > 0:
             self.__stack_headers = headers.copy()
@@ -237,10 +246,12 @@ class Asset:
                 env = self.__stack_headers['environment']
                 self.__query_params["environment"] = env
                 self.__stack_headers.pop('environment', None)
+            else:
+                raise Exception("Environment Can't Be None")
 
         return self
 
-    def add_params(self, params: dict):
+    def params(self, params: dict):
 
         """
         add param method allows to add query param dictionary to the asset
@@ -248,7 +259,7 @@ class Asset:
         :return: self
         """
         if params is not None and isinstance(params, dict) and len(params) > 0:
-            self.__query_params = params.copy()
+            self.__query_params.update(params)
         return self
 
     def relative_urls(self):
@@ -274,99 +285,15 @@ class Asset:
         if asset_uid is not None:
             self.__asset_uid = asset_uid
 
-    def fetch_all(self) -> tuple:
-
-        import requests
-        from urllib import parse
-        from requests import Response
+    def fetch_all(self):
         from contentstack import Config
-        from contentstack import Error
-
-        error = None
         asset_url = Config().endpoint('assets')
-        self.__stack_headers.update(self.header_agents())
-        payload = parse.urlencode(query=self.__query_params, encoding='UTF-8')
+        return self.__http_request.get_result(asset_url, self.__query_params, self.__stack_headers)
 
-        try:
-            response: Response = requests.get(asset_url, params=payload, headers=self.__stack_headers)
-            list_asset: list[Asset] = []
-
-            if response.ok:
-
-                response: dict = response.json()['assets']
-                print(response)
-                for asset in response:
-                    asset_resp: Asset = self.configure(asset)
-                    list_asset.append(asset_resp)
-            else:
-
-                error_dict = response.json()
-                Error().error(error_dict)
-
-            return list_asset, error
-
-        except requests.exceptions.RequestException as e:
-            raise ConnectionError(e.response)
-            pass
-
-    def fetch(self) -> tuple:
-
-        import requests
-        from urllib import parse
-        from requests import Response
+    def fetch(self):
         from contentstack import Config
-        error = None
-
-        asset_url = '{}/{}'.format(Config().endpoint('assets'), self.__asset_uid)
-
-        if self.__asset_uid is None or len(self.__asset_uid) == 0:
-            raise KeyError('Please provide asset uid to process to fetch response')
-
-        self.__stack_headers.update(self.header_agents())
-        payload = parse.urlencode(query=self.__query_params, encoding='UTF-8')
-
-        try:
-            response: Response = requests.get(asset_url, params=payload, headers=self.__stack_headers)
-
-            if response.ok:
-                response: dict = response.json()['asset']
-                self.configure(response)
-
-            else:
-
-                error = response.json()
-
-            return response, error
-
-        except requests.exceptions.RequestException as e:
-            raise ConnectionError(e.response)
-            pass
-
-    @classmethod
-    def header_agents(cls) -> dict:
-
-        import contentstack
-        import platform
-
-        """
-        Contentstack-User-Agent header.
-        """
-        header = {'sdk': dict(name=contentstack.__package__, version=contentstack.__version__)}
-        os_name = platform.system()
-
-        if os_name == 'Darwin':
-            os_name = 'macOS'
-
-        elif not os_name or os_name == 'Java':
-            os_name = None
-
-        elif os_name and os_name not in ['macOS', 'Windows']:
-            os_name = 'Linux'
-
-        header['os'] = {
-            'name': os_name,
-            'version': platform.release()
-        }
-
-        local_headers = {'X-User-Agent': str(header), "Content-Type": 'application/json'}
-        return local_headers
+        if self.__asset_uid is not None and len(self.__asset_uid) > 0:
+            asset_url = '{}/{}'.format(Config().endpoint('assets'), self.__asset_uid)
+            return self.__http_request.get_result(asset_url, self.__query_params, self.__stack_headers)
+        else:
+            raise Exception("Kindly Provide Asset UID")

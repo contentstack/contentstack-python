@@ -38,11 +38,14 @@ class Error:
         self.__cause_err = str
 
     def config(self, result: dict):
+
         if result is not None and len(result) > 0:
             self.__error_dict = result
             self.__error_code = self.__error_dict['error_code']
             self.__msg = self.__error_dict['error_message']
             self.__cause_err = self.__error_dict['errors']
+
+        return self
 
     @property
     def error_code(self):

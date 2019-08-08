@@ -23,22 +23,22 @@
 
 class ContentType:
 
-    def __init__(self, http_request, content_type_uid: str):
-        self.http_request = http_request
-        if isinstance(content_type_uid, str):
-            self.__content_type_uid = content_type_uid
-        else:
-            raise TypeError('Please provide a valid content_type_uid')
+    def __init__(self, content_type_uid: str):
+
+        self.__stack_instance = None
+        self.__http_request = None
         self.__stack_headers = {}
+        if content_type_uid is None:
+            raise ValueError('Kindly Provide ContentType')
+        self.__content_type_uid = content_type_uid
+
+    def instance(self, stack_instance):
+        self.__stack_instance = stack_instance
+        self.__stack_headers.update(self.__stack_instance.headers)
+        self.__http_request = self.__stack_instance.http_request
 
     @property
-    def headers(self):
-        return self.__stack_headers
-
-    @headers.setter
-    def headers(self, local_headers: dict):
-        if local_headers is not None:
-            self.__stack_headers = local_headers.copy()
+    def headers(self): return self.__stack_headers
 
     def header(self, key, value):
         if key is not None and value is not None:
@@ -64,11 +64,12 @@ class ContentType:
 
         """
         from contentstack import Entry
+        if self.__http_request is None:
+            raise Exception("Invalid HTTP Request")
         entry: Entry = Entry(content_type_id=self.__content_type_uid)
-        entry.headers = self.__stack_headers
+        entry.instance(self.__stack_instance)
         if entry_uid is not None:
             entry.set_uid(entry_uid)
-
         return entry
 
     def query(self):
@@ -76,32 +77,18 @@ class ContentType:
         """
         You can add queries to extend the functionality of this API call. 
         Under the URI Parameters section, insert a parameter named query 
-        and provide a query in JSON format as the value.
-        To learn more about the queries, refer to the Queries section.
+        and provide a query in JSON format as the value. To learn more about the queries, refer to the Queries section.
         """
         from contentstack.query import Query
         query = Query(self.__content_type_uid)
-        query.headers = self.__stack_headers
+        query.instance(self.__stack_instance)
         return query
 
-    def fetch(self) -> tuple:
+    def fetch(self):
 
-        global error
-        import requests
         import contentstack
-        payload: dict = {}
-
         endpoint = contentstack.config.Config().endpoint('content_types')
-        url = '{0}/{1}'.format(endpoint, self.__content_type_uid)
-        error = None
-        response = requests.get(url, params=payload, headers=self.__stack_headers)
-        url = response.url
-        print(url, response)
-        if response.ok:
-            response = response.json()
-        else:
-            error = response.json()
-
-        return response, error
-
+        content_type_url = '{0}/{1}'.format(endpoint, self.__content_type_uid)
+        result = self.__http_request.get_result(content_type_url, {}, self.__stack_headers)
+        return result
 
