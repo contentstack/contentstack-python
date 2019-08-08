@@ -67,7 +67,7 @@ class Config:
         url = self.path(path)
         if url is not None and isinstance(url, str):
             url = "{0}{1}/{2}/{3}".format(self.defaultConfig["protocol"], self.host(), self.version(), url)
-            logging.info('{0} endpoint'.format(path))
+            logging.info('endpoint is :: {0} '.format(url))
         return url
 
 

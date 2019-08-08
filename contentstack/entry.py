@@ -1,7 +1,7 @@
 # Created by Shailesh on 22/06/19.
 # Copyright (c) 2012 - 2019 Contentstack. All rights reserved.
 
-# [MIT License] :: Permission is hereby granted, free of charge, to any person
+# Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files (the "Software"),
 # to deal in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -13,7 +13,7 @@
 
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -34,11 +34,12 @@ class Entry:
 
     def __init__(self, content_type_id: str = None):
 
-        self.http_request = None
-        self.url = contentstack.config.Config().endpoint('entries')
+        self.__stack_instance = None
+        self.__http_request = None
+        self.__entry_url = contentstack.config.Config().endpoint('entries')
         self.__content_type_id = content_type_id
         if self.__content_type_id is not None:
-            self.url = '{}/{}/entries/'.format(self.url, self.__content_type_id)
+            self.__entry_url = '{}/{}/entries/'.format(self.__entry_url, self.__content_type_id)
 
         self.__local_params: dict = {}
         self.__stack_headers: dict = {}
@@ -63,14 +64,18 @@ class Entry:
         self.__updated_by = str
         self.__version = str
 
+    def instance(self, stack_instance):
+        self.__stack_instance = stack_instance
+        self.__stack_headers.update(self.__stack_instance.headers)
+        if self.__stack_headers is not None:
+            if 'environment' in self.__stack_headers:
+                self.__local_params['environment'] = self.__stack_headers['environment']
+        self.__http_request = self.__stack_instance.http_request
+
     @property
     def headers(self):
         return self.__stack_headers
 
-    @headers.setter
-    def headers(self, local_headers: dict):
-        if local_headers is not None:
-            self.__stack_headers = local_headers.copy()
 
     @property
     def uid(self):
@@ -104,9 +109,9 @@ class Entry:
             self.__local_params["locale"] = locale_code
 
     def configure(self, model: dict):
+
         if model is not None and isinstance(model, dict):
             self.__result_json = model
-
             if self.__result_json is not None:
                 if 'title' in self.__result_json:
                     self.__title = self.__result_json['title']
@@ -235,6 +240,7 @@ class Entry:
 
     @property
     def created_at(self):
+
         """
         value of creation time of entry.
         [Uses] created_at = entry.get_created_at()
@@ -244,6 +250,7 @@ class Entry:
 
     @property
     def created_by(self):
+
         """
         Get uid who created this entry.
         created_by = entry.get_created_by()
@@ -253,6 +260,7 @@ class Entry:
 
     @property
     def updated_at(self):
+
         """
         value of updating time of entry.
         [Uses] updated_at = entry.get_updated_at()
@@ -262,6 +270,7 @@ class Entry:
 
     @property
     def updated_by(self):
+
         """
         Get uid who updated this entry.
         [Uses]  updated_by = entry.get_updated_by()
@@ -270,6 +279,7 @@ class Entry:
         return self.__updated_by
 
     def asset(self, key: str):
+
         """
         Get an asset from the entry
         [Uses]
@@ -278,6 +288,7 @@ class Entry:
         :return: asset
         """
         asset = contentstack.asset.Asset
+
         if key is not None:
             result = self.get_json(key)
             if result is not None and isinstance(result, dict):
@@ -470,12 +481,11 @@ class Entry:
             main_dict["only"] = self.__only_dict
             self.__only_dict = None
 
-    def fetch(self) -> tuple:
-        from contentstack.errors import ContentstackError
-        if self.__entry_uid is not None:
-            self.url = '{0}{1}'.format(self.url, self.__entry_uid)
-        else:
-            raise ContentstackError('Kindly provide entry uid')
-        result = self.http_request.get_result(self.url, self.__local_params, self.__stack_headers)
-        return result
+    def fetch(self):
 
+        from contentstack.errors import ContentstackError
+        if self.__entry_uid is None:
+            raise ContentstackError('Kindly provide entry uid')
+        self.__entry_url = '{0}{1}'.format(self.__entry_url, self.__entry_uid)
+        result = self.__http_request.get_result(self.__entry_url, self.__local_params, self.__stack_headers)
+        return result

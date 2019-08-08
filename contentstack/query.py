@@ -41,6 +41,8 @@ class Query:
         else:
             ValueError('Invalid content_type_id, content_type_id could not be None or empty')
 
+        self.__stack_instance = None
+        self.__http_request = None
         self.__stack_headers = {}
         self.__query_params = {}
 
@@ -53,6 +55,14 @@ class Query:
         self.__query_dict = {}
         self.__except_Json = {}
         self.__main_json = {}
+
+    def instance(self, stack_instance):
+        self.__stack_instance = stack_instance
+        self.__stack_headers.update(self.__stack_instance.headers)
+        if self.__stack_headers is not None:
+            if 'environment' in self.__stack_headers:
+                self.__query_params['environment'] = self.__stack_headers['environment']
+        self.__http_request = self.__stack_instance.http_request
 
     @property
     def content_type(self):
@@ -70,14 +80,6 @@ class Query:
     def headers(self):
         return self.__stack_headers
 
-    @headers.setter
-    def headers(self, headers: dict):
-        if headers is not None and isinstance(headers, dict):
-            self.__stack_headers = headers
-            if 'environment' in headers:
-                env_value = self.__stack_headers['environment']
-                self.__query_params['environment'] = env_value
-
     def remove_header(self, key):
         if key in self.__stack_headers:
             self.__stack_headers.pop(key)
@@ -88,8 +90,9 @@ class Query:
             self.__stack_headers[key] = value
         return self.__stack_headers
 
-    def locale(self, locale_code='en-us'):
-        self.__query_params["locale"] = locale_code
+    def locale(self, locale_code: str):
+        if locale_code is not None and isinstance(locale_code, str):
+            self.__query_params["locale"] = locale_code
         return self
 
     def where(self, key: str, value):

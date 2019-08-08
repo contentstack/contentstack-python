@@ -36,7 +36,6 @@ class Stack:
     A stack is a space that stores the content of a project (a web or mobile property).
     Within a stack, you can create content structures, content entries, users, etc.
     related to the project. Read more about Stacks
-
     API Reference: [https://www.contentstack.com/docs/guide/stack]
     """
 
@@ -62,8 +61,8 @@ class Stack:
         for key, value in kwargs.items():
             self.__stack_headers[key] = value
             log.debug("%s == %s" % (key, value))
-        self.__initialise_stack()
 
+        self.__initialise_stack()
         url = Config().endpoint('stacks')
         self.http_request = HTTPConnection(url, self.__query_params, self.__stack_headers)
 
@@ -96,13 +95,15 @@ class Stack:
         >>> content_type:ContentType = stack.content_type('product')
         """
         from contentstack import ContentType
-        if content_type_id is not None and len(content_type_id) > 0 and isinstance(content_type_id, str):
-            content_type = ContentType(self.http_request, content_type_id)
-            content_type.headers = self.__stack_headers
+        if content_type_id is None:
+            raise ValueError('Kindly Provide ContentTypeUid')
         else:
-            raise KeyError('Kindly provide a valid content_type')
-
-        return content_type
+            if len(content_type_id) > 0:
+                content_type = ContentType(content_type_id)
+                content_type.instance(self)
+                return content_type
+            else:
+                raise ValueError('Kindly Provide Valid ContentTypeUid')
 
     def get_content_types(self):
 
@@ -144,14 +145,11 @@ class Stack:
 
         [Usage]:
         >>>> asset = stack.asset('uid')
-
         """
 
         from contentstack import Asset
         assets = Asset(asset_uid=uid)
-        assets.headers(self.__stack_headers)
-        if uid is not None:
-            assets.set_uid(asset_uid=uid)
+        assets.instance(self)
         return assets
 
     def asset_library(self):
@@ -167,7 +165,7 @@ class Stack:
         """
         from contentstack import AssetLibrary
         asset_library = AssetLibrary()
-        asset_library.headers(self.__stack_headers)
+        asset_library.instance(self)
         return asset_library
 
     @property
@@ -186,6 +184,10 @@ class Stack:
             return app_key
         else:
             return None
+
+    @property
+    def get_http_instance(self):
+        return self.http_request
 
     @property
     def access_token(self):
@@ -359,11 +361,11 @@ class Stack:
         return self.__sync_request()
 
     @property
-    def environment(self) -> str:
+    def environment(self):
         if 'environment' in self.__stack_headers:
             return self.__stack_headers['environment']
         else:
-            return 'environment not found'
+            return None
 
     @environment.setter
     def environment(self, env: str):
@@ -385,19 +387,17 @@ class Stack:
 
         """
         :return:dict headers
-
         [Uses]
         >>>> headers:dict = stack.headers
-
         """
         return self.__stack_headers
 
-    def __sync_request(self) -> tuple:
+    def __sync_request(self):
         sync_url = Config().endpoint('sync')
         result = self.http_request.get_result(sync_url, self.__sync_query, self.__stack_headers)
         return result
 
-    def fetch(self) -> tuple:
+    def fetch(self):
         from contentstack import Config
         stack_url = Config().endpoint('stacks')
         result = self.http_request.get_result(stack_url, self.__query_params, self.__stack_headers)
@@ -416,7 +416,6 @@ class SyncResult:
         self.__pagination_token = str
 
     def configure(self, result: dict):
-
         if result is not None and len(result) > 0:
             self.__resp = result
             if 'items' in self.__resp:
@@ -431,7 +430,6 @@ class SyncResult:
                 self.__sync_token = self.__resp['sync_token']
             if 'pagination_token' in self.__resp:
                 self.__pagination_token = self.__resp['pagination_token']
-
         return self
 
     @property
