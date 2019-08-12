@@ -75,3 +75,7 @@ def header_agents() -> dict:
 
     local_headers = {'X-User-Agent': header, "Content-Type": 'application/json'}
     return local_headers
+
+
+
+

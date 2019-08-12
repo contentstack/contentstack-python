@@ -36,11 +36,12 @@ class Asset:
     """
 
     def __init__(self, asset_uid: str = None):
-
         self.__asset_uid = asset_uid
+
         self.__stack_instance = None
         self.__response = None
         self.__http_request = None
+
         self.__query_params = {}
         self.__stack_headers = {}
 

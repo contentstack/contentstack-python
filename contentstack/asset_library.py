@@ -24,6 +24,17 @@
  """
 
 
+class OrderType(object):
+
+    """
+    OrderType is used to choose one of the ascending and descending
+    It returns either ascending or descending
+    """
+    ASC, DESC = range(0, 2)
+
+    pass
+
+
 class AssetLibrary:
 
     """
@@ -35,23 +46,27 @@ class AssetLibrary:
     """
 
     def __init__(self):
-        self.count = 0
+
+        self.__count = 0
         self.__stack_instance = None
         self.__http_request = None
         self.__stack_headers = {}
         self.__query_params = {}
 
     def instance(self, stack_instance):
+
         self.__stack_instance = stack_instance
         self.__stack_headers.update(self.__stack_instance.headers)
         self.__http_request = self.__stack_instance.http_request
 
     def set_header(self, key: str, value):
+
         if key is not None and value is not None:
             self.__stack_headers[key] = value
             return self
 
     def headers(self, headers: dict):
+
         if headers is not None and len(headers) > 0 and isinstance(headers, dict):
             self.__stack_headers = headers
             if 'environment' in self.__stack_headers:
@@ -60,6 +75,7 @@ class AssetLibrary:
         return self
 
     def remove_header(self, key):
+
         if key is not None:
             if key in self.__stack_headers:
                 self.__stack_headers.pop(key)
@@ -74,79 +90,31 @@ class AssetLibrary:
         return self
 
     def get_count(self) -> int:
-        return self.count
+        """
+        get_count returns the total size of content
+        :return: count of content
+        :rtype: int
+        """
+        return self.__count
 
-    # Color = enumerate(RED="ASCENDING", GREEN='DESCENDING')
-    # [PENDING], Need to add
-    # order_by = Enum('ORDER_BY', 'ASCENDING DESCENDING')
-    #   def sort(self, key: str, order_by):
-    #  if ORDER_.ASCENDING:
-    #      self.__post_params['asc'] = key
-    #   if ORDER_BY.DESCENDING:
-    #       self.__post_params['desc'] = key
-    #   return self.__post_params
+    def sort(self, key: str, order_by: OrderType):
+
+        """
+        :param key: provides key on which ASC/DESC need to apply.
+        :param order_by: object option either "asc" or "desc"
+        :return self , instance of AssetLibrary
+        """
+        if order_by == 1:
+            self.__query_params['asc'] = key
+        else:
+            self.__query_params['desc'] = key
+
+        return self.__query_params
 
     def fetch_all(self):
-
-        import requests
-        from urllib import parse
-        from requests import Response
         from contentstack import Config
-        from contentstack import Error
-        from contentstack import Asset
-
-        error = None
         asset_url = Config().endpoint('assets')
-        self.__stack_headers.update(self.header_agents())
-        payload = parse.urlencode(query=self.__query_params, encoding='UTF-8')
-
-        try:
-            response: Response = requests.get(asset_url, params=payload, headers=self.__stack_headers)
-            list_asset: list[Asset] = []
-
-            if response.ok:
-
-                response: dict = response.json()['assets']
-
-                for asset in response:
-                    asset_instance = Asset()
-                    asset_resp: Asset = asset_instance.configure(response=asset)
-                    list_asset.append(asset_resp)
-
-                return list_asset
-            else:
-                error_dict = response.json()
-                return Error().error(error_dict)
-
-        except requests.exceptions.RequestException as e:
-            raise ConnectionError(e.response)
+        return self.__http_request.get_result(asset_url, self.__query_params, self.__stack_headers)
 
 
-    @classmethod
-    def header_agents(cls) -> dict:
 
-        import contentstack
-        import platform
-
-        """
-        Contentstack-User-Agent header.
-        """
-        header = {'sdk': dict(name=contentstack.__package__, version=contentstack.__version__)}
-        os_name = platform.system()
-
-        if os_name == 'Darwin':
-            os_name = 'macOS'
-
-        elif not os_name or os_name == 'Java':
-            os_name = None
-
-        elif os_name and os_name not in ['macOS', 'Windows']:
-            os_name = 'Linux'
-
-        header['os'] = {
-            'name': os_name,
-            'version': platform.release()
-        }
-
-        local_headers = {'X-User-Agent': str(header), "Content-Type": 'application/json'}
-        return local_headers
