@@ -1,11 +1,12 @@
 import logging
 import unittest
-
 from contentstack import Asset, Error
+from contentstack.asset_library import  OrderType
 from contentstack.stack import Stack
 
 
 class TestAsset(unittest.TestCase):
+
     log = logging.getLogger(__name__)
 
     def setUp(self):
@@ -153,8 +154,18 @@ class TestAsset(unittest.TestCase):
 
     # [Asset Library]
 
-    def test_asset_library(self):
+    def test_asset_library_check(self):
         _asset_library = self.stack_asset.asset_library()
         result = _asset_library.fetch_all()
         if result is not None:
             self.assertEqual(list, type(result))
+
+    def test_asset_library_example(self):
+        _asset_library = self.stack_asset.asset_library()
+        _asset_library.sort('keyOrder', OrderType.ASC)
+        result = _asset_library.fetch_all()
+        if result is not None:
+            self.assertEqual(list, type(result))
+
+
+

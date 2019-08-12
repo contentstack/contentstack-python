@@ -25,6 +25,7 @@
 
 
 class Query:
+
     """
     Contentstack provides certain queries that you can use to fetch filtered results.
     You can use queries for Entries and Assets API requests.
