@@ -1,12 +1,15 @@
 # !/usr/bin/env python
 # distutils/setuptools install script.
 
-from setuptools import setup, find_packages
+import setuptools
 import os
 import re
 
 ROOT = os.path.dirname(__file__)
 VERSION_RE = re.compile(r'''__version__ = ['"]([0-9.]+)['"]''')
+
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
 
 def get_version():
@@ -26,12 +29,13 @@ requirements = [
     'python-dateutil'
 ]
 
-setup(
+setuptools.setup(
 
     name='contentstack',
     version=get_version(),
     py_modules=['contentstack'],
-    packages=find_packages(exclude=['tests']),
+    scripts=['dokr'],
+    # packages=find_packages(exclude=['tests']),
     url='https://github.com/contentstack/contentstack-python.git',
     license='MIT License',
     author='Shailesh Mishra',
@@ -40,7 +44,7 @@ setup(
                 'Contentstack. The SDK uses Content Delivery APIs. ',
     install_requires=['requests', 'asset'],
     tests_require=['pytest'],
-    long_description=read('README.rst'),
+    long_description=read('README.md'),
     include_package_data=True,
 
     classifiers=[
