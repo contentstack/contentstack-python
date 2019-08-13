@@ -1,14 +1,26 @@
-"""contentstack - decorator heavy REST client library for Python."""
+# !/usr/bin/env python
+# distutils/setuptools install script.
 
-from setuptools import setup, find_packages
+import setuptools
 import os
 import re
+
+ROOT = os.path.dirname(__file__)
+VERSION_RE = re.compile(r'''__version__ = ['"]([0-9.]+)['"]''')
+
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
+
+def get_version():
+    init = open(os.path.join(ROOT, 'contentstack', '__init__.py')).read()
+    return VERSION_RE.search(init).group(1)
+
 
 package = 'contentstack'
 
 
 def read(fname):
-    """Read description from local file."""
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
@@ -17,35 +29,32 @@ requirements = [
     'python-dateutil'
 ]
 
+setuptools.setup(
 
-def get_version():
-    """Return package version as listed in `__version__` in `init.py`."""
-    init_py = open('decorest/__init__.py').read()
-    return re.search("__version__ = ['\"]([^'\"]+)['\"]", init_py).group(1)
-
-
-version = get_version()
-
-setup(
-    name='contentstack-python',
-    version=version,
-    packages=find_packages(exclude=['tests']),
-    url='https://www.contentstack.com',
+    name='contentstack',
+    version=get_version(),
+    py_modules=['contentstack'],
+    scripts=['dokr'],
+    # packages=find_packages(exclude=['tests']),
+    url='https://github.com/contentstack/contentstack-python.git',
     license='MIT License',
     author='Shailesh Mishra',
-    author_email='shailesh.mishra@contentstack.com',
-    description='Create python-based applications and use the python SDK to fetch and deliver content from Contentstack. The SDK uses Content Delivery APIs. ',
-    install_requires=['requests'],
+    author_email='mshaileshr@gmail.com',
+    description='Create python-based applications and use the python SDK to fetch and deliver content from '
+                'Contentstack. The SDK uses Content Delivery APIs. ',
+    install_requires=['requests', 'asset'],
     tests_require=['pytest'],
-    long_description=read('README.rst'),
+    long_description=read('README.md'),
     include_package_data=True,
+
     classifiers=[
-        'Development Status :: 1 - Alpha',
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
         'Intended Audience :: Developers',
         'Natural Language :: English',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3.6'
-    ]
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+    ],
+    test_suite='tests',
+
 )
