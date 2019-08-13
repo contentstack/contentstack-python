@@ -144,11 +144,11 @@ class Stack:
         This call fetches the latest version of a specific asset of a particular stack.
 
         [Usage]:
-        >>>> asset = stack.asset('uid')
+        >>>> asset = stack.asset('bltyourasssetuid')
         """
 
         from contentstack import Asset
-        assets = Asset(asset_uid=uid)
+        assets = Asset(uid=uid)
         assets.instance(self)
         return assets
 
