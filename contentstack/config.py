@@ -20,39 +20,59 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
- """
 
+ """
 import logging
 
 
-class Config(object):
+logging.basicConfig(filename='contentstack.log', format='%(asctime)s - %(message)s', level=logging.INFO)
+logging.getLogger("Config")
 
-    def __init__(self, host_url: str = 'cdn.contentstack.io'):
-        self.host_url = host_url
-        self.api_version: str = 'v3'
-        self.http_protocol: str = 'https://'
 
-    def set_host(self, host_url=None):
-        logging.info("set host", host_url)
-        self.host_url = host_url
-        return self
+class Config:
 
-    def get_host(self):
-        logging.info('getting host url', self.host_url)
-        return self.host_url
+    def __init__(self):
+        self.defaultConfig = dict(protocol="https://", host="cdn.contentstack.io", port=443, version="v3", path={
+            "stacks": "stacks",
+            "sync": "stacks/sync",
+            "content_types": "content_types",
+            "entries": "content_types",
+            "assets": "assets",
+            "environments": "environments"
+        })
 
-    def get_version(self):
-        logging.info('getting api version', self.api_version)
-        return self.api_version
+    def host(self, host_url=None):
+        if host_url is not None:
+            self.defaultConfig["host"] = host_url
+        return self.defaultConfig["host"]
 
-    def get_http_protocol(self):
-        logging.info('get http protocol', self.http_protocol)
-        return self.http_protocol
+    def version(self, version: str = None):
+        if version is not None and isinstance(version, str):
+            self.defaultConfig['version'] = version
+            return self.defaultConfig['version']
+        else:
+            return self.defaultConfig['version']
 
-    def get_endpoint(self, url_path):
-        api_version: str = self.get_version()
-        host_url = self.get_host()
-        http_protocol = self.get_http_protocol()
-        config_url = "{0}{1}/{2}/{3}".format(http_protocol, host_url, api_version, url_path)
-        return config_url
+    def path(self, path):
+        url_section = self.defaultConfig['path']
+        if path in url_section:
+            return url_section[path]
+        else:
+            logging.error("{0} is invalid endpoint path".format(path))
+            raise ValueError('Invalid endpoint!!, {0} is invalid endpoint path, '
+                             'Path can be found among {1}'
+                             .format(path, url_section.keys()))
+
+    def endpoint(self, path):
+        url = self.path(path)
+        if url is not None and isinstance(url, str):
+            url = "{0}{1}/{2}/{3}".format(self.defaultConfig["protocol"], self.host(), self.version(), url)
+            logging.info('endpoint is :: {0} '.format(url))
+        return url
+
+
+config = Config()
+config.host("cdn.contentstack.io")
+result_url = config.endpoint('entries')
+print(result_url)
+

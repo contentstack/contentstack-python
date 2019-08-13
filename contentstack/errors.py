@@ -1,6 +1,5 @@
 """
  * MIT License
- *
  * Copyright (c) 2012 - 2019 Contentstack
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,30 +22,76 @@
  *
 """
 
-import logging
 
+class Error:
+    """
+    contentstack.error
+    ~~~~~~~~~~~~~~~~~~
+    This module implements the Error class.
+    API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#error
+    """
 
-class HTTPError(Exception):
+    def __init__(self):
+        self.__error_dict = {}
+        self.__error_code = str
+        self.__msg = str
+        self.__cause_err = str
+
+    def config(self, result: dict):
+
+        if result is not None and len(result) > 0:
+            self.__error_dict = result
+            self.__error_code = self.__error_dict['error_code']
+            self.__msg = self.__error_dict['error_message']
+            self.__cause_err = self.__error_dict['errors']
+
+        return self
+
+    @property
+    def error_code(self):
+        """
+        :return: error_code as int
+        """
+        return self.__error_code
+
+    @property
+    def error_message(self):
+        """
+        :return: error_message
+        """
+        return self.__msg
+
+    @property
+    def error(self):
+        """
+        :return: error dict
+        """
+        return self.__cause_err
+
+    @property
+    def error_info(self) -> dict:
+        """
+        :return: dict, error information
+        """
+        return self.__error_dict
+
     errors_str = {
 
-        'error_invalid_json': "Please provide valid JSON.",
-        'error_message_stack_api_key_is_null': "Stack api key can not be null.",
-        'error_form_name': "Please set contentType name.",
-        'error_stack_access_token_is_null': "Access token can not be null.",
-        'error_stack_environment_is_null': "Environment can not be null.",
-        'Error_Connection_Error': "Connection error",
-        'Error_Auth_Failure_Error': "Authentication Not present.",
-        'Error_Parse_Error': "Parsing Error.",
-        'Error_Server_Error': "Server interaction went wrong, Please try again.",
-        'Error_Default': "Oops! Something went wrong. Please try again.",
-        'Error_No_Network': "Network not available.",
-        'Error_Called_Default_Method': "You must called Contentstack.stack() first",
-        'Error_Query_Filter_Exception': "Please provide valid params."
+        'invalid_json': "Please provide valid JSON.",
+        'api_key_is_none': "Stack api key can not be None.",
+        'empty_content_type': "Please set contentType name.",
+        'access_token_error': "Access token can not be None.",
+        'environment_error': "Environment can not be None.",
+        'connection_error': "Connection error",
+        'auth_failure': "Authentication Not present.",
+        'parse_error': "Parsing Error.",
+        'server_error': "Server interaction went wrong, Please try again.",
+        'error_default': "Oops! Something went wrong. Please try again.",
+        'no_network': "Network not available.",
+        'query_error': "Please provide valid params."
     }
 
-
-def __init__(self):
-    errors = {
+    __error_code = {
 
         400: "The request was incorrect or corrupted.",
         401: "The login credentials are invalid.",
@@ -57,32 +102,26 @@ def __init__(self):
         429: "The number of requests exceeds the allowed limit for the given time period.",
         500: "The server is malfunctioning and is not specific on what the problem is.",
         502: "A server received an invalid response from another server.",
-        504: "A server did not receive a timely response from another server that it was accessing while attempting to load the web page or fill another request by the browser."
+        504: "A server did not receive a timely response from another server that it was accessing while attempting "
+             "to load the web page or fill another request by the browser. "
     }
 
-    def get_error(self, response):
-        print('Error')
-
-    def set_logging_config(self, level):
+    @staticmethod
+    def logging_config(level):
         print('level ' + level)
 
 
 class ConfigError(Exception):
-    """Configuration Error Class"""
     pass
 
 
 class StackException(Exception):
-    """StackException Class"""
+    pass
+
+
+class ContentstackError(Exception):
     pass
 
 
 class NotSupportedException(Exception):
-    """ exception is thrown when something is not supported by the API."""
     pass
-
-
-class retry_request(object):
-    """
-    Decorator to retry function calls in case they raise rate limit exceptions
-    """
