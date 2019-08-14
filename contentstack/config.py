@@ -32,21 +32,25 @@ logging.getLogger("Config")
 class Config:
 
     def __init__(self):
-        self.defaultConfig = dict(protocol="https://", host="cdn.contentstack.io", port=443, version="v3", path={
-            "stacks": "stacks",
-            "sync": "stacks/sync",
-            "content_types": "content_types",
-            "entries": "content_types",
-            "assets": "assets",
-            "environments": "environments"
-        })
+        self.defaultConfig = dict(protocol="https:/",
+                                  host="cdn.contentstack.io",
+                                  port=443,
+                                  version="v3",
+                                  path={
+                                      "stacks": "stacks",
+                                      "sync": "stacks/sync",
+                                      "content_types": "content_types",
+                                      "entries": "content_types",
+                                      "assets": "assets",
+                                      "environments": "environments"
+                                  })
 
     def host(self, host_url=None):
-        if host_url is not None:
-            self.defaultConfig["host"] = host_url
-        return self.defaultConfig["host"]
+        if host_url is not None and isinstance(host_url, str):
+            self.defaultConfig['host'] = host_url
+        return self.defaultConfig['host']
 
-    def version(self, version: str = None):
+    def version(self, version=None):
         if version is not None and isinstance(version, str):
             self.defaultConfig['version'] = version
             return self.defaultConfig['version']
@@ -59,20 +63,25 @@ class Config:
             return url_section[path]
         else:
             logging.error("{0} is invalid endpoint path".format(path))
-            raise ValueError('Invalid endpoint!!, {0} is invalid endpoint path, '
-                             'Path can be found among {1}'
-                             .format(path, url_section.keys()))
+            raise Exception('Invalid endpoint!!, {0} is invalid endpoint path, Path can be found among {1}'
+                            .format(path, url_section.keys()))
+
+    @property
+    def default_endpoint(self):
+        endpoint_url = "{0}/{1}/{2}".format(self.defaultConfig["protocol"], self.host(), self.version())
+        return endpoint_url
 
     def endpoint(self, path):
         url = self.path(path)
         if url is not None and isinstance(url, str):
-            url = "{0}{1}/{2}/{3}".format(self.defaultConfig["protocol"], self.host(), self.version(), url)
+            url = "{0}/{1}/{2}/{3}".format(self.defaultConfig["protocol"], self.host(), self.version(), url)
             logging.info('endpoint is :: {0} '.format(url))
+
         return url
 
 
-config = Config()
-config.host("cdn.contentstack.io")
-result_url = config.endpoint('entries')
-print(result_url)
+# config = Config()
+# config.host("stag-cdn.contentstack.io")
+# result_url = config.endpoint('assets')
+# print(result_url)
 

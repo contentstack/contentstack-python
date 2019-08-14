@@ -39,35 +39,28 @@ class HTTPConnection:
                 # If result contains stack, return json response
                 if 'stack' in result:
                     return result['stack']
-
                 # If result contains entry, return Entry
                 if 'entry' in result:
                     dict_entry = result['entry']
                     return self.__parse_entries(dict_entry)
-
                 # If result contains entries, return list[Entry]
                 if 'entries' in result:
                     entry_list = result['entries']
                     return self.__parse_entries(entry_list)
-
                 # If result contains asset, return Asset
                 if 'asset' in result:
                     dict_asset = result['asset']
                     return self.__parse_assets(dict_asset)
-
                 # If result contains assets, return list[Asset]
                 if 'assets' in result:
                     asset_list = result['assets']
                     return self.__parse_assets(asset_list)
-
                 # If result contains content_type,return content_type json
                 if 'content_type' in result:
                     return result['content_type']
-
                 # If result contains content_types,return content_types json
                 if 'content_types' in result:
                     return result['content_types']
-
                 # If result contains items, return SyncResult json
                 if 'items' in result:
                     sync_result = SyncResult().configure(result)
@@ -96,7 +89,6 @@ class HTTPConnection:
                 for entry_obj in result:
                     each_entry = Entry().configure(entry_obj)
                     entries.append(each_entry)
-
                 return entries
 
     @staticmethod
@@ -117,7 +109,6 @@ class HTTPConnection:
 
     @staticmethod
     def __user_agents() -> dict:
-
         import contentstack
         import platform
 
