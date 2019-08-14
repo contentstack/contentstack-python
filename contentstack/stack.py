@@ -1,109 +1,113 @@
-"""
-MIT License
-Copyright (c) 2012 - 2019 Contentstack
- 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
- 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
- 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
- 
-"""
 import logging
-from contentstack import errors as err, HTTPConnection
+from contentstack import HTTPConnection
 from contentstack import Config
+from contentstack.errors import StackException
 
 log = logging.getLogger(__name__)
 
+"""
+@Author Shailesh Mishra
+Date: 12-Aug-2019
+:copyright: (c) 2012- 2019 contentstack
+:license: MIT, see LICENSE for more details.
 
-class Stack:
+contentstack.stack
+~~~~~~~~~~~~~~~~~~
+A stack is a space that stores the content of a project (a web or mobile property).
+Within a stack, you can create content structures, content entries, users, etc.
+related to the project. Read more about Stacks
+API Reference: [https://www.contentstack.com/docs/guide/stack]
 
-    """
-    contentstack.stack
-    ~~~~~~~~~~~~~~~~~~
-    A stack is a space that stores the content of a project (a web or mobile property).
-    Within a stack, you can create content structures, content entries, users, etc.
-    related to the project. Read more about Stacks
-    API Reference: [https://www.contentstack.com/docs/guide/stack]
-    """
+"""
+
+
+class Stack(object):
 
     def __init__(self, **kwargs):
 
         """
-        A stack is a space that stores the content of a project (a web or mobile property).
-        Within a stack, you can create content structures, content entries, users, etc.
-        related to the project. Read more about Stacks
+        provide key-worded, variable-length argument list
 
-        API Reference: [https://www.contentstack.com/docs/guide/stack]
+        :param kwargs: key-worded list
+        :type kwargs: str
+        :param api_key: stack 'api_key' of your target stack.
+        :param access_token: stack 'access_token' of your target stack.
+        :param environment: stack 'environment' of your target stack.
+        :param config: (optional) config='<contentstack.Config>' it is useful to change config of the stack
+        like host, version of the stack.
+
+        Example:
+
+        import contentstack
+        >>> stack: Stack = contentstack.Stack(api_key ='api_key', access_token='access_token', environment='environment')
+        [or]
+        >>> config = Config()
+        >>> config.host('cdn.contentstack.com')
+        >>> stack: Stack = contentstack.Stack(api_key ='api_key', access_token='access_token', environment='environment')
+
         """
-
-        # declare stack class variables
+        self.__endpoint = None
         self.__query_params = dict()
         self.__stack_headers = dict()
-        # set class variables to initialise image transformation.
+        self.__headers = dict()
         self.__image_transform_url = None
         self.__image_params = dict
-        # set sync variables
         self.__sync_query = dict()
-        # it accepts api_key as str, access_token as str, and environment as str
-        for key, value in kwargs.items():
-            self.__stack_headers[key] = value
-            log.debug("%s == %s" % (key, value))
 
+        for key, value in kwargs.items():
+            self.__headers[key] = value
         self.__initialise_stack()
-        url = Config().endpoint('stacks')
-        self.http_request = HTTPConnection(url, self.__query_params, self.__stack_headers)
+        self.__http_request = HTTPConnection(self.__endpoint.__str__, self.__query_params, self.__stack_headers)
 
     def __initialise_stack(self):
 
-        if len(self.__stack_headers) > 0:
-            if 'api_key' not in self.__stack_headers:
-                raise err.StackException('Kindly provide api_key')
-            if 'access_token' not in self.__stack_headers:
-                raise err.StackException('Kindly provide access token')
-            if 'environment' not in self.__stack_headers:
-                raise err.StackException('Kindly provide environment')
-        else:
-            raise err.StackException('Kindly provide valid Arguments')
+        """  Validates the stack configuration key requirements  """
 
-    def content_type(self, content_type_id: str):
+        if len(self.__headers) > 0:
+            if 'api_key' not in self.__headers:
+                raise StackException('Kindly provide api_key')
+            else:
+                self.__stack_headers['api_key'] = self.__headers['api_key']
+            if 'access_token' not in self.__headers:
+                raise StackException('Kindly provide access token')
+            else:
+                self.__stack_headers['access_token'] = self.__headers['access_token']
+            if 'environment' not in self.__headers:
+                raise StackException('Kindly provide environment')
+            else:
+                self.__stack_headers['environment'] = self.__headers['environment']
+            if 'config' in self.__headers:
+                config = self.__headers['config']
+                self.__endpoint = config.default_endpoint
+            else:
+                self.__endpoint = Config().default_endpoint
+
+    def content_type(self, content_type_id):
 
         """
-
         Content type defines the structure or schema of a page or a section of your web or mobile property.
         To create content for your application, you are required to first create a content type.
         and then create entries using the content type. Read more about Content Types.
-
         API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#content-types
 
-        :param content_type_id: The id of the Content Type.
-        :return ContentType
+        :param content_type_id: Content Type UID.
+        :type content_type_id: str
+        :return: content_type
+        :rtype: <contentstack.ContentType>
 
-        [Example]
-        >>> content_type:ContentType = stack.content_type('product')
+        Example:
+
+        >>> content_type = stack.content_type('product')
+
         """
+
         from contentstack import ContentType
-        if content_type_id is None:
-            raise ValueError('Kindly Provide ContentTypeUid')
+        if content_type_id is not None and isinstance(content_type_id, str) and len(content_type_id) > 0:
+            content_type = ContentType(content_type_id)
+            content_type.instance(self)
+            return content_type
         else:
-            if len(content_type_id) > 0:
-                content_type = ContentType(content_type_id)
-                content_type.instance(self)
-                return content_type
-            else:
-                raise ValueError('Kindly Provide Valid ContentTypeUid')
+            raise StackException('Kindly provide valid content_type')
 
     def get_content_types(self):
 
@@ -112,70 +116,90 @@ class Stack:
         of all the content types available in a particular stack in your account.
         API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#content-types
 
-        :return: ContentTypes response
+        :return: ContentTypes dict response
+        :rtype:  dict
 
-        [Usage]:
+        Example:
+
         >>>> content_types = stack.get_content_types()
+
         """
+
+        if self.__endpoint is not None:
+            self.__endpoint = '{}/content_types'.format(self.__endpoint)
         ct_query: dict = {'include_count': 'true'}
-        from contentstack import Config
-        ct_url = Config().endpoint('content_types')
-        result = self.http_request.get_result(ct_url, ct_query, self.__stack_headers)
+        result = self.__http_request.get_result(self.__endpoint, ct_query, self.__stack_headers)
         return result
 
-    def asset(self, uid: str = None):
+    def asset(self, uid=None):
+
+        from contentstack import Asset
 
         """
+        ===========[All Assets]==========
+
         Assets refer to all the media files (images, videos, PDFs, audio files, and so on)
         uploaded in your Contentstack repository for future use. These files can be
         attached and used in multiple entries. Learn more about Assets.
+        Keep uid None to fetch list of all assets
         API Reference : https://www.contentstack.com/docs/guide/content-management#working-with-assets
-        :param uid: asset uid
-        :return: asset
-
-
-        [All Assets]
-        This call fetches the list of all the assets of a particular stack.
-        It also returns the content of each asset in JSON format. You can also specify the environment of
-        which you wish to get the assets.You can apply queries to
-        filter assets/entries. Refer to the Queries [https://www.contentstack.com/docs/apis/content-delivery-api/#queries] section for more details.
-
-        [Single Asset]
+        
+        Example:
+        
+        in case to fetch single asset, provide uid of the asset: 
+        >>> asset_instance = stack.asset()
+        >>> assets list[Asset] = asset_instance.fetch_all()
+        
+        ===========[Asset]===========
+        
         This call fetches the latest version of a specific asset of a particular stack.
-
-        [Usage]:
-        >>>> asset = stack.asset('bltyourasssetuid')
+        provide asset_uid of the asset you have to find.
+        
+        Example:
+        
+        in case to fetch single asset, provide uid of the asset: 
+        >>> asset_instance = stack.asset('bltyourasssetuid')
+        >>> asset Asset = asset_instance.fetch()
+        
+        :param uid: asset uid is unique_id of the asset
+        :type uid: str
+        :return: asset
+        :rtype: Asset
+        
         """
 
-        from contentstack import Asset
-        assets = Asset(uid=uid)
-        assets.instance(self)
-        return assets
+        if isinstance(uid, str):
+            asset = Asset(uid=uid)
+            asset.instance(self)
+            return asset
+        else:
+            raise StackException('Kindly provide a valid asset uid')
 
-    def asset_library(self):
+        # def asset_library(self):
+        # """
+        # [AssetLibrary]
+        # This call fetches the list of all the assets on query
+        #: return: asset_library
 
-        """
-        [AssetLibrary]
-        This call fetches the list of all the assets on query
-        :return: asset_library
+        # [Usage]:
+        # >>>> asset_lib: AssetLibrary = stack.asset_library()
 
-        [Usage]:
-        >>>> asset_lib: AssetLibrary = stack.asset_library()
-
-        """
-        from contentstack import AssetLibrary
-        asset_library = AssetLibrary()
-        asset_library.instance(self)
-        return asset_library
+        # """
+        # from contentstack import AssetLibrary
+        # asset_library = AssetLibrary()
+        # asset_library.instance(self)
+        # return asset_library
 
     @property
     def application_key(self):
 
         """
-        :return: application_key as str
+        :return: app_key / api_key of the stack
+        :rtype: str
 
-        [Usage]:
-        >>>> api_key: str = stack.application_key
+        Example :
+
+        >>>> api_key = stack.application_key
 
         """
 
@@ -187,15 +211,31 @@ class Stack:
 
     @property
     def get_http_instance(self):
-        return self.http_request
+
+        """
+        This method returns http_instance of the stack.
+
+        :return: http_request
+        :rtype: <contentstack.http_connection.HTTPConnection()>
+
+        Example:
+
+        http_instance = stack.get_http_instance
+
+        """
+        return self.__http_request
 
     @property
     def access_token(self):
 
         """
-        :return:str access token of the stack
 
-        [Usage]:
+        This method returns access_token of the stack.
+        :return: access_token
+        :rtype: str
+
+        Example :
+
         >>>> access_token: str = stack.access_token
 
         """
@@ -208,20 +248,23 @@ class Stack:
     def image_transform(self, image_url: str, **kwargs):
 
         """
+
         The Image Delivery API is used to retrieve, manipulate and/or convert image
         files of your Contentstack account and deliver it to your web or mobile properties.
+        It is an second parameter in which we want to place different manipulation key and
+        value in array form ImageTransform method is define for image manipulation with
+        different transform_params in second parameter in array form
 
-        It is an second parameter in which we want to place different manipulation
-        key and value in array form
-        ImageTransform function is define for image manipulation with different
-        transform_params in second parameter in array form
-
-        :param image_url:str endpoint
-        :param kwargs: query arguments
-        :return: url:str
+        :param image_url: on which we want to manipulate.
+        :type image_url: str
+        :param kwargs: this parameter in which we want to place different manipulation key-worded, variable-length argument list
+        :type kwargs: dict
+        :return: image_url
+        :rtype:str
 
         [Usage]:
-        >>>> image_url: str = stack.image_transform('endpoint', query_key='query_value', query_key1='query_value', query_key2='query_value')
+
+        image_url: str = stack.image_transform('image_url', width=100, height=100)
 
         """
         self.__image_transform_url = image_url
@@ -234,11 +277,13 @@ class Stack:
     def collaborators(self):
 
         """
-        collaborators with whom the stacks are shared.
+        :return: self, collaborators with whom the stacks are shared.
         A detailed information about each collaborator is returned.
-        :returns list of stack collaborators in response
 
-        [Usage]:
+        :rtype: <contentstack.Stack>
+
+        Example:
+
         >>>> stack = stack.collaborators()
 
         """
@@ -253,10 +298,12 @@ class Stack:
         such as the description, format of date,
         format of time, and so on. Users can include or exclude stack variables in the response.
         :returns stack_variables
-        [Usage]:
-        >>>> stack = stack.include_stack_variables()
-        """
 
+        Example
+
+        >>>> stack = stack.include_stack_variables()
+
+        """
         self.__query_params['include_stack_variables'] = 'true'
 
         return self
@@ -265,6 +312,7 @@ class Stack:
 
         """
         :returns discrete variables of the stack
+
         [Usage]:
         >>>> stack = stack.include_discrete_variables()
 
@@ -276,67 +324,88 @@ class Stack:
     def include_count(self):
 
         """
-        :returns Total Count of stack response
-        [Usage]:
+        It includes Count of stack response
+        :return: self
+        :rtype: Stack
+
+        Example:
+
         >>>> stack = stack.include_count()
         """
         self.__query_params['include_count'] = 'true'
-
         return self
 
-    def pagination(self, pagination_token: str):
+    def pagination(self, pagination_token):
 
         """
-        If the result of the initial sync (or subsequent sync) contains more than 100 records,
-        the response would be paginated. It provides pagination token in the response. However,
-        you do not have to use the pagination token manually to get the next batch,
-        the SDK does that automatically until the sync is complete.
-        Pagination token can be used in case you want to fetch only selected batches.
-        It is especially useful if the sync process is interrupted midway (due to network issues, etc.).
-        In such cases, this token can be used to restart the sync process from where it was interrupted.
 
-        :param pagination_token:
-        :return: list[SyncResult]
+        If the result of the initial sync (or subsequent sync) contains more than 100 records, the response would be
+        paginated. It provides pagination token in the response. However, you do not have to use the pagination token
+        manually to get the next batch, the SDK does that automatically until the sync is complete. Pagination token
+        can be used in case you want to fetch only selected batches. It is especially useful if the sync process is
+        interrupted midway (due to network issues, etc.). In such cases, this token can be used to restart the sync
+        process from where it was interrupted.
+
+        :param pagination_token: It can be found in the sync response
+        :type pagination_token: str
+        :return: list of SyncResult object
+        :rtype: list[SyncResult]
+
+        Example:
+
+        >>> result = stack.pagination('bltsomekeytoput')
+
         """
-
-        self.__sync_query = {'pagination_token': pagination_token}
-
+        if isinstance(pagination_token, str):
+            self.__sync_query = {'pagination_token': pagination_token}
+        else:
+            raise StackException('Kindly provide valid pagination_token')
         return self.__sync_request()
 
     def sync_token(self, sync_token):
 
         """
+
         You can use the sync token (that you receive after initial sync)
         to get the updated content next time.
         The sync token fetches only the content that was added after your last sync,
         and the details of the content that was deleted or updated.
 
-        :param sync_token:
-        :return: SyncStack
+        :param sync_token: The sync token fetches only the content that was added after your last sync
+        :type sync_token:
+        :return: list of SyncResult object
+        :rtype: list[SyncResult]
+
+        Example:
+
+        >>> result = stack.sync_token('bltsomekeytoput')
+
         """
-
-        self.__sync_query = {'sync_token': sync_token}
-
+        if isinstance(sync_token, str):
+            self.__sync_query = {'sync_token': sync_token}
+        else:
+            raise StackException('Kindly provide valid sync_token')
         return self.__sync_request()
 
     def sync(self, **kwargs):
 
         """
-        [content_type_uid] --> You can also initialize sync with entries of
+
+        :content_type_uid:  You can also initialize sync with entries of
         only specific content_type. To do this, use syncContentType and specify
         the content type uid as its value. However, if you do this,
         the subsequent syncs will only include the entries of the specified content_type.
 
-        [from_date] --> You can also initialize sync with entries published
+        :from_date: You can also initialize sync with entries published
         after a specific date. To do this, use from_date
         and specify the start date as its value.
 
-        [locale] --> You can also initialize sync with entries of only specific locales.
+        :locale: You can also initialize sync with entries of only specific locales.
         To do this, use syncLocale and specify the locale code as its value.
         However, if you do this, the subsequent syncs will only include
         the entries of the specified locales.
 
-        [publish_type] --> Use the type parameter to get a specific type of content.
+        :publish_type:  Use the type parameter to get a specific type of content.
         You can pass one of the following values:
 
         asset_published, entry_published, asset_unpublished,
@@ -345,35 +414,59 @@ class Stack:
 
         If you do not specify any value, it will bring all published entries and published assets.
 
+        :param kwargs: content_type_uid='blt83847327434739', from_date='date', locale='en-us', publish_type='asset_published'
+        :type kwargs: key-worded, variable-length argument list
+        :return: list of SyncResult Object
+        :rtype: list[SyncResult]
+
+        Example:
+
+        >>> result = stack.sync(content_type_uid='content_type_uid', from_date='date', locale='en-us', publish_type='asset_published')
+
         """
 
         self.__sync_query["init"] = 'true'
-        for key, value in kwargs.items():
-            self.__sync_query[key] = value
-
+        if kwargs is not None and len(kwargs) > 0:
+            for key, value in kwargs.items():
+                self.__sync_query[key] = value
         if self.__stack_headers is not None and len(self.__stack_headers) > 0:
             if 'environment' in self.__stack_headers:
                 env = self.__stack_headers['environment']
                 self.__sync_query['environment'] = env
         else:
             raise KeyError("Kindly provide stack headers")
-
         return self.__sync_request()
 
     @property
     def environment(self):
+
+        """
+        This method returns  environment of the stack
+        :return: environment of the stack
+        :rtype: str
+
+        Example:
+
+        >>> env = stack.environment
+
+        """
         if 'environment' in self.__stack_headers:
             return self.__stack_headers['environment']
         else:
             return None
 
     @environment.setter
-    def environment(self, env: str):
+    def environment(self, env):
 
         """
-        :param env:str environment
+
+        :param env: environment for the stack
+        :type env: str
+        :return: self
+        :rtype: Stack
 
         Example:
+
         stack = stack.environment = 'product'
 
         """
@@ -386,21 +479,27 @@ class Stack:
     def headers(self):
 
         """
-        :return:dict headers
-        [Uses]
-        >>>> headers:dict = stack.headers
+
+        :return: list of stack headers
+        :rtype: dict
+
+        Example:
+
+            >>> headers = stack.headers
+
         """
         return self.__stack_headers
 
     def __sync_request(self):
-        sync_url = Config().endpoint('sync')
-        result = self.http_request.get_result(sync_url, self.__sync_query, self.__stack_headers)
+        # This is useful to find sync_request for the stack
+        url = '{}/stacks/sync'.format(self.__endpoint)
+        result = self.__http_request.get_result(url, self.__sync_query, self.__stack_headers)
         return result
 
     def fetch(self):
-        from contentstack import Config
-        stack_url = Config().endpoint('stacks')
-        result = self.http_request.get_result(stack_url, self.__query_params, self.__stack_headers)
+        # This is useful to fetch the stack data
+        url = '{}/stacks'.format(self.__endpoint)
+        result = self.__http_request.get_result(url, self.__query_params, self.__stack_headers)
         return result
 
 
