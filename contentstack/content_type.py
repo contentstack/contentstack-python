@@ -33,12 +33,17 @@ class ContentType:
         self.__content_type_uid = content_type_uid
 
     def instance(self, stack_instance):
-        self.__stack_instance = stack_instance
+        from contentstack.stack import Stack
+        from contentstack.errors import StackException
+        if stack_instance is None:
+            raise StackException('Kindly initialise stack first')
+        self.__stack_instance: Stack = stack_instance
         self.__stack_headers.update(self.__stack_instance.headers)
-        self.__http_request = self.__stack_instance.http_request
+        self.__http_request = self.__stack_instance.get_http_instance
 
     @property
-    def headers(self): return self.__stack_headers
+    def headers(self):
+        return self.__stack_headers
 
     def header(self, key, value):
         if key is not None and value is not None:
@@ -91,4 +96,3 @@ class ContentType:
         content_type_url = '{0}/{1}'.format(endpoint, self.__content_type_uid)
         result = self.__http_request.get_result(content_type_url, {}, self.__stack_headers)
         return result
-

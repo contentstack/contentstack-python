@@ -1,7 +1,7 @@
 import logging
 import unittest
 
-from contentstack import Error
+from contentstack import Error, Config
 from contentstack.stack import Stack
 
 
@@ -10,7 +10,19 @@ class TestStack(unittest.TestCase):
 
     def setUp(self):
 
-        self.stack = Stack(api_key="blt20962a819b57e233", access_token="blt01638c90cc28fb6f", environment="development")
+        api_key = 'blt20962a819b57e233'
+        access_token = 'blt01638c90cc28fb6f'
+        environment = 'development'
+
+        self.sync_api_key = 'blt477ba55f9a67bcdf'
+        self.sync_delivery__token = 'cs7731f03a2feef7713546fde5'
+        self.sync_env = 'web'
+
+        config = Config()
+        config.host('stag-cdn.contentstack.io')
+        config.version('v2')
+        self.stack = Stack(api_key=api_key, access_token=access_token, environment=environment, config=config)
+        self.sync_stack = Stack(api_key=self.sync_api_key, access_token=self.sync_delivery__token, environment=self.sync_env)
 
     def test_stack(self):
         self.assertEqual('development', self.stack.environment)
@@ -60,9 +72,8 @@ class TestStack(unittest.TestCase):
             self.assertTrue(True)
 
     def test_image_transform(self):
-        url = self.stack.image_transform("www.contentstack.io/endpoint",
-                                         firstname="sita", lastname="sharma", age=22, phone=1234567890)
-        if 'age' in url:
+        url = self.stack.image_transform("www.contentstack.io/endpoint", width="500", height="200")
+        if '500' in url:
             self.assertTrue(True)
         else:
             self.assertTrue(False)
@@ -70,8 +81,7 @@ class TestStack(unittest.TestCase):
     # [Sync]
 
     def test_sync_pagination(self):
-        sync_stack = Stack(api_key="blt477ba55f9a67bcdf", access_token="cs7731f03a2feef7713546fde5", environment="web")
-        result = sync_stack.pagination('bltbb61f31a70a572e6c9506a')
+        result = self.sync_stack.pagination('bltbb61f31a70a572e6c9506a')
         if result is not None:
             if isinstance(result, Error):
                 logging.debug(result)
@@ -79,18 +89,15 @@ class TestStack(unittest.TestCase):
 
     def test_init_sync(self):
         from contentstack.stack import SyncResult
-        sync_stack = Stack(api_key="blt477ba55f9a67bcdf", access_token="cs7731f03a2feef7713546fde5", environment="web")
-        result = sync_stack.sync(from_date='2018-01-14T00:00:00.000Z', content_type_uid='session',
-                                 publish_type='entry_published')
+        result = self.sync_stack.sync(from_date='2018-01-14T00:00:00.000Z', content_type_uid='session', publish_type='entry_published')
         if result is not None:
             print(SyncResult, type(result))
             self.assertEqual(31, result.count)
 
     def test_sync_token(self):
-        sync_stack = Stack(api_key="blt477ba55f9a67bcdf", access_token="cs7731f03a2feef7713546fde5", environment="web")
-        response = sync_stack.sync_token('bltbb61f31a70a572e6c9506a')
-        items = response.count
-        self.assertTrue(9, items)
+        response = self.sync_stack.sync_token('bltbb61f31a70a572e6c9506a')
+        if isinstance(response, Error):
+            self.assertTrue(109, response.error_code)
 
     # [ContentType class]
 

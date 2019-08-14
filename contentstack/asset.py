@@ -21,9 +21,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+class OrderType(object):
+
+    """
+    OrderType is used to choose one of the ascending and descending
+    It returns either ascending or descending
+    """
+    ASC, DESC = range(0, 2)
+
+    pass
+
 
 class Asset:
-
     """
 
     Assets refer to all the media files (images, videos, PDFs, audio files, and so on) uploaded
@@ -51,6 +60,7 @@ class Asset:
         self.__http_request = None
         self.__query_params = {}
         self.__stack_headers = {}
+        self.__count = 0
         self.__file_name = None
         self.__file_size = None
         self.__file_type = None
@@ -72,9 +82,14 @@ class Asset:
         :return: self
         :rtype: Asset
         """
-        self.__stack_instance = stack_instance
+
+        from contentstack.stack import Stack
+        from contentstack.errors import StackException
+        if stack_instance is None:
+            raise StackException('Kindly initialise stack first')
+        self.__stack_instance: Stack = stack_instance
         self.__stack_headers.update(self.__stack_instance.headers)
-        self.__http_request = self.__stack_instance.http_request
+        self.__http_request = self.__stack_instance.get_http_instance
 
         return self
 
@@ -125,6 +140,19 @@ class Asset:
 
         [Example]
         uid = asset.asset_uid
+        """
+
+        return self.__uid
+
+    @property
+    def count(self):
+
+        """
+        :return: count function returns list of assets.
+        :rtype: int
+
+        [Example]
+        count = asset.count
         """
 
         return self.__uid
@@ -283,6 +311,7 @@ class Asset:
         :rtype: dict
 
         [Example]
+
         dimension = asset.dimension
 
         """
@@ -312,6 +341,24 @@ class Asset:
                 raise Exception("Environment Can't Be None")
         else:
             Exception('Kindly provide a valid input')
+
+        return self
+
+    def environment(self, environment):
+
+        """
+        provide the name of the environment if you wish to retrieve the assets published in a particular environment.
+        Example: production
+
+        :param environment: the name of the environment
+        :type environment: str
+        :return: self
+        :rtype: Asset
+
+        """
+
+        if environment is not None and isinstance(environment, str):
+            self.__query_params['environment'] = environment
 
         return self
 
@@ -366,6 +413,7 @@ class Asset:
         :rtype: Asset
 
         [Example]
+
         asset = asset.version(1)
 
         """
@@ -426,6 +474,39 @@ class Asset:
             raise Exception('Kindly provide valid asset_uid')
 
         return self
+
+    def include_count(self):
+
+        """
+        :return: include_count is used to include number of assets, used for fetch_all()
+        :rtype: Asset
+
+        """
+        self.__query_params['include_count'] = 'true'
+
+        return self
+
+    def sort(self, key: str, order_by):
+
+        """
+        :param key: provides key on which ASC/DESC need to apply.
+        :param order_by: object option either "asc" or "desc"
+        :return self , instance of AssetLibrary
+
+        [Example]:
+        asset = asset.sort(OrderType.ASC)
+
+        """
+
+        if order_by is not None:
+            if order_by == 0:
+                self.__query_params['asc'] = key
+            else:
+                self.__query_params['desc'] = key
+        else:
+            raise Exception('Kindly provide a valid input')
+
+        return self.__query_params
 
     def fetch_all(self):
 
