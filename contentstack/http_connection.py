@@ -1,3 +1,8 @@
+
+from json import JSONDecodeError
+import logging
+
+
 class HTTPConnection:
 
     def __init__(self, url: str, query: dict, headers: dict):
@@ -32,10 +37,12 @@ class HTTPConnection:
             # requesting for url, payload and headers
             response: Response = requests.get(self.url, params=payload, headers=self.headers)
             # if response.status_code = 200
+            # logging.info('Request url :: -> ', response.url)
             if response.ok:
 
                 # Decode byte response to json
                 result = response.json()
+                logging.info('url={}\nresponse={}'.format(response.url, result))
                 # If result contains stack, return json response
                 if 'stack' in result:
                     return result['stack']
@@ -70,11 +77,12 @@ class HTTPConnection:
                 err = response.json()
                 if err is not None:
                     return Error().config(err)
-                    # raise ContentstackError('Server Error Code {} Message: {}'.format(error_code, error_message))
 
         except requests.RequestException as err:
-            # Error().config(err)
-            raise ConnectionError(err)
+            if isinstance(err, ConnectionError):
+                raise ConnectionError(err)
+        except JSONDecodeError:
+            raise ValueError("Inappropriate response")
 
     @staticmethod
     def __parse_entries(result):
@@ -134,3 +142,10 @@ class HTTPConnection:
 
         local_headers = {'X-User-Agent': str(header), "Content-Type": 'application/json'}
         return local_headers
+
+    # def is_json(self, myjson):
+    #    try:
+    #        json.loads(myjson.json())
+    #        return True
+    #    except JSONDecodeError:
+    #        return False

@@ -29,7 +29,7 @@ class Stack(object):
         provide key-worded, variable-length argument list
 
         :param kwargs: key-worded list
-        :type kwargs: str
+        :type kwargs: object
         :param api_key: stack 'api_key' of your target stack.
         :param access_token: stack 'access_token' of your target stack.
         :param environment: stack 'environment' of your target stack.
@@ -39,30 +39,27 @@ class Stack(object):
         Example:
 
         import contentstack
-        >>> stack: Stack = contentstack.Stack(api_key ='api_key', access_token='access_token', environment='environment')
+        >>> stack: Stack = Stack(api_key ='api_key', access_token='access_token', environment='environment')
         [or]
-        >>> config = Config()
-        >>> config.host('cdn.contentstack.com')
-        >>> stack: Stack = contentstack.Stack(api_key ='api_key', access_token='access_token', environment='environment')
+        >>> configs = Config()
+        >>> configs.host('cdn.contentstack.com')
+        >>> stack: Stack = Stack(api_key ='api_key', access_token='access_token', environment='environment', config=configs)
 
         """
-        self.__endpoint = None
+        self.config = None
+        self.__http_request = None
         self.__query_params = dict()
         self.__stack_headers = dict()
         self.__headers = dict()
         self.__image_transform_url = None
         self.__image_params = dict
         self.__sync_query = dict()
-
         for key, value in kwargs.items():
             self.__headers[key] = value
         self.__initialise_stack()
-        self.__http_request = HTTPConnection(self.__endpoint.__str__, self.__query_params, self.__stack_headers)
 
     def __initialise_stack(self):
-
-        """  Validates the stack configuration key requirements  """
-
+        # Validates the stack configuration key requirements
         if len(self.__headers) > 0:
             if 'api_key' not in self.__headers:
                 raise StackException('Kindly provide api_key')
@@ -77,10 +74,10 @@ class Stack(object):
             else:
                 self.__stack_headers['environment'] = self.__headers['environment']
             if 'config' in self.__headers:
-                config = self.__headers['config']
-                self.__endpoint = config.default_endpoint
+                self.config = self.__headers['config']
             else:
-                self.__endpoint = Config().default_endpoint
+                self.config = Config()
+            self.__http_request = HTTPConnection(self.config.endpoint, self.__query_params, self.__stack_headers)
 
     def content_type(self, content_type_id):
 
@@ -125,10 +122,12 @@ class Stack(object):
 
         """
 
-        if self.__endpoint is not None:
-            self.__endpoint = '{}/content_types'.format(self.__endpoint)
+        if self.config is None:
+            raise StackException('Kindly initialise stack')
+        endpoint = self.config.endpoint
+        url = '{}/content_types'.format(endpoint)
         ct_query: dict = {'include_count': 'true'}
-        result = self.__http_request.get_result(self.__endpoint, ct_query, self.__stack_headers)
+        result = self.__http_request.get_result(url, ct_query, self.__stack_headers)
         return result
 
     def asset(self, uid=None):
@@ -168,12 +167,9 @@ class Stack(object):
         
         """
 
-        if isinstance(uid, str):
-            asset = Asset(uid=uid)
-            asset.instance(self)
-            return asset
-        else:
-            raise StackException('Kindly provide a valid asset uid')
+        asset = Asset(uid=uid)
+        asset.instance(self)
+        return asset
 
         # def asset_library(self):
         # """
@@ -258,7 +254,7 @@ class Stack(object):
         :param image_url: on which we want to manipulate.
         :type image_url: str
         :param kwargs: this parameter in which we want to place different manipulation key-worded, variable-length argument list
-        :type kwargs: dict
+        :type kwargs: str
         :return: image_url
         :rtype:str
 
@@ -492,13 +488,13 @@ class Stack(object):
 
     def __sync_request(self):
         # This is useful to find sync_request for the stack
-        url = '{}/stacks/sync'.format(self.__endpoint)
+        url = '{}/stacks/sync'.format(self.config.endpoint)
         result = self.__http_request.get_result(url, self.__sync_query, self.__stack_headers)
         return result
 
     def fetch(self):
-        # This is useful to fetch the stack data
-        url = '{}/stacks'.format(self.__endpoint)
+        # This is useful to fetch the stack result
+        url = '{}/stacks'.format(self.config.endpoint)
         result = self.__http_request.get_result(url, self.__query_params, self.__stack_headers)
         return result
 
@@ -553,6 +549,17 @@ class SyncResult:
 
     @property
     def sync_token(self):
+
+        """
+
+        :return: This property returns sync_token
+        :rtype: str
+
+        Example:
+
+        sync_token = SyncResult.sync_token
+
+        """
         return self.__sync_token
 
     @property

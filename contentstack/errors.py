@@ -24,14 +24,20 @@
 
 
 class Error:
+
     """
     contentstack.error
     ~~~~~~~~~~~~~~~~~~
     This module implements the Error class.
     API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#error
+
     """
 
     def __init__(self):
+
+        """
+
+        """
         self.__error_dict = {}
         self.__error_code = str
         self.__msg = str
@@ -39,39 +45,70 @@ class Error:
 
     def config(self, result: dict):
 
+        """
+
+        :param result:
+        :type result:
+        :return:
+        :rtype:
+        """
         if result is not None and len(result) > 0:
             self.__error_dict = result
             self.__error_code = self.__error_dict['error_code']
             self.__msg = self.__error_dict['error_message']
             self.__cause_err = self.__error_dict['errors']
-
         return self
 
     @property
     def error_code(self):
+
         """
+        It returns error code from the stack response
         :return: error_code as int
+        :rtype: int
+
+        Example. code = error.error_code
+
         """
         return self.__error_code
 
     @property
     def error_message(self):
+
         """
+        Returns error_message from the stack response
         :return: error_message
+        :rtype: str
+
+        Example. error.error_message
+
         """
+
         return self.__msg
 
     @property
     def error(self):
+
         """
+        This returns error code and error_message in dict formats
         :return: error dict
+        :rtype: dict
+
+        Example. error = error.error
         """
+
         return self.__cause_err
 
     @property
     def error_info(self) -> dict:
+
         """
-        :return: dict, error information
+        error information
+        :return: error information
+        :rtype: dict
+
+        Example. error.error_info
+
         """
         return self.__error_dict
 

@@ -121,7 +121,7 @@ class TestAsset(unittest.TestCase):
             if isinstance(result, Asset):
                 sallie: str = result.update_at
                 var_shailesh, fileid = sallie.split('T')
-                self.assertEqual('2017-01-10', var_shailesh)
+                self.assertEqual('2019-08-14', var_shailesh)
             else:
                 self.assertFalse(True)
 

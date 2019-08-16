@@ -21,6 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+
 class OrderType(object):
 
     """
@@ -33,6 +34,7 @@ class OrderType(object):
 
 
 class Asset:
+
     """
 
     Assets refer to all the media files (images, videos, PDFs, audio files, and so on) uploaded
@@ -55,6 +57,7 @@ class Asset:
         """
         if uid is not None and isinstance(uid, str):
             self.__asset_uid = uid
+        self.__config = None
         self.__stack_instance = None
         self.__response = None
         self.__http_request = None
@@ -88,6 +91,7 @@ class Asset:
         if stack_instance is None:
             raise StackException('Kindly initialise stack first')
         self.__stack_instance: Stack = stack_instance
+        self.__config = self.__stack_instance.config
         self.__stack_headers.update(self.__stack_instance.headers)
         self.__http_request = self.__stack_instance.get_http_instance
 
@@ -338,9 +342,9 @@ class Asset:
                 self.__query_params['environment'] = env
                 self.__stack_headers.pop('environment', None)
             else:
-                raise Exception("Environment Can't Be None")
+                raise ValueError("Environment Can't Be None")
         else:
-            Exception('Kindly provide a valid input')
+            raise ValueError('Kindly provide a valid input')
 
         return self
 
@@ -521,9 +525,10 @@ class Asset:
         :rtype: list[Asset]
 
         """
-        from contentstack import Config
-        asset_url = Config().endpoint('assets')
-        return self.__http_request.get_result(asset_url, self.__query_params, self.__stack_headers)
+
+        endpoint = self.__config.endpoint
+        url = '{}/assets'.format(endpoint)
+        return self.__http_request.get_result(url, self.__query_params, self.__stack_headers)
 
     def fetch(self):
 
@@ -533,9 +538,9 @@ class Asset:
         :rtype: Asset
 
         """
-        from contentstack import Config
         if self.__asset_uid is not None and len(self.__asset_uid) > 0:
-            asset_url = '{}/{}'.format(Config().endpoint('assets'), self.__asset_uid)
+            endpoint = self.__config.endpoint
+            url = '{}/assets/{}'.format(endpoint, self.__asset_uid)
         else:
             raise Exception("Kindly Provide Asset UID")
-        return self.__http_request.get_result(asset_url, self.__query_params, self.__stack_headers)
+        return self.__http_request.get_result(url, self.__query_params, self.__stack_headers)

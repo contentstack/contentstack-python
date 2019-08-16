@@ -21,67 +21,71 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
 
- """
+"""
 import logging
 
 
-logging.basicConfig(filename='contentstack.log', format='%(asctime)s - %(message)s', level=logging.INFO)
+logging.basicConfig(filename='cs.log', format='%(asctime)s - %(message)s', level=logging.INFO)
 logging.getLogger("Config")
 
 
-class Config:
+class Config(object):
+    """
+    All API paths are relative to this base URL, for example, /users actually means <scheme>://<host>/<basePath>/users.
+
+    """
 
     def __init__(self):
-        self.defaultConfig = dict(protocol="https:/",
-                                  host="cdn.contentstack.io",
-                                  port=443,
-                                  version="v3",
-                                  path={
-                                      "stacks": "stacks",
-                                      "sync": "stacks/sync",
-                                      "content_types": "content_types",
-                                      "entries": "content_types",
-                                      "assets": "assets",
-                                      "environments": "environments"
-                                  })
 
-    def host(self, host_url=None):
-        if host_url is not None and isinstance(host_url, str):
-            self.defaultConfig['host'] = host_url
-        return self.defaultConfig['host']
+        # It initialises the Config with the default endpoint
+        self.default = dict(protocol="https", host="cdn.contentstack.io", port=443, version="v3")
+
+    def host(self, host):
+
+        """
+        The base URL for Content Delivery API is cdn.contentstack.io.
+        host is the domain name or IP address (
+        IPv4) of the host that serves the API. It may include the port number if different from the scheme's default
+        port (443 for HTTPS).
+
+        Note: contentstack supports HTTPS only
+        :param host: host is the domain name
+        :type host: str
+        :return: self
+        :rtype: Config
+
+        Example:
+
+            >>> config  = Config().host('api.contentstack.io')
+
+        """
+
+        if host is not None and isinstance(host, str):
+            self.default['host'] = host
+        return self
 
     def version(self, version=None):
-        if version is not None and isinstance(version, str):
-            self.defaultConfig['version'] = version
-            return self.defaultConfig['version']
-        else:
-            return self.defaultConfig['version']
 
-    def path(self, path):
-        url_section = self.defaultConfig['path']
-        if path in url_section:
-            return url_section[path]
-        else:
-            logging.error("{0} is invalid endpoint path".format(path))
-            raise Exception('Invalid endpoint!!, {0} is invalid endpoint path, Path can be found among {1}'
-                            .format(path, url_section.keys()))
+        """
+        Note: Only version 3 is supported on the CDN. If you're still using version 2 (which we recommend you should
+        not), switch to the CDN version for even faster loading.
+        :param version: The API version can be found in the URL that is basePath
+        :type version: str
+        :return: self
+        :rtype: Config
+
+        Example: The API version (in our case, 'v3') can be found in the URL, e.g.
+
+            >>> config  = Config()
+            >>> config.version = 'v3'
+
+        """
+        if version is not None and isinstance(version, str):
+            self.default['version'] = version
+
+        return self
 
     @property
-    def default_endpoint(self):
-        endpoint_url = "{0}/{1}/{2}".format(self.defaultConfig["protocol"], self.host(), self.version())
-        return endpoint_url
-
-    def endpoint(self, path):
-        url = self.path(path)
-        if url is not None and isinstance(url, str):
-            url = "{0}/{1}/{2}/{3}".format(self.defaultConfig["protocol"], self.host(), self.version(), url)
-            logging.info('endpoint is :: {0} '.format(url))
-
+    def endpoint(self):
+        url = "{0}://{1}/{2}".format(self.default["protocol"], self.default["host"], self.default["version"])
         return url
-
-
-# config = Config()
-# config.host("stag-cdn.contentstack.io")
-# result_url = config.endpoint('assets')
-# print(result_url)
-
