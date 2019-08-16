@@ -16,13 +16,12 @@ class TestStack(unittest.TestCase):
 
         self.sync_api_key = 'blt477ba55f9a67bcdf'
         self.sync_delivery__token = 'cs7731f03a2feef7713546fde5'
-        self.sync_env = 'web'
 
         config = Config()
-        config.host('stag-cdn.contentstack.io')
-        config.version('v2')
+        config.host('cdn.contentstack.io')
+        config.version('v3')
         self.stack = Stack(api_key=api_key, access_token=access_token, environment=environment, config=config)
-        self.sync_stack = Stack(api_key=self.sync_api_key, access_token=self.sync_delivery__token, environment=self.sync_env)
+        self.sync_stack = Stack(api_key=self.sync_api_key, access_token=self.sync_delivery__token, environment='web')
 
     def test_stack(self):
         self.assertEqual('development', self.stack.environment)
@@ -32,9 +31,7 @@ class TestStack(unittest.TestCase):
     def test_config(self):
         from contentstack import Config
         conf = Config()
-        self.assertEqual('v3', conf.version())
-        self.assertEqual('cdn.contentstack.io', conf.host())
-        self.assertEqual('https://cdn.contentstack.io/v3/stacks', conf.endpoint('stacks'))
+        self.assertEqual('https://cdn.contentstack.io/v3/stacks', '{}/stacks'.format(conf.endpoint))
 
     def test_include_collaborators(self):
         is_contains = False
@@ -89,7 +86,8 @@ class TestStack(unittest.TestCase):
 
     def test_init_sync(self):
         from contentstack.stack import SyncResult
-        result = self.sync_stack.sync(from_date='2018-01-14T00:00:00.000Z', content_type_uid='session', publish_type='entry_published')
+        result = self.sync_stack.sync(from_date='2018-01-14T00:00:00.000Z', content_type_uid='session',
+                                      publish_type='entry_published')
         if result is not None:
             print(SyncResult, type(result))
             self.assertEqual(31, result.count)

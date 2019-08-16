@@ -15,8 +15,11 @@ from .http_connection import HTTPConnection
 
 # Set a default logger to prevent "No handler found" warnings
 import logging
+
 try:
     from logging import NullHandler
+    # logging.basicConfig(filename='cs.log', format='%(asctime)s - %(message)s', level=logging.DEBUG)
+    # logging.getLogger("__init__.py")
 except ImportError:
     class NullHandler(logging.Handler):
         def emit(self, record):

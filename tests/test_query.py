@@ -28,22 +28,22 @@ class TestQuery(unittest.TestCase):
 
     def test_query_add_headers(self):
         query = self.stack_query.content_type('product').query()
-        headers = query.add_header('env', 'mishra')
-        self.assertEqual(4, len(headers))
+        result = query.add_header('env', 'mishra')
+        self.assertEqual(4, len(result))
 
     def test_query_where(self):
         query = self.stack_query.content_type('product').query()
         query.locale('en-us').where("title", "Redmi 3S")
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(1, len(result))
 
     def test_query_add_query(self):
         query = self.stack_query.content_type('product').query()
         query.locale('en-us')
         query.add_query("limit", "8")
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(7, len(result))
 
     def test_query_remove_query(self):
@@ -51,8 +51,8 @@ class TestQuery(unittest.TestCase):
         query.locale('en-us')
         query.add_query("limit", "3")
         query.remove_query('limit')
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(7, len(result))
 
     def test_query_and_query(self):
@@ -70,8 +70,8 @@ class TestQuery(unittest.TestCase):
         list_array = [query, sub_query]
         # passing query list in and_query
         base_query.and_query(list_array)
-        result, error = base_query.find()
-        if error is None:
+        result = base_query.find()
+        if result is not None:
             self.assertEqual(1, len(result))
 
     def test_query_or_query(self):
@@ -89,8 +89,8 @@ class TestQuery(unittest.TestCase):
         list_array = [query1, query2]
         # passing query list in and_query
         query.or_query(list_array)
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(5, len(result))
 
     def test_query_less_than(self):
@@ -99,8 +99,8 @@ class TestQuery(unittest.TestCase):
         query = content_type.query()
         query.locale('en-us')
         query.less_than('price_in_usd', 600)
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(5, len(result))
 
     def test_query_less_than_or_equal_to(self):
@@ -109,8 +109,8 @@ class TestQuery(unittest.TestCase):
         query = content_type.query()
         query.locale('en-us')
         query.less_than_or_equal_to('price_in_usd', 146)
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(4, len(result))
 
     def test_query_greater_than(self):
@@ -119,8 +119,8 @@ class TestQuery(unittest.TestCase):
         query = content_type.query()
         query.locale('en-us')
         query.greater_than('price_in_usd', 146)
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(3, len(result))
 
     def test_query_greater_than_or_equal_to(self):
@@ -129,8 +129,8 @@ class TestQuery(unittest.TestCase):
         query = content_type.query()
         query.locale('en-us')
         query.greater_than_or_equal_to('price_in_usd', 146)
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(4, len(result))
 
     def test_query_not_equal_to(self):
@@ -139,8 +139,8 @@ class TestQuery(unittest.TestCase):
         query = content_type.query()
         query.locale('en-us')
         query.not_equal_to('price_in_usd', 146)
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(6, len(result))
 
     def test_query_contained_in(self):
@@ -150,8 +150,8 @@ class TestQuery(unittest.TestCase):
         query.locale('en-us')
         in_list = [101, 749]
         query.contained_in('price_in_usd', in_list)
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(2, len(result))
 
     def test_query_not_contained_in(self):
@@ -161,8 +161,8 @@ class TestQuery(unittest.TestCase):
         query.locale('en-us')
         in_list = [101, 749]
         query.not_contained_in('price_in_usd', in_list)
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(5, len(result))
 
     def test_query_exists(self):
@@ -171,8 +171,8 @@ class TestQuery(unittest.TestCase):
         query = content_type.query()
         query.locale('en-us')
         query.exists('price_in_usd')
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(7, len(result))
 
     def test_query_not_exists(self):
@@ -181,8 +181,8 @@ class TestQuery(unittest.TestCase):
         query = content_type.query()
         query.locale('en-us')
         query.not_exists('price_in_usd')
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(7, len(result))
 
     def test_query_include_reference(self):
@@ -191,8 +191,8 @@ class TestQuery(unittest.TestCase):
         query = content_type.query()
         query.locale('en-us')
         query.include_reference('categories')
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(7, len(result))
 
     def test_query_tags(self):
@@ -202,8 +202,8 @@ class TestQuery(unittest.TestCase):
         query.locale('en-us')
         taglist = ['Black', 'Gold', 'Silver']
         query.tags(taglist)
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(0, len(result))
 
     def test_query_ascending(self):
@@ -212,8 +212,8 @@ class TestQuery(unittest.TestCase):
         query = content_type.query()
         query.locale('en-us')
         query.ascending('price_in_usd')
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(7, len(result))
 
     def test_query_descending(self):
@@ -222,8 +222,8 @@ class TestQuery(unittest.TestCase):
         query = content_type.query()
         query.locale('en-us')
         query.descending('price_in_usd')
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(7, len(result))
 
     def test_query_except_field_uid(self):
@@ -233,8 +233,8 @@ class TestQuery(unittest.TestCase):
         query.locale('en-us')
         listfield = {'gold', 'silver'}
         query.except_field_uid(listfield)
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(7, len(result))
 
     def test_query_only_field_uid(self):
@@ -244,8 +244,8 @@ class TestQuery(unittest.TestCase):
         query.locale('en-us')
         listfield = {'gold', 'silver'}
         query.only_field_uid(listfield)
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(7, len(result))
 
     def test_query_only_with_reference_uid(self):
@@ -255,11 +255,11 @@ class TestQuery(unittest.TestCase):
         query.locale('en-us')
         fields = ['gold', 'silver']
         query.only_with_reference_uid(fields, 'reference_field_uid')
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(7, len(result))
         else:
-            self.assertEqual(141, error['error_code'])
+            self.assertEqual(141, result.error_code)
 
     def test_query_except_with_reference_uid(self):
 
@@ -268,8 +268,8 @@ class TestQuery(unittest.TestCase):
         query.locale('en-us')
         listfield = ['gold', 'silver']
         query.except_with_reference_uid(listfield, 'reference_field_uid')
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(7, len(result))
 
     # def test_query_count(self):
@@ -278,8 +278,8 @@ class TestQuery(unittest.TestCase):
     #    query = content_type.query()
     #    query.locale('en-us')
     #    query.count()
-    #    result, error = query.find()
-    #    if error is None:
+    #    result = query.find()
+    #    i is None:
     #        self.assertEqual(7, result)
 
     def test_query_include_count(self):
@@ -288,8 +288,8 @@ class TestQuery(unittest.TestCase):
         query = content_type.query()
         query.locale('en-us')
         query.include_count()
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(7, len(result))
 
     def test_query_include_content_type(self):
@@ -298,8 +298,8 @@ class TestQuery(unittest.TestCase):
         query = content_type.query()
         query.locale('en-us')
         query.include_content_type()
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(7, len(result))
 
     def test_query_include_owner(self):
@@ -307,8 +307,8 @@ class TestQuery(unittest.TestCase):
         content_type = self.stack_query.content_type('product')
         query = content_type.query()
         query.include_owner()
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(7, len(result))
 
     def test_query_before_uid(self):
@@ -316,8 +316,8 @@ class TestQuery(unittest.TestCase):
         content_type = self.stack_query.content_type('product')
         query = content_type.query()
         query.before_uid('')
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(7, len(result))
 
     def test_query_after_uid(self):
@@ -325,8 +325,8 @@ class TestQuery(unittest.TestCase):
         content_type = self.stack_query.content_type('product')
         query = content_type.query()
         query.after_uid('')
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(7, len(result))
 
     def test_query_skip(self):
@@ -334,8 +334,8 @@ class TestQuery(unittest.TestCase):
         content_type = self.stack_query.content_type('product')
         query = content_type.query()
         query.skip(3)
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(4, len(result))
 
     def test_query_limit(self):
@@ -343,8 +343,8 @@ class TestQuery(unittest.TestCase):
         content_type = self.stack_query.content_type('product')
         query = content_type.query()
         query.limit(3)
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(3, len(result))
 
     def test_query_regex(self):
@@ -352,8 +352,8 @@ class TestQuery(unittest.TestCase):
         content_type = self.stack_query.content_type('product')
         query = content_type.query()
         query.regex('key', 'regex', 'modifiers')
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(0, len(result))
 
     def test_query_search(self):
@@ -361,8 +361,8 @@ class TestQuery(unittest.TestCase):
         content_type = self.stack_query.content_type('product')
         query = content_type.query()
         query.search('somekey')
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(0, len(result))
 
     def test_query_param(self):
@@ -370,6 +370,6 @@ class TestQuery(unittest.TestCase):
         content_type = self.stack_query.content_type('product')
         query = content_type.query()
         query.param('somekey', 'somevalue')
-        result, error = query.find()
-        if error is None:
+        result = query.find()
+        if result is not None:
             self.assertEqual(7, len(result))
