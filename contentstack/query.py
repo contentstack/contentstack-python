@@ -25,6 +25,7 @@
 
 
 class Query:
+
     """
     Contentstack provides certain queries that you can use to fetch filtered results.
     You can use queries for Entries and Assets API requests.
@@ -307,12 +308,12 @@ class Query:
 
         return self
 
-    def or_query(self, queries: list):
+    def or_query(self, *queries):
 
         """
 
         :param queries: list of queries
-        :type queries: list
+        :type queries: Query
         :return: self
         :rtype: Query object, so you can chain this call.
 
@@ -334,9 +335,8 @@ class Query:
         query2 = content_type.query()
         query2.where("color", "Gold")
 
-        list_array = [query1, query2]
+        cs_query.or_query(query1, query2)
 
-        cs_query.or_query(list_array)
         result = cs_query.find()
 
         """
@@ -380,7 +380,7 @@ class Query:
         """
 
         if key and value is None:
-            raise ValueError('Invalid Argumets')
+            raise ValueError('Invalid Arguments')
         self.__query_value["$lt"] = value
         if isinstance(key, str):
             self.__query_dict[key] = self.__query_value
@@ -922,6 +922,7 @@ class Query:
         query = stack.content_type("content_type_id").query()
         query.regex("name", "browser")
         result, error = query.find()
+
         """
         if key is not None and regex is not None and modifiers is not None \
                 and isinstance(key, str) and isinstance(regex, str) \
@@ -1020,7 +1021,6 @@ class Query:
                 self.__query_params["limit"] = limit
         else:
             raise KeyError('Invalid content_type id ')
-
         pass
 
     def __execute_query(self):

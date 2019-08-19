@@ -88,7 +88,7 @@ class TestQuery(unittest.TestCase):
         # adding query in list
         list_array = [query1, query2]
         # passing query list in and_query
-        query.or_query(list_array)
+        query.or_query(query1, query2)
         result = query.find()
         if result is not None:
             self.assertEqual(5, len(result))
@@ -254,7 +254,7 @@ class TestQuery(unittest.TestCase):
         query = content_type.query()
         query.locale('en-us')
         fields = ['gold', 'silver']
-        query.only_with_reference_uid(fields, 'reference_field_uid')
+        query.only_with_reference_uid(fields, 'categories')
         result = query.find()
         if result is not None:
             self.assertEqual(7, len(result))
@@ -267,7 +267,7 @@ class TestQuery(unittest.TestCase):
         query = content_type.query()
         query.locale('en-us')
         listfield = ['gold', 'silver']
-        query.except_with_reference_uid(listfield, 'reference_field_uid')
+        query.except_with_reference_uid(listfield, 'categories')
         result = query.find()
         if result is not None:
             self.assertEqual(7, len(result))
