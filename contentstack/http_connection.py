@@ -1,3 +1,8 @@
+
+from json import JSONDecodeError
+import logging
+
+
 class HTTPConnection:
 
     def __init__(self, url: str, query: dict, headers: dict):
@@ -32,42 +37,37 @@ class HTTPConnection:
             # requesting for url, payload and headers
             response: Response = requests.get(self.url, params=payload, headers=self.headers)
             # if response.status_code = 200
+            # logging.info('Request url :: -> ', response.url)
             if response.ok:
 
                 # Decode byte response to json
                 result = response.json()
+                logging.info('url={}\nresponse={}'.format(response.url, result))
                 # If result contains stack, return json response
                 if 'stack' in result:
                     return result['stack']
-
                 # If result contains entry, return Entry
                 if 'entry' in result:
                     dict_entry = result['entry']
                     return self.__parse_entries(dict_entry)
-
                 # If result contains entries, return list[Entry]
                 if 'entries' in result:
                     entry_list = result['entries']
                     return self.__parse_entries(entry_list)
-
                 # If result contains asset, return Asset
                 if 'asset' in result:
                     dict_asset = result['asset']
                     return self.__parse_assets(dict_asset)
-
                 # If result contains assets, return list[Asset]
                 if 'assets' in result:
                     asset_list = result['assets']
                     return self.__parse_assets(asset_list)
-
                 # If result contains content_type,return content_type json
                 if 'content_type' in result:
                     return result['content_type']
-
                 # If result contains content_types,return content_types json
                 if 'content_types' in result:
                     return result['content_types']
-
                 # If result contains items, return SyncResult json
                 if 'items' in result:
                     sync_result = SyncResult().configure(result)
@@ -77,11 +77,12 @@ class HTTPConnection:
                 err = response.json()
                 if err is not None:
                     return Error().config(err)
-                    # raise ContentstackError('Server Error Code {} Message: {}'.format(error_code, error_message))
 
         except requests.RequestException as err:
-            # Error().config(err)
-            raise ConnectionError(err)
+            if isinstance(err, ConnectionError):
+                raise ConnectionError(err)
+        except JSONDecodeError:
+            raise ValueError("Inappropriate response")
 
     @staticmethod
     def __parse_entries(result):
@@ -96,7 +97,6 @@ class HTTPConnection:
                 for entry_obj in result:
                     each_entry = Entry().configure(entry_obj)
                     entries.append(each_entry)
-
                 return entries
 
     @staticmethod
@@ -117,7 +117,6 @@ class HTTPConnection:
 
     @staticmethod
     def __user_agents() -> dict:
-
         import contentstack
         import platform
 
@@ -143,3 +142,10 @@ class HTTPConnection:
 
         local_headers = {'X-User-Agent': str(header), "Content-Type": 'application/json'}
         return local_headers
+
+    # def is_json(self, myjson):
+    #    try:
+    #        json.loads(myjson.json())
+    #        return True
+    #    except JSONDecodeError:
+    #        return False
