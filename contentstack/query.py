@@ -15,7 +15,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -30,27 +30,34 @@ class Query:
     Contentstack provides certain queries that you can use to fetch filtered results.
     You can use queries for Entries and Assets API requests.
     [API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#queries]
+
     """
 
-    def __init__(self, content_type_id: str):
+    def __init__(self, content_type_uid):
 
-        import contentstack
-        if content_type_id is not None and len(content_type_id) > 0:
-            self.__content_type_id = content_type_id
-            self.__entry_url = contentstack.config.Config().endpoint('entries')
-            self.__entry_url = '{}/{}/entries'.format(self.__entry_url, self.__content_type_id)
-        else:
-            ValueError('Invalid content_type_id, content_type_id could not be None or empty')
+        """
+        :param content_type_uid: the unique ID of the content type of which you wish to retrieve the details. The uid
+        is generated based on the title of the content type and it is unique across a stack
+        :type content_type_uid: str
 
+        Example.
+            query = self.stack_query.content_type('product').query()
+        """
+
+        if content_type_uid is None:
+            raise ValueError('Kindly provide valid content_type_uid')
+        if isinstance(content_type_uid, str) and len(content_type_uid) > 0:
+            self.__content_type_id = content_type_uid
+
+        self.__config = None
+        self.__entry_url = None
         self.__stack_instance = None
         self.__http_request = None
-        self.__stack_headers = {}
-        self.__query_params = {}
-
         self.__uid_include: list = []
         self.__uid_except: list = []
         self.__uid_only: list = []
-
+        self.__stack_headers = {}
+        self.__query_params = {}
         self.__query_value = {}
         self.__only_json = {}
         self.__query_dict = {}
@@ -58,110 +65,212 @@ class Query:
         self.__main_json = {}
 
     def instance(self, stack_instance):
+
+        """
+        This method is used to set stack instance to the query
+        :param stack_instance: It contains stack instance and other configurations to setup
+        :type stack_instance: <http_connection.HttpConnection>
+        :return: self
+        :rtype: Query
+
+        """
         self.__stack_instance = stack_instance
+        self.__config = self.__stack_instance.config
         self.__stack_headers.update(self.__stack_instance.headers)
+        endpoint = self.__config.endpoint
+        self.__entry_url = '{}/content_types/{}/entries'.format(endpoint, self.__content_type_id)
         if self.__stack_headers is not None:
             if 'environment' in self.__stack_headers:
                 self.__query_params['environment'] = self.__stack_headers['environment']
-        self.__http_request = self.__stack_instance.http_request
+        self.__http_request = self.__stack_instance.get_http_instance
+
+        return self
 
     @property
     def content_type(self):
+
+        """
+        :return: This is used to return content_type_uid of stack
+        :rtype: str
+
+        Example: query = query.content_type
+
+        """
         return self.__content_type_id
 
     @content_type.setter
     def content_type(self, content_type_id):
-        if content_type_id is not None and len(content_type_id) > 0:
-            self.__content_type_id = content_type_id
+
+        """
+        The unique ID of the content type of which you wish to retrieve the details. The uid is generated based on
+        the title of the content type and it is unique across a stack
+        :param content_type_id: unique ID of the content type of which you wish to retrieve information
+        :type content_type_id: str
+        :return: dost not return anything
+        :rtype: Query
+
+        Example: query = query.content_type = 'product'
+
+        """
+        if content_type_id is not None:
+            if isinstance(content_type_id, str) and len(content_type_id) > 0:
+                self.__content_type_id = content_type_id
+            else:
+                raise ValueError('Kindly provide a valid input')
         else:
-            ValueError('Invalid content_type_id, '
-                       'content_type_id could not be None or empty')
+            raise ValueError('Invalid content_type_id')
+
+        return self
 
     @property
     def headers(self):
+
+        """
+        Returns headers for Contentstack rest calls.
+        :return: returns headers for the stack
+        :rtype: dict
+
+        Example: query = query.headers
+
+        """
         return self.__stack_headers
 
     def remove_header(self, key):
-        if key in self.__stack_headers:
+
+        """
+
+        :param key: Remove header key.
+        :type key: str
+        :return: self
+        :rtype: Query
+
+        Example. query = query.remove_header('api_key')
+
+        """
+        if key is None:
+            raise ValueError('Invalid Arguments')
+        if isinstance(key, str) and key in self.__stack_headers:
             self.__stack_headers.pop(key)
         return self.__stack_headers
 
     def add_header(self, key, value):
-        if key is not None and value is not None:
+
+        """
+        :param key: Add header key.
+        :type key: str
+        :param value: add header value of respetive key
+        :type value: str
+        :return: self
+        :rtype: Query
+
+        Example. query = query.add_header('key', value)
+
+        """
+        if key and value is None:
+            raise ValueError('Invalid Arguments')
+        if isinstance(key, str):
             self.__stack_headers[key] = value
+        else:
+            raise ValueError('Kindly provide a valid arguments')
+
         return self.__stack_headers
 
-    def locale(self, locale_code: str):
-        if locale_code is not None and isinstance(locale_code, str):
-            self.__query_params["locale"] = locale_code
+    def locale(self, locale):
+
+        """
+        Enter the language code of which the entries needs to be included.
+        Only the entries published in this locale will be displayed.
+        :param locale: Enter the language code of which the entries needs to be included.
+        :type locale: str
+        :return: self
+        :rtype: Query
+
+        Example: if locale is 'en-us'
+        query = query.locale('en-us')
+
+        """
+        if locale is None:
+            raise ValueError('Kindly provide a valid input')
+        if isinstance(locale, str):
+            self.__query_params['locale'] = locale
+        else:
+            raise ValueError('Kindly provide a valid input')
+
         return self
 
-    def where(self, key: str, value):
+    def where(self, key, value):
 
         """
         :param key: field_UID
+        :type key: str
         :param value: provide value as str
+        :type value: str
         :return: self
+        :rtype: Query
 
         [Equals Operator]
+
         Get entries containing the field values matching the condition in the query.
         Example: In the Products content type, you have a field named Title ("uid":"title") field.
         If, for instance, you want to retrieve all the entries in which the value for
         the Title field is 'Redmi 3S', you can set the parameters as:
 
         [Example]
-        query = stack.contentType("content_type_id").query();
+
         query.where('title', 'Redmi 3S')
-        result, error = query.find()
 
         """
-
-        if key is not None and value is not None and len(key) > 0 and len(value) > 0:
+        if key and value is None:
+            raise ValueError('Invalid Arguments')
+        if isinstance(key, str):
             self.__query_dict[key] = value
         else:
-            raise TypeError('Kindly provide valid parameters')
+            raise ValueError('Kindly provide a valid input')
+
         return self
 
-    def add_query(self, key: str, value):
+    def add_query(self, key, value):
 
         """
-        :param value value:
-        :param key key:
-        :returns Query object, so you can chain this call.
+        :param key: parameter
+        :type key:
+        :param value:
+        :type value:
+        :return: self
+        :rtype: Query object, so you can chain this call
 
-        [Uses]:
-        query = stack.contentType("content_type_id").query()
+        Example:
+
         query.add_query("query_param_key", "query_param_value")
-        result, error = query.find()
-        if error is None:
-            print(result)
+
         """
 
-        if key is not None and value is not None:
+        if key and value is None:
+            raise ValueError('Invalid Input')
+        if isinstance(key, str):
             self.__query_params[key] = value
         else:
-            raise TypeError('Kindly provide valid parameters')
+            raise ValueError('Kindly provide a valid input')
+
         return self
 
-    def remove_query(self, key: str):
+    def remove_query(self, key):
 
         """
         Remove provided query key from custom query if exist.
-        :param key Query name to remove.
-        :return: Query object, so you can chain this call.
+        :param key: key Query name to remove.
+        :type key: str
+        :return: self
+        :rtype:  Query object, so you can chain this call.
 
-        [Uses]:
-        query = stack.contentType("content_type_id").query();
-        projectQuery.remove_query("query_key")
-        result, error = query.find()
-        if error is None:
-            print(result)
+        example -> query.remove_query("query_key")
+
         """
-
-        if key is not None and key in self.__query_params:
+        if key is None:
+            raise ValueError('Invalid input')
+        if key in self.__query_params:
             self.__query_params.pop(key)
-        else:
-            raise TypeError('Kindly provide valid parameters')
+
         return self
 
     def and_query(self, queries: list):
@@ -169,11 +278,13 @@ class Query:
         """
         Combines all the queries together using AND operator
         :param queries: list of Query instances on which AND query executes.
+        :type queries: list
         :return: self
+        :rtype: Query
 
-        [Uses]:
+        Example.
+
         query = stack.content_type("content_type_id").query()
-
         query = content_type.query()
         query.where("title", "Redmi Note 3")
 
@@ -182,13 +293,12 @@ class Query:
 
         list_array = [query, sub_query]
         base_query.and_query(list_array)
-        result, error = query.find()
-        if error is None:
-            print(result)
+        result = query.find()
 
         """
-
-        if queries is not None and len(queries) > 0 and isinstance(queries, list):
+        if queries is None:
+            raise ValueError('Invalid input')
+        if isinstance(queries, list) and len(queries) > 0:
             query_list: list = []
             for query in queries:
                 query_list.append(query.__query_dict)
@@ -198,11 +308,15 @@ class Query:
 
         return self
 
-    def or_query(self, queries: list):
+    def or_query(self, *queries):
 
         """
-        :param queries: list
+
+        :param queries: list of queries
+        :type queries: Query
         :return: self
+        :rtype: Query object, so you can chain this call.
+
 
         Get all entries that satisfy at least one
         of the given conditions provided in the '$or' query.
@@ -212,34 +326,41 @@ class Query:
         Color field is 'Gold' or 'Black'.
         The query to be used for such a case would be:
 
-        cs_query = stack.content_type("content_type_id").query()
+        Example.
 
+        cs_query = stack.content_type("content_type_id").query()
         query1 = content_type.query()
         query1.where("color", "Black")
 
         query2 = content_type.query()
         query2.where("color", "Gold")
 
-        list_array = [query1, query2]
+        cs_query.or_query(query1, query2)
 
-        cs_query.or_query(list_array)
-        result, error = cs_query.find()
+        result = cs_query.find()
 
         """
 
-        if queries is not None and len(queries) > 0:
-            query_list: list = []
-            for query in queries:
-                query_list.append(query.__query_dict)
-            self.__query_dict["$or"] = query_list
-        else:
-            raise TypeError('Kindly provide valid parameters')
+        if queries is None:
+            raise ValueError('Invalid argument')
+        query_list: list = []
+        for query in queries:
+            query_list.append(query.__query_dict)
+        self.__query_dict["$or"] = query_list
 
         return self
 
-    def less_than(self, key: str, value):
+    def less_than(self, key, value):
 
         """
+
+        :param key: the key to be constrained.
+        :type key: str
+        :param value: value the value that provides an upper bound.
+        :type value:
+        :return: self
+        :rtype: Query object, so you can chain this call.
+
         Get entries in which the value of a field is lesser
         than the value provided in the condition.
 
@@ -248,23 +369,23 @@ class Query:
         field set to a value that is less than but not
         equal to 600. You can send the parameter as:
 
-        :param key the key to be constrained.
-        :param value the value that provides an upper bound.
-        :returns  Query object, so you can chain this call.
+        Example.
 
-        [Example :]
         content_type = self.stack_query.content_type('product')
         query = content_type.query()
         query.locale('en-us')
         query.less_than('price_in_usd', 600)
         result, error = query.find()
+
         """
 
-        if key is not None and value is not None:
-            self.__query_value["$lt"] = value
+        if key and value is None:
+            raise ValueError('Invalid Arguments')
+        self.__query_value["$lt"] = value
+        if isinstance(key, str):
             self.__query_dict[key] = self.__query_value
         else:
-            raise TypeError('Kindly provide valid parameters')
+            raise TypeError('Kindly provide valid KEY')
 
         return self
 
@@ -801,6 +922,7 @@ class Query:
         query = stack.content_type("content_type_id").query()
         query.regex("name", "browser")
         result, error = query.find()
+
         """
         if key is not None and regex is not None and modifiers is not None \
                 and isinstance(key, str) and isinstance(regex, str) \
@@ -887,7 +1009,9 @@ class Query:
             raise KeyError('Invalid content_type id ')
 
     def find_one(self):
+
         limit = -1
+
         if self.__content_type_id is not None and len(self.__content_type_id) > 0:
             if self.__query_params is not None and "limit" in self.__query_params:
                 limit = self.__query_params["limit"]
@@ -897,72 +1021,12 @@ class Query:
                 self.__query_params["limit"] = limit
         else:
             raise KeyError('Invalid content_type id ')
-
         pass
 
-    def __execute_query(self) -> tuple:
+    def __execute_query(self):
 
-        import requests
-        from urllib import parse
-        from requests import Response
-        from contentstack import Entry
-        error = None
-
+        # Example:
+        # https://cdn.contentstack.io/v3/content_types/product/entries?environment=production&locale=en-us
         self.__setup_queries()
-        self.__stack_headers.update(self.header_agents())
-        payload = parse.urlencode(query=self.__query_params, encoding='UTF-8')
-
-        try:
-            response: Response = requests.get(self.__entry_url, params=payload, headers=self.__stack_headers)
-            entries: list[Entry] = []
-
-            if response.ok:
-
-                result = response.json()
-                if 'entries' in result:
-                    resp: dict = result['entries']
-                    if isinstance(resp, list):
-                        for obj in resp:
-                            entry = Entry()
-                            entry.configure(obj)
-                            entries.append(entry)
-                    else:
-                        entries = resp
-                else:
-                    pass
-            else:
-                error = response.json()
-
-            return entries, error
-
-        except requests.exceptions.RequestException as e:
-            raise ConnectionError(e.response)
-
-    @classmethod
-    def header_agents(cls) -> dict:
-
-        import contentstack
-        import platform
-
-        """
-        Contentstack-User-Agent header.
-        """
-        header = {'sdk': dict(name=contentstack.__package__, version=contentstack.__version__)}
-        os_name = platform.system()
-
-        if os_name == 'Darwin':
-            os_name = 'macOS'
-
-        elif not os_name or os_name == 'Java':
-            os_name = None
-
-        elif os_name and os_name not in ['macOS', 'Windows']:
-            os_name = 'Linux'
-
-        header['os'] = {
-            'name': os_name,
-            'version': platform.release()
-        }
-
-        local_headers = {'X-User-Agent': str(header), "Content-Type": 'application/json'}
-        return local_headers
+        result = self.__http_request.get_result(self.__entry_url, self.__query_params, self.__stack_headers)
+        return result

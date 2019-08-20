@@ -8,7 +8,6 @@ __endpoint__ = 'cdn.contentstack.io'
 
 from .entry import Entry
 from .asset import Asset
-from .asset_library import AssetLibrary
 from .config import Config
 from .content_type import ContentType
 from .errors import Error, ConfigError
@@ -16,6 +15,7 @@ from .http_connection import HTTPConnection
 
 # Set a default logger to prevent "No handler found" warnings
 import logging
+
 try:
     from logging import NullHandler
 except ImportError:

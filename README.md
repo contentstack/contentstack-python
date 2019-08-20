@@ -17,8 +17,7 @@ To use the Contentstack Python SDK to your existing project, perform the steps g
 
 1. **pip**
 ```
-Need to add pip version
-
+Not created: (Waiting for repository to get public)
 ```
 
 
@@ -50,9 +49,9 @@ A publishing environment corresponds to one or more deployment servers or a cont
 
 #### Initializing your SDK
 
-To initialize the SDK, specify application  API key, access token, and environment name of the stack as shown in the snippet given below:
+To initialize the SDK, specify application  API key, access token, and environment name of the stack as shown in the snippet given below (config is optional):
 ```
-stack = Contentstack.Stack( api_key="api_key", access_token="access_token", environment="environment")
+stack = contentstack.Stack(api_key=api_key, access_token=access_token, environment=environment, config=config)
 ```
 To get the API credentials mentioned above, log in to your Contentstack account and then in your top panel navigation, go to Settings &gt; Stack to view the API Key and Access Token.
 
@@ -63,19 +62,19 @@ To get the API credentials mentioned above, log in to your Contentstack account 
 To retrieve a single entry from a content type use the code snippet given below:
 
 ```
-content_type: ContentType = stack.content_type("content_type_uid")
-blog_entry: Entry = content_type.entry("entry_uid")
-result = blog_entry.fetch()
-  ```
+content_type = stack.content_type("content_type_uid")
+entry: Entry = content_type.entry("entry_uid")
+result = entry.find()
+```
 ##### Get Multiple Entries
 
 To retrieve multiple entries of a particular content type, use the code snippet given below:
 
 ```
 //stack is an instance of Stack class
-blog_query = stack.content_type("content_type_uid").query()
-result = blog_query.find()
-  ```
+query = stack.content_type("content_type_uid").query()
+result = query.find()
+```
 
 
 ### Advanced Queries

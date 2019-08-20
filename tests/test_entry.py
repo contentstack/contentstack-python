@@ -1,7 +1,6 @@
 import logging
 import unittest
-
-from contentstack import Entry
+from contentstack import Entry, Config
 from contentstack.stack import Stack
 
 
@@ -14,8 +13,9 @@ class TestEntry(unittest.TestCase):
         api_key: str = 'blt20962a819b57e233'
         access_token: str = 'cs18efd90468f135a3a5eda3ba'
         env_prod: str = 'production'
-        self.entry_uid = 'blt9965f5f9840923ba'
-        self.stack_entry = Stack(api_key=api_key, access_token=access_token, environment=env_prod)
+        self.entry_uid = 'bltb0256a89e2225a39'
+        config = Config().host('cdn.contentstack.io')
+        self.stack_entry = Stack(api_key=api_key, access_token=access_token, environment=env_prod, config=config)
 
     def test_entry_by_uid(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
@@ -33,7 +33,7 @@ class TestEntry(unittest.TestCase):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
         result: Entry = _entry.fetch()
         if result is not None:
-            self.assertEqual("", result.urls)
+            self.assertEqual('/mobiles/redmi-note-3', result.urls)
 
     def test_entry_tags(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
@@ -73,7 +73,7 @@ class TestEntry(unittest.TestCase):
         _entry.locale = 'en-us'
         result: Entry = _entry.fetch()
         if result is not None:
-            self.assertEqual('blt9965f5f9840923ba', result.get('uid'))
+            self.assertEqual(self.entry_uid, result.get('uid'))
 
     def test_entry_string(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
@@ -102,7 +102,7 @@ class TestEntry(unittest.TestCase):
         _entry.locale = 'en-us'
         result = _entry.fetch()
         if result is not None:
-            json_result = _entry.get_int('color')
+            json_result = _entry.get('color')
             self.assertFalse(None, type(json_result))
 
     def test_entry_get_created_at(self):
