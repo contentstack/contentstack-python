@@ -25,8 +25,8 @@
 class OrderType(object):
 
     """
-    OrderType is used to choose one of the ascending and descending
-    It returns either ascending or descending
+    OrderType is used to choose one of the ascending or descending
+
     """
     ASC, DESC = range(0, 2)
 
