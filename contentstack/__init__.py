@@ -18,8 +18,6 @@ import logging
 
 try:
     from logging import NullHandler
-    # logging.basicConfig(filename='cs.log', format='%(asctime)s - %(message)s', level=logging.DEBUG)
-    # logging.getLogger("__init__.py")
 except ImportError:
     class NullHandler(logging.Handler):
         def emit(self, record):
