@@ -1,7 +1,6 @@
 import logging
 import unittest
 from contentstack import Asset, Error
-from contentstack.asset_library import  OrderType
 from contentstack.stack import Stack
 
 
@@ -122,7 +121,7 @@ class TestAsset(unittest.TestCase):
             if isinstance(result, Asset):
                 sallie: str = result.update_at
                 var_shailesh, fileid = sallie.split('T')
-                self.assertEqual('2017-01-10', var_shailesh)
+                self.assertEqual('2019-08-14', var_shailesh)
             else:
                 self.assertFalse(True)
 
@@ -158,14 +157,15 @@ class TestAsset(unittest.TestCase):
             self.assertEqual(list, type(result))
 
     def test_asset_library_check(self):
-        _asset_library = self.__stack.asset_library()
+        _asset_library = self.__stack.asset()
         result = _asset_library.fetch_all()
         if result is not None:
             self.assertEqual(list, type(result))
 
     def test_asset_library_example(self):
-        _asset_library = self.__stack.asset_library()
-        _asset_library.sort('keyOrder', OrderType.ASC)
+        from contentstack.asset import OrderType
+        _asset_library = self.__stack.asset()
+        _asset_library.sort('title', OrderType.DESC)
         result = _asset_library.fetch_all()
         if result is not None:
             self.assertEqual(list, type(result))
