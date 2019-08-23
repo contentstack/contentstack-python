@@ -1053,7 +1053,11 @@ class Query:
             query.where_in("brand");
             result = query.find()
         """
-        self.__query_dict = {key: {'$in_query': self.__query_dict}}
+        if key is not None and isinstance(key, str):
+            self.__query_dict = {key: {'$in_query': self.__query_dict}}
+        else:
+            raise ValueError('Kindly provide a valid key')
+        return self
 
     def where_not_in(self, key):
 
@@ -1070,7 +1074,11 @@ class Query:
             query.where_not_in("brand");
             result = query.find()
         """
-        self.__query_dict = {key: {'$nin_query': self.__query_dict}}
+        if key is not None and isinstance(key, str):
+            self.__query_dict = {key: {'$nin_query': self.__query_dict}}
+        else:
+            raise ValueError('Kindly provide a valid key')
+        return self
 
     def __execute_query(self):
         # Example:
