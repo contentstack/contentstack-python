@@ -366,10 +366,33 @@ class TestQuery(unittest.TestCase):
             self.assertEqual(0, len(result))
 
     def test_query_param(self):
-
         content_type = self.stack_query.content_type('product')
         query = content_type.query()
         query.param('somekey', 'somevalue')
         result = query.find()
         if result is not None:
             self.assertEqual(7, len(result))
+
+    def test_query_in_query_reference(self):
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale("en-us")
+        query.where("title", "Apple Inc")
+        query.where_in("brand")
+        result = query.find()
+        if result is not None:
+            self.assertEqual(7, len(result))
+        else:
+            self.assertTrue(False)
+
+    def test_query_not_in_query_reference(self):
+        content_type = self.stack_query.content_type('product')
+        query = content_type.query()
+        query.locale("en-us")
+        query.where("title", "Apple Inc")
+        query.where_not_in("brand")
+        result = query.find()
+        if result is not None:
+            self.assertEqual(7, len(result))
+        else:
+            self.assertTrue(False)

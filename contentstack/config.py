@@ -24,7 +24,6 @@
 """
 import logging
 
-
 logging.basicConfig(filename='cs.log', format='%(asctime)s - %(message)s', level=logging.INFO)
 logging.getLogger("Config")
 
@@ -38,7 +37,7 @@ class Config(object):
     def __init__(self):
 
         # It initialises the Config with the default endpoint
-        self.default = dict(protocol="https", host="cdn.contentstack.io", port=443, version="v3")
+        self.default = dict(protocol="https", region="us", host="cdn.contentstack.io", port=443, version="v3")
 
     def host(self, host):
 
