@@ -25,7 +25,6 @@
 
 
 class Query:
-
     """
     Contentstack provides certain queries that you can use to fetch filtered results.
     You can use queries for Entries and Assets API requests.
@@ -375,7 +374,7 @@ class Query:
         query = content_type.query()
         query.locale('en-us')
         query.less_than('price_in_usd', 600)
-        result, error = query.find()
+        result = query.find()
 
         """
 
@@ -407,7 +406,7 @@ class Query:
         [ Example :]
         cs_query = stack.content_type("content_type_id").query();
         query.less_than_or_equal_to('price_in_usd', 146)
-        result, error = query.find()
+        result = query.find()
 
         """
 
@@ -431,7 +430,7 @@ class Query:
         [ Example :]
         cs_query = stack.content_type("content_type_id").query();
         query.greater_than('price_in_usd', 146)
-        result, error = query.find()
+        result = query.find()
 
         """
 
@@ -455,7 +454,7 @@ class Query:
         [ Example :]
         cs_query = stack.content_type("content_type_id").query();
         query.greater_than_or_equal_to('price_in_usd', 146)
-        result, error = query.find()
+        result = query.find()
 
         """
 
@@ -480,7 +479,7 @@ class Query:
         [ Example :]
         cs_query = stack.content_type("content_type_id").query();
         query.not_equal_to('price_in_usd', 146)
-        result, error = query.find()
+        result = query.find()
         """
 
         if key is not None and value is not None:
@@ -506,7 +505,7 @@ class Query:
         query.locale('en-us')
         in_list = [101, 749]
         query.contained_in('price_in_usd', in_list)
-        result, error = query.find()
+        result = query.find()
 
         """
         if key is not None and values is not None:
@@ -533,7 +532,7 @@ class Query:
         query.locale('en-us')
         in_list = [101, 749]
         query.not_contained_in('price_in_usd', in_list)
-        result, error = query.find()
+        result = query.find()
 
         """
 
@@ -559,7 +558,7 @@ class Query:
         [ Example :]
         query = content_type.query()
         query.exists('price_in_usd')
-        result, error = query.find()
+        result = query.find()
         """
         if key is not None:
             self.__query_value["$exists"] = 'true'
@@ -580,7 +579,7 @@ class Query:
         [ Example :]
         query = content_type.query()
         query.not_exists('price_in_usd')
-        result, error = query.find()
+        result = query.find()
 
         """
         if key is not None:
@@ -609,7 +608,7 @@ class Query:
        [ Example :]
        query = content_type.query()
        query.include_reference('categories')
-       result, error = query.find()
+       result = query.find()
 
        """
         if key is not None and isinstance(key, str):
@@ -630,7 +629,7 @@ class Query:
         query = content_type.query()
         tags = ['black', 'gold', 'silver']
         query.tags(tags)
-        result, error = query.find()
+        result = query.find()
 
         """
         if tags is not None and len(tags) > 0 and isinstance(tags, list):
@@ -653,7 +652,7 @@ class Query:
         [Example :]
         query = content_type.query()
         query.ascending('price_in_usd')
-        result, error = query.find()
+        result = query.find()
 
         """
         if key is not None:
@@ -674,7 +673,7 @@ class Query:
         [Example]
         query = content_type.query()
         query.descending('price_in_usd')
-        result, error = query.find()
+        result = query.find()
 
         """
         if key is not None:
@@ -695,7 +694,7 @@ class Query:
         [Example]
         query = stack.content_type("content_type_id").query()
         query.except_field_uid(fields)
-        result, error = query.find()
+        result = query.find()
 
         """
 
@@ -719,7 +718,7 @@ class Query:
         query = stack.content_type("content_type_id").query()
         fields: list = ['A', 'B', 'C']
         query.except(fields)
-        result, error = query.find()
+        result = query.find()
 
         """
         if field_uid is not None and len(field_uid) > 0:
@@ -743,7 +742,7 @@ class Query:
         query = stack.content_type("content_type_id").query()
         fields: list = ['A', 'B', 'C']
         query.only_with_reference_uid(fields, 'gold')
-        result, error = query.find()
+        result = query.find()
 
         """
         if field_uid is not None and reference_field_uid is not None:
@@ -772,7 +771,7 @@ class Query:
         query = stack.content_type("content_type_id").query()
         fields: list = ['description', 'name']
         query.only_with_reference_uid(fields, 'for_bug')
-        result, error = query.find()
+        result = query.find()
         """
 
         if field_uid is not None and reference_field_uid is not None:
@@ -798,7 +797,7 @@ class Query:
         [Example]
         query = stack.content_type("content_type_id").query()
         query.include_count()
-        result, error = query.find()
+        result = query.find()
         """
         self.__query_params["include_count"] = "true"
 
@@ -813,7 +812,7 @@ class Query:
         [Example]
         query = stack.content_type("content_type_id").query()
         query.include_content_type()
-        result, error = query.find()
+        result = query.find()
         """
 
         if "include_schema" in self.__query_params:
@@ -831,7 +830,7 @@ class Query:
         [Example]
         query = stack.content_type("content_type_id").query()
         query.include_owner()
-        result, error = query.find()
+        result = query.find()
 
         """
         self.__query_params["include_owner"] = "true"
@@ -847,7 +846,7 @@ class Query:
         [Example]
         query = stack.content_type("content_type_id").query()
         query.before_uid()
-        result, error = query.find()
+        result = query.find()
 
         """
         if uid is not None and isinstance(uid, str):
@@ -864,7 +863,7 @@ class Query:
         [Example]
         query = stack.content_type("content_type_id").query()
         query.after_uid()
-        result, error = query.find()
+        result = query.find()
 
         """
         if uid is not None and isinstance(uid, str):
@@ -882,7 +881,7 @@ class Query:
         [Example]
         query = stack.content_type("content_type_id").query()
         query.skip(3)
-        result, error = query.find()
+        result = query.find()
 
         """
         if number is not None and isinstance(number, int):
@@ -899,7 +898,7 @@ class Query:
         [Example]
         query = stack.content_type("content_type_id").query()
         query.limit(3)
-        result, error = query.find()
+        result = query.find()
 
         """
         if number is not None and isinstance(number, int):
@@ -921,7 +920,7 @@ class Query:
 
         query = stack.content_type("content_type_id").query()
         query.regex("name", "browser")
-        result, error = query.find()
+        result= query.find()
 
         """
         if key is not None and regex is not None and modifiers is not None \
@@ -946,7 +945,7 @@ class Query:
 
         query = stack.content_type("content_type_id").query()
         query.regex("name", "browser")
-        result, error = query.find()
+        result = query.find()
 
         """
         if value is not None and isinstance(value, str):
@@ -964,7 +963,7 @@ class Query:
 
         query = stack.content_type("content_type_id").query()
         query.param("key", "value")
-        result, error = query.find()
+        result = query.find()
 
         """
         if key is not None and value is not None:
@@ -1023,8 +1022,57 @@ class Query:
             raise KeyError('Invalid content_type id ')
         pass
 
-    def __execute_query(self):
+    def include_reference_content_type_uid(self):
 
+        """
+        This method also includes the content type UIDs of the referenced entries returned in the response
+        :return: Query object, so you can chain this call.
+
+        Example:
+
+            query = stack.content_type("content_type_id").query()
+            query.include_reference_content_type_uid()
+            result = query.find()
+
+        """
+        self.__query_params['include_reference_content_type_uid'] = 'true'
+        return self
+
+    def where_in(self, key):
+
+        """
+        Get entries having values based on referenced fields. This query retrieves all entries that satisfy the query
+        conditions made on referenced fields. :param key: The key to be constrained :return: Query object,
+        so you can chain this call.
+
+        Example:
+
+            query = stack.content_type("content_type_id").query()
+            query.locale("en-us");
+            query.where("title","Apple Inc");
+            query.where_in("brand");
+            result = query.find()
+        """
+        self.__query_dict = {key: {'$in_query': self.__query_dict}}
+
+    def where_not_in(self, key):
+
+        """
+        Get entries having values based on referenced fields. This query works the opposite of $in_query and
+        retrieves all entries that does not satisfy query conditions made on referenced fields. :param key: The key
+        to be constrained :return: Query object, so you can chain this call.
+
+        Example:
+
+            query = stack.content_type("content_type_id").query()
+            query.locale("en-us");
+            query.where("title","Apple Inc");
+            query.where_not_in("brand");
+            result = query.find()
+        """
+        self.__query_dict = {key: {'$nin_query': self.__query_dict}}
+
+    def __execute_query(self):
         # Example:
         # https://cdn.contentstack.io/v3/content_types/product/entries?environment=production&locale=en-us
         self.__setup_queries()
