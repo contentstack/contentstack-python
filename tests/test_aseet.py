@@ -30,7 +30,7 @@ class TestAsset(unittest.TestCase):
     def test_asset_relative_urls(self):
         _asset = self.__stack.asset(self.asset_uid)
         _asset.relative_urls()
-        result: Asset = _asset.fetch()
+        result = _asset.fetch()
         if result is not None:
             self.assertNotIn('images.contentstack.io/', result.url)
             logging.debug(result)
