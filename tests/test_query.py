@@ -382,8 +382,7 @@ class TestQuery(unittest.TestCase):
         result = query.find()
         if result is not None:
             self.assertEqual(7, len(result))
-        else:
-            self.assertTrue(False)
+
 
     def test_query_not_in_query_reference(self):
         content_type = self.stack_query.content_type('product')
