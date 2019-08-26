@@ -32,21 +32,27 @@ requirements = [
 setuptools.setup(
 
     name='contentstack',
+
     version=get_version(),
     py_modules=['contentstack'],
     scripts=['dokr'],
-    # packages=find_packages(exclude=['tests']),
+
     url='https://github.com/contentstack/contentstack-python.git',
+
     license='MIT License',
     author='Shailesh Mishra',
     author_email='mshaileshr@gmail.com',
-    description='Create python-based applications and use the python SDK to fetch and deliver content from '
+
+    description='Create python-based applications and use the python '
+                'SDK to fetch and deliver content from '
                 'Contentstack. The SDK uses Content Delivery APIs. ',
+
     install_requires=['requests', 'asset'],
     tests_require=['pytest'],
     long_description=read('README.md'),
-    include_package_data=True,
 
+    include_package_data=True,
+    test_suite='tests',
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
@@ -55,6 +61,4 @@ setuptools.setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    test_suite='tests',
-
 )
