@@ -1,88 +1,98 @@
-
-from json import JSONDecodeError
 import logging
+import requests
+from urllib import parse
+from contentstack import Error
+from json import JSONDecodeError
+from requests.exceptions import Timeout
 
 
-class HTTPConnection:
+class HTTPConnection(object):
 
     def __init__(self, url: str, query: dict, headers: dict):
-
-        if url is not None and query is not None and headers is not None:
+        if None not in (url, query, headers):
             self.url = url
             self.query = query
             self.headers = headers
         else:
-            raise TypeError('Kindly provide valid Arguments')
+            raise ValueError('Kindly provide valid Arguments')
 
     def get_result(self, url: str, query: dict, headers: dict):
 
-        import requests
-        from urllib import parse
-        from requests import Response
-        from contentstack.stack import SyncResult
-        from contentstack import Error
+        """
+        get Results is helpful to make HTTP methods
+        :param url:
+        :param query:
+        :param headers:
+        :return:
+        """
 
-        if url is not None and len(url) > 0:
-            self.url = url
-        if query is not None and len(query) > 0:
-            self.query = query
-        if headers is not None and len(headers) > 0:
-            self.headers = headers
+        if None not in (url, query, headers):
+            if len(url) > 0 and len(headers) > 0:
+                self.url = url
+                self.query = query
+                self.headers = headers
+            else:
+                raise ValueError('Kindly provide a valid input')
 
-        # Adding user agent to headers
+        # Headers from locale
         self.headers.update(self.__user_agents())
         payload = parse.urlencode(query=self.query, encoding='UTF-8')
-
         try:
-            # requesting for url, payload and headers
-            response: Response = requests.get(self.url, params=payload, headers=self.headers)
-            # if response.status_code = 200
-            # logging.info('Request url :: -> ', response.url)
-            if response.ok:
-
-                # Decode byte response to json
-                result = response.json()
-                logging.info('url={}\nresponse={}'.format(response.url, result))
-                # If result contains stack, return json response
-                if 'stack' in result:
-                    return result['stack']
-                # If result contains entry, return Entry
-                if 'entry' in result:
-                    dict_entry = result['entry']
-                    return self.__parse_entries(dict_entry)
-                # If result contains entries, return list[Entry]
-                if 'entries' in result:
-                    entry_list = result['entries']
-                    return self.__parse_entries(entry_list)
-                # If result contains asset, return Asset
-                if 'asset' in result:
-                    dict_asset = result['asset']
-                    return self.__parse_assets(dict_asset)
-                # If result contains assets, return list[Asset]
-                if 'assets' in result:
-                    asset_list = result['assets']
-                    return self.__parse_assets(asset_list)
-                # If result contains content_type,return content_type json
-                if 'content_type' in result:
-                    return result['content_type']
-                # If result contains content_types,return content_types json
-                if 'content_types' in result:
-                    return result['content_types']
-                # If result contains items, return SyncResult json
-                if 'items' in result:
-                    sync_result = SyncResult().configure(result)
-                    return sync_result
+            response = requests.get(self.url, verify=True, timeout=(2, 5), params=payload, headers=self.headers)
+            if response.status_code == 200:
+                # Check if json dictionary is valid decode and parse the dictionary
+                if response.raise_for_status() is None:
+                    return self.__parse_dict(response)
             else:
-                # Decode byte response to json
+                # It helps to set Error object to return with Error Message and Error Code
                 err = response.json()
                 if err is not None:
                     return Error().config(err)
-
-        except requests.RequestException as err:
-            if isinstance(err, ConnectionError):
-                raise ConnectionError(err)
+        except Timeout:
+            raise TimeoutError('The request timed out')
+        except ConnectionError:
+            raise ConnectionError('Connection error occurred')
         except JSONDecodeError:
-            raise ValueError("Inappropriate response")
+            raise JSONDecodeError('Invalid JSON in request')
+
+    def __parse_dict(self, response):
+        # This is the private method to parse the response to their respective type
+        from contentstack.stack import SyncResult
+        # Decode byte response to json
+        result = response.json()
+        logging.info('url={}\nresponse={}'.format(response.url, result))
+
+        # If result contains stack, return json response
+        if 'stack' in result:
+            return result['stack']
+        # If result contains entry, return Entry
+        if 'entry' in result:
+            dict_entry = result['entry']
+            return self.__parse_entries(dict_entry)
+        # If result contains entries, return list[Entry]
+        if 'entries' in result:
+            entry_list = result['entries']
+            return self.__parse_entries(entry_list)
+        # If result contains asset, return Asset
+        if 'asset' in result:
+            dict_asset = result['asset']
+            return self.__parse_assets(dict_asset)
+        # If result contains assets, return list[Asset]
+        if 'assets' in result:
+            asset_list = result['assets']
+            return self.__parse_assets(asset_list)
+        # If result contains content_type,return content_type json
+        if 'content_type' in result:
+            return result['content_type']
+        # If result contains content_types,return content_types json
+        if 'content_types' in result:
+            return result['content_types']
+        # If result contains items, return SyncResult json
+        if 'items' in result:
+            sync_result = SyncResult().configure(result)
+            return sync_result
+
+        return None
 
     @staticmethod
     def __parse_entries(result):
@@ -143,9 +153,13 @@ class HTTPConnection:
         local_headers = {'X-User-Agent': str(header), "Content-Type": 'application/json'}
         return local_headers
 
-    # def is_json(self, myjson):
-    #    try:
-    #        json.loads(myjson.json())
-    #        return True
-    #    except JSONDecodeError:
-    #        return False
+    import json
+
+    @staticmethod
+    def is_valid_json(json_string):
+        import json
+        try:
+            json_object = json.loads(json_string)
+        except ValueError as e:
+            return False
+        return True
