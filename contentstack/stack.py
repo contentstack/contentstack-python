@@ -41,9 +41,9 @@ class Stack(object):
         import contentstack
         >>> stack: Stack = Stack(api_key ='api_key', access_token='access_token', environment='environment')
         [or]
-        >>> configs = Config()
-        >>> configs.host('cdn.contentstack.com')
-        >>> stack: Stack = Stack(api_key ='api_key', access_token='access_token', environment='environment', config=configs)
+        >>> config = Config()
+        >>> config.host('cdn.contentstack.io')
+        >>> stack: Stack = Stack(api_key ='API_key',access_token='access_token',environment='environment',config=config)
 
         """
         self.config = None

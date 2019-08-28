@@ -729,7 +729,7 @@ class Query:
 
         return self
 
-    def only_with_reference_uid(self, field_uid: list, reference_field_uid: str):
+    def only_with_reference_uid(self, *field_uid, reference_field_uid: str):
 
         """
         Specifies an array of only keys that would be included in the response.
@@ -745,18 +745,17 @@ class Query:
         result = query.find()
 
         """
-        if field_uid is not None and reference_field_uid is not None:
-            if isinstance(field_uid, list) and isinstance(reference_field_uid, str):
-                field_value_container: list = []
-                for uid in field_uid:
-                    field_value_container.append(uid)
+        if field_uid and reference_field_uid is not None:
+            field_value_container: list = []
+            for uid in field_uid:
+                field_value_container.append(uid)
+            if isinstance(reference_field_uid, str):
                 self.__only_json[reference_field_uid] = field_value_container
                 self.__uid_include.append(reference_field_uid)
             else:
-                raise TypeError('Kindly provide valid parameters')
+                raise ValueError('Kindly provide valid Argument')
         else:
             raise TypeError('Kindly provide valid parameters')
-
         return self
 
     def except_with_reference_uid(self, field_uid: list, reference_field_uid: str):
