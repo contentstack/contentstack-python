@@ -24,7 +24,6 @@
 
 
 class Error:
-
     """
     contentstack.error
     ~~~~~~~~~~~~~~~~~~
@@ -34,7 +33,6 @@ class Error:
     """
 
     def __init__(self):
-
         """
 
         """
@@ -44,7 +42,6 @@ class Error:
         self.__cause_err = str
 
     def config(self, result: dict):
-
         """
 
         :param result:
@@ -61,7 +58,6 @@ class Error:
 
     @property
     def error_code(self):
-
         """
         It returns error code from the stack response
         :return: error_code as int
@@ -74,7 +70,6 @@ class Error:
 
     @property
     def error_message(self):
-
         """
         Returns error_message from the stack response
         :return: error_message
@@ -88,7 +83,6 @@ class Error:
 
     @property
     def error(self):
-
         """
         This returns error code and error_message in dict formats
         :return: error dict
@@ -101,7 +95,6 @@ class Error:
 
     @property
     def error_info(self) -> dict:
-
         """
         error information
         :return: error information
@@ -161,4 +154,14 @@ class ContentstackError(Exception):
 
 
 class NotSupportedException(Exception):
+    pass
+
+
+class RequestsWarning(Warning):
+    """Base warning for Requests."""
+    pass
+
+
+class FileModeWarning(RequestsWarning, DeprecationWarning):
+    """A file was opened in text mode, but Requests determined its binary length."""
     pass

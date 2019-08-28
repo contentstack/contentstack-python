@@ -1,6 +1,7 @@
 import logging
 import unittest
-from contentstack import Asset, Error
+from contentstack import Asset, Error, Config
+from contentstack.config import ContentstackRegion
 from contentstack.stack import Stack
 
 
@@ -14,8 +15,10 @@ class TestAsset(unittest.TestCase):
         access_token: str = 'blt01638c90cc28fb6f'
         env_prod: str = 'production'
         self.asset_uid: str = 'blt91af1e5af9c3639f'
+        config = Config()
+        config.region(ContentstackRegion.US)
 
-        self.__stack = Stack(api_key=api_key, access_token=access_token, environment=env_prod)
+        self.__stack = Stack(api_key=api_key, access_token=access_token, environment=env_prod, config=config)
 
     def test_single_asset(self):
         _asset: Asset = self.__stack.asset(self.asset_uid)

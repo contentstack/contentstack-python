@@ -3,7 +3,7 @@ import requests
 from urllib import parse
 from contentstack import Error
 from json import JSONDecodeError
-from requests.exceptions import Timeout
+from requests.exceptions import Timeout, HTTPError
 
 
 class HTTPConnection(object):
@@ -19,11 +19,12 @@ class HTTPConnection(object):
     def get_result(self, url: str, query: dict, headers: dict):
 
         """
-        get Results is helpful to make HTTP methods
-        :param url:
-        :param query:
-        :param headers:
-        :return:
+        get Results is helpful to make HTTP request
+        :param url: Request url
+        :param query: query parameters
+        :param headers: headers parameters
+        :return: response
+
         """
 
         if None not in (url, query, headers):
@@ -49,11 +50,18 @@ class HTTPConnection(object):
                 if err is not None:
                     return Error().config(err)
         except Timeout:
+            # If a request times out, a Timeout exception will be raised.
             raise TimeoutError('The request timed out')
         except ConnectionError:
+            # If there is a network problem like a DNS failure, or refused connection the Requests library will raise
+            # a ConnectionError exception.
             raise ConnectionError('Connection error occurred')
         except JSONDecodeError:
+            # Invalid json format response received
             raise JSONDecodeError('Invalid JSON in request')
+        except HTTPError:
+            # With invalid HTTP responses, Requests will also raise an HTTPError exception, but these are rare.
+            raise HTTPError('Http Error Occurred')
 
     def __parse_dict(self, response):
         # This is the private method to parse the response to their respective type
