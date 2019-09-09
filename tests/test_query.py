@@ -249,17 +249,18 @@ class TestQuery(unittest.TestCase):
             self.assertEqual(7, len(result))
 
     def test_query_only_with_reference_uid(self):
+        from contentstack import Error
 
         content_type = self.stack_query.content_type('product')
         query = content_type.query()
         query.locale('en-us')
-        fields = ['gold', 'silver']
-        query.only_with_reference_uid(fields, 'categories')
+        query.only_with_reference_uid('gold', 'silver', reference_field_uid='categories')
         result = query.find()
         if result is not None:
-            self.assertEqual(7, len(result))
-        else:
-            self.assertEqual(141, result.error_code)
+            if isinstance(result, list):
+                self.assertEqual(7, len(result))
+            if isinstance(result, Error):
+                self.assertEqual(141, result.error_code)
 
     def test_query_except_with_reference_uid(self):
 

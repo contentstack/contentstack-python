@@ -1,27 +1,8 @@
-"""
- * MIT License
- *
- * Copyright (c) 2012 - 2019 Contentstack
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- *
- """
+#  Query
+#  contentstack
+#
+#  Created by Shailesh Mishra on 22/06/19.
+#  Copyright © 2019 Contentstack. All rights reserved.
 
 
 class Query:
@@ -729,7 +710,7 @@ class Query:
 
         return self
 
-    def only_with_reference_uid(self, field_uid: list, reference_field_uid: str):
+    def only_with_reference_uid(self, *field_uid, reference_field_uid: str):
 
         """
         Specifies an array of only keys that would be included in the response.
@@ -745,18 +726,17 @@ class Query:
         result = query.find()
 
         """
-        if field_uid is not None and reference_field_uid is not None:
-            if isinstance(field_uid, list) and isinstance(reference_field_uid, str):
-                field_value_container: list = []
-                for uid in field_uid:
-                    field_value_container.append(uid)
+        if field_uid and reference_field_uid is not None:
+            field_value_container: list = []
+            for uid in field_uid:
+                field_value_container.append(uid)
+            if isinstance(reference_field_uid, str):
                 self.__only_json[reference_field_uid] = field_value_container
                 self.__uid_include.append(reference_field_uid)
             else:
-                raise TypeError('Kindly provide valid parameters')
+                raise ValueError('Kindly provide valid Argument')
         else:
             raise TypeError('Kindly provide valid parameters')
-
         return self
 
     def except_with_reference_uid(self, field_uid: list, reference_field_uid: str):
