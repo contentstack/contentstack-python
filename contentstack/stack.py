@@ -1,3 +1,9 @@
+#  Stack
+#  contentstack
+#
+#  Created by Shailesh Mishra on 22/06/19.
+#  Copyright © 2019 Contentstack. All rights reserved.
+
 import logging
 from contentstack import HTTPConnection
 from contentstack import Config
