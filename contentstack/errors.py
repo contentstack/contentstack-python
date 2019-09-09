@@ -1,30 +1,11 @@
-"""
- * MIT License
- * Copyright (c) 2012 - 2019 Contentstack
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- *
-"""
+#  Error
+#  contentstack
+#
+#  Created by Shailesh Mishra on 22/06/19.
+#  Copyright © 2019 Contentstack. All rights reserved.
 
 
 class Error:
-
     """
     contentstack.error
     ~~~~~~~~~~~~~~~~~~
@@ -34,7 +15,6 @@ class Error:
     """
 
     def __init__(self):
-
         """
 
         """
@@ -44,7 +24,6 @@ class Error:
         self.__cause_err = str
 
     def config(self, result: dict):
-
         """
 
         :param result:
@@ -61,7 +40,6 @@ class Error:
 
     @property
     def error_code(self):
-
         """
         It returns error code from the stack response
         :return: error_code as int
@@ -74,7 +52,6 @@ class Error:
 
     @property
     def error_message(self):
-
         """
         Returns error_message from the stack response
         :return: error_message
@@ -88,7 +65,6 @@ class Error:
 
     @property
     def error(self):
-
         """
         This returns error code and error_message in dict formats
         :return: error dict
@@ -101,7 +77,6 @@ class Error:
 
     @property
     def error_info(self) -> dict:
-
         """
         error information
         :return: error information
@@ -161,4 +136,14 @@ class ContentstackError(Exception):
 
 
 class NotSupportedException(Exception):
+    pass
+
+
+class RequestsWarning(Warning):
+    """Base warning for Requests."""
+    pass
+
+
+class FileModeWarning(RequestsWarning, DeprecationWarning):
+    """A file was opened in text mode, but Requests determined its binary length."""
     pass

@@ -1,43 +1,49 @@
-"""
- * MIT License
- *
- * Copyright (c) 2012 - 2019 Contentstack
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+#  Config
+#  contentstack
+#
+#  Created by Shailesh Mishra on 22/06/19.
+#  Copyright © 2019 Contentstack. All rights reserved.
 
-"""
 import logging
+from enum import Enum
 
 logging.basicConfig(filename='cs.log', format='%(asctime)s - %(message)s', level=logging.INFO)
 logging.getLogger("Config")
 
 
+class ContentstackRegion(Enum):
+    US = 'us'
+    EU = 'eu'
+
+
 class Config(object):
+
     """
     All API paths are relative to this base URL, for example, /users actually means <scheme>://<host>/<basePath>/users.
-
     """
 
     def __init__(self):
+        self.default = dict(protocol="https", region=ContentstackRegion.US, host="cdn.contentstack.io", version="v3")
 
-        # It initialises the Config with the default endpoint
-        self.default = dict(protocol="https", region="us", host="cdn.contentstack.io", port=443, version="v3")
+    def region(self, region=ContentstackRegion.US):
+
+        """
+        The base URL for Content Delivery API is cdn.contentstack.io.
+        default region is for ContentstackRegion is US
+
+        :param region: ContentstackRegion
+        :return: self
+
+        Example:
+            >>> config  = Config().region(region=ContentstackRegion.US)
+
+        """
+
+        if region is not None and isinstance(region, ContentstackRegion):
+            self.default['region'] = region
+        else:
+            raise ValueError('Kindly provide a valid argument')
+        return self
 
     def host(self, host):
 
@@ -86,5 +92,19 @@ class Config(object):
 
     @property
     def endpoint(self):
-        url = "{0}://{1}/{2}".format(self.default["protocol"], self.default["host"], self.default["version"])
-        return url
+        return self.__get_url()
+
+    def __get_url(self):
+        host = self.default["host"]
+        if self.default['region'] is not ContentstackRegion.US:
+
+            if self.default["host"] == 'cdn.contentstack.io':
+                # update the host to .com
+                self.default["host"] = 'cdn.contentstack.com'
+            else:
+                # Find the regional value
+                regional_host = str(self.default['region'].value)
+                # Attach region to the host
+                host = '{}-{}'.format(regional_host, self.default["host"])
+
+        return "{0}://{1}/{2}".format(self.default["protocol"], host, self.default["version"])
