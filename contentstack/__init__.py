@@ -1,6 +1,11 @@
-""" contentstack python sdk. """
-import warnings
 
+#  __init__
+#  contentstack
+#
+#  Created by Shailesh Mishra on 22/06/19.
+#  Copyright © 2019 Contentstack. All rights reserved.
+
+import warnings
 __author__ = 'Shailesh Mishra'
 __status__ = 'debug'
 __version__ = '1.0.0'
