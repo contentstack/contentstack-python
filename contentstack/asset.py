@@ -1,44 +1,47 @@
 
 
-#  Asset
-#  contentstack
-#
-#  Created by Shailesh Mishra on 22/06/19.
-#  Copyright © 2019 Contentstack. All rights reserved.
+"""
+Asset
+contentstack
+Created by Shailesh Mishra on 22/06/19.
+Copyright 2019 Contentstack. All rights reserved.
+
+"""
 
 
 class OrderType(object):
 
     """
     OrderType is used to choose one of the ascending or descending
-
     """
     ASC, DESC = range(0, 2)
-
-    pass
 
 
 class Asset:
 
     """
-
     Assets refer to all the media files (images, videos, PDFs, audio files, and so on) uploaded
     in your Contentstack repository for future use.
     These files can be attached and used in multiple entries.
     contentstack.asset
-    ~~~~~~~~~~~~~~~~~~
-
+    ==============================
+    [Example]:
     This module implements the Asset class.
     API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#assets
-
+    >>> asset = stack.asset()
+    ==============================
     """
 
     def __init__(self, uid=None):
 
         """
-        :param uid: accepts asset_uid (optional) -> it is URI parameter required for fetch() Asset
+        :param uid: Accepts asset_uid (optional): it is URI parameter
         :type : str
-
+        ==============================
+        [Example]:
+        Useful to initialise the Asset()
+        >>> asset = stack.asset('uid')
+        ==============================
         """
         if uid is not None and isinstance(uid, str):
             self.__asset_uid = uid
@@ -59,41 +62,27 @@ class Asset:
         self.__updated_by = None
         self.__version = None
         self.__dimension = None
-        self.__uid = None
         self.__tags = None
 
-    def instance(self, stack_instance):
-
-        """
-        :param stack_instance: contains stack information like config, headers and http_instance
-        :type stack_instance: contentstack.stack.Stack
-        :return: self
-        :rtype: Asset
-        """
+    def _instance(self, stack_instance):
 
         from contentstack.stack import Stack
         from contentstack.errors import StackException
+
         if stack_instance is None:
             raise StackException('Kindly initialise stack first')
-        self.__stack_instance: Stack = stack_instance
-        self.__config = self.__stack_instance.config
-        self.__stack_headers.update(self.__stack_instance.headers)
-        self.__http_request = self.__stack_instance.get_http_instance
+        if isinstance(stack_instance, Stack):
+            self.__stack_instance = stack_instance
+            self.__config = self.__stack_instance.config
+            self.__http_request = self.__stack_instance.get_http_instance
+        else:
+            raise ValueError('Invalid Stack type, Please provide Stack Instance')
 
         return self
 
-    def configure(self, response):
-
-        """
-        :param response: response is Asset result
-        :type response: dict
-        :return: self
-        :rtype: Asset
-
-        """
+    def _configure(self, response):
         if response is not None and isinstance(response, dict) and len(response) > 0:
             self.__response = response
-
             if 'filename' in self.__response:
                 self.__file_name = self.__response['filename']
             if 'file_size' in self.__response:
@@ -103,7 +92,7 @@ class Asset:
             if 'url' in self.__response:
                 self.__file_url = self.__response['url']
             if 'uid' in self.__response:
-                self.__uid = self.__response['uid']
+                self.__asset_uid = self.__response['uid']
             if 'tags' in self.__response:
                 self.__tags = self.__response['tags']
             if 'created_at' in self.__response:
@@ -126,25 +115,29 @@ class Asset:
         """
         :return: asset_uid function returns asset_uid of the asset
         :rtype: str
+        ==============================
+        [Example]:
 
-        [Example]
-        uid = asset.asset_uid
+        >>> uid = asset.asset_uid
+        ==============================
         """
 
-        return self.__uid
+        return self.__asset_uid
 
     @property
     def count(self):
 
         """
-        :return: count function returns list of assets.
+        :return: Size of asset objects in Asset list.
         :rtype: int
+        ==============================
+        [Example]:
 
-        [Example]
-        count = asset.count
+        >>> count = asset.count
+        ==============================
         """
 
-        return self.__uid
+        return self.__asset_uid
 
     @property
     def filetype(self):
@@ -152,10 +145,11 @@ class Asset:
         """
         :return: This function returns type of the asset file
         :rtype: str
+        ==============================
+        [Example]:
 
-        [Example]
-        file = asset.filetype
-
+        >>> file = asset.filetype
+        ==============================
         """
 
         return self.__file_type
@@ -166,11 +160,13 @@ class Asset:
         """
         :return: returns size of asset file
         :rtype: str
+        ==============================
+        [Example]:
 
-        [Example]
-        size = asset.file_size
-
+        >>> size = asset.file_size
+        ==============================
         """
+
         return self.__file_size
 
     @property
@@ -179,10 +175,11 @@ class Asset:
         """
         :return: this function returns the name of the asset file.
         :rtype: str
+        ==============================
+        [Example]:
 
-        [Example]
-        filename = asset.filename
-
+        >>> filename = asset.filename
+        ==============================
         """
 
         return self.__file_name
@@ -193,37 +190,43 @@ class Asset:
         """
         :return: this function returns the url of the Asset
         :rtype: str
+        ==============================
+        [Example]:
 
-        [Example]
-        file_url = asset.file_url
-
+        >>> file_url = asset.file_url
+        ==============================
         """
+
         return self.__file_url
 
     @property
-    def to_json(self):
+    def json(self):
 
         """
         :return: this function returns json response of Asset
         :rtype: dict
+        ==============================
+        [Example]:
 
-        [Example]
-        response = asset.to_json
-
+        >>>  response = asset.to_json
+        ==============================
         """
+
         return self.__response
 
     @property
-    def create_at(self):
+    def created_at(self):
 
         """
         :return: this function returns the time when Asset is created.
         :rtype:  str
+        ==============================
+        [Example]:
 
-        [Example]
-        created_at = asset.created_at
-
+        >>>  response = asset.created_at
+        ==============================
         """
+
         return self.__created_at
 
     @property
@@ -232,25 +235,28 @@ class Asset:
         """
         :return: this function returns the owner of the Asset
         :rtype: str
+        ==============================
+        [Example]:
 
-        [Example]
-        created_by = asset.created_by
-
+        >>>  response = asset.created_by
+        ==============================
         """
+
         return self.__created_by
 
     @property
-    def update_at(self):
+    def updated_at(self):
 
         """
         :return: this method returns the time the Asset was updated.
         :rtype: str
+        ==============================
+        [Example]:
 
-        [Example]
-        updated_at = asset.updated_at
-        :return: str updated_at
-
+        >>>  response = asset.updated_at
+        ==============================
         """
+
         return self.__updated_at
 
     @property
@@ -259,11 +265,13 @@ class Asset:
         """
         :return: this function returns the time of Asset was updated
         :rtype: str
+        ==============================
+        [Example]:
 
-        [Example]
-        updated_by = asset.updated_by
-
+        >>>  response = asset.updated_by
+        ==============================
         """
+
         return self.__updated_by
 
     @property
@@ -272,11 +280,13 @@ class Asset:
         """
         :return: this function returns the list of str
         :rtype: list
+        ==============================
+        [Example]:
 
-        [Example]
-        tags = asset.tags
-
+        >>>  tags = asset.tags
+        ==============================
         """
+
         return self.__tags
 
     @property
@@ -285,11 +295,13 @@ class Asset:
         """
         :return: this returns the version of the asset
         :rtype: int
+        ==============================
+        [Example]:
 
-        [Example]
-        version = asset.get_version
-
+        >>>  tags = asset.get_version
+        ==============================
         """
+
         return self.__version
 
     @property
@@ -298,38 +310,35 @@ class Asset:
         """
         :return: this function returns the dimension of the Asset
         :rtype: dict
+        ==============================
+        [Example]:
 
-        [Example]
-
-        dimension = asset.dimension
-
+        >>>  tags = asset.dimension
+        ==============================
         """
+
         return self.__dimension
 
-    def headers(self, headers):
+    def add_header(self, key, value):
 
         """
-        :param headers: headers is the stack headers for the stack authentication
-        :type headers: dict
-        :return: self
-        :rtype: Asset
 
-        [Example]
+        :param key: header key
+        :param value:  header value
+        :return: Asset , so we can chain the call
+        ==============================
+        [Example]:
 
-        asset_dict = {'api_key':'bltsomething', 'access_token':'someacceesstoken', 'environment':'development'}
-        asset = asset.headers(asset_dict)
-
+        >>>  asset = asset.add_header('key', 'value')
+        ==============================
         """
-        if headers is not None and isinstance(headers, dict) and len(headers) > 0:
-            self.__stack_headers = headers.copy()
-            if 'environment' in self.__stack_headers:
-                env = self.__stack_headers['environment']
-                self.__query_params['environment'] = env
-                self.__stack_headers.pop('environment', None)
-            else:
-                raise ValueError("Environment Can't Be None")
+
+        if None in (key, value):
+            raise ValueError('Kindly provide valid KEY and Value')
+        elif isinstance(key, str) and isinstance(value, str):
+            self.__stack_headers[key] = value
         else:
-            raise ValueError('Kindly provide a valid input')
+            raise ValueError('KEY and Value should be str type')
 
         return self
 
@@ -337,36 +346,46 @@ class Asset:
 
         """
         provide the name of the environment if you wish to retrieve the assets published in a particular environment.
-        Example: production
-
         :param environment: the name of the environment
         :type environment: str
         :return: self
-        :rtype: Asset
+        :rtype: Asset, so we can chain the call
+        ==============================
+        [Example]:
 
+        >>>  asset = asset.environment('production')
+        ==============================
         """
 
-        if environment is not None and isinstance(environment, str):
+        if environment is None:
+            raise ValueError('Kindly provide valid environment')
+        elif isinstance(environment, str):
             self.__query_params['environment'] = environment
+        else:
+            raise ValueError('Kindly provide valid environment')
 
         return self
 
-    def params(self, params):
+    def add_params(self, key, value):
 
         """
-        :param params: param function allows to add/update asset query param dictionary.
-        :type params: dict
-        :return: instance of asset self
-        :rtype: Asset
 
-        [Example]
+        :param key: query params key
+        :param value: query params value
+        :return: Asset, so we can chain the call
+        ==============================
+        [Example]:
 
-        asset_param = {'key1':'paramOne', 'key2':'paramTwo', 'key3':'paramThree'}
-        asset = asset.params(asset_param)
-
+        >>>  asset = asset.add_params('key', 'value')
+        ==============================
         """
-        if params is not None and isinstance(params, dict) and len(params) > 0:
-            self.__query_params.update(params)
+
+        if None in (key, value):
+            raise ValueError('Kindly provide valid params')
+        elif isinstance(key, str):
+            self.__query_params[key] = value
+        else:
+            raise ValueError('Kindly provide str type KEY')
 
         return self
 
@@ -374,40 +393,16 @@ class Asset:
 
         """
         include the relative URLs of the assets in the response.
-        :return: instance of asset self
-        :rtype: Asset
+        :return: self
+        :rtype: Asset, so we can chain the call
+        ==============================
+        [Example]:
 
-        [Example]
-        asset = asset.relative_urls()
-
+        >>>  asset = asset.relative_urls()
+        ==============================
         """
+
         self.__query_params['relative_urls'] = 'true'
-
-        return self
-
-    def version(self, version):
-
-        """
-        Note: If no version is mentioned, this request will retrieve the latest published version of the asset.
-        To retrieve a specific version, make use of the version parameter and keep the environment parameter blank.
-
-        Specify the version number of the asset that you wish to retrieve.
-        If the version is not specified, the details of the latest version will be retrieved.
-        To retrieve a specific version, keep the environment parameter blank.
-        Example: 1
-
-        :param version: retrieves asset of a specific version
-        :type version: int
-        :return: instance of asset self
-        :rtype: Asset
-
-        [Example]
-
-        asset = asset.version(1)
-
-        """
-        if version is not None:
-            self.__query_params['version'] = version
 
         return self
 
@@ -416,33 +411,37 @@ class Asset:
         """
         include the dimensions (height and width) of the image in the response.
         Supported image types: JPG, GIF, PNG, WebP, BMP, TIFF, SVG, and PSD.
-
-        :return: instance of asset
+        :return: self
         :rtype: Asset
+        ==============================
+        [Example]:
 
-        [Example]
-        asset = asset.include_dimension()
-
+        >>>  asset = asset.include_dimension()
+        ==============================
         """
+
         self.__query_params['include_dimension'] = "true"
+
         return self
 
     def remove_header(self, key):
 
         """
         :param key: remove_header function takes key of header developer wants to remove.
-        :type key:
-        :return: instance of asset
-        :rtype: Asset
+        :type key: header of key
+        :return: self
+        :rtype: Asset, So we can chain the call
+        ==============================
+        [Example]:
 
-        [Example]
-        asset = asset.remove_header('header_key')
-
+        >>>  asset = asset.remove_header('some_key')
+        ==============================
         """
-        if key is not None and key in self.__stack_headers:
-            self.__stack_headers.pop(key)
-        else:
-            raise Exception('Kindly provide valid input')
+
+        if key is None:
+            raise ValueError('Kindly provide valid KEY')
+        elif isinstance(key, str) and key in self.__stack_headers:
+            self.__stack_headers.pop(key, None)
 
         return self
 
@@ -450,17 +449,22 @@ class Asset:
 
         """
         Enter the unique ID of the asset of which you wish to retrieve the details.
-        Example: blt91af1e5af9c3639f
-
         :param asset_uid:  asset_uid is unique ID of the asset of which you wish to retrieve the details
         :type asset_uid:
-        :return: instance of asset
+        :return: self
         :rtype: Asset
+        ==============================
+        [Example]:
+
+        >>>  asset = asset.set_uid('uid')
+        ==============================
         """
-        if asset_uid is not None and isinstance(asset_uid, str):
+        if asset_uid is None:
+            raise ValueError('Invalid asset_uid')
+        elif isinstance(asset_uid, str):
             self.__asset_uid = asset_uid
         else:
-            raise Exception('Kindly provide valid asset_uid')
+            raise Exception('Kindly provide str tyoe of asset_uid')
 
         return self
 
@@ -468,32 +472,40 @@ class Asset:
 
         """
         :return: include_count is used to include number of assets, used for fetch_all()
-        :rtype: Asset
+        :rtype: Asset,
+        ==============================
+        [Example]:
+
+        >>>  asset = asset.set_uid('uid')
+        ==============================
 
         """
         self.__query_params['include_count'] = 'true'
 
         return self
 
-    def sort(self, key: str, order_by):
+    def sort(self, key, order_by):
 
         """
         :param key: provides key on which ASC/DESC need to apply.
         :param order_by: object option either "asc" or "desc"
         :return self , instance of AssetLibrary
-
+        ==============================
         [Example]:
-        asset = asset.sort(OrderType.ASC)
 
+        >>>  asset = asset.sort('some_key', OrderType.ASC)
+        ==============================
         """
-
-        if order_by is not None:
-            if order_by == 0:
-                self.__query_params['asc'] = key
+        if None in (key, order_by):
+            raise ValueError('Kindly provide valid arguments')
+        elif isinstance(key, str) and isinstance(order_by, OrderType):
+            if order_by is not None:
+                if order_by == 0:
+                    self.__query_params['asc'] = key
+                else:
+                    self.__query_params['desc'] = key
             else:
-                self.__query_params['desc'] = key
-        else:
-            raise Exception('Kindly provide a valid input')
+                raise Exception('Kindly provide a valid input')
 
         return self.__query_params
 

@@ -33,7 +33,7 @@ class TestEntry(unittest.TestCase):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
         result: Entry = _entry.fetch()
         if result is not None:
-            self.assertEqual('/mobiles/redmi-note-3', result.urls)
+            self.assertEqual('/mobiles/redmi-note-3', result.url)
 
     def test_entry_tags(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
@@ -66,7 +66,7 @@ class TestEntry(unittest.TestCase):
         _entry.locale = 'en-us'
         result = _entry.fetch()
         if result is not None:
-            self.assertEqual(dict, type(_entry.to_json))
+            self.assertEqual(dict, type(result.json))
 
     def test_entry_get(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
@@ -141,3 +141,21 @@ class TestEntry(unittest.TestCase):
         # _entry = self.stack_entry.content_type('product').entry(self.entry_uid))
         # _entry.locale = 'en-us'
         pass
+
+    def test_entry_include_except(self):
+        # _entry = self.stack_entry.content_type('product').entry(self.entry_uid))
+        # _entry.locale = 'en-us'
+        pass
+
+    def test_entry_only(self):
+        # _entry = self.stack_entry.content_type('product').entry(self.entry_uid))
+        # _entry.locale = 'en-us'
+        pass
+
+    def test_entry_include_reference_content_type_uid(self):
+        _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
+        _entry.include_reference_content_type_uid()
+        schema_result = _entry.fetch()
+        if isinstance(schema_result, Entry):
+            title = schema_result.title
+            self.assertEqual('Redmi Note 3', title)
