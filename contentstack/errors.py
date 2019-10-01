@@ -1,11 +1,14 @@
-#  Error
-#  contentstack
-#
-#  Created by Shailesh Mishra on 22/06/19.
-#  Copyright © 2019 Contentstack. All rights reserved.
+"""
+Error
+contentstack
+Created by Shailesh Mishra on 22/06/19.
+Copyright 2019 Contentstack. All rights reserved.
+
+"""
 
 
 class Error:
+
     """
     contentstack.error
     ~~~~~~~~~~~~~~~~~~
@@ -15,75 +18,78 @@ class Error:
     """
 
     def __init__(self):
-        """
-
-        """
+        # It has some values to set error_msg, error_code etc..
         self.__error_dict = {}
         self.__error_code = str
         self.__msg = str
-        self.__cause_err = str
 
-    def config(self, result: dict):
-        """
-
-        :param result:
-        :type result:
-        :return:
-        :rtype:
-        """
+    def _config(self, result: dict):
+        # config error information
         if result is not None and len(result) > 0:
             self.__error_dict = result
             self.__error_code = self.__error_dict['error_code']
             self.__msg = self.__error_dict['error_message']
-            self.__cause_err = self.__error_dict['errors']
         return self
 
     @property
     def error_code(self):
+
         """
         It returns error code from the stack response
         :return: error_code as int
         :rtype: int
+        ==============================
+        [Example:]
 
-        Example. code = error.error_code
-
+        >>> ode = error.error_code
+        ==============================
         """
         return self.__error_code
 
     @property
     def error_message(self):
+
         """
         Returns error_message from the stack response
         :return: error_message
         :rtype: str
+        ==============================
+        [Example:]
 
-        Example. error.error_message
-
+        >>> ode = error.error_message
+        ==============================
         """
 
         return self.__msg
 
     @property
     def error(self):
+
         """
         This returns error code and error_message in dict formats
         :return: error dict
         :rtype: dict
+        ==============================
+        [Example:]
 
-        Example. error = error.error
+        >>> ode = error.error
+        ==============================
         """
 
-        return self.__cause_err
+        return self.__msg
 
     @property
     def error_info(self) -> dict:
+
         """
         error information
         :return: error information
         :rtype: dict
+        ==============================
+        [Example:]
 
-        Example. error.error_info
-
+        >>> ode = error.error_info
+        ==============================
         """
         return self.__error_dict
 
@@ -114,28 +120,15 @@ class Error:
         429: "The number of requests exceeds the allowed limit for the given time period.",
         500: "The server is malfunctioning and is not specific on what the problem is.",
         502: "A server received an invalid response from another server.",
-        504: "A server did not receive a timely response from another server that it was accessing while attempting "
-             "to load the web page or fill another request by the browser. "
+        504: """ A server did not receive a timely response from another server that it was accessing while attempting
+             to load the web page or fill another request by the browser. """
     }
-
-    @staticmethod
-    def logging_config(level):
-        print('level ' + level)
-
-
-class ConfigError(Exception):
-    pass
 
 
 class StackException(Exception):
-    pass
-
-
-class ContentstackError(Exception):
-    pass
-
-
-class NotSupportedException(Exception):
+    """
+    StackException used to handle Stack validation Errors.
+    """
     pass
 
 

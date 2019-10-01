@@ -1,8 +1,10 @@
-#  HttpConnection
-#  contentstack
-#
-#  Created by Shailesh Mishra on 22/06/19.
-#  Copyright © 2019 Contentstack. All rights reserved.
+"""
+HttpConnection
+contentstack
+Created by Shailesh Mishra on 22/06/19.
+Copyright 2019 Contentstack. All rights reserved.
+
+"""
 
 import logging
 import requests
@@ -14,69 +16,60 @@ from requests.exceptions import Timeout, HTTPError
 
 class HTTPConnection(object):
 
-    def __init__(self, url: str, query: dict, headers: dict):
-        if None not in (url, query, headers):
-            self.url = url
-            self.query = query
-            self.headers = headers
-        else:
-            raise ValueError('Kindly provide valid Arguments')
+    def __init__(self, url: str, query: dict, stack_headers: dict):
+
+        """
+        Initialises the HTTPConnection to make Http Request
+        :param url: url for the request to made
+        :param query: It will be executed to retrieve entries. This query should be in key value format.
+        :param stack_headers: It contains like API key of your stack, access token and others.
+        """
+        if None not in (url, query, stack_headers):
+            self.__url = url
+            self.__query_params = query
+            self.__stack_headers = stack_headers
+            self.__stack_headers.update(self.__user_agents())
 
     def get_result(self, url: str, query: dict, headers: dict):
-
-        """
-        get Results is helpful to make HTTP request
-        :param url: Request url
-        :param query: query parameters
-        :param headers: headers parameters
-        :return: response
-
-        """
-
         if None not in (url, query, headers):
-            if len(url) > 0 and len(headers) > 0:
-                self.url = url
-                self.query = query
-                self.headers = headers
+            if len(url) > 0 and len(self.__stack_headers) > 0:
+                self.__url = url
+                self.__query_params = query
+                self.__stack_headers.update(headers)
             else:
                 raise ValueError('Kindly provide a valid input')
 
         # Headers from locale
-        self.headers.update(self.__user_agents())
-        payload = parse.urlencode(query=self.query, encoding='UTF-8')
+        if 'environment' in self.__stack_headers:
+            environment = self.__stack_headers['environment']
+            self.__query_params['environment'] = environment
+        logging.info('Query Parameters ={}'.format(self.__query_params))
+        logging.info('Headers ={}'.format(self.__stack_headers))
+        payload = parse.urlencode(query=self.__query_params, encoding='UTF-8')
         try:
-            response = requests.get(self.url, verify=True, timeout=(2, 5), params=payload, headers=self.headers)
+            response = requests.get(self.__url, verify=True, timeout=(10, 8), params=payload,
+                                    headers=self.__stack_headers)
             if response.status_code == 200:
-                # Check if json dictionary is valid decode and parse the dictionary
                 if response.raise_for_status() is None:
                     return self.__parse_dict(response)
             else:
-                # It helps to set Error object to return with Error Message and Error Code
                 err = response.json()
                 if err is not None:
-                    return Error().config(err)
+                    return Error()._config(err)
         except Timeout:
-            # If a request times out, a Timeout exception will be raised.
             raise TimeoutError('The request timed out')
         except ConnectionError:
-            # If there is a network problem like a DNS failure, or refused connection the Requests library will raise
-            # a ConnectionError exception.
             raise ConnectionError('Connection error occurred')
         except JSONDecodeError:
-            # Invalid json format response received
             raise JSONDecodeError('Invalid JSON in request')
         except HTTPError:
-            # With invalid HTTP responses, Requests will also raise an HTTPError exception, but these are rare.
             raise HTTPError('Http Error Occurred')
 
     def __parse_dict(self, response):
-        # This is the private method to parse the response to their respective type
         from contentstack.stack import SyncResult
-        # Decode byte response to json
         result = response.json()
-        logging.info('url={}\nresponse={}'.format(response.url, result))
+        logging.info('\n\nrequest url => {}\nresponse={}'.format(response.url, result))
 
-        # If result contains stack, return json response
         if 'stack' in result:
             return result['stack']
         # If result contains entry, return Entry
@@ -103,7 +96,7 @@ class HTTPConnection(object):
             return result['content_types']
         # If result contains items, return SyncResult json
         if 'items' in result:
-            sync_result = SyncResult().configure(result)
+            sync_result = SyncResult()._configure(result)
             return sync_result
 
         return None
@@ -113,13 +106,14 @@ class HTTPConnection(object):
         from contentstack import Entry
         entries: list[Entry] = []
         entry = Entry()
-
+        # if 'count' in result:
+        # entry.count = result['count']
         if result is not None and len(result) > 0:
             if isinstance(result, dict):
-                return entry.configure(result)
+                return entry._configure(result)
             if isinstance(result, list):
                 for entry_obj in result:
-                    each_entry = Entry().configure(entry_obj)
+                    each_entry = Entry()._configure(entry_obj)
                     entries.append(each_entry)
                 return entries
 
@@ -131,10 +125,10 @@ class HTTPConnection(object):
 
         if result is not None and len(result) > 0:
             if isinstance(result, dict):
-                return asset.configure(result)
+                return asset._configure(result)
             if isinstance(result, list):
                 for asset_obj in result:
-                    itr_asset = asset.configure(asset_obj)
+                    itr_asset = asset._configure(asset_obj)
                     assets.append(itr_asset)
 
                 return assets
@@ -164,16 +158,17 @@ class HTTPConnection(object):
             'version': platform.release()
         }
 
-        local_headers = {'X-User-Agent': str(header), "Content-Type": 'application/json'}
+        local_headers = {'User-Agent': str(header),
+                         "Content-Type": 'application/json',
+                         "X-User-Agent": "contentstack-python, {}".format(contentstack.__version__)
+                         }
         return local_headers
 
-    import json
+    def __is_valid_json(response):
 
-    @staticmethod
-    def is_valid_json(json_string):
         import json
         try:
-            json_object = json.loads(json_string)
+            json.loads(response)
+            return True
         except ValueError as e:
             return False
-        return True

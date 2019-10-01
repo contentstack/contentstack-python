@@ -1,19 +1,18 @@
-#  ContentType
-#  contentstack
-#
-#  Created by Shailesh Mishra on 22/06/19.
-#  Copyright © 2019 Contentstack. All rights reserved.
+"""
+ContentType
+contentstack
+Created by Shailesh Mishra on 22/06/19.
+Copyright 2019 Contentstack. All rights reserved.
+"""
 
 
 class ContentType:
 
     """
-
     Content type defines the structure or schema of a page or a section of your web or mobile property. To create
     content for your application, you are required to first create a content type, and then create entries using the
     content type.
     Read more about Content Types[https://www.contentstack.com/docs/guide/content-types].
-
     """
 
     def __init__(self, content_type_uid: str):
@@ -21,11 +20,12 @@ class ContentType:
         """
         :param content_type_uid: This is the uid of the content_type
         :type content_type_uid: str
-
-        Example:
-            >>> content_type: ContentType = stack.content_type('product')
-
+        ==============================
+        [Example:]
+        >>> content_type: ContentType = stack.content_type('product')
+        ==============================
         """
+
         self.__config = None
         self.__stack_instance = None
         self.__http_request = None
@@ -35,12 +35,10 @@ class ContentType:
         else:
             raise ValueError('Kindly Provide ContentType')
 
-    def instance(self, stack_instance):
+    def _instance(self, stack_instance):
 
-        # this method get stack_instance to retrieve essential stack information
         from contentstack.stack import Stack
         from contentstack.errors import StackException
-
         if stack_instance is None:
             raise StackException('Kindly initialise stack first')
         self.__stack_instance: Stack = stack_instance
@@ -49,20 +47,22 @@ class ContentType:
         self.__http_request = self.__stack_instance.get_http_instance
 
     @property
-    def headers(self):
+    def header(self):
 
         """
         List of headers, used to verify stack (these are stack credentials)
         :return: stack_headers
         :rtype: dict
-
-        Example:
-            >>> content_type:ContentType = stack.content_type('product')
-            >>> headers: dict = content_type.headers
+        ==============================
+        [Example:]
+        >>> content_type:ContentType = stack.content_type('product')
+        >>> headers: dict = content_type.add_header
+        ==============================
         """
+
         return self.__stack_headers
 
-    def header(self, key, value):
+    def add_header(self, key, value):
 
         """
         This method used to add key value pair to the stack headers
@@ -72,12 +72,13 @@ class ContentType:
         :type value: str
         :return: self
         :rtype: ContentType
-
-        Example:
-            >>> content_type: ContentType = stack.content_type('product')
-            >>> content_type.header('api_key', 'blt00000000000')
-
+        ==============================
+        [Example:]
+        >>> content_type: ContentType = stack.content_type('product')
+        >>> content_type.add_header('api_key', 'bltsomething')
+        ==============================
         """
+
         if key is not None and value is not None:
             if isinstance(key, str) and isinstance(value, str):
                 self.__stack_headers[key] = value
@@ -96,12 +97,13 @@ class ContentType:
         :type key: str
         :return: self
         :rtype: ContentType
-
-        Example:
-            >>> content_type: ContentType =  stack.content_type('product')
-            >>> content_type.remove_header('api_key')
-
+        ==============================
+        [Example:]
+        >>> content_type: ContentType =  stack.content_type('product')
+        >>> content_type.remove_header('api_key')
+        ==============================
         """
+
         if key is not None and isinstance(key, str):
             if key in self.__stack_headers:
                 self.__stack_headers.pop(key)
@@ -112,30 +114,31 @@ class ContentType:
 
         return self
 
-    def entry(self, entry_uid=None):
+    def entry(self, uid):
 
         """
         An entry is the actual piece of content created using one of the defined content types.
         Read more about Entries. [ https://www.contentstack.com/docs/apis/content-delivery-api/#entries ]
-
-        :param entry_uid: This is the uid of entry
-        :type entry_uid: str
+        :param uid: This is the uid of entry
+        :type uid: str
         :return: entry
         :rtype: <content_type.Entry>
 
-        Example:
-            >>> content_type ContentType = stack.content_type('product')
-            >>> entry = content_type.entry('blt87409832174')
-
+        ==============================
+        [Example:]
+        >>> content_type ContentType = stack.content_type('product')
+        >>> entry = content_type.entry('blt87409832174')
+        ==============================
         """
+
         from contentstack import Entry
         if self.__http_request is None:
             raise ValueError("Invalid HTTP Request")
         entry: Entry = Entry(content_type_id=self.__content_type_uid)
-        entry.instance(self.__stack_instance)
-        if entry_uid is not None:
-            if isinstance(entry_uid, str):
-                entry.set_uid(entry_uid)
+        entry._instance(self.__stack_instance)
+        if uid is not None:
+            if isinstance(uid, str):
+                entry.set_uid(uid)
             else:
                 raise ValueError('Kindly provide valid entry uid')
         return entry
@@ -146,25 +149,24 @@ class ContentType:
         You can add queries to extend the functionality of this API call.
         Under the URI Parameters section, insert a parameter named query
         and provide a query in JSON format as the value. To learn more about the queries, refer to the Queries section.
+        :return: Query
 
-        :return: query
-        :rtype: Query
-
-        Example:
-            >>> content_type ContentType = stack.content_type('product')
-            >>> query = content_type.query()
+        ==============================
+        [Example:]
+        >>> content_type ContentType = stack.content_type('product')
+        >>> query = content_type.query()
+        ==============================
         """
-        from contentstack.query import Query
 
+        from contentstack.query import Query
         query = Query(self.__content_type_uid)
-        query.instance(self.__stack_instance)
+        query._instance(self.__stack_instance)
         return query
 
     def fetch(self):
 
         """
         This method is useful to fetch ContentType of the of the stack.
-
         :return: response returns Json
         :rtype: ContentType
         """
