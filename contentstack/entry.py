@@ -6,6 +6,10 @@ Copyright 2019 Contentstack. All rights reserved.
 
 """
 
+import os
+import sys
+sys.path.insert(0, os.path.abspath('.'))
+
 
 class Entry:
 
@@ -16,25 +20,13 @@ class Entry:
     This module implements the Entry class.
     API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#entries
 
-    [ Note: If no version is mentioned, this request will retrieve the
+    [Note: If no version is mentioned, this request will retrieve the
     latest published version of the entry.
     To retrieve a specific version,
     make use of the version parameter and keep the environment parameter blank.]
-
     """
 
     def __init__(self, content_type_id=None):
-
-        """
-        The content type uid is useful to fetch a particular entry of a content type
-        :param content_type_id: is used to get entry of respected content_type
-        :type content_type_id: str
-        ==============================
-        [Example:]
-        >>> entry = stack.ContentType('product').entry()
-        ==============================
-        """
-
         self.__content_type_id = content_type_id
         self.__stack_instance = None
         self.__http_request = None
@@ -66,19 +58,7 @@ class Entry:
         self.__count = 0
 
     def _instance(self, stack_instance):
-
-        """
-        This method is useful to setup instance of stack and httpConnection, It is used to form a complete url.
-        :param stack_instance: stack_instance con't be None
-        :type stack_instance: Stack
-        :return: self
-        :rtype: Entry
-        ==============================
-        [Example:]
-        >>> entry = stack.instance(stack_instance)
-        ==============================
-        """
-
+        # This is the protcted from outside users, so they can't access this function.
         self.__stack_instance = stack_instance
         self.__config = self.__stack_instance.config
         self.__entry_url = self.__config.endpoint
@@ -95,9 +75,13 @@ class Entry:
         This method is useful to get dictionary of the headers
         :return: The method is used to get list of headers.
         :rtype: dict
+
         ==============================
+
         [Example:]
+
         >>> entry = entry.headers
+
         ==============================
         """
 
@@ -108,9 +92,13 @@ class Entry:
 
         """
         :return: uid of the entry of str type
+
         ==============================
+
         [Example:]
+
         >>> entry = entry.uid
+
         ==============================
         """
         return self.__entry_uid
@@ -123,9 +111,13 @@ class Entry:
         :param uid: The unique ID of the content type of which you wish to retrieve the details
         :type uid: str
         :return: Entry
+
         ==============================
+
         [Example:]
-        >>> entry = entry.set_uid('uid_example123')
+
+        >>> entry = entry.set_uid('uidexamplesomethng')
+
         ==============================
         """
 
@@ -148,9 +140,13 @@ class Entry:
         :type value: str
         :return: self
         :rtype: Entry
+
         ==============================
+
         [Example:]
+
         >>> entry = entry.params('key', 'value')
+
         ==============================
         """
 
@@ -172,9 +168,13 @@ class Entry:
         :type version: str
         :return: self
         :rtype: Entry
+
         ==============================
+
         [Example:]
+
         >>> entry = entry.version('7')
+
         ==============================
         """
 
@@ -194,9 +194,13 @@ class Entry:
         It returns code of the language of which the entries needs to be included.
         :return: code of the language of which the entries needs to be included.
         :rtype: str
+
         ==============================
+
         [Example:]
+
         >>> entry = entry.locale
+
         ==============================
         """
 
@@ -215,9 +219,13 @@ class Entry:
         :type locale: str
         :return: It does not return any value
         :rtype: Entry
+
         ==============================
+
         [Example:]
+
         >>> entry = entry.locale('en-us')
+
         ==============================
         """
 
@@ -263,9 +271,13 @@ class Entry:
         :type value: str
         :return: self
         :rtype: Entry
+
         ==============================
+
         [Example:]
+
         >>> entry = entry.set_header('key', 'value')
+
         ==============================
         """
 
@@ -287,9 +299,13 @@ class Entry:
         :type key: str
         :return: self
         :rtype: Entry
+
         ==============================
+
         [Example:]
+
         >>> header = remove_header('key')
+
         ==============================
         """
 
@@ -310,9 +326,13 @@ class Entry:
         This method returns title of the entry
         :return: Title of the entry
         :rtype: str
+
         ==============================
+
         [Example:]
+        
         >>> title = entry.title
+
         ==============================
         """
         return self.__title
@@ -322,9 +342,13 @@ class Entry:
 
         """
         This method returns urls of the entry
+
         ==============================
+        
         [Example:]
+        
         >>> url = entry.url
+        
         ==============================
         """
 
@@ -337,9 +361,13 @@ class Entry:
         This method returns list of tags of the entry
         :return: This method returns tags of the entry
         :rtype: list
+        
         ==============================
+        
         [Example:]
+        
         >>> tags = entry.tags
+        
         ==============================
         """
 
@@ -352,9 +380,13 @@ class Entry:
         This method returns content_type of the entry
         :return: content_type of the entry
         :rtype: str
+        
         ==============================
+        
         [Example:]
+        
         >>> content_type = entry.content_type
+        
         ==============================
         """
 
@@ -367,9 +399,13 @@ class Entry:
         This method returns uid of the entry
         :return: uid of the entry
         :rtype: str
+        
         ==============================
+        
         [Example:]
+        
         >>> uid = entry.uid
+        
         ==============================
         """
         return self.__entry_uid
@@ -381,9 +417,13 @@ class Entry:
         This method returns response of the entry in dictionary formats
         :return: response of the entry in dictionary type
         :rtype: dict
+        
         ==============================
+        
         [Example:]
+        
         >>> json_result = entry.json
+        
         ==============================
         """
 
@@ -400,9 +440,13 @@ class Entry:
         :type key: str
         :return: json
         :rtype: object
+        
         ==============================
+        
         [Example:]
+        
         >>> result = entry.get('yourKey')
+        
         ==============================
         """
 
@@ -417,10 +461,13 @@ class Entry:
 
         """
         :return: count of the Entry Object
+        
         ==============================
+        
         [Example:]
 
         >>> result = entry.count
+        
         ==============================
         """
         return self.__count
@@ -433,10 +480,13 @@ class Entry:
         :type key: str
         :return: value from the dict of respective key
         :rtype: str
+        
         ==============================
+        
         [Example:]
 
         >>> result = entry.get_string('entry_key')
+        
         ==============================
         """
 
@@ -454,10 +504,13 @@ class Entry:
         :type key: str
         :return: boolean value
         :rtype: bool
+        
         ==============================
+        
         [Example:]
 
         >>> result = entry.get_boolean('bool_key')
+        
         ==============================
         """
 
@@ -472,11 +525,15 @@ class Entry:
 
         """
         This method is useful to get result of respective key if result is dict
+        :rtype: object
         :param key: This is the key of the entry
+        
         ==============================
+        
         [Example:]
 
         >>> result = entry.get_json('key')
+        
         ==============================
         """
 
@@ -491,10 +548,13 @@ class Entry:
         """
         Gets list of data from the entry
         :param key: key of the entry to be accessed
+        
         ==============================
+        
         [Example:]
 
         >>> result = entry.get_list('key')
+        
         ==============================
         """
         value = self.get(key)
@@ -510,10 +570,13 @@ class Entry:
         value of creation time of entry.
         [Uses] created_at = entry.get_created_at()
         :return: str
+        
         ==============================
+        
         [Example:]
 
         >>> result = entry.created_at
+        
         ==============================
         """
 
@@ -526,10 +589,13 @@ class Entry:
         Get uid who created this entry.
         :return:  uid who created this entry.
         :rtype:str
+        
         ==============================
+        
         [Example:]
 
         >>> result = entry.get_created_by
+        
         ==============================
         """
 
@@ -542,10 +608,13 @@ class Entry:
         value of updating time of entry.
         :return: updating time of entry.
         :rtype: str
+        
         ==============================
+        
         [Example:]
 
         >>> result = entry.get_updated_at
+        
         ==============================
         """
 
@@ -558,10 +627,13 @@ class Entry:
         Get uid who updated this entry.
         :return: uid who updated entry.
         :rtype: str
+        
         ==============================
+        
         [Example:]
 
         >>> result = entry.get_updated_by
+        
         ==============================
         """
 
@@ -570,25 +642,31 @@ class Entry:
     def asset(self, key):
 
         """
-        Get an asset from the entry
-        :return: asset uid
-        :rtype: str
+
+        Get an asset from the entry on the basis of the key
+        :return: Asset of the entry
+        :rtype: Asset
+
         ==============================
+
         [Example:]
 
         >>> result = entry.get_asset("key")
+
         ==============================
         """
 
         from contentstack import Asset
         asset = Asset()
-        if key is not None:
-            if isinstance(key, str):
-                result = self.get_json(key)
-                if result is not None and isinstance(result, dict):
-                    asset = asset.configure(result)
+
+        if key is None:
+            raise KeyError('Kindly provide valid key')
+        elif isinstance(key, str):
+            result = self.get_json(key)
+            if result is not None and isinstance(result, dict):
+                asset = asset._configure(result)
             else:
-                raise ValueError('Kindly provide valid KEY')
+                asset = None
         return asset
 
     def get_assets(self, key):
@@ -599,48 +677,63 @@ class Entry:
         :type key: str
         :return: list of Asset
         :rtype: list[Asset]
+        
         ==============================
+        
         [Example:]
 
         >>> result = entry.get_assets("key")
+        
         ==============================
         """
         assets = []
-        if key is not None and isinstance(key, str):
+        from contentstack import Asset
+
+        if key is None:
+            raise KeyError('Kindly provide valid key')
+        elif isinstance(key, str):
             assetlist = self.get_list(key)
             if isinstance(assetlist, list):
                 for assetobj in assetlist:
                     if isinstance(assetobj, dict):
-                        assetmodel = self.asset._configure(assetobj)
-                        assets.append(assetmodel)
+                        asset = Asset()
+                        model = asset._configure(assetobj)
+                        assets.append(model)
         return assets
 
-    def get_all_entries(self, reference_key, reference_content_type):
+    def get_all_entries(self, ref_key, ref_content_type):
 
         """
-        :param reference_key: key of a reference field.
-        :type reference_key: str
-        :param reference_content_type:  class uid.
-        :type reference_content_type: str
+        Get value for the given reference key.
+        :param ref_key: key of a reference field.
+        :type ref_key: str
+        :param ref_content_type: class uid.
+        :type ref_content_type: str
         :return: list of  :Entry instances. Also specified content_type value will be set as class uid for all
         :rtype: list[Entry]
+        
         ==============================
+        
         [Example:]
 
         >>> entry = entry.get_all_entries("reference_key", "reference_content_type")
+        
         ==============================
         """
-
         from contentstack import ContentType
-
-        if isinstance(reference_key, str) and isinstance(reference_content_type, str):
-            if self.__result_json is not None and isinstance(self.__result_json[reference_key], list):
-                list_of_entries = self.__result_json[reference_key]
-                for entry in list_of_entries:
-                    if reference_content_type is not None:
-                        entry_instance = ContentType(reference_content_type).entry()
-        else:
-            raise KeyError('Please provide valid KEY')
+        all_entries = []
+        if self.__result_json is not None and isinstance(ref_key, str):
+            if ref_key in self.__result_json:
+                list_entry = self.__result_json[ref_key]
+                if isinstance(list_entry, list):
+                    for entry_obj in list_entry:
+                        entry = self.__stack_instance.content_type(ref_content_type).entry()
+                        model = list_entry[entry_obj]
+                        entry._configure(model)
+                        all_entries.append(entry)
+                    return all_entries
+                else:
+                    return None
 
     def except_field_uid(self, *field_uid):
 
@@ -653,10 +746,13 @@ class Entry:
         :type: str
         :return: self
         :rtype: Entry object, so you can chain this call.
+        
         ==============================
+        
         [Example:]
 
         >>> entry.except_field_uid('uid1', 'uid2', 'uid3')
+        
         ==============================
         """
 
@@ -672,10 +768,13 @@ class Entry:
         :type reference_uid: str
         :return: self
         :rtype: Entry object, so you can chain this call.
+        
         ==============================
+        
         [Example:]
 
         >>> entry.includeReference("uid1, uid2, uid3")
+        
         ==============================
         """
 
@@ -693,10 +792,13 @@ class Entry:
         :type field_uid: word args
         :return: self
         :rtype: Entry object, so you can chain this call.
+        
         ==============================
+        
         [Example:]
 
         >>> entry.only('field_uid1', 'field_uid2')
+        
         ==============================
         """
 
@@ -714,10 +816,13 @@ class Entry:
         :type field_uid: word args of str type
         :return: self
         :rtype: Entry object, so you can chain this call.
+        
         ==============================
+        
         [Example:]
 
         >>> entry.only_with_reference_uid('reference_uid', 'some_value', 'field_uid1', 'field_uid2', 'field_uid3')
+        
         ==============================
         """
 
@@ -741,10 +846,13 @@ class Entry:
         :type: str:
         :return: Entry
         :rtype: Entry object, so you can chain this call.
+        
         ==============================
+        
         [Example:]
 
         >>> entry.except_with_reference_uid('reference_field_uid', "field1", 'field2', 'field3');
+        
         ==============================
 
         stack = contentstack.Stack( "blt5d4sample2633b", "blt6d0240b5sample254090d", "stag");
@@ -768,10 +876,13 @@ class Entry:
         description  This method also includes the content type UIDs
         of the referenced entries returned in the response.
         :return: Entry object, so you can chain this call.
+        
         ==============================
+        
         [Example:]
 
         >>> entry.include_reference_content_type_uid()
+        
         ==============================
         """
 
@@ -783,10 +894,13 @@ class Entry:
         """
         Include the details of the content type along with the entry/entries details.
         :return: Entry
+        
         ==============================
+        
         [Example:]
 
         >>> entry.include_content_type()
+        
         ==============================
         """
 

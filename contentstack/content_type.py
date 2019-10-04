@@ -5,6 +5,10 @@ Created by Shailesh Mishra on 22/06/19.
 Copyright 2019 Contentstack. All rights reserved.
 """
 
+import os
+import sys
+sys.path.insert(0, os.path.abspath('.'))
+
 
 class ContentType:
 
@@ -20,9 +24,13 @@ class ContentType:
         """
         :param content_type_uid: This is the uid of the content_type
         :type content_type_uid: str
+        
         ==============================
+        
         [Example:]
+        
         >>> content_type: ContentType = stack.content_type('product')
+        
         ==============================
         """
 
@@ -53,10 +61,14 @@ class ContentType:
         List of headers, used to verify stack (these are stack credentials)
         :return: stack_headers
         :rtype: dict
+        
         ==============================
+        
         [Example:]
+        
         >>> content_type:ContentType = stack.content_type('product')
         >>> headers: dict = content_type.add_header
+        
         ==============================
         """
 
@@ -72,10 +84,14 @@ class ContentType:
         :type value: str
         :return: self
         :rtype: ContentType
+        
         ==============================
+        
         [Example:]
+        
         >>> content_type: ContentType = stack.content_type('product')
         >>> content_type.add_header('api_key', 'bltsomething')
+        
         ==============================
         """
 
@@ -97,10 +113,14 @@ class ContentType:
         :type key: str
         :return: self
         :rtype: ContentType
+        
         ==============================
+        
         [Example:]
+        
         >>> content_type: ContentType =  stack.content_type('product')
         >>> content_type.remove_header('api_key')
+        
         ==============================
         """
 
@@ -125,9 +145,12 @@ class ContentType:
         :rtype: <content_type.Entry>
 
         ==============================
+        
         [Example:]
+        
         >>> content_type ContentType = stack.content_type('product')
         >>> entry = content_type.entry('blt87409832174')
+        
         ==============================
         """
 
@@ -152,9 +175,12 @@ class ContentType:
         :return: Query
 
         ==============================
+        
         [Example:]
+        
         >>> content_type ContentType = stack.content_type('product')
         >>> query = content_type.query()
+        
         ==============================
         """
 
