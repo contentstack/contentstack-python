@@ -6,6 +6,9 @@ Copyright 2019 Contentstack. All rights reserved.
 
 """
 
+import os
+import sys
+sys.path.insert(0, os.path.abspath('.'))
 
 class Error:
 
@@ -38,10 +41,13 @@ class Error:
         It returns error code from the stack response
         :return: error_code as int
         :rtype: int
+        
         ==============================
+        
         [Example:]
 
-        >>> ode = error.error_code
+        >>> code = error.error_code
+
         ==============================
         """
         return self.__error_code
@@ -53,10 +59,13 @@ class Error:
         Returns error_message from the stack response
         :return: error_message
         :rtype: str
+
         ==============================
+
         [Example:]
 
-        >>> ode = error.error_message
+        >>> message = error.error_message
+
         ==============================
         """
 
@@ -69,10 +78,13 @@ class Error:
         This returns error code and error_message in dict formats
         :return: error dict
         :rtype: dict
+
         ==============================
+
         [Example:]
 
         >>> ode = error.error
+
         ==============================
         """
 
@@ -85,10 +97,13 @@ class Error:
         error information
         :return: error information
         :rtype: dict
+
         ==============================
+
         [Example:]
 
         >>> ode = error.error_info
+        
         ==============================
         """
         return self.__error_dict

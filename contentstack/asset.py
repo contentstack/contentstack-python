@@ -1,4 +1,6 @@
-
+import os
+import sys
+sys.path.insert(0, os.path.abspath('.'))
 
 """
 Asset
@@ -33,18 +35,9 @@ class Asset:
     """
 
     def __init__(self, uid=None):
-
-        """
-        :param uid: Accepts asset_uid (optional): it is URI parameter
-        :type : str
-        ==============================
-        [Example]:
-        Useful to initialise the Asset()
-        >>> asset = stack.asset('uid')
-        ==============================
-        """
         if uid is not None and isinstance(uid, str):
             self.__asset_uid = uid
+        
         self.__config = None
         self.__stack_instance = None
         self.__response = None
@@ -65,7 +58,6 @@ class Asset:
         self.__tags = None
 
     def _instance(self, stack_instance):
-
         from contentstack.stack import Stack
         from contentstack.errors import StackException
 
@@ -81,6 +73,7 @@ class Asset:
         return self
 
     def _configure(self, response):
+        
         if response is not None and isinstance(response, dict) and len(response) > 0:
             self.__response = response
             if 'filename' in self.__response:
@@ -113,13 +106,19 @@ class Asset:
     def asset_uid(self):
 
         """
-        :return: asset_uid function returns asset_uid of the asset
-        :rtype: str
+        asset_uid function returns asset_uid of the asset
+
+        Returns:
+            [type] -- str
+
         ==============================
+
         [Example]:
 
-        >>> uid = asset.asset_uid
+            >>> uid = asset.asset_uid
+
         ==============================
+
         """
 
         return self.__asset_uid
@@ -128,27 +127,37 @@ class Asset:
     def count(self):
 
         """
-        :return: Size of asset objects in Asset list.
-        :rtype: int
+        Size of asset objects in Asset list.
+        
+        Returns:
+            [type] -- [int]
+
         ==============================
+        
         [Example]:
 
         >>> count = asset.count
+
         ==============================
         """
 
-        return self.__asset_uid
+        return self.__count
 
     @property
     def filetype(self):
 
         """
-        :return: This function returns type of the asset file
-        :rtype: str
+        This function returns type of the asset file
+
+        Returns:
+            [type] -- str
+
         ==============================
+
         [Example]:
 
         >>> file = asset.filetype
+
         ==============================
         """
 
@@ -158,12 +167,17 @@ class Asset:
     def filesize(self):
 
         """
-        :return: returns size of asset file
-        :rtype: str
+        Returns size of asset file
+        
+        Returns:
+            [type] -- str
+
         ==============================
+
         [Example]:
 
         >>> size = asset.file_size
+
         ==============================
         """
 
@@ -173,12 +187,17 @@ class Asset:
     def filename(self):
 
         """
-        :return: this function returns the name of the asset file.
-        :rtype: str
+        This function returns the name of the asset file.
+        
+        Returns:
+            [type] -- [str]
+
         ==============================
+
         [Example]:
 
         >>> filename = asset.filename
+
         ==============================
         """
 
@@ -188,12 +207,17 @@ class Asset:
     def url(self):
 
         """
-        :return: this function returns the url of the Asset
-        :rtype: str
+        This function returns the url of the Asset
+        
+        Returns:
+            [type] -- [str]
+
         ==============================
+
         [Example]:
 
         >>> file_url = asset.file_url
+
         ==============================
         """
 
@@ -203,12 +227,17 @@ class Asset:
     def json(self):
 
         """
-        :return: this function returns json response of Asset
-        :rtype: dict
+        This function returns json response of Asset
+        
+        Returns:
+            [{str}] -- [json response of Asset]
+
         ==============================
+
         [Example]:
 
         >>>  response = asset.to_json
+
         ==============================
         """
 
@@ -218,12 +247,17 @@ class Asset:
     def created_at(self):
 
         """
-        :return: this function returns the time when Asset is created.
-        :rtype:  str
+        This function returns the time when Asset is created.
+        
+        Returns:
+            [str] -- Time when Asset is created
+
         ==============================
+
         [Example]:
 
         >>>  response = asset.created_at
+
         ==============================
         """
 
@@ -233,13 +267,15 @@ class Asset:
     def created_by(self):
 
         """
-        :return: this function returns the owner of the Asset
-        :rtype: str
-        ==============================
+        This function returns the owner of the Asset
+        
+        Returns:
+            [str] -- Owner of the Asset
+
         [Example]:
 
         >>>  response = asset.created_by
-        ==============================
+
         """
 
         return self.__created_by
@@ -248,12 +284,17 @@ class Asset:
     def updated_at(self):
 
         """
-        :return: this method returns the time the Asset was updated.
-        :rtype: str
+        This method returns the time the Asset was updated.
+        
+        Returns:
+            [str] -- Time the Asset was updated
+
         ==============================
+
         [Example]:
 
         >>>  response = asset.updated_at
+
         ==============================
         """
 
@@ -263,12 +304,17 @@ class Asset:
     def updated_by(self):
 
         """
-        :return: this function returns the time of Asset was updated
-        :rtype: str
+        This function returns the time of Asset was updated
+        
+        Returns:
+            [str] --  Asset was updated by whome
+
         ==============================
+
         [Example]:
 
         >>>  response = asset.updated_by
+
         ==============================
         """
 
@@ -278,12 +324,17 @@ class Asset:
     def tags(self):
 
         """
-        :return: this function returns the list of str
-        :rtype: list
+        This function returns the list of str
+        
+        Returns:
+            [list] -- list of tags
+
         ==============================
+
         [Example]:
 
         >>>  tags = asset.tags
+
         ==============================
         """
 
@@ -293,12 +344,17 @@ class Asset:
     def get_version(self):
 
         """
-        :return: this returns the version of the asset
-        :rtype: int
+        This returns the version of the asset
+        
+        Returns:
+            [int] -- Version of the asset
+
         ==============================
+
         [Example]:
 
         >>>  tags = asset.get_version
+
         ==============================
         """
 
@@ -308,12 +364,17 @@ class Asset:
     def dimension(self):
 
         """
-        :return: this function returns the dimension of the Asset
-        :rtype: dict
+        This function returns the dimension of the Asset
+        
+        Returns:
+            [dict] -- Dimension of the Asset
+
         ==============================
+
         [Example]:
 
         >>>  tags = asset.dimension
+
         ==============================
         """
 
@@ -322,15 +383,24 @@ class Asset:
     def add_header(self, key, value):
 
         """
+        Adds header params to the header of request
+        
+        Raises:
 
-        :param key: header key
-        :param value:  header value
-        :return: Asset , so we can chain the call
+            ValueError: Kindly provide valid KEY and Value
+            ValueError: key and value should be str type
+        
+        Returns:
+            [Asset] -- Asset, So we can chain the call
+
         ==============================
+
         [Example]:
 
         >>>  asset = asset.add_header('key', 'value')
+
         ==============================
+        
         """
 
         if None in (key, value):
@@ -345,15 +415,20 @@ class Asset:
     def environment(self, environment):
 
         """
-        provide the name of the environment if you wish to retrieve the assets published in a particular environment.
+        Provide the name of the environment if you wish to retrieve the assets published 
+        in a particular environment.
+
         :param environment: the name of the environment
         :type environment: str
         :return: self
         :rtype: Asset, so we can chain the call
+
         ==============================
+
         [Example]:
 
         >>>  asset = asset.environment('production')
+
         ==============================
         """
 
@@ -362,21 +437,23 @@ class Asset:
         elif isinstance(environment, str):
             self.__query_params['environment'] = environment
         else:
-            raise ValueError('Kindly provide valid environment')
+            raise ValueError('Environment should be str type')
 
         return self
 
     def add_params(self, key, value):
 
         """
-
         :param key: query params key
         :param value: query params value
-        :return: Asset, so we can chain the call
+        :return: Asset, So we can chain the call
+
         ==============================
+
         [Example]:
 
         >>>  asset = asset.add_params('key', 'value')
+
         ==============================
         """
 
@@ -395,10 +472,13 @@ class Asset:
         include the relative URLs of the assets in the response.
         :return: self
         :rtype: Asset, so we can chain the call
+
         ==============================
+
         [Example]:
 
         >>>  asset = asset.relative_urls()
+
         ==============================
         """
 
@@ -413,10 +493,13 @@ class Asset:
         Supported image types: JPG, GIF, PNG, WebP, BMP, TIFF, SVG, and PSD.
         :return: self
         :rtype: Asset
+
         ==============================
+
         [Example]:
 
         >>>  asset = asset.include_dimension()
+
         ==============================
         """
 
@@ -431,10 +514,13 @@ class Asset:
         :type key: header of key
         :return: self
         :rtype: Asset, So we can chain the call
+
         ==============================
+
         [Example]:
 
         >>>  asset = asset.remove_header('some_key')
+
         ==============================
         """
 
@@ -452,11 +538,14 @@ class Asset:
         :param asset_uid:  asset_uid is unique ID of the asset of which you wish to retrieve the details
         :type asset_uid:
         :return: self
-        :rtype: Asset
+        :rtype: Asset, So we can chain the call
+
         ==============================
+
         [Example]:
 
         >>>  asset = asset.set_uid('uid')
+
         ==============================
         """
         if asset_uid is None:
@@ -472,11 +561,14 @@ class Asset:
 
         """
         :return: include_count is used to include number of assets, used for fetch_all()
-        :rtype: Asset,
+        :rtype: Asset, So we can chain the call
+
         ==============================
+
         [Example]:
 
         >>>  asset = asset.set_uid('uid')
+        
         ==============================
 
         """
@@ -490,10 +582,13 @@ class Asset:
         :param key: provides key on which ASC/DESC need to apply.
         :param order_by: object option either "asc" or "desc"
         :return self , instance of AssetLibrary
+
         ==============================
+
         [Example]:
 
         >>>  asset = asset.sort('some_key', OrderType.ASC)
+        
         ==============================
         """
         if None in (key, order_by):

@@ -138,19 +138,22 @@ class TestEntry(unittest.TestCase):
             self.assertTrue(str, type(updated_by))
 
     def test_entry_get_asset(self):
-        # _entry = self.stack_entry.content_type('product').entry(self.entry_uid))
-        # _entry.locale = 'en-us'
-        pass
+        _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
+        _entry.locale = 'en-us'
+        result = _entry.fetch()
+        if result is not None and isinstance(result, Entry):
+            the_result = result.get_assets('images')
+            does_exist = the_result[0].asset_uid
+            if does_exist is not None:
+                self.assertTrue(True)
 
-    def test_entry_include_except(self):
-        # _entry = self.stack_entry.content_type('product').entry(self.entry_uid))
-        # _entry.locale = 'en-us'
-        pass
+    def test_entry_get_all_entries(self):
+        _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
+        _entry.locale = 'en-us'
+        result = _entry.fetch()
+        if result is not None and isinstance(result, Entry):
+            self.assertTrue(True)
 
-    def test_entry_only(self):
-        # _entry = self.stack_entry.content_type('product').entry(self.entry_uid))
-        # _entry.locale = 'en-us'
-        pass
 
     def test_entry_include_reference_content_type_uid(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)

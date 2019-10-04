@@ -3,6 +3,11 @@ from contentstack import Config
 from contentstack.errors import StackException
 
 
+import os
+import sys
+sys.path.insert(0, os.path.abspath('.'))
+
+
 class Stack(object):
 
     def __init__(self, **kwargs):
@@ -16,7 +21,9 @@ class Stack(object):
         :param environment: stack 'environment' of your target stack.
         :param config: config='<contentstack.Config>' (optional) it is useful to change config of the stack's
         configurations like host, version of the stack.
+        
         ==============================
+        
         [Example]:
 
         >>> import contentstack
@@ -26,6 +33,7 @@ class Stack(object):
         >>> config = Config()
         >>> config.host('cdn.contentstack.io')
         >>> stack: Stack = Stack(api_key ='API_Key',access_token='access_token',environment='environment', config=config)
+        
         ==============================
         """
 
@@ -47,10 +55,13 @@ class Stack(object):
         """
         :return: api_key of the stack
         :rtype: str
+        
         ==============================
+        
         [Example]:
 
         >>> api_key = stack.api_key
+        
         ==============================
         """
 
@@ -65,10 +76,13 @@ class Stack(object):
         This method returns http_instance of the stack.
         :return: http_request
         :rtype: <contentstack.http_connection.HTTPConnection()>
+        
         ==============================
+        
         [Example]:
 
         >>> http_instance = stack.get_http_instance
+        
         ==============================
         """
 
@@ -81,10 +95,13 @@ class Stack(object):
         This method returns access_token of the stack.
         :return: access_token
         :rtype: str
+        
         ==============================
+        
         [Example]:
 
         >>> access_token: str = stack.access_token
+        
         ==============================
         """
 
@@ -101,10 +118,13 @@ class Stack(object):
         This method returns  environment of the stack
         :return: environment of the stack
         :rtype: str
+        
         ==============================
+        
         [Example]:
 
         >>> env = stack.environment
+        
         ==============================
         """
 
@@ -121,10 +141,13 @@ class Stack(object):
         :type env: str
         :return: self
         :rtype: Stack
+        
         ==============================
+        
         [Example]:
 
         >>> stack = stack.environment = 'product'
+        
         ==============================
         """
 
@@ -139,10 +162,13 @@ class Stack(object):
         """
         :return: list of stack headers
         :rtype: dict
+        
         ==============================
+        
         [Example]:
 
         >>> headers = stack.add_header
+        
         ==============================
         """
 
@@ -188,9 +214,11 @@ class Stack(object):
         :rtype: <contentstack.ContentType>
 
         ==============================
+        
         [Example]:
 
         >>> content_type = stack.content_type('product')
+        
         ==============================
         """
 
@@ -213,10 +241,13 @@ class Stack(object):
 
         :return: ContentTypes dict response
         :rtype:  dict
+        
         ==============================
+        
         [Example]:
 
         >>> content_types = stack.get_content_types()
+        
         ==============================
         """
 
@@ -235,10 +266,11 @@ class Stack(object):
         """
         :param uid: asset uid is unique_id of the asset
         :type uid: str
-        :return: asset
-        :rtype: <Asset>
+        :return: asset file of the stack
+        :rtype: <contentstack.asset.Asset>
 
         ==============================
+        
         [Example]: [All Assets]
         Assets refer to all the media files (images, videos, PDFs, audio files, and so on)
         uploaded in your Contentstack repository for future use. These files can be
@@ -248,10 +280,10 @@ class Stack(object):
 
         >>> asset_instance = stack.asset()
         >>> assets = asset_instance.fetch_all()
+        
         ==============================
-
-
         ==============================
+        
         [Example]: [Asset]
         This call fetches the latest version of a specific asset of a particular stack.
         provide asset_uid of the asset you have to find.
@@ -259,6 +291,7 @@ class Stack(object):
 
         >>> asset_instance = stack.asset('bltputyourassetuid')
         >>> asset = asset_instance.fetch()
+        
         ==============================
         """
 
@@ -276,7 +309,9 @@ class Stack(object):
         :type kwargs: str
         :return: image_url
         :rtype:str
+
         ==============================
+
         [Example]: The Image Delivery API is used to retrieve, manipulate and/or convert image
         files of your Contentstack account and deliver it to your web or mobile properties.
         It is an second parameter in which we want to place different manipulation key and
@@ -284,6 +319,7 @@ class Stack(object):
         different transform_params in second parameter in array form
 
         >>> stack.image_transform('image_url', width=100, height=100)
+
         ==============================
         """
 
@@ -300,10 +336,13 @@ class Stack(object):
         :return: self, collaborators with whom the stacks are shared.
         A detailed information about each collaborator is returned.
         :rtype: <contentstack.Stack>
+
         ==============================
+
         [Example]: collaborators with whom the stacks are shared
 
         >>> stack = stack.collaborators()
+
         ==============================
         """
 
@@ -315,12 +354,15 @@ class Stack(object):
 
         """
         :returns stack_variables
+
         ==============================
+
         [Example]: Stack variables are extra information about the stack,
         such as the description, format of date, format of time, and so on.
         Users can include or exclude stack variables in the response.
 
         >>> stack = stack.include_stack_variables()
+
         ==============================
         """
 
@@ -332,9 +374,12 @@ class Stack(object):
 
         """
         :returns discrete variables of the stack
+
         ==============================
+
         [Example]:
         >>> stack = stack.include_discrete_variables()
+
         ==============================
         """
 
@@ -348,9 +393,12 @@ class Stack(object):
         It includes Count of stack response
         :return: self
         :rtype: Stack
+
         ==============================
+
         [Example]:
         >>> stack = stack.include_count()
+
         ==============================
         """
 
@@ -388,7 +436,9 @@ class Stack(object):
         content_type_deleted.
 
         If you do not specify any value, it will bring all published entries and published assets.
+
         ==============================
+
         [Explanation]:
         :param kwargs: content_type_uid='blt83847327434739', from_date='date', locale='en-us',
         publish_type='asset_published'
@@ -398,6 +448,7 @@ class Stack(object):
 
         [Example]:
         >>> result = stack.sync(content_type_uid='content_type_uid', from_date='date', locale='en-us', publish_type='asset_published')
+        
         ==============================
         """
 
@@ -424,6 +475,7 @@ class Stack(object):
         process from where it was interrupted.
 
         ==============================
+
         [Explanation]:
         :param pagination_token: It can be found in the sync response
         :type pagination_token: str
@@ -433,6 +485,7 @@ class Stack(object):
         [Example]:
 
         >>> result = stack.pagination('blt8347235938759')
+
         ==============================
         """
 
@@ -449,7 +502,9 @@ class Stack(object):
         to get the updated content next time.
         The sync token fetches only the content that was added after your last sync,
         and the details of the content that was deleted or updated.
+
         ==============================
+
         [Explanation]:
         :param sync_token: The sync token fetches only the content that was added after your last sync
         :type sync_token:
@@ -459,6 +514,7 @@ class Stack(object):
         [Example]:
 
         >>> result = stack.sync_token('bltsomekeytoput')
+
         ==============================
         """
 
@@ -517,10 +573,34 @@ class SyncResult:
 
     @property
     def limit(self):
+
+        """
+        :return: This property returns limit
+        :rtype: int
+
+        ==============================
+
+        Example:
+        limit = SyncResult.limit
+
+        ==============================
+        """
         return self.__limit
 
     @property
     def count(self):
+
+        """
+        :return: This property returns count
+        :rtype: int
+
+        ==============================
+
+        Example:
+        count = SyncResult.count
+
+        ==============================
+        """
         return self.__total_count
 
     @property
@@ -530,11 +610,27 @@ class SyncResult:
         :return: This property returns sync_token
         :rtype: str
 
+        ==============================
+
         Example:
         sync_token = SyncResult.sync_token
+
+        ==============================
         """
         return self.__sync_token
 
     @property
     def pagination_token(self):
+
+        """
+        :return: This property returns pagination_token
+        :rtype: str
+        
+        ==============================
+
+        Example:
+        pagination_token = SyncResult.pagination_token
+
+        ==============================
+        """
         return self.__pagination_token
