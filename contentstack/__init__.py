@@ -8,8 +8,11 @@ Copyright 2019 Contentstack. All rights reserved.
 """
 
 import warnings
+import os
+import sys
+sys.path.insert(0, os.path.abspath('.'))
 
-__author__ = 'Contentstack (Shailesh Mishra)'
+__author__ = 'Shailesh Mishra'
 __status__ = 'debug'
 __version__ = '1.0.0'
 __package__ = 'contentstack'

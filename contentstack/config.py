@@ -1,3 +1,9 @@
+import os
+import sys
+import enum
+import logging
+sys.path.insert(0, os.path.abspath('.'))
+
 """
 Config
 contentstack
@@ -6,8 +12,6 @@ Copyright 2019 Contentstack. All rights reserved.
 
 """
 
-import logging
-import enum
 
 logging.basicConfig(filename='report.log', format='%(asctime)s - %(message)s', level=logging.INFO)
 logging.getLogger(__name__)
@@ -28,11 +32,16 @@ class Config(object):
         """
         The base URL for Content Delivery API is cdn.contentstack.io.
         default region is for ContentstackRegion is US
-        :param region: ContentstackRegion
-        :return: self
+
+        :param region: Region support given for US and EU
+        :return: ContentstackRegion
+
         ==============================
+
         [Example:]
+
         >>> config  = Config().region(region=ContentstackRegion.US)
+
         ==============================
         """
 
@@ -44,20 +53,13 @@ class Config(object):
 
         """
         The base URL for Content Delivery API is cdn.contentstack.io.
-        host is the domain name or IP address (
-        IPv4) of the host that serves the API. It may include the port number if different from the scheme's default
+        host is the domain name or IP address of the host that serves the API. It may include the 
+        port number if different from the scheme's default
         port (443 for HTTPS).
+        
+        Returns:
+            [Config] -- Config, So we can chain more functions
 
-        Note: contentstack supports HTTPS only
-        :param host: host is the domain name
-        :type host: str
-        :return: self
-        :rtype: Config
-
-        ==============================
-        [Example:]
-        >>> config  = Config().host('api.contentstack.io')
-        ==============================
         """
 
         if host is not None and isinstance(host, str):
@@ -73,11 +75,14 @@ class Config(object):
         :type version: str
         :return: self
         :rtype: Config
+        
         ==============================
+        
         [Example:] The API version (in our case, 'v3') can be found in the URL
 
         >>> config  = Config()
         >>> config.version = 'v3'
+        
         ==============================
         """
 
@@ -91,6 +96,7 @@ class Config(object):
 
         """
         :return: url endpoint to make Http requst
+        
         """
         return self.__get_url()
 

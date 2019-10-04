@@ -15,11 +15,11 @@ except ImportError:
         def emit(self, record):
             pass
 
-logging.basicConfig(filename='contentstack.log', format='%(asctime)s - %(message)s', level=logging.INFO)
+logging.basicConfig(filename='report_log.log', format='%(asctime)s - %(message)s', level=logging.INFO)
 logging.getLogger("Config")
 
 
-def log(message: str):
+def log(message):
     logging.debug(message)
 
 
