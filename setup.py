@@ -68,7 +68,6 @@ if sys.argv[-1] == 'publish':
     sys.exit()
 
 setuptools.setup(
-
     name='contentstack',
     version=get_version(package),
     py_modules=['contentstack'],
