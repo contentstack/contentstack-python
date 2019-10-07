@@ -34,16 +34,14 @@ class Entry:
         self.__entry_url = None
 
         self.__local_params = {}
-        self.__stack_headers = {}
+        self.__entry_headers = {}
         self.__only_dict = {}
         self.__result_json = {}
-        self.__other_post_dict = {}
 
-        self.__uid_for_except = []
+        self.__uid_for_except = {}
+        self.__except_field = []
         self.__uid_for_only = []
-        self.__except_dic = []
         self.__tags = []
-        self.__reference_list = []
 
         self.__entry_uid = str
         self.__title = str
@@ -68,6 +66,228 @@ class Entry:
 
         return self
 
+    def _configure(self, model):
+        if model is not None and isinstance(model, dict):
+            self.__result_json = model
+            if self.__result_json is not None:
+                if 'title' in self.__result_json:
+                    self.__title = self.__result_json['title']
+                if 'url' in self.__result_json:
+                    self.__url = self.__result_json['url']
+                if 'uid' in self.__result_json:
+                    self.__entry_uid = self.__result_json['uid']
+                if 'tags' in self.__result_json:
+                    self.__tags = self.__result_json['tags']
+                if 'created_by' in self.__result_json:
+                    self.__created_by = self.__result_json['created_by']
+                if 'created_at' in self.__result_json:
+                    self.__created_at = self.__result_json['created_at']
+                if 'updated_at' in self.__result_json:
+                    self.__updated_at = self.__result_json['updated_at']
+                if 'updated_by' in self.__result_json:
+                    self.__updated_by = self.__result_json['updated_by']
+                if 'locale' in self.__result_json:
+                    self.__locale = self.__result_json['locale']
+                if '_version' in self.__result_json:
+                    self.__version = self.__result_json['_version']
+
+        return self
+
+    def add_header(self, key, value):
+
+        """
+        It is useful to accept the API key, access_token of stack of which you wish to retrieve the content types.
+        :param key: key of the header
+        :type key: str
+        :param value: value of respected key header
+        :type value: str
+        :return: self
+        :rtype: Entry
+
+        ==============================
+
+        [Example:]
+
+        >>> entry = entry.set_header('key', 'value')
+
+        ==============================
+        """
+
+        if key and value is not None:
+            if isinstance(key, str) and isinstance(value, str):
+                self.__entry_headers[key] = value
+            else:
+                raise ValueError('Kindly provide str type key-value pair')
+        else:
+            raise ValueError('Kindly provide a valid input')
+
+        return self
+
+    def remove_header(self, key):
+
+        """
+        This method is helpful to remove desired key from the header of the entry
+        :param key: key of the entry header
+        :type key: str
+        :return: self
+        :rtype: Entry
+
+        ==============================
+
+        [Example:]
+
+        >>> header = remove_header('key')
+
+        ==============================
+        """
+
+        if key is None:
+            raise ValueError('Kindly provide valid KEY')
+        elif isinstance(key, str):
+            if key in self.__entry_headers:
+                self.__entry_headers.pop(key, None)
+        else:
+            raise ValueError('Kindly provide a valid input')
+
+        return self
+
+    @property
+    def uid(self):
+
+        """
+        :return: uid of the entry of str type
+
+        ==============================
+
+        [Example:]
+
+        >>> entry = entry.uid
+
+        ==============================
+        """
+        return self.__entry_uid
+
+    @property
+    def locale(self):
+
+        """
+        It returns code of the language of which the entries needs to be included.
+        :return: code of the language of which the entries needs to be included.
+        :rtype: str
+
+        ==============================
+
+        [Example:]
+
+        >>> entry = entry.locale
+
+        ==============================
+        """
+
+        if 'locale' in self.__result_json:
+            return self.__result_json['locale']
+        else:
+            return self.__locale
+
+    @locale.setter
+    def locale(self, locale):
+
+        """
+        locale accepts code of the language of which the entries needs to be included.
+        Only the entries published in this locale will be displayed.
+        :param locale: code of the language of which the entries needs to be included.
+        :type locale: str
+        :return: It does not return any value
+        :rtype: Entry
+
+        ==============================
+
+        [Example:]
+
+        >>> entry = entry.locale('en-us')
+
+        ==============================
+        """
+
+        if locale is not None and isinstance(locale, str):
+            self.__local_params["locale"] = locale
+        else:
+            raise ValueError('Kindly provide a valid locale')
+
+    @property
+    def title(self):
+
+        """
+        This method returns title of the entry
+        :return: Title of the entry
+        :rtype: str
+
+        ==============================
+
+        [Example:]
+        
+        >>> title = entry.title
+
+        ==============================
+        """
+        return self.__title
+
+    @property
+    def url(self):
+
+        """
+        This method returns urls of the entry
+
+        ==============================
+        
+        [Example:]
+        
+        >>> url = entry.url
+        
+        ==============================
+
+        """
+
+        return self.__url
+
+    @property
+    def tags(self):
+
+        """
+        This method returns list of tags of the entry
+        :return: This method returns tags of the entry
+        :rtype: list
+        
+        ==============================
+        
+        [Example:]
+        
+        >>> tags = entry.tags
+        
+        ==============================
+        """
+
+        return self.__tags
+
+    @property
+    def content_type(self):
+
+        """
+        This method returns content_type of the entry
+        :return: content_type of the entry
+        :rtype: str
+        
+        ==============================
+        
+        [Example:]
+        
+        >>> content_type = entry.content_type
+        
+        ==============================
+        """
+
+        return self.__content_type_id
+
     @property
     def headers(self):
 
@@ -85,23 +305,215 @@ class Entry:
         ==============================
         """
 
-        return self.__stack_headers
+        return self.__entry_headers
 
     @property
     def uid(self):
 
         """
-        :return: uid of the entry of str type
+        This method returns uid of the entry
+        :return: uid of the entry
+        :rtype: str
+        
+        ==============================
+        
+        [Example:]
+        
+        >>> uid = entry.uid
+        
+        ==============================
+        """
+        return self.__entry_uid
+
+    @property
+    def json(self):
+
+        """
+        This method returns response of the entry in dictionary formats
+        :return: response of the entry in dictionary type
+        :rtype: dict
+        
+        ==============================
+        
+        [Example:]
+        
+        >>> json_result = entry.json
+        
+        ==============================
+        """
+
+        if self.__result_json is None:
+            return None
+        else:
+            return self.__result_json
+
+    @property
+    def count(self):
+
+        """
+        :return: count of the Entry Object
+        
+        ==============================
+        
+        [Example:]
+
+        >>> result = entry.count
+        
+        ==============================
+        """
+        return self.__count
+
+    @property
+    def created_at(self):
+
+        """
+        value of creation time of entry.
+        [Uses] created_at = entry.get_created_at()
+        :return: str
 
         ==============================
 
         [Example:]
 
-        >>> entry = entry.uid
+        >>> result = entry.created_at
 
         ==============================
         """
-        return self.__entry_uid
+
+        return self.__created_at
+
+    @property
+    def created_by(self):
+
+        """
+        Get uid who created this entry.
+        :return:  uid who created this entry.
+        :rtype:str
+
+        ==============================
+
+        [Example:]
+
+        >>> result = entry.get_created_by
+
+        ==============================
+        """
+
+        return self.__created_by
+
+    @property
+    def updated_at(self):
+
+        """
+        value of updating time of entry.
+        :return: updating time of entry.
+        :rtype: str
+
+        ==============================
+
+        [Example:]
+
+        >>> result = entry.get_updated_at
+
+        ==============================
+        """
+
+        return self.__updated_at
+
+    @property
+    def updated_by(self):
+
+        """
+        Get uid who updated this entry.
+        :return: uid who updated entry.
+        :rtype: str
+
+        ==============================
+
+        [Example:]
+
+        >>> result = entry.get_updated_by
+
+        ==============================
+        """
+
+        return self.__updated_by
+
+    @property
+    def created_at(self):
+
+        """
+        value of creation time of entry.
+        [Uses] created_at = entry.get_created_at()
+        :return: str
+
+        ==============================
+
+        [Example:]
+
+        >>> result = entry.created_at
+
+        ==============================
+        """
+
+        return self.__created_at
+
+    @property
+    def created_by(self):
+
+        """
+        Get uid who created this entry.
+        :return:  uid who created this entry.
+        :rtype:str
+
+        ==============================
+
+        [Example:]
+
+        >>> result = entry.get_created_by
+
+        ==============================
+        """
+
+        return self.__created_by
+
+    @property
+    def updated_at(self):
+
+        """
+        value of updating time of entry.
+        :return: updating time of entry.
+        :rtype: str
+
+        ==============================
+
+        [Example:]
+
+        >>> result = entry.get_updated_at
+
+        ==============================
+        """
+
+        return self.__updated_at
+
+    @property
+    def updated_by(self):
+
+        """
+        Get uid who updated this entry.
+        :return: uid who updated entry.
+        :rtype: str
+
+        ==============================
+
+        [Example:]
+
+        >>> result = entry.get_updated_by
+
+        ==============================
+        """
+
+        return self.__updated_by
 
     def set_uid(self, uid):
 
@@ -129,6 +541,30 @@ class Entry:
             raise ValueError('entry_uid should be str type')
 
         return self
+
+    def get(self, key):
+
+        """
+        This method returns value of respective key of the entry
+        :param key: key you want to access value
+        :type key: str
+        :return: json
+        :rtype: object
+
+        ==============================
+
+        [Example:]
+
+        >>> result = entry.get('yourKey')
+
+        ==============================
+        """
+
+        if key is None:
+            raise ValueError('Kindly provide a valid argument')
+        elif isinstance(key, str):
+            if key in self.__result_json:
+                return self.__result_json[key]
 
     def add_param(self, key, value):
 
@@ -186,291 +622,6 @@ class Entry:
             raise ValueError('Kindly provide a valid input')
 
         return self
-
-    @property
-    def locale(self):
-
-        """
-        It returns code of the language of which the entries needs to be included.
-        :return: code of the language of which the entries needs to be included.
-        :rtype: str
-
-        ==============================
-
-        [Example:]
-
-        >>> entry = entry.locale
-
-        ==============================
-        """
-
-        if 'locale' in self.__result_json:
-            return self.__result_json['locale']
-        else:
-            return self.__locale
-
-    @locale.setter
-    def locale(self, locale):
-
-        """
-        locale accepts code of the language of which the entries needs to be included.
-        Only the entries published in this locale will be displayed.
-        :param locale: code of the language of which the entries needs to be included.
-        :type locale: str
-        :return: It does not return any value
-        :rtype: Entry
-
-        ==============================
-
-        [Example:]
-
-        >>> entry = entry.locale('en-us')
-
-        ==============================
-        """
-
-        if locale is not None and isinstance(locale, str):
-            self.__local_params["locale"] = locale
-        else:
-            raise ValueError('Kindly provide a valid locale')
-
-    def _configure(self, model):
-        if model is not None and isinstance(model, dict):
-            self.__result_json = model
-            if self.__result_json is not None:
-                if 'title' in self.__result_json:
-                    self.__title = self.__result_json['title']
-                if 'url' in self.__result_json:
-                    self.__url = self.__result_json['url']
-                if 'uid' in self.__result_json:
-                    self.__entry_uid = self.__result_json['uid']
-                if 'tags' in self.__result_json:
-                    self.__tags = self.__result_json['tags']
-                if 'created_by' in self.__result_json:
-                    self.__created_by = self.__result_json['created_by']
-                if 'created_at' in self.__result_json:
-                    self.__created_at = self.__result_json['created_at']
-                if 'updated_at' in self.__result_json:
-                    self.__updated_at = self.__result_json['updated_at']
-                if 'updated_by' in self.__result_json:
-                    self.__updated_by = self.__result_json['updated_by']
-                if 'locale' in self.__result_json:
-                    self.__locale = self.__result_json['locale']
-                if '_version' in self.__result_json:
-                    self.__version = self.__result_json['_version']
-
-        return self
-
-    def add_header(self, key, value):
-
-        """
-        It is useful to accept the API key, access_token of stack of which you wish to retrieve the content types.
-        :param key: key of the header
-        :type key: str
-        :param value: value of respected key header
-        :type value: str
-        :return: self
-        :rtype: Entry
-
-        ==============================
-
-        [Example:]
-
-        >>> entry = entry.set_header('key', 'value')
-
-        ==============================
-        """
-
-        if key and value is not None:
-            if isinstance(key, str) and isinstance(value, str):
-                self.__stack_headers[key] = value
-            else:
-                raise ValueError('Kindly provide str type key-value pair')
-        else:
-            raise ValueError('Kindly provide a valid input')
-
-        return self
-
-    def remove_header(self, key):
-
-        """
-        This method is helpful to remove desired key from the header of the entry
-        :param key: key of the entry header
-        :type key: str
-        :return: self
-        :rtype: Entry
-
-        ==============================
-
-        [Example:]
-
-        >>> header = remove_header('key')
-
-        ==============================
-        """
-
-        if key is None:
-            raise ValueError('Kindly provide valid KEY')
-        elif isinstance(key, str):
-            if key in self.__stack_headers:
-                self.__stack_headers.pop(key, None)
-        else:
-            raise ValueError('Kindly provide a valid input')
-
-        return self
-
-    @property
-    def title(self):
-
-        """
-        This method returns title of the entry
-        :return: Title of the entry
-        :rtype: str
-
-        ==============================
-
-        [Example:]
-        
-        >>> title = entry.title
-
-        ==============================
-        """
-        return self.__title
-
-    @property
-    def url(self):
-
-        """
-        This method returns urls of the entry
-
-        ==============================
-        
-        [Example:]
-        
-        >>> url = entry.url
-        
-        ==============================
-        """
-
-        return self.__url
-
-    @property
-    def tags(self):
-
-        """
-        This method returns list of tags of the entry
-        :return: This method returns tags of the entry
-        :rtype: list
-        
-        ==============================
-        
-        [Example:]
-        
-        >>> tags = entry.tags
-        
-        ==============================
-        """
-
-        return self.__tags
-
-    @property
-    def content_type(self):
-
-        """
-        This method returns content_type of the entry
-        :return: content_type of the entry
-        :rtype: str
-        
-        ==============================
-        
-        [Example:]
-        
-        >>> content_type = entry.content_type
-        
-        ==============================
-        """
-
-        return self.__content_type_id
-
-    @property
-    def uid(self):
-
-        """
-        This method returns uid of the entry
-        :return: uid of the entry
-        :rtype: str
-        
-        ==============================
-        
-        [Example:]
-        
-        >>> uid = entry.uid
-        
-        ==============================
-        """
-        return self.__entry_uid
-
-    @property
-    def json(self):
-
-        """
-        This method returns response of the entry in dictionary formats
-        :return: response of the entry in dictionary type
-        :rtype: dict
-        
-        ==============================
-        
-        [Example:]
-        
-        >>> json_result = entry.json
-        
-        ==============================
-        """
-
-        if self.__result_json is None:
-            return None
-        else:
-            return self.__result_json
-
-    def get(self, key):
-
-        """
-        This method returns value of respective key of the entry
-        :param key: key you want to access value
-        :type key: str
-        :return: json
-        :rtype: object
-        
-        ==============================
-        
-        [Example:]
-        
-        >>> result = entry.get('yourKey')
-        
-        ==============================
-        """
-
-        if key is None:
-            raise ValueError('Kindly provide a valid argument')
-        elif isinstance(key, str):
-            if key in self.__result_json:
-                return self.__result_json[key]
-
-    @property
-    def count(self):
-
-        """
-        :return: count of the Entry Object
-        
-        ==============================
-        
-        [Example:]
-
-        >>> result = entry.count
-        
-        ==============================
-        """
-        return self.__count
 
     def get_string(self, key):
 
@@ -563,82 +714,6 @@ class Entry:
         else:
             return None
 
-    @property
-    def created_at(self):
-
-        """
-        value of creation time of entry.
-        [Uses] created_at = entry.get_created_at()
-        :return: str
-        
-        ==============================
-        
-        [Example:]
-
-        >>> result = entry.created_at
-        
-        ==============================
-        """
-
-        return self.__created_at
-
-    @property
-    def created_by(self):
-
-        """
-        Get uid who created this entry.
-        :return:  uid who created this entry.
-        :rtype:str
-        
-        ==============================
-        
-        [Example:]
-
-        >>> result = entry.get_created_by
-        
-        ==============================
-        """
-
-        return self.__created_by
-
-    @property
-    def updated_at(self):
-
-        """
-        value of updating time of entry.
-        :return: updating time of entry.
-        :rtype: str
-        
-        ==============================
-        
-        [Example:]
-
-        >>> result = entry.get_updated_at
-        
-        ==============================
-        """
-
-        return self.__updated_at
-
-    @property
-    def updated_by(self):
-
-        """
-        Get uid who updated this entry.
-        :return: uid who updated entry.
-        :rtype: str
-        
-        ==============================
-        
-        [Example:]
-
-        >>> result = entry.get_updated_by
-        
-        ==============================
-        """
-
-        return self.__updated_by
-
     def asset(self, key):
 
         """
@@ -720,7 +795,6 @@ class Entry:
         
         ==============================
         """
-        from contentstack import ContentType
         all_entries = []
         if self.__result_json is not None and isinstance(ref_key, str):
             if ref_key in self.__result_json:
@@ -738,11 +812,9 @@ class Entry:
     def except_field_uid(self, *field_uid):
 
         """
-        Specifies list of field uids that would be &#39excluded&#39 from the response.
-        stack = contentstack.stack("blt5d4sample2633b", "blt6d0240b5sample254090d", "stag")
-        entry = stack.content_type.content_type("content_type_uid").entry("entry_uid")
-        entry.except_field_uid('field uid 1', 'field uid 2','field uid 3')
-        :param field_uid: field uid  which get excluded from the response.
+        Specifies list of field field_uid that would be excluded from the response.
+        :param field_uid: field_uid for variable number of arguments which get excluded from the response.
+        *field_uid for variable number of arguments
         :type: str
         :return: self
         :rtype: Entry object, so you can chain this call.
@@ -757,14 +829,46 @@ class Entry:
         """
 
         for uid in field_uid:
-            self.__uid_for_except.append(uid)
+            self.__except_field.append(uid)
+
+        return self
+
+    def except_with_reference_uid(self, reference_field_uid, *field_uid):
+
+        """
+        :param: reference_field_uid: Key who has reference to some other class object.
+        :type: str:
+        :param: field_uid: field_uid for variable number of arguments
+        *field_uid for variable number of arguments
+        :type: str:
+        :return: Entry
+        :rtype: Entry object, so you can chain this call.
+        
+        ==============================
+        
+        [Example:]
+
+        >>> entry.except_with_reference_uid('reference_field_uid', "field1", 'field2', 'field3');
+
+        ==============================
+
+        """
+        if (reference_field_uid, field_uid) is None:
+            raise ValueError('Kindly provide valid arguments')
+        elif isinstance(reference_field_uid, str):
+            self.__uid_for_except[reference_field_uid] = list(field_uid)
+            self.include_reference(reference_field_uid)
+        else:
+            raise ValueError('Kindly provide a valid input')
+
         return self
 
     def include_reference(self, *reference_uid):
 
         """
         Add a constraint that requires a particular reference key details.
-        :param reference_uid: word args reference_field key that to be constrained.
+        :param reference_uid: word args reference_field key that to be constrained. 
+        *reference_uid for variable number of arguments
         :type reference_uid: str
         :return: self
         :rtype: Entry object, so you can chain this call.
@@ -778,17 +882,21 @@ class Entry:
         ==============================
         """
 
-        if reference_uid is not None:
-            for uid in reference_uid:
-                self.__reference_list.append(uid)
-            self.__other_post_dict["include[]"] = self.__reference_list
+        if reference_uid is None:
+            raise ValueError('Kindly provide a valid argument')
+        values = []
+        for uid in len(reference_uid):
+            values.append(uid)
+        self.__local_params["include[]"] = values
+
         return self
 
     def only(self, *field_uid):
 
         """
-        Specifies an array of only keys in BASE object that would be &#39;included&#39; in the response.
-        :param field_uid: word args  of the only reference keys to be included in response.
+        Specifies an array of only keys in BASE object that would be included in the response.
+        :param field_uid: field_uid for variable number of arguments to be included in response.
+        *field_uid for variable number of arguments
         :type field_uid: word args
         :return: self
         :rtype: Entry object, so you can chain this call.
@@ -812,7 +920,8 @@ class Entry:
         """
         :param reference_field_uid:
         :type reference_field_uid: Key who has reference to some other class object..
-        :param field_uid: word args the only reference keys to be included in response.
+        :param field_uid: field_uid for variable number of arguments to be included in response.
+        *field_uid for variable number of arguments
         :type field_uid: word args of str type
         :return: self
         :rtype: Entry object, so you can chain this call.
@@ -837,39 +946,6 @@ class Entry:
 
         return self
 
-    def except_with_reference_uid(self, reference_field_uid, *field_uid):
-
-        """
-        :param: reference_field_uid: Key who has reference to some other class object.
-        :type: str:
-        :param: field_uid:
-        :type: str:
-        :return: Entry
-        :rtype: Entry object, so you can chain this call.
-        
-        ==============================
-        
-        [Example:]
-
-        >>> entry.except_with_reference_uid('reference_field_uid', "field1", 'field2', 'field3');
-        
-        ==============================
-
-        stack = contentstack.Stack( "blt5d4sample2633b", "blt6d0240b5sample254090d", "stag");
-        entry = stack.content_type("content_type_uid").entry("entry_uid")
-        entry.except_with_reference_uid('reference_field_uid', "field1", 'field2', 'field3');
-        """
-        field_value_list = []
-        for field in field_uid:
-            field_value_list.append(field)
-        if reference_field_uid is not None and isinstance(reference_field_uid, str):
-            self.__uid_for_except[reference_field_uid] = field_value_list
-            self.include_reference(reference_field_uid)
-        else:
-            raise ValueError('Kindly provide a valid input')
-
-        return self
-
     def include_reference_content_type_uid(self):
 
         """
@@ -887,6 +963,7 @@ class Entry:
         """
 
         self.__local_params['include_reference_content_type_uid'] = 'true'
+
         return self
 
     def include_content_type(self):
@@ -903,16 +980,36 @@ class Entry:
         
         ==============================
         """
+        include_content_type = {'include_content_type': 'true', 'include_snippet_schema': 'true'}
+        self.__local_params.update(include_content_type)
+        # self.__local_params['include_snippet_schema'] = 'true'
 
-        if 'include_schema' in self.__local_params:
-            self.__local_params.pop('include_schema', None)
-        self.__local_params['include_content_type'] = 'true'
-        self.__local_params['include_snippet_schema'] = 'true'
+        return self
+
+    def __set_include_json(self):
+
+        if self.__uid_for_only is not None and len(self.__uid_for_only) > 0:
+            self.__local_params["only[BASE][]"] = self.__uid_for_only.__str__().replace("\'", "\"")
+            self.__uid_for_only = None
+
+        if self.__except_field is not None and len(self.__except_field) > 0:
+            self.__local_params["except[BASE][]"] = self.__except_field.__str__().replace("\'", "\"")
+            self.__except_field = None
+
+        if self.__uid_for_except is not None and len(self.__uid_for_except) > 0:
+            self.__local_params["except"] = self.__uid_for_except.__str__().replace("\'", "\"")
+            self.__uid_for_except = None
+
+        if self.__only_dict is not None and len(self.__only_dict) > 0:
+            self.__local_params["only"] = self.__only_dict.__str__().replace("\'", "\"")
+            self.__only_dict = None
+
         return self
 
     def fetch(self):
         if self.__entry_uid is None:
             raise KeyError('Kindly provide entry uid')
+        self.__set_include_json()
         self.__entry_url = '{}{}'.format(self.__entry_url, self.__entry_uid)
-        result = self.__http_request.get_result(self.__entry_url, self.__local_params, self.__stack_headers)
+        result = self.__http_request.get_result(self.__entry_url, self.__local_params, self.__entry_headers)
         return result
