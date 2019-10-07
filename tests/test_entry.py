@@ -1,18 +1,17 @@
 import logging
 import unittest
-from contentstack import Entry, Config
+from contentstack import Entry, Config, Error
 from contentstack.stack import Stack
 
 
 class TestEntry(unittest.TestCase):
-
     log = logging.getLogger(__name__)
 
     def setUp(self):
 
-        api_key: str = 'blt20962a819b57e233'
-        access_token: str = 'cs18efd90468f135a3a5eda3ba'
-        env_prod: str = 'production'
+        api_key = 'blt20962a819b57e233'
+        access_token = 'cs18efd90468f135a3a5eda3ba'
+        env_prod = 'production'
         self.entry_uid = 'bltb0256a89e2225a39'
         config = Config().host('cdn.contentstack.io')
         self.stack_entry = Stack(api_key=api_key, access_token=access_token, environment=env_prod, config=config)
@@ -25,19 +24,19 @@ class TestEntry(unittest.TestCase):
 
     def test_entry_title(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
-        result: Entry = _entry.fetch()
+        result = _entry.fetch()
         if result is not None:
             self.assertEqual("Redmi Note 3", result.title)
 
     def test_entry_url(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
-        result: Entry = _entry.fetch()
+        result = _entry.fetch()
         if result is not None:
             self.assertEqual('/mobiles/redmi-note-3', result.url)
 
     def test_entry_tags(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
-        result: Entry = _entry.fetch()
+        result = _entry.fetch()
         if result is not None:
             self.assertEqual(list, type(result.tags))
 
@@ -56,7 +55,7 @@ class TestEntry(unittest.TestCase):
     def test_entry_locale(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
         _entry.locale = 'en-us'
-        result: Entry = _entry.fetch()
+        result = _entry.fetch()
         if result is not None:
             if '-' in result.locale:
                 self.assertEqual('en-us', result.locale)
@@ -71,14 +70,14 @@ class TestEntry(unittest.TestCase):
     def test_entry_get(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
         _entry.locale = 'en-us'
-        result: Entry = _entry.fetch()
+        result = _entry.fetch()
         if result is not None:
             self.assertEqual(self.entry_uid, result.get('uid'))
 
     def test_entry_string(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
         _entry.locale = 'en-us'
-        result: Entry = _entry.fetch()
+        result = _entry.fetch()
         if result is not None:
             self.assertEqual(str, type(result.get_string('description')))
 
@@ -92,7 +91,7 @@ class TestEntry(unittest.TestCase):
     def test_entry_json(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
         _entry.locale = 'en-us'
-        result: Entry = _entry.fetch()
+        result = _entry.fetch()
         if result is not None:
             json_result = result.get_json('publish_details')
             self.assertEqual(dict, type(json_result))
@@ -154,11 +153,95 @@ class TestEntry(unittest.TestCase):
         if result is not None and isinstance(result, Entry):
             self.assertTrue(True)
 
+    def test_entry_except_field_uid(self):
+        _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
+        _entry.locale = 'en-us'
+        _entry.except_field_uid('fieldOne', 'fieldTwo', 'fieldThree')
+        result = _entry.fetch()
+        if result is not None and isinstance(result, Entry):
+            self.assertTrue(True)
+        else:
+            self.assertTrue(False)
+
+    def test_entry_except_with_reference_uid(self):
+        _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
+        _entry.locale = 'en-us'
+        _entry.except_with_reference_uid('blt4f1fd991ec80e52f', 'color')
+        result = _entry.fetch()
+        if result is not None and isinstance(result, Entry):
+            self.assertTrue(True)
+        else:
+            if isinstance(result, Error):
+                self.assertEqual(141, result.error_code)
+
+    def test_entry_include_reference(self):
+        entry = self.stack_entry.content_type('product').entry(self.entry_uid)
+        entry.locale = 'en-us'
+        entry.include_reference('color', 'price_in_usd')
+        result = entry.fetch()
+        if result is not None and isinstance(result, Entry):
+            self.assertTrue(True)
+        else:
+            if isinstance(result, Error):
+                self.assertEqual(141, result.error_code)
+
+    def test_entry_only(self):
+        _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
+        _entry.locale = 'en-us'
+        _entry.only('color', 'price_in_usd')
+        result = _entry.fetch()
+        if result is not None and isinstance(result, Entry):
+            self.assertTrue(True)
+        else:
+            self.assertTrue(False)
+
+    def test_entry_only_with_reference_uid(self):
+        _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
+        _entry.locale = 'en-us'
+        _entry.only_with_reference_uid('reference_field_uid', 'color')
+        result = _entry.fetch()
+        if result is not None and isinstance(result, Entry):
+            self.assertTrue(True)
+        else:
+            self.assertTrue(True)
+
+    def test_entry_include_content_type(self):
+        _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
+        _entry.locale = 'en-us'
+        _entry.include_content_type()
+        result = _entry.fetch()
+        if result is not None and isinstance(result, Entry):
+            contenttype_value = result.json['brand'][0]['_content_type_uid']
+            self.assertEqual('brand', contenttype_value)
+        else:
+            self.assertTrue(False)
+
+    def test_entry_include_except(self):
+        _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
+        _entry.locale = 'en-us'
+        _entry.except_field_uid('color', 'price_in_usd')
+        result = _entry.fetch()
+        if result is not None and isinstance(result, Entry):
+            self.assertTrue(True)
+        else:
+            self.assertTrue(False)
+
+    def test_entry_only(self):
+        _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
+        _entry.locale = 'en-us'
+        _entry.only('color', 'price_in_usd')
+        result = _entry.fetch()
+        if result is not None and isinstance(result, Entry):
+            self.assertTrue(True)
+        else:
+            self.assertTrue(False)
 
     def test_entry_include_reference_content_type_uid(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
         _entry.include_reference_content_type_uid()
-        schema_result = _entry.fetch()
-        if isinstance(schema_result, Entry):
-            title = schema_result.title
+        result = _entry.fetch()
+        if result is not None and isinstance(result, Entry):
+            title = result.title
             self.assertEqual('Redmi Note 3', title)
+        else:
+            self.assertTrue(False)

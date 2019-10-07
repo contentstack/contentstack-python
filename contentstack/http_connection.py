@@ -16,7 +16,7 @@ from requests.exceptions import Timeout, HTTPError
 
 class HTTPConnection(object):
 
-    def __init__(self, url: str, query: dict, stack_headers: dict):
+    def __init__(self, url, query, stack_headers):
 
         """
         Initialises the HTTPConnection to make Http Request
@@ -164,11 +164,11 @@ class HTTPConnection(object):
                          }
         return local_headers
 
-    def __is_valid_json(response):
+    def __is_valid_json(self, json_string):
 
         import json
         try:
-            json.loads(response)
+            json.loads(json_string)
             return True
         except ValueError as e:
             return False
