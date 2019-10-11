@@ -1,10 +1,12 @@
 import logging
 import unittest
+from config import ContentstackRegion
 from contentstack import Entry, Config, Error
 from contentstack.stack import Stack
 
 
 class TestEntry(unittest.TestCase):
+
     log = logging.getLogger(__name__)
 
     def setUp(self):
@@ -13,7 +15,9 @@ class TestEntry(unittest.TestCase):
         access_token = 'cs18efd90468f135a3a5eda3ba'
         env_prod = 'production'
         self.entry_uid = 'bltb0256a89e2225a39'
-        config = Config().host('cdn.contentstack.io')
+        config = Config()
+        config.host = 'cdn.contentstack.io'
+        config.region = ContentstackRegion.EU
         self.stack_entry = Stack(api_key=api_key, access_token=access_token, environment=env_prod, config=config)
 
     def test_entry_by_uid(self):
@@ -156,7 +160,7 @@ class TestEntry(unittest.TestCase):
     def test_entry_except_field_uid(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
         _entry.locale = 'en-us'
-        _entry.except_field_uid('fieldOne', 'fieldTwo', 'fieldThree')
+        _entry.excepts('title', 'color', 'price_in_usd')
         result = _entry.fetch()
         if result is not None and isinstance(result, Entry):
             self.assertTrue(True)
@@ -166,13 +170,23 @@ class TestEntry(unittest.TestCase):
     def test_entry_except_with_reference_uid(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
         _entry.locale = 'en-us'
-        _entry.except_with_reference_uid('blt4f1fd991ec80e52f', 'color')
+        _entry.except_with_reference_uid('category', 'color', 'price_in_usd')
         result = _entry.fetch()
         if result is not None and isinstance(result, Entry):
             self.assertTrue(True)
         else:
             if isinstance(result, Error):
                 self.assertEqual(141, result.error_code)
+
+    def test_entry_only_with_reference_uid(self):
+        _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
+        _entry.locale = 'en-us'
+        _entry.only_with_reference_uid('category', 'title', 'color', 'price_in_usd')
+        result = _entry.fetch()
+        if result is not None and isinstance(result, Entry):
+            self.assertTrue(True)
+        else:
+            self.assertTrue(True)
 
     def test_entry_include_reference(self):
         entry = self.stack_entry.content_type('product').entry(self.entry_uid)
@@ -195,38 +209,18 @@ class TestEntry(unittest.TestCase):
         else:
             self.assertTrue(False)
 
-    def test_entry_only_with_reference_uid(self):
-        _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
-        _entry.locale = 'en-us'
-        _entry.only_with_reference_uid('reference_field_uid', 'color')
-        result = _entry.fetch()
-        if result is not None and isinstance(result, Entry):
-            self.assertTrue(True)
-        else:
-            self.assertTrue(True)
-
     def test_entry_include_content_type(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
         _entry.locale = 'en-us'
         _entry.include_content_type()
         result = _entry.fetch()
         if result is not None and isinstance(result, Entry):
-            contenttype_value = result.json['brand'][0]['_content_type_uid']
-            self.assertEqual('brand', contenttype_value)
+            ct = result.json['brand'][0]['_content_type_uid']
+            self.assertEqual('brand', ct)
         else:
             self.assertTrue(False)
 
-    def test_entry_include_except(self):
-        _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
-        _entry.locale = 'en-us'
-        _entry.except_field_uid('color', 'price_in_usd')
-        result = _entry.fetch()
-        if result is not None and isinstance(result, Entry):
-            self.assertTrue(True)
-        else:
-            self.assertTrue(False)
-
-    def test_entry_only(self):
+    def test_entry_only_check_if_true(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
         _entry.locale = 'en-us'
         _entry.only('color', 'price_in_usd')

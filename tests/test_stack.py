@@ -1,5 +1,7 @@
 import logging
 import unittest
+
+from config import ContentstackRegion
 from contentstack import Error, Config
 from contentstack.stack import Stack
 
@@ -18,12 +20,9 @@ class TestStack(unittest.TestCase):
         environment = self.credentials['environment']
 
         self.config = Config()
-        # custom host can be set by config.host
-        self.config.host('cdn.contentstack.io')
-        # custom version can be set by config.version
+        self.config.host = 'cdn.contentstack.io'
         self.config.version('v3')
-        # Passing required key value pairs to the Stack
-        # [Credentials for Stack]
+        self.config.region = ContentstackRegion.US
         self.stack = Stack(api_key=api_key, access_token=access_token, environment=environment, config=self.config)
 
         # [Credentials for SyncStack]
@@ -38,7 +37,12 @@ class TestStack(unittest.TestCase):
         self.assertEqual(self.credentials['api_key'], self.stack.api_key)
 
     def test_stack_config_endpoint(self):
+        region = self.config.region
+        host = self.config.host
+        endpoint = self.config.endpoint
+
         self.assertEqual('https://cdn.contentstack.io/v3', self.config.endpoint)
+        print(self.config.endpoint)
 
     def test_stack_collaborators(self):
         is_contains = False
