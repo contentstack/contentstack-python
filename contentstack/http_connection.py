@@ -8,7 +8,7 @@ Copyright 2019 Contentstack. All rights reserved.
 
 import logging
 import requests
-from urllib import parse
+from urllib.parse import urlencode
 from contentstack import Error
 from json import JSONDecodeError
 from requests.exceptions import Timeout, HTTPError
@@ -18,44 +18,55 @@ class HTTPConnection(object):
 
     def __init__(self, url, query, stack_headers):
 
-        """
-        Initialises the HTTPConnection to make Http Request
-        :param url: url for the request to made
-        :param query: It will be executed to retrieve entries. This query should be in key value format.
-        :param stack_headers: It contains like API key of your stack, access token and others.
-        """
         if None not in (url, query, stack_headers):
-            self.__url = url
+            self.__payload = None
+            self.__base_url = url
             self.__query_params = query
-            self.__stack_headers = stack_headers
-            self.__stack_headers.update(self.__user_agents())
+            self.__headers = stack_headers
+            self.__headers.update(self.__user_agents())
+
+            if 'environment' in self.__headers:
+                environment = self.__headers['environment']
+                self.__query_params['environment'] = environment
 
     def get_result(self, url: str, query: dict, headers: dict):
-        if None not in (url, query, headers):
-            if len(url) > 0 and len(self.__stack_headers) > 0:
-                self.__url = url
-                self.__query_params = query
-                self.__stack_headers.update(headers)
-            else:
-                raise ValueError('Kindly provide a valid input')
 
-        # Headers from locale
-        if 'environment' in self.__stack_headers:
-            environment = self.__stack_headers['environment']
-            self.__query_params['environment'] = environment
-        logging.info('Query Parameters ={}'.format(self.__query_params))
-        logging.info('Headers ={}'.format(self.__stack_headers))
-        payload = parse.urlencode(query=self.__query_params, encoding='UTF-8')
+        if None not in (url, query, headers):
+            if len(url) > 0 and len(self.__headers) > 0:
+                self.__base_url = url
+                if len(headers) > 0:
+                    self.__headers.update(headers)
+                self.__query_params.update(query)
+
+                # Case: If UIR Parameter contains entries
+                if 'entries' in self.__base_url:
+                    self.__payload = self.__execute_entry()
+                    # self.__payload = parse.urlencode(query=params, encoding='UTF-8')
+                else:
+                    url_param = ''
+                    for (key, value) in self.__query_params.items():
+                        url_param = '{}&{}={}'.format(url_param, key, value)
+                    self.__payload = url_param
+
         try:
-            response = requests.get(self.__url, verify=True, timeout=(10, 8), params=payload,
-                                    headers=self.__stack_headers)
+            if self.__payload.startswith("&"):
+                self.__payload = self.__payload[1:]
+            _url = '{}?{}'.format(self.__base_url, self.__payload)
+            logging.info('{}?{}'.format(self.__base_url, self.__payload))
+            response = requests.get(_url, verify=True, timeout=(10, 8), headers=self.__headers)
+
             if response.status_code == 200:
                 if response.raise_for_status() is None:
                     return self.__parse_dict(response)
             else:
                 err = response.json()
                 if err is not None:
-                    return Error()._config(err)
+                    error = Error()
+                    error._config(err)
+                    return error
+
+            logging.info('\n\nrequest url => {}\nresponse={}'.format(response.url, response))
+
         except Timeout:
             raise TimeoutError('The request timed out')
         except ConnectionError:
@@ -65,38 +76,91 @@ class HTTPConnection(object):
         except HTTPError:
             raise HTTPError('Http Error Occurred')
 
+    # def __check_for_valid_query(self):
+    #
+    #     if 'include[]' in self.__query_params:
+    #         url_params = ''
+    #         params = self.__query_params['include[]']
+    #         for param in params:
+    #             url_params = '{}&include[]={}'.format(url_params, param)
+    #         del self.__query_params['include[]']
+    #         return self.__return_query(url_params)
+    #
+    #     elif 'only[BASE][]' in self.__query_params:
+    #         url_params = ''
+    #         params = self.__query_params['only[BASE][]']
+    #         for param in params:
+    #             url_params = '{}&only[BASE][]={}'.format(url_params, param)
+    #         del self.__query_params['only[BASE][]']
+    #         return self.__return_query(url_params)
+    #
+    #     elif 'except[BASE][]' in self.__query_params:
+    #         url_params = ''
+    #         params = self.__query_params['except[BASE][]']
+    #         for param in params:
+    #             url_params = '{}&except[BASE][]={}'.format(url_params, param)
+    #         del self.__query_params['except[BASE][]']
+    #         return self.__return_query(url_params)
+    #
+    #     elif 'only' in self.__query_params:
+    #         url_params = ''
+    #         params = self.__query_params['only']
+    #         for param in params:
+    #             url_params = '{}&only={}'.format(url_params, param)
+    #         del self.__query_params['only']
+    #         return self.__return_query(url_params)
+    #
+    #     elif 'except' in self.__query_params:
+    #         url_params = ''
+    #         params = self.__query_params['except']
+    #         for param in params:
+    #             url_params = '{}&except={}'.format(url_params, param)
+    #         del self.__query_params['except']
+    #         return self.__return_query(url_params)
+    #
+    #     elif 'query' in self.__query_params:
+    #         url_params = ''
+    #         params = self.__query_params['query']
+    #         for param in params:
+    #             url_params = '{}&query={}'.format(url_params, param)
+    #         del self.__query_params['query']
+    #         return self.__return_query(url_params)
+    #     else:
+    #         pass
+    #
+    # def __return_query(self, url_params):
+    #     other_queries = ''
+    #     for key, value in self.__query_params.items():
+    #         other_queries = '{}&{}={}'.format(other_queries, key, value)
+    #     url_params = '{}{}'.format(other_queries, url_params)
+    #     self.__query_params.clear()
+    #     return url_params
+
     def __parse_dict(self, response):
         from contentstack.stack import SyncResult
         result = response.json()
-        logging.info('\n\nrequest url => {}\nresponse={}'.format(response.url, result))
 
         if 'stack' in result:
             return result['stack']
-        # If result contains entry, return Entry
         if 'entry' in result:
             dict_entry = result['entry']
             return self.__parse_entries(dict_entry)
-        # If result contains entries, return list[Entry]
         if 'entries' in result:
             entry_list = result['entries']
             return self.__parse_entries(entry_list)
-        # If result contains asset, return Asset
         if 'asset' in result:
             dict_asset = result['asset']
             return self.__parse_assets(dict_asset)
-        # If result contains assets, return list[Asset]
         if 'assets' in result:
             asset_list = result['assets']
             return self.__parse_assets(asset_list)
-        # If result contains content_type,return content_type json
         if 'content_type' in result:
             return result['content_type']
-        # If result contains content_types,return content_types json
         if 'content_types' in result:
             return result['content_types']
-        # If result contains items, return SyncResult json
         if 'items' in result:
-            sync_result = SyncResult()._configure(result)
+            sync_result = SyncResult()
+            sync_result._configure(result)
             return sync_result
 
         return None
@@ -104,7 +168,7 @@ class HTTPConnection(object):
     @staticmethod
     def __parse_entries(result):
         from contentstack import Entry
-        entries: list[Entry] = []
+        entries = []
         entry = Entry()
         # if 'count' in result:
         # entry.count = result['count']
@@ -120,7 +184,7 @@ class HTTPConnection(object):
     @staticmethod
     def __parse_assets(result):
         from contentstack import Asset
-        assets: list[Asset] = []
+        assets = []
         asset = Asset()
 
         if result is not None and len(result) > 0:
@@ -138,37 +202,51 @@ class HTTPConnection(object):
         import contentstack
         import platform
 
-        """
-        Contentstack-User-Agent.
-        """
         header = {'sdk': dict(name=contentstack.__package__, version=contentstack.__version__)}
-        os_name = platform.system()
-
-        if os_name == 'Darwin':
-            os_name = 'macOS'
-
-        elif not os_name or os_name == 'Java':
-            os_name = None
-
-        elif os_name and os_name not in ['macOS', 'Windows']:
-            os_name = 'Linux'
-
-        header['os'] = {
-            'name': os_name,
-            'version': platform.release()
-        }
-
-        local_headers = {'User-Agent': str(header),
-                         "Content-Type": 'application/json',
-                         "X-User-Agent": "contentstack-python, {}".format(contentstack.__version__)
-                         }
+        os = platform.system()
+        if os == 'Darwin':
+            os = 'macOS'
+        elif not os or os == 'Java':
+            os = None
+        elif os and os not in ['macOS', 'Windows']:
+            os = 'Linux'
+        header['os'] = {'name': os, 'version': platform.release()}
+        package = "contentstack-python, - {}".format(contentstack.__version__)
+        local_headers = {'User-Agent': str(header), "Content-Type": 'application/json', "X-User-Agent": package}
         return local_headers
 
-    def __is_valid_json(self, json_string):
+    def __execute_entry(self):
 
-        import json
-        try:
-            json.loads(json_string)
-            return True
-        except ValueError as e:
-            return False
+        url_param = ''
+
+        for (key, value) in self.__query_params.items():
+            if key == 'include[]':
+                if isinstance(value, list):
+                    url_param = '{}&{}'.format(url_param, urlencode({key: value}, doseq=True))
+            elif key == 'only[BASE][]':
+                if isinstance(value, list):
+                    url_param = '{}&{}'.format(url_param, urlencode({key: value}, doseq=True))
+            elif key == 'except[BASE][]':
+                if isinstance(value, list):
+                    url_param = '{}&{}'.format(url_param, urlencode({key: value}, doseq=True))
+            elif key == 'only':
+                for uid in value:
+                    inner_list = value[uid]
+                    inner_key = 'only[{}][]'.format(uid)
+                    if isinstance(inner_list, list):
+                        url_param = '{}&{}'.format(url_param, urlencode({inner_key: inner_list}, doseq=True))
+            elif key == 'except':
+                for uid in value:
+                    inner_list = value[uid]
+                    inner_key = 'except[{}][]'.format(uid)
+                    if isinstance(inner_list, list):
+                        url_param = '{}&{}'.format(url_param, urlencode({inner_key: inner_list}, doseq=True))
+            elif key == 'query':
+                query = urlencode({key: value})
+                url_param = '{}&{}'.format(url_param, query, doseq=True)
+            else:
+                url_param = '{}&{}={}'.format(url_param, key, value)
+
+        return url_param
+
+

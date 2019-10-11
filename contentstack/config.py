@@ -25,8 +25,18 @@ class ContentstackRegion(enum.Enum):
 class Config(object):
 
     def __init__(self):
+
+        """
+
+        """
         self.default = dict(protocol="https", region=ContentstackRegion.US, host="cdn.contentstack.io", version="v3")
 
+    @property
+    def region(self):
+        """ :returns  region of the stack """
+        return self.default['region']
+
+    @region.setter
     def region(self, region=ContentstackRegion.US):
 
         """
@@ -40,15 +50,22 @@ class Config(object):
 
         [Example:]
 
-        >>> config  = Config().region(region=ContentstackRegion.US)
+        >>> config = Config()
+        >>> config.region = ContentstackRegion.US
 
         ==============================
         """
 
         if region is not None and isinstance(region, ContentstackRegion):
             self.default['region'] = region
-        return self
 
+
+    @property
+    def host(self):
+
+        return self.default['host']
+
+    @host.setter
     def host(self, host):
 
         """
@@ -64,7 +81,6 @@ class Config(object):
 
         if host is not None and isinstance(host, str):
             self.default['host'] = host
-        return self
 
     def version(self, version=None):
 
@@ -102,10 +118,10 @@ class Config(object):
 
     def __get_url(self):
         host = self.default["host"]
-        if self.default['region'] is not ContentstackRegion.US:
-            if self.default["host"] == 'cdn.contentstack.io':
-                self.default["host"] = 'cdn.contentstack.com'
-            else:
-                regional_host = str(self.default['region'].value)
-                host = '{}-{}'.format(regional_host, self.default["host"])
+        region = self.default['region'].value
+        if region is not None:
+            if region is not 'us':
+                if self.default["host"] == 'cdn.contentstack.io':
+                    self.default["host"] = 'cdn.contentstack.com'
+                host = '{}-{}'.format(region, self.default["host"])
         return "{0}://{1}/{2}".format(self.default["protocol"], host, self.default["version"])
