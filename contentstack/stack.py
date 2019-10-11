@@ -189,7 +189,6 @@ class Stack(object):
             else:
                 self.__stack_headers['environment'] = self.__headers['environment']
             if 'config' in self.__headers:
-                # Set the config object to the config
                 self.config = self.__headers['config']
                 # Remove the config from the headers
                 self.__headers.pop('config', None)

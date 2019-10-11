@@ -8,11 +8,11 @@ Copyright 2019 Contentstack. All rights reserved.
 
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('.'))
 
 
 class Entry:
-
     """
     contentstack.entry
     This Get a single entry request fetches a particular entry of a content type.
@@ -56,7 +56,7 @@ class Entry:
         self.__count = 0
 
     def _instance(self, stack_instance):
-        # This is the protcted from outside users, so they can't access this function.
+        # This is the protected from outside users, so they can't access this function.
         self.__stack_instance = stack_instance
         self.__config = self.__stack_instance.config
         self.__entry_url = self.__config.endpoint
@@ -809,7 +809,7 @@ class Entry:
                 else:
                     return None
 
-    def except_field_uid(self, *field_uid):
+    def excepts(self, *field_uid):
 
         """
         Specifies list of field field_uid that would be excluded from the response.
@@ -823,13 +823,13 @@ class Entry:
         
         [Example:]
 
-        >>> entry.except_field_uid('uid1', 'uid2', 'uid3')
+        >>> entry.excepts('title', 'colot', 'price_in_usd')
         
         ==============================
         """
-
-        for uid in field_uid:
-            self.__except_field.append(uid)
+        if field_uid is None:
+            raise ValueError('Kindly provide a valid argument')
+        self.__except_field = list(field_uid)
 
         return self
 
@@ -884,10 +884,7 @@ class Entry:
 
         if reference_uid is None:
             raise ValueError('Kindly provide a valid argument')
-        values = []
-        for uid in len(reference_uid):
-            values.append(uid)
-        self.__local_params["include[]"] = values
+        self.__local_params["include[]"] = list(reference_uid)
 
         return self
 
@@ -910,9 +907,11 @@ class Entry:
         ==============================
         """
 
-        if field_uid is not None and len(field_uid) > 0:
-            for field in field_uid:
-                self.__uid_for_only.append(field)
+        if field_uid is None:
+            raise KeyError
+        for uid in field_uid:
+            self.__uid_for_only.append(uid)
+
         return self
 
     def only_with_reference_uid(self, reference_field_uid, *field_uid):
@@ -982,26 +981,25 @@ class Entry:
         """
         include_content_type = {'include_content_type': 'true', 'include_snippet_schema': 'true'}
         self.__local_params.update(include_content_type)
-        # self.__local_params['include_snippet_schema'] = 'true'
 
         return self
 
     def __set_include_json(self):
 
         if self.__uid_for_only is not None and len(self.__uid_for_only) > 0:
-            self.__local_params["only[BASE][]"] = self.__uid_for_only.__str__().replace("\'", "\"")
+            self.__local_params["only[BASE][]"] = self.__uid_for_only
             self.__uid_for_only = None
 
         if self.__except_field is not None and len(self.__except_field) > 0:
-            self.__local_params["except[BASE][]"] = self.__except_field.__str__().replace("\'", "\"")
+            self.__local_params["except[BASE][]"] = self.__except_field
             self.__except_field = None
 
         if self.__uid_for_except is not None and len(self.__uid_for_except) > 0:
-            self.__local_params["except"] = self.__uid_for_except.__str__().replace("\'", "\"")
+            self.__local_params["except"] = self.__uid_for_except
             self.__uid_for_except = None
 
         if self.__only_dict is not None and len(self.__only_dict) > 0:
-            self.__local_params["only"] = self.__only_dict.__str__().replace("\'", "\"")
+            self.__local_params["only"] = self.__only_dict
             self.__only_dict = None
 
         return self

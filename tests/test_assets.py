@@ -17,7 +17,7 @@ class TestAsset(unittest.TestCase):
         self.asset_uid: str = 'blt91af1e5af9c3639f'
 
         config = Config()
-        config.region(ContentstackRegion.US)
+        config.region = ContentstackRegion.US
         self.__stack = Stack(api_key=api_key, access_token=access_token, environment=env_prod, config=config)
 
     def test_single_asset(self):

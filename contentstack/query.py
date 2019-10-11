@@ -1094,32 +1094,21 @@ class Query:
     def __setup_queries(self):
 
         if self.__query_dict is not None and len(self.__query_dict) > 0:
-            self.__query_params["query"] = self.__query_dict.__str__().replace("\'", "\"")
-
+            self.__query_params["query"] = self.__query_dict
         if self.__uid_except is not None and len(self.__uid_except) > 0:
-            self.__query_params["except[BASE][]"] = self.__uid_except.__str__().replace("\'", "\"")
-            # self.__query_params = self.__query_params.__str__().replace("\'", "\"")
+            self.__query_params["except[BASE][]"] = self.__uid_except
             self.__uid_except = None
-
         if self.__uid_only is not None and len(self.__uid_only) > 0:
-            self.__query_params["only[BASE][]"] = self.__uid_only.__str__().replace("\'", "\"")
-            # self.__query_params = self.__query_params.__str__().replace("\'", "\"")
+            self.__query_params["only[BASE][]"] = self.__uid_only
             self.__uid_only = None
-
         if self.__only_json is not None and len(self.__only_json) > 0:
-            self.__query_params["only"] = self.__only_json.__str__().replace("\'", "\"")
-            # self.__query_params = self.__query_params.__str__().replace("\'", "\"")
+            self.__query_params["only"] = self.__only_json
             self.__only_json = None
-
         if self.__except_Json is not None and len(self.__except_Json) > 0:
-            self.__query_params["except"] = self.__except_Json.__str__().replace("\'", "\"")
-            # self.__query_params = self.__query_params.__str__().replace("\'", "\"")
+            self.__query_params["except"] = self.__except_Json
             self.__except_Json = None
-
         if self.__uid_include is not None and len(self.__uid_include) > 0:
-            var = ', '.join(self.__uid_include)
-            self.__query_params["include[]"] = self.__uid_include.__str__().replace("\'", "\"")
-            # self.__query_params = self.__query_params.__str__().replace("\'", "\"")
+            self.__query_params["include[]"] = self.__uid_include
             self.__uid_include = None
 
         return self
@@ -1165,9 +1154,7 @@ class Query:
         return self.__execute_query()
 
     def __execute_query(self):
-        # Sets up queries
         self.__setup_queries()
-        # HTTPConnection request process
-        result = self.__http_request.get_result(self.__entry_url, self.__query_params, self.__headers)
-        # Returns result of Query
+        query = self.__query_params.__str__().replace('\'', '\"')
+        result = self.__http_request.get_result(self.__entry_url, query, self.__headers)
         return result
