@@ -41,16 +41,15 @@ class HTTPConnection(object):
                 # Case: If UIR Parameter contains entries
                 if 'entries' in self.__base_url:
                     self.__payload = self.__execute_entry()
-                    # self.__payload = parse.urlencode(query=params, encoding='UTF-8')
                 else:
                     url_param = ''
                     for (key, value) in self.__query_params.items():
                         url_param = '{}&{}={}'.format(url_param, key, value)
                     self.__payload = url_param
-
         try:
             if self.__payload.startswith("&"):
                 self.__payload = self.__payload[1:]
+
             _url = '{}?{}'.format(self.__base_url, self.__payload)
             logging.info('{}?{}'.format(self.__base_url, self.__payload))
             response = requests.get(_url, verify=True, timeout=(10, 8), headers=self.__headers)
@@ -76,70 +75,9 @@ class HTTPConnection(object):
         except HTTPError:
             raise HTTPError('Http Error Occurred')
 
-    # def __check_for_valid_query(self):
-    #
-    #     if 'include[]' in self.__query_params:
-    #         url_params = ''
-    #         params = self.__query_params['include[]']
-    #         for param in params:
-    #             url_params = '{}&include[]={}'.format(url_params, param)
-    #         del self.__query_params['include[]']
-    #         return self.__return_query(url_params)
-    #
-    #     elif 'only[BASE][]' in self.__query_params:
-    #         url_params = ''
-    #         params = self.__query_params['only[BASE][]']
-    #         for param in params:
-    #             url_params = '{}&only[BASE][]={}'.format(url_params, param)
-    #         del self.__query_params['only[BASE][]']
-    #         return self.__return_query(url_params)
-    #
-    #     elif 'except[BASE][]' in self.__query_params:
-    #         url_params = ''
-    #         params = self.__query_params['except[BASE][]']
-    #         for param in params:
-    #             url_params = '{}&except[BASE][]={}'.format(url_params, param)
-    #         del self.__query_params['except[BASE][]']
-    #         return self.__return_query(url_params)
-    #
-    #     elif 'only' in self.__query_params:
-    #         url_params = ''
-    #         params = self.__query_params['only']
-    #         for param in params:
-    #             url_params = '{}&only={}'.format(url_params, param)
-    #         del self.__query_params['only']
-    #         return self.__return_query(url_params)
-    #
-    #     elif 'except' in self.__query_params:
-    #         url_params = ''
-    #         params = self.__query_params['except']
-    #         for param in params:
-    #             url_params = '{}&except={}'.format(url_params, param)
-    #         del self.__query_params['except']
-    #         return self.__return_query(url_params)
-    #
-    #     elif 'query' in self.__query_params:
-    #         url_params = ''
-    #         params = self.__query_params['query']
-    #         for param in params:
-    #             url_params = '{}&query={}'.format(url_params, param)
-    #         del self.__query_params['query']
-    #         return self.__return_query(url_params)
-    #     else:
-    #         pass
-    #
-    # def __return_query(self, url_params):
-    #     other_queries = ''
-    #     for key, value in self.__query_params.items():
-    #         other_queries = '{}&{}={}'.format(other_queries, key, value)
-    #     url_params = '{}{}'.format(other_queries, url_params)
-    #     self.__query_params.clear()
-    #     return url_params
-
     def __parse_dict(self, response):
         from contentstack.stack import SyncResult
         result = response.json()
-
         if 'stack' in result:
             return result['stack']
         if 'entry' in result:
@@ -242,8 +180,8 @@ class HTTPConnection(object):
                     if isinstance(inner_list, list):
                         url_param = '{}&{}'.format(url_param, urlencode({inner_key: inner_list}, doseq=True))
             elif key == 'query':
-                query = urlencode({key: value})
-                url_param = '{}&{}'.format(url_param, query, doseq=True)
+                url_param = '{}&{}={}'.format(url_param, key, value.__str__().replace("\'", "\""))
+                print(url_param)
             else:
                 url_param = '{}&{}={}'.format(url_param, key, value)
 
