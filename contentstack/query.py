@@ -1155,6 +1155,5 @@ class Query:
 
     def __execute_query(self):
         self.__setup_queries()
-        query = self.__query_params.__str__().replace('\'', '\"')
-        result = self.__http_request.get_result(self.__entry_url, query, self.__headers)
+        result = self.__http_request.get_result(self.__entry_url, self.__query_params, self.__headers)
         return result

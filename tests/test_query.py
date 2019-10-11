@@ -35,12 +35,14 @@ class TestQuery(unittest.TestCase):
         query.add_header('contentstack_header', 'contentstack')
         self.assertEqual(3, len(query.headers))
 
+    # ==================================
     def test_query_is_equal_where_condition(self):
         query = self.stack_query.content_type('product').query()
-        query.locale('en-us').where("title", "Redmi 3S")
+        query.locale('en-us')
+        query.where("color", "Gold")
         result = query.find()
         if result is not None:
-            self.assertEqual(1, len(result))
+            self.assertEqual(2, len(result))
 
     def test_query_add_query(self):
         query = self.stack_query.content_type('product').query()
@@ -70,6 +72,7 @@ class TestQuery(unittest.TestCase):
             else:
                 self.assertFalse(True)
 
+    # ==================================
     def test_query_where_condition_check(self):
         query = self.stack_query.content_type('product').query()
         query.locale('en-us')
@@ -114,6 +117,7 @@ class TestQuery(unittest.TestCase):
         else:
             self.assertFalse(True)
 
+    # ==================================
     def test_query_or_query(self):
 
         content_type = self.stack_query.content_type('product')
@@ -135,6 +139,7 @@ class TestQuery(unittest.TestCase):
         else:
             self.assertFalse(True)
 
+    # ==================================
     def test_query_less_than(self):
 
         content_type = self.stack_query.content_type('product')
@@ -152,6 +157,7 @@ class TestQuery(unittest.TestCase):
         else:
             self.assertFalse(True)
 
+    # ==================================
     def test_query_less_than_or_equal_to(self):
 
         content_type = self.stack_query.content_type('product')
@@ -169,6 +175,7 @@ class TestQuery(unittest.TestCase):
         else:
             self.assertFalse(True)
 
+    # ==================================
     def test_query_greater_than(self):
 
         content_type = self.stack_query.content_type('product')
@@ -186,6 +193,7 @@ class TestQuery(unittest.TestCase):
         else:
             self.assertFalse(True)
 
+    # ==================================
     def test_query_greater_than_or_equal_to(self):
 
         content_type = self.stack_query.content_type('product')
@@ -203,6 +211,7 @@ class TestQuery(unittest.TestCase):
         else:
             self.assertFalse(True)
 
+    # ==================================
     def test_query_not_equal_to(self):
 
         content_type = self.stack_query.content_type('product')
@@ -440,6 +449,7 @@ class TestQuery(unittest.TestCase):
         if result is not None:
             self.assertEqual(LIMIT, len(result))
 
+    # ==================================
     def test_query_regex(self):
         content_type = self.stack_query.content_type('product')
         query = content_type.query()
@@ -448,6 +458,7 @@ class TestQuery(unittest.TestCase):
         if result is not None:
             self.assertEqual(3, len(result))
 
+    # ==================================
     def test_query_regex_with_option(self):
 
         content_type = self.stack_query.content_type('product')
@@ -481,6 +492,7 @@ class TestQuery(unittest.TestCase):
         if result is not None:
             self.assertEqual(7, len(result))
 
+    # ==================================
     def test_query_in_query_reference(self):
         stack = Stack(api_key='blt02f7b45378b008ee', access_token='bltb327f978f247e1c8', environment='production')
         content_type = stack.content_type('product')
@@ -494,6 +506,7 @@ class TestQuery(unittest.TestCase):
         else:
             self.assertTrue(False)
 
+    # ==================================
     def test_query_not_in_query_reference(self):
         stack = Stack(api_key='blt02f7b45378b008ee', access_token='bltb327f978f247e1c8', environment='production')
         content_type = stack.content_type('product')
