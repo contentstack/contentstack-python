@@ -11,12 +11,12 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
 
-__author__ = 'Shailesh Mishra'
+__author__ = 'contentstack'
 __status__ = 'debug'
 __version__ = '1.0.0'
 __package__ = 'contentstack'
 __endpoint__ = 'cdn.contentstack.io'
-__email__ = "mshaileshr@gmail.com"
+__email__ = "shailesh.mishra@contentstack.com"
 
 from .entry import Entry
 from .asset import Asset

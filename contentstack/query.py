@@ -63,6 +63,7 @@ class Query(object):
         [Example]:
 
         >>> query = Query.content_type
+
         ==============================
         """
 
@@ -122,7 +123,9 @@ class Query(object):
 
         [Example]:
 
-        >>> query = Query.remove_header('header_key')
+        >>> query = Query()
+        >>> query = query.remove_header('header_key')
+        >>> result = query.find()
 
         ==============================
         """
@@ -148,7 +151,9 @@ class Query(object):
 
         [Example]:
 
-        >>> query = Query.add_header('key', value)
+        >>> query = Query()
+        >>> query = query.add_header('key', value)
+        >>> result = query.find()
 
         ==============================
         """
@@ -175,7 +180,9 @@ class Query(object):
 
         [Example]:
 
-        >>> query = Query.locale('en-us')
+        >>> query = Query()
+        >>> query = query.locale('en-us')
+        >>> result = query.find()
 
         ==============================
         """
@@ -203,7 +210,9 @@ class Query(object):
 
         [Example]:
 
-        >>> Query.where("uid", "bltsomething123")
+        >>> query = Query()
+        >>> query = query.where("uid", "bltsomething123")
+        >>> result = query.find()
 
         ==============================
         """
@@ -232,7 +241,9 @@ class Query(object):
 
         [Example]:
 
-        >>> Query.add_query("query_param_key", "query_param_value")
+        >>> query = Query()
+        >>> query = query.add_query("query_param_key", "query_param_value")
+        >>> result = query.find()
 
         ==============================
         """
@@ -259,7 +270,9 @@ class Query(object):
 
         [Example]:
 
-        >>> Query.remove_query("query_key")
+        >>> query = Query()
+        >>> query = query.remove_query("query_key")
+        >>> result = query.find()
 
         ==============================
         """
@@ -268,7 +281,6 @@ class Query(object):
             raise ValueError('Kindly provide valid key')
         if key in self.__query_params and isinstance(key, str):
             self.__query_params.pop(key, None)
-
         return self
 
     def and_query(self, *query_objects):
@@ -286,9 +298,10 @@ class Query(object):
         The response will contain the entries where the values for Title is 'Redmi Note 3' and Color is 'Gold'
         for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#and-operator]
 
-        >>> query1 = Query.where("title", "Redmi Note 3")
-        >>> query2 = Query.where("color", "Gold")
-        >>> Query.and_query(query1, query2)
+        >>> query = Query()
+        >>> query1 = query.where("title", "Redmi Note 3")
+        >>> query2 = query.where("color", "Gold")
+        >>> query.and_query(query1, query2)
         >>> result = query.find()
 
         ==============================
@@ -319,8 +332,9 @@ class Query(object):
         Color field is 'Gold' or 'Black'. The query to be used for such a case would be:
         for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#or-operator]
 
-        >>> query1 = Query.where("color", "Black")
-        >>> query2 = Query.where("color", "Gold")
+        >>> query = Query()
+        >>> query1 = query.where("color", "Black")
+        >>> query2 = query.where("price", "price_in_usd")
         >>> query.or_query(query1, query2)
         >>> result = query.find()
 
@@ -354,7 +368,9 @@ class Query(object):
         You can send the parameter as:
         for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#less-than]
 
-        >>> query = Query.less_than('price_in_usd', 600)
+        >>> query = Query()
+        >>> query = query.less_than('price_in_usd', 600)
+        >>> result = query.find()
 
         ==============================
         """
@@ -385,7 +401,9 @@ class Query(object):
         set to a value that is less than or equal to 146. To achieve this, send the parameter as:
         for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#less-than-or-equal-to]
 
-        >>> query = Query.less_than_or_equal_to('price_in_usd', 146)
+        >>> query = Query()
+        >>> query = query.less_than_or_equal_to('price_in_usd', 146)
+        >>> result = query.find()
 
         ==============================
         """
@@ -415,7 +433,9 @@ class Query(object):
         that is greater than but not equal to 146. You can send the parameter as:
         for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#greater-than]
 
-        >>> query = Query.greater_than('price_in_usd', 146)
+        >>> query = Query()
+        >>> query = query.greater_than('price_in_usd', 146)
+        >>> result = query.find()
 
         ==============================
         """
@@ -446,7 +466,9 @@ class Query(object):
         that is greater than or equal to 146. You can send the parameter as:
         for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#greater-than-or-equal-to]
 
-        >>> query = Query.greater_than_or_equal_to('price_in_usd', 146)
+        >>> query = Query()
+        >>> query = query.greater_than_or_equal_to('price_in_usd', 146)
+        >>> result = query.find()
 
         ==============================
         """
@@ -478,7 +500,9 @@ class Query(object):
         for this field. The parameter can be used as:
         for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#not-equals-operator]
 
-        >>> query = Query.not_equal_to('price_in_usd', 146)
+        >>> query = Query()
+        >>> query = query.not_equal_to('price_in_usd', 146)
+        >>> result = query.find()
 
         ==============================
         """
@@ -509,7 +533,9 @@ class Query(object):
         The query fired using the '$in' parameter is given below:
         for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#array-equals-operator]
 
-        >>> query = Query.contained_in('price_in_usd', 101, 749)
+        >>> query = Query('content_type_uid')
+        >>> query = query.contained_in('price_in_usd', 101, 749)
+        >>> result = query.find()
 
         ==============================
         """
@@ -539,7 +565,9 @@ class Query(object):
         where the field value does not fall in the given set. You can send the parameter as:
         for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#array-not-equals-operator]
 
-        >>> query = Query.not_contained_in('price_in_usd', 101, 749)
+        >>> query = Query('content_type_uid')
+        >>> query = query.not_contained_in('price_in_usd', 101, 749)
+        >>> result = query.find()
 
         ==============================
         """
@@ -567,7 +595,9 @@ class Query(object):
         the content type in which the field exists
         for more: https://www.contentstack.com/docs/apis/content-delivery-api/#exists
 
-        >>> query = Query.exists('price_in_usd')
+        >>> query = Query('content_type_uid')
+        >>> query = query.exists('price_in_usd')
+        >>> result = query.find()
 
         ==============================
         """
@@ -594,7 +624,9 @@ class Query(object):
         In the Product content type, we have a field named Price in USD. Now, you want 
         to retrieve all the entries in the content type in which the field does not exists
 
-        >>> query = Query.not_exists('price_in_usd')
+        >>> query = Query('content_type_uid')
+        >>> query = query.not_exists('price_in_usd')
+        >>> result = query.find()
 
         ==============================
         """
@@ -626,7 +658,9 @@ class Query(object):
         reference field
         for more: https://www.contentstack.com/docs/apis/content-delivery-api/#include-reference
 
-        >>> query = Query.include_reference('categories')
+        >>> query = Query()
+        >>> query = query.include_reference('categories')
+        >>> result = query.find()
 
         ==============================
        """
@@ -651,7 +685,9 @@ class Query(object):
 
         Example:
 
-        >>> query = Query.tags('black', 'gold', 'silver')
+        >>> query = Query()
+        >>> query = query.tags('black', 'gold', 'silver')
+        >>> result = query.find()
 
         ==============================
         """
@@ -677,7 +713,9 @@ class Query(object):
         Example: In the Product content type, if you wish to sort the entries with respect to their prices,
         the parameter can be used as:
 
-        >>> query = Query.ascending('price_in_usd')
+        >>> query = Query()
+        >>> query = query.ascending('price_in_usd')
+        >>> result = query.find()
 
         ==============================
         """
@@ -704,7 +742,9 @@ class Query(object):
         Example: In the Product content type, if you wish to sort the entries
         with respect to their prices, the parameter can be used as:
 
-        >>> query = Query.descending('price_in_usd')
+        >>> query = Query()
+        >>> query = query.descending('price_in_usd')
+        >>> result = query.find()
 
         ==============================
         """
@@ -730,7 +770,9 @@ class Query(object):
         Example: In the Product content type, if you wish to sort the entries
         with respect to their prices, the parameter can be used as:
 
-        >>> except_field = Query('content_type_uid').except_field_uid('field_uid1', 'field_uid2')
+        >>> query = Query()
+        >>> except_field = query.except_field_uid('field_uid1', 'field_uid2')
+        >>> result = query.find()
 
         ==============================
         """
@@ -756,7 +798,9 @@ class Query(object):
         Example: In the Product content type, if you wish to sort the entries
         with respect to their prices, the parameter can be used as:
 
-        >>> query = Query.only('price_in_usd', 'color')
+        >>> query = Query()
+        >>> query = query.only('price_in_usd', 'color')
+        >>> result = query.find()
 
         ==============================
         """
@@ -781,7 +825,9 @@ class Query(object):
         
         [Example:]
 
-        >>> query = Query.only_with_reference_uid('reference_field_uid', 'field_uid 1', 'field_uid 2')
+        >>> query = Query()
+        >>> query = query.only_with_reference_uid('reference_field_uid', 'field_uid 1', 'field_uid 2')
+        >>> result = query.find()
 
         ==============================
         """
@@ -808,7 +854,9 @@ class Query(object):
         
         [Example:]
 
-        >>> query = Query.except_with_reference_uid('price_in_usd', 'field_uid 1', 'field_uid 2')
+        >>> query = Query()
+        >>> query = query.except_with_reference_uid('price_in_usd', 'field_uid 1', 'field_uid 2')
+        >>> result = query.find()
 
         ==============================
         """
@@ -833,8 +881,10 @@ class Query(object):
         ==============================
         
         [Example:]
-        
-        >>> query = Query.include_count()
+
+        >>> query = Query()
+        >>> query = query.include_count()
+        >>> result = query.find()
 
         ==============================
         """
@@ -853,7 +903,9 @@ class Query(object):
         
         [Example:]
 
-        >>> query = Query.include_content_type()
+        >>> query = Query()
+        >>> query = query.include_content_type()
+        >>> result = query.find()
 
         ==============================
         """
@@ -872,7 +924,9 @@ class Query(object):
         
         [Example:]
 
-        >>> query = Query.skip(3)
+        >>> query = Query()
+        >>> query = query.skip(3)
+        >>> result = query.find()
 
         ==============================
         """
@@ -896,7 +950,9 @@ class Query(object):
         
         [Example]
 
-        >>> query = Query.limit(3)
+        >>> query = Query()
+        >>> query = query.limit(3)
+        >>> result = query.find()
 
         ==============================
         
@@ -918,7 +974,7 @@ class Query(object):
         regular expression. This may be slow for large data sets.
         :param key: The key to be constrained.
         :param regex: The regular expression pattern to match
-        :param modifiers (Optional): Any of the following supported Regular expression modifiers.
+        :param modifiers: (Optional) Any of the following supported Regular expression modifiers.
         :return: Query object, so you can chain this call.
 
         [Note:] Some useful values for $options are m for making dot match newlines and x for ignoring
@@ -928,7 +984,9 @@ class Query(object):
         
         [Example:]
 
-        >>> query = Query.regex("name", "browser")
+        >>> query = Query()
+        >>> query = query.regex("name", "browser")
+        >>> result = query.find()
 
         ==============================
         """
@@ -955,7 +1013,9 @@ class Query(object):
         
         [Example]
 
-        >>> query = Query.search("search_keyword")
+        >>> query = Query()
+        >>> query = query.search("search_keyword")
+        >>> result = query.find()
         
         ==============================
         """
@@ -981,7 +1041,9 @@ class Query(object):
         
         [Example]
 
-        >>> query = Query.param("key", "value")
+        >>> query = Query()
+        >>> query = query.param("key", "value")
+        >>> result = query.find()
         
         ==============================
         """
@@ -1005,7 +1067,9 @@ class Query(object):
 
         [Example]
 
-        >>> query = Query.include_reference_content_type_uid()
+        >>> query = Query()
+        >>> query = query.include_reference_content_type_uid()
+        >>> result = query.find()
 
         ==============================
         """
@@ -1026,7 +1090,9 @@ class Query(object):
         
         [Example]
 
-        >>> query = Query.where_in("brand")
+        >>> query = Query()
+        >>> query = query.where_in("brand")
+        >>> result = query.find()
 
         ==============================
         """
@@ -1052,7 +1118,9 @@ class Query(object):
         
         [Example]
 
-        >>> query = Query.where_not_in("brand")
+        >>> query = Query()
+        >>> query = query.where_not_in("brand")
+        >>> result = query.find()
 
         ==============================
         """
@@ -1092,13 +1160,14 @@ class Query(object):
 
         """
         It fetches the query result.
-        :return: list of Entry Objects.
+        :return: List of :class:`Entry <contentstack.entry.Entry>` objects.
+        :rtype: List of <contentstack.entry.Entry>
 
         ==============================
         
         [Example]:
-
-        result = query.find()
+        >>> query = Query()
+        >>> result = query.find()
         
         ==============================
         """
@@ -1113,13 +1182,15 @@ class Query(object):
     def find_one(self):
 
         """ It returns only one result.
-        :return: Query result
+        :return: List of :class:`Entry <contentstack.entry.Entry>` objects.
+        :rtype: List of <contentstack.entry.Entry>
 
         ==============================
         
         [Example]:
 
-        >>> result = Query.find_one()
+        >>> query = Query()
+        >>> result = query.find_one()
         
         ==============================
         """
