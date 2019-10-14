@@ -114,7 +114,8 @@ class Asset:
         ==============================
 
         [Example]:
-        >>> uid = Asset.asset_uid
+        >>> asset = Asset()
+        >>> uid = asset.asset_uid
 
         ==============================
 
@@ -134,8 +135,8 @@ class Asset:
         ==============================
         
         [Example]:
-
-        >>> count = Asset.count
+        >>> asset = Asset()
+        >>> count = asset.count
 
         ==============================
         """
@@ -154,8 +155,8 @@ class Asset:
         ==============================
 
         [Example]:
-
-        >>> file = Asset.filetype
+        >>> asset = Asset()
+        >>> file = asset.filetype
 
         ==============================
         """
@@ -174,8 +175,8 @@ class Asset:
         ==============================
 
         [Example]:
-
-        >>> size = Asset.filesize
+        >>> asset = Asset()
+        >>> size = asset.filesize
 
         ==============================
         """
@@ -194,8 +195,8 @@ class Asset:
         ==============================
 
         [Example]:
-
-        >>> filename = Asset.filename
+        >>> asset = Asset()
+        >>> filename = asset.filename
 
         ==============================
         """
@@ -214,8 +215,8 @@ class Asset:
         ==============================
 
         [Example]:
-
-        >>> file_url = Asset.url
+        >>> asset = Asset()
+        >>> file_url = asset.url
 
         ==============================
         """
@@ -234,8 +235,8 @@ class Asset:
         ==============================
 
         [Example]:
-
-        >>>  response = Asset.json
+        >>> asset = Asset()
+        >>>  response = asset.json
 
         ==============================
         """
@@ -254,8 +255,8 @@ class Asset:
         ==============================
 
         [Example]:
-
-        >>>  response = Asset.created_at
+        >>> asset = Asset()
+        >>>  response = asset.created_at
 
         ==============================
         """
@@ -272,8 +273,8 @@ class Asset:
             [str] -- Owner of the Asset
 
         [Example]:
-
-        >>>  response = Asset.created_by
+        >>> asset = Asset()
+        >>>  response = asset.created_by
 
         """
 
@@ -291,8 +292,8 @@ class Asset:
         ==============================
 
         [Example]:
-
-        >>>  response = Asset.updated_at
+        >>> asset = Asset()
+        >>>  response = asset.updated_at
 
         ==============================
         """
@@ -311,8 +312,8 @@ class Asset:
         ==============================
 
         [Example]:
-
-        >>>  response = Asset.updated_by
+        >>> asset = Asset()
+        >>>  response = asset.updated_by
 
         ==============================
         """
@@ -331,8 +332,8 @@ class Asset:
         ==============================
 
         [Example]:
-
-        >>>  tags = Asset.tags
+        >>> asset = Asset()
+        >>>  tags = asset.tags
 
         ==============================
         """
@@ -351,8 +352,8 @@ class Asset:
         ==============================
 
         [Example]:
-
-        >>>  tags = Asset.get_version
+        >>> asset = Asset()
+        >>> tags = asset.get_version
 
         ==============================
         """
@@ -371,8 +372,8 @@ class Asset:
         ==============================
 
         [Example]:
-
-        >>>  tags = Asset.dimension
+        >>> asset = Asset()
+        >>> tags = asset.dimension
 
         ==============================
         """
@@ -395,8 +396,8 @@ class Asset:
         ==============================
 
         [Example]:
-
-        >>>  asset = Asset.add_header('key', 'value')
+        >>> asset = Asset()
+        >>>  asset = asset.add_header('key', 'value')
 
         ==============================
         
@@ -425,8 +426,8 @@ class Asset:
         ==============================
 
         [Example]:
-
-        >>>  asset = Asset.environment('production')
+        >>> asset = Asset()
+        >>>  asset = asset.environment('production')
 
         ==============================
         """
@@ -450,8 +451,8 @@ class Asset:
         ==============================
 
         [Example]:
-
-        >>>  asset = Asset.add_params('key', 'value')
+        >>> asset = Asset()
+        >>>  asset = asset.add_params('key', 'value')
 
         ==============================
         """
@@ -475,8 +476,8 @@ class Asset:
         ==============================
 
         [Example]:
-
-        >>>  asset = asset.relative_urls()
+        >>> asset = Asset()
+        >>> asset = asset.relative_urls()
 
         ==============================
         """
@@ -496,8 +497,8 @@ class Asset:
         ==============================
 
         [Example]:
-
-        >>>  asset = asset.include_dimension()
+        >>> asset = Asset()
+        >>> asset = asset.include_dimension()
 
         ==============================
         """
@@ -517,8 +518,8 @@ class Asset:
         ==============================
 
         [Example]:
-
-        >>>  asset = asset.remove_header('some_key')
+        >>> asset = Asset()
+        >>> asset = asset.remove_header('some_key')
 
         ==============================
         """
@@ -542,8 +543,8 @@ class Asset:
         ==============================
 
         [Example]:
-
-        >>>  asset = asset.set_uid('uid')
+        >>> asset = Asset()
+        >>> asset = asset.set_uid('uid')
 
         ==============================
         """
@@ -565,7 +566,7 @@ class Asset:
         ==============================
 
         [Example]:
-
+        >>> asset = Asset()
         >>>  asset = asset.set_uid('uid')
         
         ==============================
@@ -585,8 +586,8 @@ class Asset:
         ==============================
 
         [Example]:
-
-        >>>  asset = asset.sort('some_key', OrderType.ASC)
+        >>> asset = Asset()
+        >>> asset = asset.sort('some_key', OrderType.ASC)
         
         ==============================
         """
