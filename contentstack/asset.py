@@ -7,7 +7,6 @@ Asset
 contentstack
 Created by Shailesh Mishra on 22/06/19.
 Copyright 2019 Contentstack. All rights reserved.
-
 """
 
 
@@ -30,6 +29,7 @@ class Asset:
     [Example]:
     This module implements the Asset class.
     API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#assets
+    >>> from stack import Stack as stack
     >>> asset = stack.asset()
     ==============================
     """
@@ -109,13 +109,12 @@ class Asset:
         asset_uid function returns asset_uid of the asset
 
         Returns:
-            [type] -- str
+        [type] -- str
 
         ==============================
 
         [Example]:
-
-            >>> uid = asset.asset_uid
+        >>> uid = Asset.asset_uid
 
         ==============================
 
@@ -136,7 +135,7 @@ class Asset:
         
         [Example]:
 
-        >>> count = asset.count
+        >>> count = Asset.count
 
         ==============================
         """
@@ -156,7 +155,7 @@ class Asset:
 
         [Example]:
 
-        >>> file = asset.filetype
+        >>> file = Asset.filetype
 
         ==============================
         """
@@ -176,7 +175,7 @@ class Asset:
 
         [Example]:
 
-        >>> size = asset.file_size
+        >>> size = Asset.filesize
 
         ==============================
         """
@@ -196,7 +195,7 @@ class Asset:
 
         [Example]:
 
-        >>> filename = asset.filename
+        >>> filename = Asset.filename
 
         ==============================
         """
@@ -216,7 +215,7 @@ class Asset:
 
         [Example]:
 
-        >>> file_url = asset.file_url
+        >>> file_url = Asset.url
 
         ==============================
         """
@@ -236,7 +235,7 @@ class Asset:
 
         [Example]:
 
-        >>>  response = asset.to_json
+        >>>  response = Asset.json
 
         ==============================
         """
@@ -256,7 +255,7 @@ class Asset:
 
         [Example]:
 
-        >>>  response = asset.created_at
+        >>>  response = Asset.created_at
 
         ==============================
         """
@@ -274,7 +273,7 @@ class Asset:
 
         [Example]:
 
-        >>>  response = asset.created_by
+        >>>  response = Asset.created_by
 
         """
 
@@ -293,7 +292,7 @@ class Asset:
 
         [Example]:
 
-        >>>  response = asset.updated_at
+        >>>  response = Asset.updated_at
 
         ==============================
         """
@@ -313,7 +312,7 @@ class Asset:
 
         [Example]:
 
-        >>>  response = asset.updated_by
+        >>>  response = Asset.updated_by
 
         ==============================
         """
@@ -333,7 +332,7 @@ class Asset:
 
         [Example]:
 
-        >>>  tags = asset.tags
+        >>>  tags = Asset.tags
 
         ==============================
         """
@@ -353,7 +352,7 @@ class Asset:
 
         [Example]:
 
-        >>>  tags = asset.get_version
+        >>>  tags = Asset.get_version
 
         ==============================
         """
@@ -373,7 +372,7 @@ class Asset:
 
         [Example]:
 
-        >>>  tags = asset.dimension
+        >>>  tags = Asset.dimension
 
         ==============================
         """
@@ -397,7 +396,7 @@ class Asset:
 
         [Example]:
 
-        >>>  asset = asset.add_header('key', 'value')
+        >>>  asset = Asset.add_header('key', 'value')
 
         ==============================
         
@@ -427,7 +426,7 @@ class Asset:
 
         [Example]:
 
-        >>>  asset = asset.environment('production')
+        >>>  asset = Asset.environment('production')
 
         ==============================
         """
@@ -452,7 +451,7 @@ class Asset:
 
         [Example]:
 
-        >>>  asset = asset.add_params('key', 'value')
+        >>>  asset = Asset.add_params('key', 'value')
 
         ==============================
         """

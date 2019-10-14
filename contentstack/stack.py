@@ -1,8 +1,7 @@
+import stack
 from contentstack import HTTPConnection
 from contentstack import Config
 from contentstack.errors import StackException
-
-
 import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
@@ -12,13 +11,15 @@ class Stack(object):
 
     def __init__(self, **kwargs):
 
-        """
-        provide key-worded, variable-length argument list
+        """ Provide key-worded, variable-length argument list.
+        To initialise stack following fields are mandatory.
+
         :param kwargs: key-worded list
         :type kwargs: object
         :param api_key: stack 'api_key' of your target stack.
         :param access_token: stack 'access_token' of your target stack.
         :param environment: stack 'environment' of your target stack.
+
         :param config: config='<contentstack.Config>' (optional) it is useful to change config of the stack's
         configurations like host, version of the stack.
         
@@ -29,7 +30,7 @@ class Stack(object):
         >>> import contentstack
         >>> stack: Stack = Stack(api_key ='api_key', access_token='access_token', environment='environment')
 
-        [OR] To declare custom stack
+        To declare stack with custom configuration
         >>> config = Config()
         >>> config.host('cdn.contentstack.io')
         >>> stack: Stack = Stack(api_key ='API_Key',access_token='access_token',environment='environment', config=config)
@@ -52,7 +53,7 @@ class Stack(object):
     @property
     def api_key(self):
 
-        """
+        """ Returns api_KEY of the stack
         :return: api_key of the stack
         :rtype: str
         
@@ -60,7 +61,7 @@ class Stack(object):
         
         [Example]:
 
-        >>> api_key = stack.api_key
+        >>> api_key = Stack.api_key
         
         ==============================
         """
@@ -81,7 +82,7 @@ class Stack(object):
         
         [Example]:
 
-        >>> http_instance = stack.get_http_instance
+        >>> http_instance = Stack.get_http_instance
         
         ==============================
         """
@@ -91,8 +92,7 @@ class Stack(object):
     @property
     def access_token(self):
 
-        """
-        This method returns access_token of the stack.
+        """ Returns access_token of the stack
         :return: access_token
         :rtype: str
         
@@ -100,7 +100,7 @@ class Stack(object):
         
         [Example]:
 
-        >>> access_token: str = stack.access_token
+        >>> access_token = Stack.access_token
         
         ==============================
         """
@@ -123,7 +123,7 @@ class Stack(object):
         
         [Example]:
 
-        >>> env = stack.environment
+        >>> env = Stack.environment
         
         ==============================
         """
@@ -146,7 +146,7 @@ class Stack(object):
         
         [Example]:
 
-        >>> stack = stack.environment = 'product'
+        >>> stack = Stack.environment = 'product'
         
         ==============================
         """
@@ -167,7 +167,7 @@ class Stack(object):
         
         [Example]:
 
-        >>> headers = stack.add_header
+        >>> headers = Stack.headers
         
         ==============================
         """
@@ -190,7 +190,6 @@ class Stack(object):
                 self.__stack_headers['environment'] = self.__headers['environment']
             if 'config' in self.__headers:
                 self.config = self.__headers['config']
-                # Remove the config from the headers
                 self.__headers.pop('config', None)
             else:
                 self.config = Config()
@@ -216,7 +215,7 @@ class Stack(object):
         
         [Example]:
 
-        >>> content_type = stack.content_type('product')
+        >>> content_type = Stack.content_type('product')
         
         ==============================
         """
@@ -245,7 +244,7 @@ class Stack(object):
         
         [Example]:
 
-        >>> content_types = stack.get_content_types()
+        >>> content_types = Stack.get_content_types()
         
         ==============================
         """
@@ -277,7 +276,7 @@ class Stack(object):
         Keep uid None to fetch list of all assets
         API Reference : https://www.contentstack.com/docs/guide/content-management#working-with-assets
 
-        >>> asset_instance = stack.asset()
+        >>> asset_instance = Stack.asset()
         >>> assets = asset_instance.fetch_all()
         
         ==============================
@@ -288,7 +287,8 @@ class Stack(object):
         provide asset_uid of the asset you have to find.
         Example: in case to fetch single asset, provide uid of the asset:
 
-        >>> asset_instance = stack.asset('bltputyourassetuid')
+        >>> stack = Stack(api_key="stack_api_KEY", access_token="access_token_of_stack", environment='environment')
+        >>> asset_instance = stack.Stack.asset('bltputyourassetuid')
         >>> asset = asset_instance.fetch()
         
         ==============================
@@ -317,7 +317,7 @@ class Stack(object):
         value in array form ImageTransform method is define for image manipulation with
         different transform_params in second parameter in array form
 
-        >>> stack.image_transform('image_url', width=100, height=100)
+        >>> stack.Stack.image_transform('image_url', width=100, height=100)
 
         ==============================
         """
@@ -340,7 +340,7 @@ class Stack(object):
 
         [Example]: collaborators with whom the stacks are shared
 
-        >>> stack = stack.collaborators()
+        >>> stack = Stack.collaborators()
 
         ==============================
         """
@@ -360,7 +360,7 @@ class Stack(object):
         such as the description, format of date, format of time, and so on.
         Users can include or exclude stack variables in the response.
 
-        >>> stack = stack.include_stack_variables()
+        >>> stack = Stack.include_stack_variables()
 
         ==============================
         """
@@ -377,7 +377,7 @@ class Stack(object):
         ==============================
 
         [Example]:
-        >>> stack = stack.include_discrete_variables()
+        >>> stack = Stack.include_discrete_variables()
 
         ==============================
         """
@@ -396,7 +396,7 @@ class Stack(object):
         ==============================
 
         [Example]:
-        >>> stack = stack.include_count()
+        >>> stack = Stack.include_count()
 
         ==============================
         """
@@ -446,7 +446,7 @@ class Stack(object):
         :rtype: list[SyncResult]
 
         [Example]:
-        >>> result = stack.sync(content_type_uid='content_type_uid', from_date='date', locale='en-us', publish_type='asset_published')
+        >>> result = Stack.sync(content_type_uid='content_type_uid', from_date='date', locale='en-us', publish_type='asset_published')
         
         ==============================
         """
@@ -483,7 +483,7 @@ class Stack(object):
 
         [Example]:
 
-        >>> result = stack.pagination('blt8347235938759')
+        >>> result = Stack.pagination('blt8347235938759')
 
         ==============================
         """
@@ -512,7 +512,7 @@ class Stack(object):
 
         [Example]:
 
-        >>> result = stack.sync_token('bltsomekeytoput')
+        >>> result = Stack.sync_token('bltsomekeytoput')
 
         ==============================
         """
