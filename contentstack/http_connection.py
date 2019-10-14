@@ -137,6 +137,7 @@ class HTTPConnection(object):
 
     @staticmethod
     def __user_agents() -> dict:
+
         import contentstack
         import platform
 

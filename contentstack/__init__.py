@@ -4,7 +4,6 @@ __init__.py
 contentstack
 Created by Shailesh Mishra on 22/06/19.
 Copyright 2019 Contentstack. All rights reserved.
-
 """
 
 import warnings
