@@ -1,5 +1,4 @@
 import unittest
-
 from contentstack.stack import Stack
 import logging
 
@@ -269,7 +268,7 @@ class TestQuery(unittest.TestCase):
             for entry in result:
                 price_in_usd = entry.get('price_in_usd')
                 print('price_in_usd {}'.format(price_in_usd))
-                counter = counter+1
+                counter = counter + 1
         self.assertEqual(7, counter)
 
     def test_query_not_exists(self):
@@ -435,7 +434,7 @@ class TestQuery(unittest.TestCase):
             result = query.find()
             if result is not None:
                 skip_counter = len(result)
-                if counter-skip_counter == 3:
+                if counter - skip_counter == 3:
                     self.assertTrue(True)
                 else:
                     self.assertTrue(False)

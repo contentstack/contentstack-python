@@ -3,16 +3,14 @@ Entry
 contentstack
 Created by Shailesh Mishra on 22/06/19.
 Copyright 2019 Contentstack. All rights reserved.
-
 """
-
 import os
 import sys
-
 sys.path.insert(0, os.path.abspath('.'))
 
 
 class Entry:
+
     """
     contentstack.entry
     This Get a single entry request fetches a particular entry of a content type.
@@ -24,6 +22,8 @@ class Entry:
     latest published version of the entry.
     To retrieve a specific version,
     make use of the version parameter and keep the environment parameter blank.]
+
+    >>> entry = Entry('content_type_uid')
     """
 
     def __init__(self, content_type_id=None):
@@ -63,7 +63,6 @@ class Entry:
         if self.__content_type_id is not None:
             self.__entry_url = '{}/content_types/{}/entries/'.format(self.__entry_url, self.__content_type_id)
         self.__http_request = self.__stack_instance.get_http_instance
-
         return self
 
     def _configure(self, model):
@@ -108,7 +107,7 @@ class Entry:
 
         [Example:]
 
-        >>> entry = entry.set_header('key', 'value')
+        >>> entry = entry.add_header('key', 'value')
 
         ==============================
         """
@@ -135,8 +134,8 @@ class Entry:
         ==============================
 
         [Example:]
-
-        >>> header = remove_header('key')
+        >>> entry = Entry('content_type_uid')
+        >>> header = entry.remove_header('header_key')
 
         ==============================
         """
@@ -160,8 +159,8 @@ class Entry:
         ==============================
 
         [Example:]
-
-        >>> entry = entry.uid
+        >>> entry = Entry('content_type_uid')
+        >>> entry_uid = entry.uid
 
         ==============================
         """
@@ -178,8 +177,8 @@ class Entry:
         ==============================
 
         [Example:]
-
-        >>> entry = entry.locale
+        >>> entry = Entry('content_type_uid')
+        >>> entry_locale = entry.locale
 
         ==============================
         """
@@ -204,7 +203,8 @@ class Entry:
 
         [Example:]
 
-        >>> entry = entry.locale('en-us')
+        >>> entry = Entry('content_type_uid')
+        >>> entry.locale = 'en-us'
 
         ==============================
         """
@@ -225,7 +225,7 @@ class Entry:
         ==============================
 
         [Example:]
-        
+        >>> entry = Entry('content_type_uid')
         >>> title = entry.title
 
         ==============================
@@ -241,7 +241,7 @@ class Entry:
         ==============================
         
         [Example:]
-        
+        >>> entry = Entry('content_type_uid')
         >>> url = entry.url
         
         ==============================
@@ -261,7 +261,7 @@ class Entry:
         ==============================
         
         [Example:]
-        
+        >>> entry = Entry('content_type_uid')
         >>> tags = entry.tags
         
         ==============================
@@ -280,7 +280,7 @@ class Entry:
         ==============================
         
         [Example:]
-        
+        >>> entry = Entry('content_type_uid')
         >>> content_type = entry.content_type
         
         ==============================
@@ -299,31 +299,13 @@ class Entry:
         ==============================
 
         [Example:]
-
-        >>> entry = entry.headers
+        >>> entry = Entry('content_type_uid')
+        >>> headers = entry.headers
 
         ==============================
         """
 
         return self.__entry_headers
-
-    @property
-    def uid(self):
-
-        """
-        This method returns uid of the entry
-        :return: uid of the entry
-        :rtype: str
-        
-        ==============================
-        
-        [Example:]
-        
-        >>> uid = entry.uid
-        
-        ==============================
-        """
-        return self.__entry_uid
 
     @property
     def json(self):
@@ -336,8 +318,8 @@ class Entry:
         ==============================
         
         [Example:]
-        
-        >>> json_result = entry.json
+        >>> entry = Entry('content_type_uid')
+        >>> result = entry.json
         
         ==============================
         """
@@ -356,8 +338,8 @@ class Entry:
         ==============================
         
         [Example:]
-
-        >>> result = entry.count
+        >>> entry = Entry('content_type_uid')
+        >>> count = entry.count
         
         ==============================
         """
@@ -374,84 +356,8 @@ class Entry:
         ==============================
 
         [Example:]
-
-        >>> result = entry.created_at
-
-        ==============================
-        """
-
-        return self.__created_at
-
-    @property
-    def created_by(self):
-
-        """
-        Get uid who created this entry.
-        :return:  uid who created this entry.
-        :rtype:str
-
-        ==============================
-
-        [Example:]
-
-        >>> result = entry.get_created_by
-
-        ==============================
-        """
-
-        return self.__created_by
-
-    @property
-    def updated_at(self):
-
-        """
-        value of updating time of entry.
-        :return: updating time of entry.
-        :rtype: str
-
-        ==============================
-
-        [Example:]
-
-        >>> result = entry.get_updated_at
-
-        ==============================
-        """
-
-        return self.__updated_at
-
-    @property
-    def updated_by(self):
-
-        """
-        Get uid who updated this entry.
-        :return: uid who updated entry.
-        :rtype: str
-
-        ==============================
-
-        [Example:]
-
-        >>> result = entry.get_updated_by
-
-        ==============================
-        """
-
-        return self.__updated_by
-
-    @property
-    def created_at(self):
-
-        """
-        value of creation time of entry.
-        [Uses] created_at = entry.get_created_at()
-        :return: str
-
-        ==============================
-
-        [Example:]
-
-        >>> result = entry.created_at
+        >>> entry = Entry('content_type_uid')
+        >>> created_at = entry.created_at
 
         ==============================
         """
@@ -469,8 +375,8 @@ class Entry:
         ==============================
 
         [Example:]
-
-        >>> result = entry.get_created_by
+        >>> entry = Entry('content_type_uid')
+        >>> created_by = entry.created_by
 
         ==============================
         """
@@ -488,8 +394,8 @@ class Entry:
         ==============================
 
         [Example:]
-
-        >>> result = entry.get_updated_at
+        >>> entry = Entry('content_type_uid')
+        >>> result = entry.updated_at
 
         ==============================
         """
@@ -507,8 +413,8 @@ class Entry:
         ==============================
 
         [Example:]
-
-        >>> result = entry.get_updated_by
+        >>> entry = Entry('content_type_uid')
+        >>> result = entry.updated_by
 
         ==============================
         """
@@ -527,8 +433,8 @@ class Entry:
         ==============================
 
         [Example:]
-
-        >>> entry = entry.set_uid('uidexamplesomethng')
+        >>> entry = Entry('content_type_uid')
+        >>> entry = entry.set_uid('entry_uid')
 
         ==============================
         """
@@ -554,8 +460,8 @@ class Entry:
         ==============================
 
         [Example:]
-
-        >>> result = entry.get('yourKey')
+        >>> entry = Entry('content_type_uid')
+        >>> result = entry.get('key')
 
         ==============================
         """
@@ -580,8 +486,8 @@ class Entry:
         ==============================
 
         [Example:]
-
-        >>> entry = entry.params('key', 'value')
+        >>> entry = Entry('content_type_uid')
+        >>> entry = entry.add_param('key', 'value')
 
         ==============================
         """
@@ -608,7 +514,7 @@ class Entry:
         ==============================
 
         [Example:]
-
+        >>> entry = Entry('content_type_uid')
         >>> entry = entry.version('7')
 
         ==============================
@@ -635,8 +541,8 @@ class Entry:
         ==============================
         
         [Example:]
-
-        >>> result = entry.get_string('entry_key')
+        >>> entry = Entry('content_type_uid')
+        >>> result = entry.get_string('key')
         
         ==============================
         """
@@ -659,7 +565,7 @@ class Entry:
         ==============================
         
         [Example:]
-
+        >>> entry = Entry('content_type_uid')
         >>> result = entry.get_boolean('bool_key')
         
         ==============================
@@ -682,7 +588,7 @@ class Entry:
         ==============================
         
         [Example:]
-
+        >>> entry = Entry('content_type_uid')
         >>> result = entry.get_json('key')
         
         ==============================
@@ -703,7 +609,7 @@ class Entry:
         ==============================
         
         [Example:]
-
+        >>> entry = Entry('content_type_uid')
         >>> result = entry.get_list('key')
         
         ==============================
@@ -725,8 +631,8 @@ class Entry:
         ==============================
 
         [Example:]
-
-        >>> result = entry.get_asset("key")
+        >>> entry = Entry('content_type_uid')
+        >>> result = entry.asset("key")
 
         ==============================
         """
@@ -740,8 +646,7 @@ class Entry:
             result = self.get_json(key)
             if result is not None and isinstance(result, dict):
                 asset = asset._configure(result)
-            else:
-                asset = None
+
         return asset
 
     def get_assets(self, key):
@@ -756,7 +661,7 @@ class Entry:
         ==============================
         
         [Example:]
-
+        >>> entry = Entry('content_type_uid')
         >>> result = entry.get_assets("key")
         
         ==============================
@@ -790,8 +695,8 @@ class Entry:
         ==============================
         
         [Example:]
-
-        >>> entry = entry.get_all_entries("reference_key", "reference_content_type")
+        >>> entry = Entry('content_type_uid')
+        >>> all_entries = entry.get_all_entries("reference_key", "reference_content_type")
         
         ==============================
         """
@@ -822,8 +727,8 @@ class Entry:
         ==============================
         
         [Example:]
-
-        >>> entry.excepts('title', 'colot', 'price_in_usd')
+        >>> entry = Entry('content_type_uid')
+        >>> entry = entry.excepts('title', 'color', 'price_in_usd')
         
         ==============================
         """
@@ -847,8 +752,8 @@ class Entry:
         ==============================
         
         [Example:]
-
-        >>> entry.except_with_reference_uid('reference_field_uid', "field1", 'field2', 'field3');
+        >>> entry = Entry('content_type_uid')
+        >>> entry = entry.except_with_reference_uid('reference_field_uid', "field1", 'field2', 'field3')
 
         ==============================
 
@@ -877,7 +782,8 @@ class Entry:
         
         [Example:]
 
-        >>> entry.includeReference("uid1, uid2, uid3")
+        >>> entry = Entry('content_type_uid')
+        >>> entry.include_reference('uid1', 'uid2', 'uid3')
         
         ==============================
         """
@@ -902,8 +808,9 @@ class Entry:
         
         [Example:]
 
-        >>> entry.only('field_uid1', 'field_uid2')
-        
+        >>> entry = Entry('content_type_uid')
+        >>> entry.only('uid1', 'uid2', 'uid3')
+
         ==============================
         """
 
@@ -928,9 +835,9 @@ class Entry:
         ==============================
         
         [Example:]
+        >>> entry = Entry('content_type_uid')
+        >>> entry.only_with_reference_uid('reference_uid', 'uid1', 'uid2', 'uid3')
 
-        >>> entry.only_with_reference_uid('reference_uid', 'some_value', 'field_uid1', 'field_uid2', 'field_uid3')
-        
         ==============================
         """
 
@@ -955,9 +862,9 @@ class Entry:
         ==============================
         
         [Example:]
-
+        >>> entry = Entry('content_type_uid')
         >>> entry.include_reference_content_type_uid()
-        
+
         ==============================
         """
 
@@ -975,6 +882,7 @@ class Entry:
         
         [Example:]
 
+        >>> entry = Entry('content_type_uid')
         >>> entry.include_content_type()
         
         ==============================

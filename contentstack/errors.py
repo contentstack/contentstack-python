@@ -8,12 +8,13 @@ Copyright 2019 Contentstack. All rights reserved.
 
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('.'))
 
-class Error:
 
+class Error:
     """
-    contentstack.error
+    >>> error = Error()
     ~~~~~~~~~~~~~~~~~~
     This module implements the Error class.
     API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#error
@@ -21,13 +22,11 @@ class Error:
     """
 
     def __init__(self):
-        # It has some values to set error_msg, error_code etc..
         self.__error_dict = {}
         self.__error_code = str
         self.__msg = str
 
     def _config(self, result: dict):
-        # config error information
         if result is not None and len(result) > 0:
             self.__error_dict = result
             self.__error_code = self.__error_dict['error_code']
@@ -36,7 +35,6 @@ class Error:
 
     @property
     def error_code(self):
-
         """
         It returns error code from the stack response
         :return: error_code as int
@@ -46,7 +44,7 @@ class Error:
         
         [Example:]
 
-        >>> code = error.error_code
+        >>> code = Error.error_code
 
         ==============================
         """
@@ -54,7 +52,6 @@ class Error:
 
     @property
     def error_message(self):
-
         """
         Returns error_message from the stack response
         :return: error_message
@@ -64,7 +61,7 @@ class Error:
 
         [Example:]
 
-        >>> message = error.error_message
+        >>> message = Error.error_message
 
         ==============================
         """
@@ -73,7 +70,6 @@ class Error:
 
     @property
     def error(self):
-
         """
         This returns error code and error_message in dict formats
         :return: error dict
@@ -83,7 +79,7 @@ class Error:
 
         [Example:]
 
-        >>> ode = error.error
+        >>> ode = Error.error
 
         ==============================
         """
@@ -92,7 +88,6 @@ class Error:
 
     @property
     def error_info(self) -> dict:
-
         """
         error information
         :return: error information
@@ -102,7 +97,7 @@ class Error:
 
         [Example:]
 
-        >>> ode = error.error_info
+        >>> ode = Error.error_info
         
         ==============================
         """
