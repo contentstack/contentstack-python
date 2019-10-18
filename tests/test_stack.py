@@ -1,6 +1,5 @@
 import logging
 import unittest
-
 from config import ContentstackRegion
 from contentstack import Error, Config
 from contentstack.stack import Stack
@@ -40,7 +39,6 @@ class TestStack(unittest.TestCase):
         region = self.config.region
         host = self.config.host
         endpoint = self.config.endpoint
-
         self.assertEqual('https://cdn.contentstack.io/v3', self.config.endpoint)
         print(self.config.endpoint)
 

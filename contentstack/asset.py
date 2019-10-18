@@ -1,43 +1,38 @@
-import os
-import sys
-sys.path.insert(0, os.path.abspath('.'))
 
 """
-Asset
-contentstack
+
 Created by Shailesh Mishra on 22/06/19.
 Copyright 2019 Contentstack. All rights reserved.
+
+contentstack.asset
+~~~~~~~~~~~~~~~~~~
+
+API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#assets
+
 """
-
-
-class OrderType(object):
-
-    """
-    OrderType is used to choose one of the ascending or descending
-    """
-    ASC, DESC = range(0, 2)
 
 
 class Asset:
 
-    """
-    Assets refer to all the media files (images, videos, PDFs, audio files, and so on) uploaded
+    """Assets refer to all the media files (images, videos, PDFs, audio files, and so on) uploaded
     in your Contentstack repository for future use.
     These files can be attached and used in multiple entries.
     contentstack.asset
     ==============================
+
+    This module implements the Asset class. API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#assets
+        
     [Example]:
-    This module implements the Asset class.
-    API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#assets
-    >>> from stack import Stack as stack
-    >>> asset = stack.asset()
+        >>> from stack import Stack as stack
+        >>> asset = stack.asset()
+
     ==============================
+
     """
 
     def __init__(self, uid=None):
         if uid is not None and isinstance(uid, str):
-            self.__asset_uid = uid
-        
+            self.__uid = uid
         self.__config = None
         self.__stack_instance = None
         self.__response = None
@@ -58,9 +53,9 @@ class Asset:
         self.__tags = None
 
     def _instance(self, stack_instance):
+        # _instance is the protected member of the asset, So outsiders can not access this file.
         from contentstack.stack import Stack
         from contentstack.errors import StackException
-
         if stack_instance is None:
             raise StackException('Kindly initialise stack first')
         if isinstance(stack_instance, Stack):
@@ -73,7 +68,7 @@ class Asset:
         return self
 
     def _configure(self, response):
-        
+        # _configure is the protected member of the asset, So outsiders can not access this file.
         if response is not None and isinstance(response, dict) and len(response) > 0:
             self.__response = response
             if 'filename' in self.__response:
@@ -85,7 +80,7 @@ class Asset:
             if 'url' in self.__response:
                 self.__file_url = self.__response['url']
             if 'uid' in self.__response:
-                self.__asset_uid = self.__response['uid']
+                self.__uid = self.__response['uid']
             if 'tags' in self.__response:
                 self.__tags = self.__response['tags']
             if 'created_at' in self.__response:
@@ -103,10 +98,9 @@ class Asset:
         return self
 
     @property
-    def asset_uid(self):
+    def uid(self):
 
-        """
-        asset_uid function returns asset_uid of the asset
+        """uid property helps to set uid of the asset
 
         Returns:
         [type] -- str
@@ -114,20 +108,19 @@ class Asset:
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>> uid = asset.asset_uid
+            >>> asset = stack.asset(uid)
+            >>> uid = asset.uid
 
         ==============================
 
         """
 
-        return self.__asset_uid
+        return self.__uid
 
     @property
     def count(self):
 
-        """
-        Size of asset objects in Asset list.
+        """count property helps to get the Size of asset objects.
         
         Returns:
             [type] -- [int]
@@ -135,10 +128,11 @@ class Asset:
         ==============================
         
         [Example]:
-        >>> asset = Asset()
-        >>> count = asset.count
+            >>> asset = Asset()
+            >>> count = asset.count
 
         ==============================
+
         """
 
         return self.__count
@@ -146,8 +140,7 @@ class Asset:
     @property
     def filetype(self):
 
-        """
-        This function returns type of the asset file
+        """This function returns type of the asset file
 
         Returns:
             [type] -- str
@@ -155,10 +148,11 @@ class Asset:
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>> file = asset.filetype
+            >>> asset = stack.asset(uid)
+            >>> file = asset.filetype
 
         ==============================
+
         """
 
         return self.__file_type
@@ -166,8 +160,7 @@ class Asset:
     @property
     def filesize(self):
 
-        """
-        Returns size of asset file
+        """Returns size of asset file
         
         Returns:
             [type] -- str
@@ -175,10 +168,11 @@ class Asset:
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>> size = asset.filesize
+            >>> asset = stack.asset(uid)
+            >>> size = asset.filesize
 
         ==============================
+
         """
 
         return self.__file_size
@@ -186,8 +180,7 @@ class Asset:
     @property
     def filename(self):
 
-        """
-        This function returns the name of the asset file.
+        """This property returns the filename asset file.
         
         Returns:
             [type] -- [str]
@@ -195,10 +188,11 @@ class Asset:
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>> filename = asset.filename
+            >>> aasset = Asset('bltsomethingasuid')
+            >>> filename = asset.filename
 
         ==============================
+
         """
 
         return self.__file_name
@@ -206,8 +200,7 @@ class Asset:
     @property
     def url(self):
 
-        """
-        This function returns the url of the Asset
+        """This property returns the url of the Asset
         
         Returns:
             [type] -- [str]
@@ -215,10 +208,11 @@ class Asset:
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>> file_url = asset.url
+            >>> asset = stack.asset(uid)
+            >>> file_url = asset.url
 
         ==============================
+
         """
 
         return self.__file_url
@@ -226,8 +220,7 @@ class Asset:
     @property
     def json(self):
 
-        """
-        This function returns json response of Asset
+        """This property returns response in json
         
         Returns:
             [{str}] -- [json response of Asset]
@@ -235,10 +228,11 @@ class Asset:
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>>  response = asset.json
+            >>> asset = stack.asset(uid)
+            >>> response = asset.json
 
         ==============================
+
         """
 
         return self.__response
@@ -246,8 +240,7 @@ class Asset:
     @property
     def created_at(self):
 
-        """
-        This function returns the time when Asset is created.
+        """This property returns the time when Asset is created.
         
         Returns:
             [str] -- Time when Asset is created
@@ -255,8 +248,8 @@ class Asset:
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>>  response = asset.created_at
+            >>> asset = stack.asset(uid)
+            >>> response = asset.created_at
 
         ==============================
         """
@@ -266,15 +259,18 @@ class Asset:
     @property
     def created_by(self):
 
-        """
-        This function returns the owner of the Asset
+        """This property created_by returns the owner of the Asset
         
         Returns:
             [str] -- Owner of the Asset
 
+        ===============================
+
         [Example]:
-        >>> asset = Asset()
-        >>>  response = asset.created_by
+            >>> asset = stack.asset(uid)
+            >>> response = asset.created_by
+        
+        ================================
 
         """
 
@@ -283,8 +279,7 @@ class Asset:
     @property
     def updated_at(self):
 
-        """
-        This method returns the time the Asset was updated.
+        """This property updated_at returns the time the Asset was updated.
         
         Returns:
             [str] -- Time the Asset was updated
@@ -292,10 +287,11 @@ class Asset:
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>>  response = asset.updated_at
+            >>> asset = stack.asset(uid)
+            >>> response = asset.updated_at
 
         ==============================
+
         """
 
         return self.__updated_at
@@ -312,10 +308,11 @@ class Asset:
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>>  response = asset.updated_by
+            >>> asset = Asset('bltsomethingasuidasuid')
+            >>> response = asset.updated_by
 
         ==============================
+
         """
 
         return self.__updated_by
@@ -323,8 +320,7 @@ class Asset:
     @property
     def tags(self):
 
-        """
-        This function returns the list of str
+        """This property returns the list of tag str
         
         Returns:
             [list] -- list of tags
@@ -332,19 +328,19 @@ class Asset:
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>>  tags = asset.tags
+            >>> asset = stack.asset(uid)
+            >>> tags = asset.tags
 
         ==============================
+
         """
 
         return self.__tags
 
     @property
-    def get_version(self):
+    def version(self):
 
-        """
-        This returns the version of the asset
+        """This property returns the version of asset
         
         Returns:
             [int] -- Version of the asset
@@ -352,10 +348,11 @@ class Asset:
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>> tags = asset.get_version
+            >>> asset = stack.asset(uid)
+            >>> tags = asset.get_version
 
         ==============================
+
         """
 
         return self.__version
@@ -363,8 +360,7 @@ class Asset:
     @property
     def dimension(self):
 
-        """
-        This function returns the dimension of the Asset
+        """This property returns the dimension of the Asset
         
         Returns:
             [dict] -- Dimension of the Asset
@@ -372,10 +368,11 @@ class Asset:
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>> tags = asset.dimension
+            >>> asset = stack.asset(uid)
+            >>> tags = asset.dimension
 
         ==============================
+
         """
 
         return self.__dimension
@@ -383,10 +380,13 @@ class Asset:
     def add_header(self, key, value):
 
         """
-        Adds header params to the header of request
+        add_header is the funtion helps to pass additional header to the asset class
+        
+        Arguments:
+            key {str} -- key of the header
+            value {str} -- value of the header
         
         Raises:
-
             ValueError: Kindly provide valid KEY and Value
             ValueError: key and value should be str type
         
@@ -396,11 +396,11 @@ class Asset:
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>>  asset = asset.add_header('key', 'value')
+            >>> asset = stack.asset(uid)
+            >>> asset = asset.add_header('key', 'value')
 
         ==============================
-        
+
         """
 
         if None in (key, value):
@@ -417,17 +417,18 @@ class Asset:
         """
         Provide the name of the environment if you wish to retrieve the assets published 
         in a particular environment.
+        
+        Arguments:
+            environment {str} -- the name of the environment
 
-        :param environment: the name of the environment
-        :type environment: str
-        :return: self
-        :rtype: Asset, so we can chain the call
+        Returns:
+            [Asset] -- Asset, So we can chain the call
 
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>>  asset = asset.environment('production')
+            >>> asset = stack.asset(uid)
+            >>> asset = asset.environment('production')
 
         ==============================
         """
@@ -444,21 +445,31 @@ class Asset:
     def add_params(self, key, value):
 
         """
-        :param key: query params key
-        :param value: query params value
-        :return: Asset, So we can chain the call
+        add_param is helpful to pass addtional parameters to the asset class
+
+        Arguments:
+            key {str} -- key of the query parameter
+            value {str} -- value of the query parameter
+        
+        Raises:
+            KeyError: if key is None or type of key is not str
+            ValueError: if value is None
+        
+        Returns:
+            Asset -- [Returns Asset object So we can chain the call]
 
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>>  asset = asset.add_params('key', 'value')
+            >>> asset = stack.asset(uid)
+            >>> asset = asset.add_params('key', 'value')
 
         ==============================
         """
 
+
         if None in (key, value):
-            raise ValueError('Kindly provide valid params')
+            raise KeyError('Kindly provide valid params')
         elif isinstance(key, str):
             self.__query_params[key] = value
         else:
@@ -469,17 +480,19 @@ class Asset:
     def relative_urls(self):
 
         """
-        include the relative URLs of the assets in the response.
-        :return: self
-        :rtype: Asset, so we can chain the call
+        Include the relative URLs of the assets in the response.
+        
+        Returns:
+            Asset -- Asset, so we can chain the call
 
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>> asset = asset.relative_urls()
+            >>> asset = stack.asset(uid)
+            >>> asset = asset.relative_urls()
 
         ==============================
+
         """
 
         self.__query_params['relative_urls'] = 'true'
@@ -491,16 +504,18 @@ class Asset:
         """
         include the dimensions (height and width) of the image in the response.
         Supported image types: JPG, GIF, PNG, WebP, BMP, TIFF, SVG, and PSD.
-        :return: self
-        :rtype: Asset
+
+        Returns:
+            Asset -- Asset, so we can chain the call
 
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>> asset = asset.include_dimension()
+            >>> asset = stack.asset(uid)
+            >>> asset = asset.include_dimension()
 
         ==============================
+        
         """
 
         self.__query_params['include_dimension'] = "true"
@@ -510,18 +525,25 @@ class Asset:
     def remove_header(self, key):
 
         """
-        :param key: remove_header function takes key of header developer wants to remove.
-        :type key: header of key
-        :return: self
-        :rtype: Asset, So we can chain the call
+        remove_header function helps to delete the existing key from the header.
+        
+        Arguments:
+            key {str} -- existing key of the header parameter
+        
+        Raises:
+            ValueError: If key is None
+        
+        Returns:
+            [Asset] -- Asset, So we can chain the call
 
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>> asset = asset.remove_header('some_key')
+            >>> asset = stack.asset(uid)
+            >>> asset = asset.remove_header('some_key')
 
         ==============================
+
         """
 
         if key is None:
@@ -533,41 +555,51 @@ class Asset:
 
     def set_uid(self, asset_uid):
 
-        """
+        """        
         Enter the unique ID of the asset of which you wish to retrieve the details.
-        :param asset_uid:  asset_uid is unique ID of the asset of which you wish to retrieve the details
-        :type asset_uid:
-        :return: self
-        :rtype: Asset, So we can chain the call
+        
+        Arguments:
+            asset_uid {str} -- asset_uid is unique ID of the asset of which you wish to retrieve the details
+        
+        Raises:
+            KeyError: If asset_uid is None
+            KeyError: If type of asset_uid is str
+        
+        Returns:
+            [Asset] -- Asset, so we can chain the call
 
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>> asset = asset.set_uid('uid')
+            >>> asset = stack.asset(uid)
+            >>> asset = asset.set_uid('uid')
 
         ==============================
+
         """
+
         if asset_uid is None:
-            raise ValueError('Invalid asset_uid')
+            raise KeyError('Invalid asset_uid')
         elif isinstance(asset_uid, str):
-            self.__asset_uid = asset_uid
+            self.__uid = asset_uid
         else:
-            raise Exception('Kindly provide str tyoe of asset_uid')
+            raise KeyError('Kindly provide str type of asset_uid')
 
         return self
 
     def include_count(self):
 
         """
-        :return: include_count is used to include number of assets, used for fetch_all()
-        :rtype: Asset, So we can chain the call
+        include_count is used to return total asset count
+
+        Returns:
+            [Asset] -- Asset, so we can chain the call
 
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>>  asset = asset.set_uid('uid')
+            >>> asset = stack.asset(uid)
+            >>> asset = asset.set_uid('uid')
         
         ==============================
 
@@ -579,15 +611,27 @@ class Asset:
     def sort(self, key, order_by):
 
         """
-        :param key: provides key on which ASC/DESC need to apply.
+        Request asset by sort by key, It caould be sorted to ASCENDING and DESCENDING order
+        param key: provides the key on which ASC/DESC need to apply.
         :param order_by: object option either "asc" or "desc"
         :return self , instance of AssetLibrary
+        
+        Arguments:
+            key {[type]} -- [description]
+            order_by {[type]} -- [description]
+        
+        Raises:
+            ValueError: [description]
+            Exception: [description]
+        
+        Returns:
+            [type] -- [description]
 
         ==============================
 
         [Example]:
-        >>> asset = Asset()
-        >>> asset = asset.sort('some_key', OrderType.ASC)
+            >>> asset = stack.asset(uid)
+            >>> asset = asset.sort('some_key', OrderType.ASC)
         
         ==============================
         """
@@ -606,11 +650,11 @@ class Asset:
 
     def fetch_all(self):
 
-        """
-        Assets refer to all the media files (images, videos, PDFs, audio files, and so on)
+        """Assets refer to all the media files (images, videos, PDFs, audio files, and so on)
         uploaded in your Contentstack repository for future use. These files can be
         attached and used in multiple entries.
-        Learn more about Assets [https://www.contentstack.com/docs/guide/content-management#working-with-assets].
+        Learn more about Assets 
+        [https://www.contentstack.com/docs/guide/content-management#working-with-assets].
 
         :return: This call fetches the list of all the assets of a particular stack.
         It also returns the content of each asset in the form of list[Assets].
@@ -630,9 +674,16 @@ class Asset:
         :rtype: Asset
 
         """
-        if self.__asset_uid is not None and len(self.__asset_uid) > 0:
+        if self.__uid is not None and len(self.__uid) > 0:
             endpoint = self.__config.endpoint
-            url = '{}/assets/{}'.format(endpoint, self.__asset_uid)
+            url = '{}/assets/{}'.format(endpoint, self.__uid)
         else:
             raise Exception("Kindly Provide Asset UID")
         return self.__http_request.get_result(url, self.__query_params, self.__stack_headers)
+
+
+class OrderType(object):
+
+    """OrderType is used to choose one of the ascending or descending"""
+    
+    ASC, DESC = range(0, 2)
