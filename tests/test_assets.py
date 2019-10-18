@@ -59,7 +59,7 @@ class TestAsset(unittest.TestCase):
         _asset = self.__stack.asset(self.asset_uid)
         result = _asset.fetch()
         if result is not None:
-            self.assertEqual(self.asset_uid, result.asset_uid)
+            self.assertEqual(self.asset_uid, result.uid)
 
     def test_asset_check_filetype(self):
         _asset = self.__stack.asset(self.asset_uid)

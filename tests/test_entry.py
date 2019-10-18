@@ -146,7 +146,7 @@ class TestEntry(unittest.TestCase):
         result = _entry.fetch()
         if result is not None and isinstance(result, Entry):
             the_result = result.get_assets('images')
-            does_exist = the_result[0].asset_uid
+            does_exist = the_result[0].uid
             if does_exist is not None:
                 self.assertTrue(True)
 

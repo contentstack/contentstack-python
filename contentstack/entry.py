@@ -1,29 +1,33 @@
+
 """
-Entry
-contentstack
+
 Created by Shailesh Mishra on 22/06/19.
 Copyright 2019 Contentstack. All rights reserved.
+
+contentstack.entry
+~~~~~~~~~~~~~~~~~~
+
+API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#entries
+
 """
-import os
-import sys
-sys.path.insert(0, os.path.abspath('.'))
 
 
 class Entry:
 
     """
-    contentstack.entry
-    This Get a single entry request fetches a particular entry of a content type.
-    ~~~~~~~~~~~~~~~~~~
-    This module implements the Entry class.
-    API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#entries
+    [Note]: If no version is mentioned, this request will retrieve the
+    latest published version of the entry.To retrieve a specific version, make use of the version parameter 
+    and keep the environment parameter blank.
 
-    [Note: If no version is mentioned, this request will retrieve the
-    latest published version of the entry.
-    To retrieve a specific version,
-    make use of the version parameter and keep the environment parameter blank.]
+    ==============================
 
-    >>> entry = Entry('content_type_uid')
+    [Example:]
+
+        >>> entry = entry.content_type('product').entry(uid)
+        >>> entry = entry.fetch()
+
+    ==============================
+
     """
 
     def __init__(self, content_type_id=None):
@@ -93,60 +97,72 @@ class Entry:
         return self
 
     def add_header(self, key, value):
+        
+        """        
+        It is useful to accept the API key, access_token of stack of which you wish to retrieve 
+        the content types.
+        
+        Arguments:
+            key {str} -- key of header
+            value {str} -- value of header
+        
+        Raises:
+            KeyError: If case when key or value is None
 
-        """
-        It is useful to accept the API key, access_token of stack of which you wish to retrieve the content types.
-        :param key: key of the header
-        :type key: str
-        :param value: value of respected key header
-        :type value: str
-        :return: self
-        :rtype: Entry
-
+            KeyError: key and value type should be str
+        
+        Returns:
+            Entry -- Entry class instance, that helps to chain the call
+        
         ==============================
 
         [Example:]
-
-        >>> entry = entry.add_header('key', 'value')
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.add_header('key', 'value')
+            >>> entry = entry.fetch() 
 
         ==============================
+
         """
 
-        if key and value is not None:
-            if isinstance(key, str) and isinstance(value, str):
-                self.__entry_headers[key] = value
-            else:
-                raise ValueError('Kindly provide str type key-value pair')
+        if None in (key, value):
+            raise KeyError
+        elif isinstance(key, str) and isinstance(value, str):
+            self.__entry_headers[key] = value
         else:
-            raise ValueError('Kindly provide a valid input')
+            raise KeyError('key and value type should be str')
 
         return self
 
     def remove_header(self, key):
 
         """
-        This method is helpful to remove desired key from the header of the entry
-        :param key: key of the entry header
-        :type key: str
-        :return: self
-        :rtype: Entry
+         To remove desired header key
+        
+        Arguments:
+            key {str} -- existing key of header
+    
+        Raises:
+            KeyError: Kindly provide a valid key, key should not be None or str
+        
+        Returns:
+            Entry -- Entry class object so we can chain the call
 
         ==============================
 
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> header = entry.remove_header('header_key')
-
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.remove_header('key')
+            >>> entry = entry.fetch() 
+            
         ==============================
         """
 
-        if key is None:
-            raise ValueError('Kindly provide valid KEY')
+        if key is None or not isinstance(key, str):
+            raise KeyError('Kindly provide valid KEY')
         elif isinstance(key, str):
             if key in self.__entry_headers:
                 self.__entry_headers.pop(key, None)
-        else:
-            raise ValueError('Kindly provide a valid input')
 
         return self
 
@@ -154,33 +170,76 @@ class Entry:
     def uid(self):
 
         """
-        :return: uid of the entry of str type
+        uid of the entry
+        
+        Returns:
+            str -- str type entry uid
 
         ==============================
 
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> entry_uid = entry.uid
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch() 
+            >>> entry_uid = entry.uid
 
         ==============================
         """
         return self.__entry_uid
+
+    @uid.setter
+    def uid(self, uid):
+
+        """
+        The unique ID of the content type of which you wish to retrieve the details.
+        The content type UID is generated based on the title of the content type 
+        and it is unique across a stack.
+        
+        Arguments:
+            uid {str} -- entry uid
+        
+        Raises:
+            KeyError: key should not be None or empty str
+        
+        Returns:
+            Entry -- Entry class object so we can chain the call
+
+        ==============================
+
+        [Example:]
+            >>> entry:Entry = entry.content_type('product').entry(uid)
+            >>> entry.uid = 'bltsomethingasuid'
+            >>> entry = entry.fetch() 
+
+        ==============================
+
+        """
+
+        if uid is None or not isinstance(uid, str):
+            raise KeyError('Kindly provide a valid uid')
+        self.__entry_uid = uid
+    
+        return self
+
+
 
     @property
     def locale(self):
 
         """
         It returns code of the language of which the entries needs to be included.
-        :return: code of the language of which the entries needs to be included.
-        :rtype: str
-
+        
+        Returns:
+            str -- language of the entry
+        
         ==============================
 
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> entry_locale = entry.locale
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch() 
+            >>> locale = entry.locale
 
         ==============================
+
         """
 
         if 'locale' in self.__result_json:
@@ -190,59 +249,69 @@ class Entry:
 
     @locale.setter
     def locale(self, locale):
-
+        
         """
-        locale accepts code of the language of which the entries needs to be included.
+        Locale accepts code of the language of which the entries needs to be included.
         Only the entries published in this locale will be displayed.
-        :param locale: code of the language of which the entries needs to be included.
-        :type locale: str
-        :return: It does not return any value
-        :rtype: Entry
-
+        
+        Arguments:
+            locale {str} -- language code
+        
+        Raises:
+            KeyError: locale should not be None or empty, type of locale should be str
+        
         ==============================
 
         [Example:]
 
-        >>> entry = Entry('content_type_uid')
-        >>> entry.locale = 'en-us'
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry.locale = 'en-us'
+            >>> entry = entry.fetch() 
 
         ==============================
         """
 
-        if locale is not None and isinstance(locale, str):
-            self.__local_params["locale"] = locale
-        else:
-            raise ValueError('Kindly provide a valid locale')
+        if locale is None and not isinstance(locale, str):
+            raise KeyError('Kindly provide a valid locale')
+        self.__local_params["locale"] = locale
+    
 
     @property
     def title(self):
 
-        """
-        This method returns title of the entry
-        :return: Title of the entry
-        :rtype: str
+        """This method returns title of the entry
+
+        Returns:
+            str -- title of the entry
 
         ==============================
 
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> title = entry.title
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch() 
+            >>> title = entry.title
 
         ==============================
+
         """
+    
         return self.__title
 
     @property
     def url(self):
 
         """
-        This method returns urls of the entry
+        This method returns url of the entry
+
+        Returns:
+            str -- url of the entry
 
         ==============================
         
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> url = entry.url
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> url = entry.url
         
         ==============================
 
@@ -253,16 +322,17 @@ class Entry:
     @property
     def tags(self):
 
-        """
-        This method returns list of tags of the entry
-        :return: This method returns tags of the entry
-        :rtype: list
+        """This method returns list of tags of the entry
+
+        Returns:
+            list -- tags of entry
         
         ==============================
         
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> tags = entry.tags
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> tags = entry.tags
         
         ==============================
         """
@@ -272,18 +342,20 @@ class Entry:
     @property
     def content_type(self):
 
-        """
-        This method returns content_type of the entry
-        :return: content_type of the entry
-        :rtype: str
+        """This method returns content_type of the entry
+
+        Returns:
+            str -- content_type_uid of the entry
         
         ==============================
         
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> content_type = entry.content_type
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> content_type = entry.content_type
         
         ==============================
+
         """
 
         return self.__content_type_id
@@ -291,18 +363,20 @@ class Entry:
     @property
     def headers(self):
 
-        """
-        This method is useful to get dictionary of the headers
-        :return: The method is used to get list of headers.
-        :rtype: dict
+        """This method is useful to get dictionary of the headers
+
+        Returns:
+            dict -- The method is used to get list of headers.
 
         ==============================
 
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> headers = entry.headers
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> headers = entry.headers
 
         ==============================
+
         """
 
         return self.__entry_headers
@@ -312,18 +386,21 @@ class Entry:
 
         """
         This method returns response of the entry in dictionary formats
-        :return: response of the entry in dictionary type
-        :rtype: dict
+
+        Returns:
+            dict -- response of the entry
         
         ==============================
         
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> result = entry.json
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> result = entry.json
         
         ==============================
-        """
 
+        """
+        # return None if self.__result_json == None else self.__result_json
         if self.__result_json is None:
             return None
         else:
@@ -332,14 +409,17 @@ class Entry:
     @property
     def count(self):
 
-        """
-        :return: count of the Entry Object
+        """ Number of entry onjects
         
+        Returns:
+            int -- count of the Entry object
+
         ==============================
         
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> count = entry.count
+            >>> entry = entry.content_type('product').entry()
+            >>> entry = entry.fetch()
+            >>> count = entry.count
         
         ==============================
         """
@@ -349,15 +429,15 @@ class Entry:
     def created_at(self):
 
         """
-        value of creation time of entry.
-        [Uses] created_at = entry.get_created_at()
-        :return: str
+        Returns:
+            str -- value of creation time of entry
 
         ==============================
 
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> created_at = entry.created_at
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> created_at = entry.created_at
 
         ==============================
         """
@@ -368,15 +448,15 @@ class Entry:
     def created_by(self):
 
         """
-        Get uid who created this entry.
-        :return:  uid who created this entry.
-        :rtype:str
+        Returns:
+            str -- uid who created this entry
 
         ==============================
 
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> created_by = entry.created_by
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> created_by = entry.created_by
 
         ==============================
         """
@@ -387,17 +467,18 @@ class Entry:
     def updated_at(self):
 
         """
-        value of updating time of entry.
-        :return: updating time of entry.
-        :rtype: str
+        Returns:
+            str -- updating time of entry.
 
         ==============================
 
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> result = entry.updated_at
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> result = entry.updated_at
 
         ==============================
+
         """
 
         return self.__updated_at
@@ -406,62 +487,40 @@ class Entry:
     def updated_by(self):
 
         """
-        Get uid who updated this entry.
-        :return: uid who updated entry.
-        :rtype: str
+
+        Returns:
+            str -- uid who updated entry.
 
         ==============================
 
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> result = entry.updated_by
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> result = entry.updated_by
 
         ==============================
         """
 
         return self.__updated_by
 
-    def set_uid(self, uid):
-
-        """
-        the unique ID of the content type of which you wish to retrieve the details.
-        The content type UID is generated based on the title of the content type and it is unique across a stack.
-        :param uid: The unique ID of the content type of which you wish to retrieve the details
-        :type uid: str
-        :return: Entry
-
-        ==============================
-
-        [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> entry = entry.set_uid('entry_uid')
-
-        ==============================
-        """
-
-        if uid is None:
-            raise ValueError('Kindly provide a valid entry_uid')
-        elif isinstance(uid, str):
-            self.__entry_uid = uid
-        else:
-            raise ValueError('entry_uid should be str type')
-
-        return self
 
     def get(self, key):
 
         """
         This method returns value of respective key of the entry
-        :param key: key you want to access value
-        :type key: str
-        :return: json
-        :rtype: object
+        
+        Arguments:
+            key {str} -- field_uid as key
+
+        Returns:
+            object -- onject by key you wants to access
 
         ==============================
 
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> result = entry.get('key')
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> result = entry.get('key')
 
         ==============================
         """
@@ -476,20 +535,27 @@ class Entry:
 
         """
         This method is useful to add additional Query parameters to the entry
-        :param key: query param key
-        :type key: str
-        :param value: query param value
-        :type value: str
-        :return: self
-        :rtype: Entry
+        
+        Arguments:
+            key {str} -- key The key as string which needs to be added to an Entry
+            value {object} -- value The value as string which needs to be added to an Entry
+        
+        Raises:
+            ValueError: If key or value is None
+            ValueError: If key is not type of str
+        
+        Returns:
+            Entry -- So can we chain the call
 
         ==============================
 
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> entry = entry.add_param('key', 'value')
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> entry = entry.add_param('key', 'value')
 
         ==============================
+
         """
 
         if None in (key, value):
@@ -504,20 +570,28 @@ class Entry:
     def version(self, version):
 
         """
-        Enter the version number of the entry that you want to retrieve. However,
-        to retrieve a specific version of an entry, you need to keep the environment parameter blank.
-        :param version: version of the entry
-        :type version: str
-        :return: self
-        :rtype: Entry
+        Enter the version number of the entry that you want to retrieve. 
+        However, to retrieve a specific version of an entry, you need to keep the environment parameter blank.
+        
+        Arguments:
+            version {str} -- version if entry
+        
+        Raises:
+            ValueError: [description]
+            ValueError: [description]
+
+        Returns:
+            Entry -- So we can chain the call
 
         ==============================
 
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> entry = entry.version('7')
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> entry = entry.version('7')
 
         ==============================
+        
         """
 
         if version is None:
@@ -533,16 +607,19 @@ class Entry:
 
         """
         This method returns str type result of the entry
-        :param key: key of the entry
-        :type key: str
-        :return: value from the dict of respective key
-        :rtype: str
+        
+        Arguments:
+            key {str} -- field_uid    
+
+        Returns:
+            str -- value from the dict of respective key
         
         ==============================
         
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> result = entry.get_string('key')
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> result = entry.get_string('key')
         
         ==============================
         """
@@ -557,16 +634,22 @@ class Entry:
 
         """
         This method returns bool type result of the entry
-        :param key: This is the key of the entry
-        :type key: str
-        :return: boolean value
-        :rtype: bool
+        
+        Arguments:
+            key {str} -- field_uid
+        
+        Raises:
+            KeyError: If key instance is not str
+        
+        Returns:
+            bool -- boolean value
         
         ==============================
         
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> result = entry.get_boolean('bool_key')
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> result = entry.get_boolean('bool_key')
         
         ==============================
         """
@@ -582,14 +665,19 @@ class Entry:
 
         """
         This method is useful to get result of respective key if result is dict
-        :rtype: object
-        :param key: This is the key of the entry
+
+        Arguments:
+            key {str} -- field_uid
+
+        Returns:
+            dict -- result dict by key
         
         ==============================
         
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> result = entry.get_json('key')
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> result = entry.get_json('key')
         
         ==============================
         """
@@ -603,17 +691,23 @@ class Entry:
     def get_list(self, key):
 
         """
-        Gets list of data from the entry
-        :param key: key of the entry to be accessed
+        Arguments:
+            key {str} -- field_uid
+
+        Returns:
+            list -- list of data from the entry
         
         ==============================
         
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> result = entry.get_list('key')
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> result = entry.get_list('key')
         
         ==============================
+
         """
+        
         value = self.get(key)
         if isinstance(value, list):
             return value
@@ -623,16 +717,20 @@ class Entry:
     def asset(self, key):
 
         """
-
         Get an asset from the entry on the basis of the key
-        :return: Asset of the entry
-        :rtype: Asset
+
+        Arguments:
+            key {str} -- field_uid
+
+        Returns:
+            Asset -- Asset of the entry
 
         ==============================
 
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> result = entry.asset("key")
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> result = entry.asset("key")
 
         ==============================
         """
@@ -653,16 +751,19 @@ class Entry:
 
         """
         Get an assets from the entry. This works with multiple true fields
-        :param key: key of asset
-        :type key: str
-        :return: list of Asset
-        :rtype: list[Asset]
+
+        Arguments:
+            key {str} -- field_uid
+
+        Returns:
+            list[Asset] -- list of Asset
         
         ==============================
         
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> result = entry.get_assets("key")
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> result = entry.get_assets("key")
         
         ==============================
         """
@@ -682,24 +783,28 @@ class Entry:
         return assets
 
     def get_all_entries(self, ref_key, ref_content_type):
-
+        
         """
         Get value for the given reference key.
-        :param ref_key: key of a reference field.
-        :type ref_key: str
-        :param ref_content_type: class uid.
-        :type ref_content_type: str
-        :return: list of  :Entry instances. Also specified content_type value will be set as class uid for all
-        :rtype: list[Entry]
+        
+        Arguments:
+            ref_key {str} -- ref_key key of a reference field.
+            ref_content_type {str} -- ref_content_type class uid.
+
+        Returns:
+            list[Asset] -- Entry instances. Also specified content_type value will be set as class uid for all
         
         ==============================
         
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> all_entries = entry.get_all_entries("reference_key", "reference_content_type")
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> all_entries = entry.get_all_entries("reference_key", "reference_content_type")
         
         ==============================
+
         """
+        
         all_entries = []
         if self.__result_json is not None and isinstance(ref_key, str):
             if ref_key in self.__result_json:
@@ -718,20 +823,21 @@ class Entry:
 
         """
         Specifies list of field field_uid that would be excluded from the response.
-        :param field_uid: field_uid for variable number of arguments which get excluded from the response.
-        *field_uid for variable number of arguments
-        :type: str
-        :return: self
-        :rtype: Entry object, so you can chain this call.
+
+        Returns:
+            Entry -- Entry object, so you can chain this call.
         
         ==============================
         
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> entry = entry.excepts('title', 'color', 'price_in_usd')
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> entry = entry.excepts('title', 'color', 'price_in_usd')
         
         ==============================
+
         """
+        
         if field_uid is None:
             raise ValueError('Kindly provide a valid argument')
         self.__except_field = list(field_uid)
@@ -741,23 +847,30 @@ class Entry:
     def except_with_reference_uid(self, reference_field_uid, *field_uid):
 
         """
-        :param: reference_field_uid: Key who has reference to some other class object.
-        :type: str:
-        :param: field_uid: field_uid for variable number of arguments
-        *field_uid for variable number of arguments
-        :type: str:
-        :return: Entry
-        :rtype: Entry object, so you can chain this call.
+        Specifies an array of &#39;except&#39; keys that would be excluded in the response.
+
+        Arguments:
+            reference_field_uid {str} -- Key who has reference to some other class object.
+            field_uid {str}: field_uid for variable number of arguments      
         
+        Raises:
+            ValueError: reference_field_uid and field_uid should not be None
+            ValueError: reference_field_uid shoud be str
+        
+        Returns:
+            Entry -- Entry object, so you can chain this call.
+
         ==============================
         
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> entry = entry.except_with_reference_uid('reference_field_uid', "field1", 'field2', 'field3')
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> entry = entry.except_with_reference_uid('reference_field_uid', "field1", 'field2', 'field3')
 
         ==============================
 
         """
+        
         if (reference_field_uid, field_uid) is None:
             raise ValueError('Kindly provide valid arguments')
         elif isinstance(reference_field_uid, str):
@@ -769,21 +882,23 @@ class Entry:
         return self
 
     def include_reference(self, *reference_uid):
-
+        
         """
         Add a constraint that requires a particular reference key details.
-        :param reference_uid: word args reference_field key that to be constrained. 
-        *reference_uid for variable number of arguments
-        :type reference_uid: str
-        :return: self
-        :rtype: Entry object, so you can chain this call.
         
+        Raises:
+            ValueError: if reference_uid is None
+        
+        Returns:
+            Entry -- Entry object, so you can chain this call.
+
         ==============================
         
         [Example:]
 
-        >>> entry = Entry('content_type_uid')
-        >>> entry.include_reference('uid1', 'uid2', 'uid3')
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> entry.include_reference('uid1', 'uid2', 'uid3')
         
         ==============================
         """
@@ -799,17 +914,18 @@ class Entry:
         """
         Specifies an array of only keys in BASE object that would be included in the response.
         :param field_uid: field_uid for variable number of arguments to be included in response.
-        *field_uid for variable number of arguments
-        :type field_uid: word args
-        :return: self
-        :rtype: Entry object, so you can chain this call.
+        field_uid for variable number of arguments
+
+        Returns:
+            Entry -- Entry object, so you can chain this call.
         
         ==============================
         
         [Example:]
 
-        >>> entry = Entry('content_type_uid')
-        >>> entry.only('uid1', 'uid2', 'uid3')
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> entry.only('uid1', 'uid2', 'uid3')
 
         ==============================
         """
@@ -822,23 +938,29 @@ class Entry:
         return self
 
     def only_with_reference_uid(self, reference_field_uid, *field_uid):
-
+        
         """
-        :param reference_field_uid:
-        :type reference_field_uid: Key who has reference to some other class object..
-        :param field_uid: field_uid for variable number of arguments to be included in response.
-        *field_uid for variable number of arguments
-        :type field_uid: word args of str type
-        :return: self
-        :rtype: Entry object, so you can chain this call.
+        Specifies an array of only keys that would be included in the response.
+        
+        Arguments:
+            reference_field_uid {str} -- Key who has reference to some other class object.
+            field_uid {comma seprated str objects} -- for variable number of arguments
+        
+        Raises:
+            ValueError: If reference_field_uid is None or not str type
+        
+        Returns:
+            Entry -- Entry object, so you can chain this call.
         
         ==============================
         
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> entry.only_with_reference_uid('reference_uid', 'uid1', 'uid2', 'uid3')
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> entry.only_with_reference_uid('reference_uid', 'uid1', 'uid2', 'uid3')
 
         ==============================
+
         """
 
         field_value_list = []
@@ -857,13 +979,16 @@ class Entry:
         """
         description  This method also includes the content type UIDs
         of the referenced entries returned in the response.
-        :return: Entry object, so you can chain this call.
+        
+        Returns:
+            Entry -- Entry object, so you can chain this call.
         
         ==============================
         
         [Example:]
-        >>> entry = Entry('content_type_uid')
-        >>> entry.include_reference_content_type_uid()
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> entry.include_reference_content_type_uid()
 
         ==============================
         """
@@ -876,14 +1001,17 @@ class Entry:
 
         """
         Include the details of the content type along with the entry/entries details.
-        :return: Entry
+        
+        Returns:
+            Entry -- Entry object, so you can chain this call.
         
         ==============================
         
         [Example:]
 
-        >>> entry = Entry('content_type_uid')
-        >>> entry.include_content_type()
+            >>> entry = entry.content_type('product').entry(uid)
+            >>> entry = entry.fetch()
+            >>> entry.include_content_type()
         
         ==============================
         """
@@ -893,7 +1021,6 @@ class Entry:
         return self
 
     def __set_include_json(self):
-
         if self.__uid_for_only is not None and len(self.__uid_for_only) > 0:
             self.__local_params["only[BASE][]"] = self.__uid_for_only
             self.__uid_for_only = None
@@ -913,6 +1040,17 @@ class Entry:
         return self
 
     def fetch(self):
+
+        """Fetches the latest version of the entries from stack
+        
+        Raises:
+            KeyError: If entry_uid is None
+        
+        Returns:
+            Entry - Entry object, so you can chain this call.
+
+        """
+
         if self.__entry_uid is None:
             raise KeyError('Kindly provide entry uid')
         self.__set_include_json()
