@@ -7,9 +7,6 @@ Copyright 2019 Contentstack. All rights reserved.
 """
 
 import warnings
-import os
-import sys
-sys.path.insert(0, os.path.abspath('.'))
 
 __author__ = 'contentstack'
 __status__ = 'debug'

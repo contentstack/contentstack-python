@@ -1,8 +1,5 @@
-import os
-import sys
 import enum
 import logging
-sys.path.insert(0, os.path.abspath('.'))
 
 """
 Config
@@ -26,32 +23,44 @@ class Config(object):
 
     def __init__(self):
 
-        """
-
+        """Config class arguments accepts protocol, region, host and version:
+        
+        protocol: It support https protocol only
+        region: It accepts us and eu region.
+        host: host of the stack
+        version: API version, contentstack support v3 API version
+        
         """
         self.default = dict(protocol="https", region=ContentstackRegion.US, host="cdn.contentstack.io", version="v3")
 
     @property
     def region(self):
-        """ :returns  region of the stack """
+
+        """It sets the region in the API, We support us and eu region
+        default region will be us.
+        
+        Returns:
+            ContentstackRegion -- It returns type of ContentstackRegion
+        """
         return self.default['region']
 
     @region.setter
     def region(self, region=ContentstackRegion.US):
 
         """
-        The base URL for Content Delivery API is cdn.contentstack.io.
-        default region is for ContentstackRegion is US
+        A Contentstack region refers to the location of the data centers where your organization's data resides.
+        
+        Keyword Arguments:
+            region {ContentstackRegion} -- region refers to the location of the data centers where your organization's data resides. (default: {ContentstackRegion.US})
 
-        :param region: Region support given for US and EU
-        :return: ContentstackRegion
-
+        For more details: https://www.contentstack.com/docs/guide/contentstack-regions
+        
         ==============================
 
         [Example:]
 
-        >>> config = Config()
-        >>> config.region = ContentstackRegion.US
+            >>> config = Config()
+            >>> config.region = ContentstackRegion.US
 
         ==============================
         """
@@ -62,6 +71,12 @@ class Config(object):
 
     @property
     def host(self):
+
+        """host property returns host of the API
+        
+        Returns:
+            str -- host of the API
+        """
 
         return self.default['host']
 
@@ -74,9 +89,20 @@ class Config(object):
         port number if different from the scheme's default
         port (443 for HTTPS).
         
+        Arguments:
+            host {str} -- host of the stack
+        
         Returns:
             [Config] -- Config, So we can chain more functions
 
+        ==============================
+        
+        [Example:] 
+
+            >>> config  = Config()
+            >>> config.host = 'cdn.contentstack.io'
+        
+        ==============================
         """
 
         if host is not None and isinstance(host, str):
@@ -85,21 +111,23 @@ class Config(object):
     def version(self, version=None):
 
         """
-        Note: Only version 3 is supported on the CDN. If you're still using version 2 (which we recommend you should
-        not), switch to the CDN version for even faster loading.
-        :param version: The API version can be found in the URL that is basePath
-        :type version: str
-        :return: self
-        :rtype: Config
+        Only version v3 is supported on the CDN.
         
-        ==============================
+        Keyword Arguments:
+            version {str} -- version of the API (default: {None})
         
-        [Example:] The API version (in our case, 'v3') can be found in the URL
+        Returns:
+            Config -- class instance to chain the functions
 
-        >>> config  = Config()
-        >>> config.version = 'v3'
+        ==============================
+        
+        [Example:] 
+
+            >>> config = Config()
+            >>> config = config.version('v3')
         
         ==============================
+
         """
 
         if version is not None and isinstance(version, str):
@@ -110,9 +138,14 @@ class Config(object):
     @property
     def endpoint(self):
 
-        """
-        :return: url endpoint to make Http requst
+        """It returns endpoint url of the API
+        The base URL for Content Delivery API for the US region is cdn.contentstack.io. and  
+        for the European region it is  eu-cdn.contentstack.com
+        For more details: https://www.contentstack.com/docs/apis/content-delivery-api/#base-url
         
+        Returns:
+            str -- endpoint url of the API
+
         """
         return self.__get_url()
 

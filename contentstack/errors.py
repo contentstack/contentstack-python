@@ -1,67 +1,74 @@
+
 """
-Error
-contentstack
+
 Created by Shailesh Mishra on 22/06/19.
 Copyright 2019 Contentstack. All rights reserved.
 
+contentstack.error
+~~~~~~~~~~~~~~~~~~
+
+API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#error
+
 """
-
-import os
-import sys
-
-sys.path.insert(0, os.path.abspath('.'))
 
 
 class Error:
+    
     """
-    >>> error = Error()
-    ~~~~~~~~~~~~~~~~~~
     This module implements the Error class.
+    
     API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#error
 
     """
 
     def __init__(self):
+
         self.__error_dict = {}
         self.__error_code = str
         self.__msg = str
 
     def _config(self, result: dict):
+        
+        # _instance is the protected member of the asset, So outsiders can not access this file.
         if result is not None and len(result) > 0:
             self.__error_dict = result
             self.__error_code = self.__error_dict['error_code']
             self.__msg = self.__error_dict['error_message']
+
         return self
 
     @property
     def error_code(self):
-        """
-        It returns error code from the stack response
-        :return: error_code as int
-        :rtype: int
+        """It returns error code from the stack response
+        
+        Returns:
+            int -- error_code as int
         
         ==============================
         
         [Example:]
 
-        >>> code = Error.error_code
+        >>> error_code = error.error_code
 
         ==============================
+
         """
         return self.__error_code
 
     @property
     def error_message(self):
+
         """
         Returns error_message from the stack response
-        :return: error_message
-        :rtype: str
+
+        Returns:
+            str -- error_message from the stack response
 
         ==============================
 
         [Example:]
 
-        >>> message = Error.error_message
+        >>> message = error.error_message
 
         ==============================
         """
@@ -70,16 +77,18 @@ class Error:
 
     @property
     def error(self):
+
         """
-        This returns error code and error_message in dict formats
-        :return: error dict
-        :rtype: dict
+        error property returns error code and error_message in dict formats
+
+        Returns:
+            dict -- error code and error_message in dict formats
 
         ==============================
 
         [Example:]
 
-        >>> ode = Error.error
+        >>> error = error.error
 
         ==============================
         """
@@ -88,16 +97,17 @@ class Error:
 
     @property
     def error_info(self) -> dict:
-        """
-        error information
-        :return: error information
-        :rtype: dict
+
+        """error information
+
+        Returns:
+            dict -- error information
 
         ==============================
 
         [Example:]
 
-        >>> ode = Error.error_info
+        >>> ode = error.error_info
         
         ==============================
         """
