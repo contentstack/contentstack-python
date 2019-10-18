@@ -1,10 +1,10 @@
-.. contentstack documentation master file, created by
-   sphinx-quickstart on Thu Oct  3 17:36:10 2019.
+.. contentstack-python documentation master file, created by
+   sphinx-quickstart on Wed Oct 16 13:32:30 2019.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to contentstack's documentation!
-========================================
+Welcome to contentstack-python's documentation!
+===============================================
 
 .. toctree::
    :maxdepth: 2
