@@ -24,7 +24,7 @@ class TestEntry(unittest.TestCase):
         access_token = self.credentials['access_token']
         env = self.credentials['environment']
         self.entry_uid = self.credentials['entry_uid']
-        self.stack_entry = Stack(api_key=api_key, access_token=access_token, environment=env, config=config)
+        self.stack_entry = Stack(api_key=api_key, access_token=access_token, environment=env)
 
     def test_entry_by_uid(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
