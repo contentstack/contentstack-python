@@ -9,7 +9,6 @@ Copyright 2019 Contentstack. All rights reserved.
 
 """
 
-
 logging.basicConfig(filename='report.log', format='%(asctime)s - %(message)s', level=logging.INFO)
 logging.getLogger(__name__)
 
@@ -51,7 +50,8 @@ class Config(object):
         A Contentstack region refers to the location of the data centers where your organization's data resides.
         
         Keyword Arguments:
-            region {ContentstackRegion} -- region refers to the location of the data centers where your organization's data resides. (default: {ContentstackRegion.US})
+            region {ContentstackRegion} -- region refers to the location of the data centers where your organization's
+            data resides. (default: {ContentstackRegion.US})
 
         For more details: https://www.contentstack.com/docs/guide/contentstack-regions
         
@@ -67,7 +67,6 @@ class Config(object):
 
         if region is not None and isinstance(region, ContentstackRegion):
             self.default['region'] = region
-
 
     @property
     def host(self):

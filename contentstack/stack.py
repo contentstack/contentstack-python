@@ -21,7 +21,8 @@ class Stack(object):
     def __init__(self, **kwargs):
 
         """
-        Argument kwargs is  key-worded, variable-length argument list. To initialise stack following fields should be provided.
+        Argument kwargs is key-worded, variable-length argument list. 
+        To initialise stack following fields should be provided.
     
         api_key -> stack 'api_key' of your target stack, type of api_key should be str.
         access_token -> stack 'access_token' of your target stack, type of access_token should be str.
@@ -39,7 +40,7 @@ class Stack(object):
 
             >>> config = Config()
             >>> config.host('cdn.contentstack.io')
-            >>> stack: Stack = Stack(api_key ='API_Key',access_token='access_token',environment='environment', config=config)
+            >>> stack = Stack(api_key ='API_Key',access_token='access_token',environment='environment', config=config)
         
         ==============================
 
@@ -69,8 +70,10 @@ class Stack(object):
         
         [Example]:
 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> api_key = stack.api_key
-        
+
         ==============================
         
         """
@@ -91,7 +94,9 @@ class Stack(object):
         
         [Example]:
 
-            >>> http_instance = Stack.get_http_instance
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> http_instance = stack.get_http_instance
         
         ==============================
         
@@ -111,7 +116,9 @@ class Stack(object):
         
         [Example]:
 
-            >>> access_token = Stack.access_token
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> access_token = stack.access_token
         
         ==============================
     
@@ -135,6 +142,8 @@ class Stack(object):
         
         [Example]:
 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> environment = stack.environment
         
         ==============================
@@ -149,7 +158,8 @@ class Stack(object):
     @environment.setter
     def environment(self, environment):
 
-        """environment property helps to set environment of the stack
+        """
+        environment property helps to set environment of the stack
         
         Arguments:
             environment {str} -- environment of the stack
@@ -161,6 +171,8 @@ class Stack(object):
         
         [Example]:
 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> stack.environment = 'product'
         
         ==============================
@@ -186,6 +198,8 @@ class Stack(object):
         
         [Example]:
 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> headers = stack.headers
         
         ==============================
@@ -235,6 +249,8 @@ class Stack(object):
         
         [Example]:
 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('product')
         
         ==============================
@@ -268,6 +284,8 @@ class Stack(object):
         
         [Example]:
 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_types = stack.get_content_types()
         
         ==============================
@@ -286,7 +304,12 @@ class Stack(object):
     def asset(self, uid=None):
         
         """
-    
+        Assets refer to all the media files (images, videos, PDFs, audio files, and so on)
+        uploaded in your Contentstack repository for future use. These files can be
+        attached and used in multiple entries. Learn more about Assets.
+        Keep uid None to fetch list of all assets
+        API Reference : https://www.contentstack.com/docs/guide/content-management#working-with-assets
+
         Keyword Arguments:
             uid {str} -- uid of the asset (default: {None})
                 
@@ -300,18 +323,17 @@ class Stack(object):
         provide asset_uid of the asset you have to find.
         Example: in case to fetch single asset, provide uid of the asset:
 
-            >>> asset_instance = stack.Stack.asset('bltputyourassetuid')
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset_instance = stack.asset('bltputyourassetuid')
             >>> asset = asset_instance.fetch()
         
         ###############################
         
         [Example]: [All Assets]
-        Assets refer to all the media files (images, videos, PDFs, audio files, and so on)
-        uploaded in your Contentstack repository for future use. These files can be
-        attached and used in multiple entries. Learn more about Assets.
-        Keep uid None to fetch list of all assets
-        API Reference : https://www.contentstack.com/docs/guide/content-management#working-with-assets
 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset_instance = stack.asset()
             >>> assets = asset_instance.fetch_all()
         
@@ -327,12 +349,16 @@ class Stack(object):
     def image_transform(self, image_url: str, **kwargs):
         
         """
-        ImageTransform function is define for image manipulation with different
-        parameters in second parameter in array form
+        The Image Delivery API is used to retrieve, manipulate and/or convert image
+        files of your Contentstack account and deliver it to your web or mobile properties.
+        It is an second parameter in which we want to place different manipulation key and
+        value in array form ImageTransform method is define for image manipulation with
+        different transform_params in second parameter in array form
         
         Arguments:
             image_url {str} -- On which we want to manipulate
-            **kwargs {object} -- parameter in which we want to place different manipulation key-worded, variable-length argument list
+            **kwargs {object} -- parameter in which we want to place different manipulation key-worded, variable-length
+            argument list
             It is a query form that we want to place different manipulation key and value
         
         Returns:
@@ -341,14 +367,9 @@ class Stack(object):
         ==============================
 
         [Example]: 
-        
-        The Image Delivery API is used to retrieve, manipulate and/or convert image
-        files of your Contentstack account and deliver it to your web or mobile properties.
-        It is an second parameter in which we want to place different manipulation key and
-        value in array form ImageTransform method is define for image manipulation with
-        different transform_params in second parameter in array form
 
-            >>> import stack            
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> stack.image_transform('image_url', width=100, height=100)
 
         ==============================
@@ -372,8 +393,10 @@ class Stack(object):
 
         ==============================
 
-        [Example]: 
+        [Example]:
 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> stack = stack.collaborators()
             >>> result = stack.fetch()
 
@@ -399,6 +422,8 @@ class Stack(object):
 
         [Example]:
 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> stack = stack.include_stack_variables()
             >>> result = stack.fetch()
 
@@ -420,6 +445,9 @@ class Stack(object):
         ==============================
 
         [Example]:
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> stack = stack.include_discrete_variables()
             >>> result = stack.fetch()
 
@@ -442,6 +470,9 @@ class Stack(object):
         ==============================
 
         [Example]:
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> stack = stack.include_count()
             >>> result = stack.fetch()
 
@@ -463,6 +494,9 @@ class Stack(object):
         ==============================
 
         [Example]:
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> stack = stack.include_count()
             >>> result = stack.fetch()
 
@@ -509,6 +543,8 @@ class Stack(object):
 
         [Example]:
 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> result = stack.sync(content_type_uid='content_type_uid', from_date='date', locale='en-us', publish_type='asset_published')
         
         ==============================
@@ -551,6 +587,8 @@ class Stack(object):
 
         [Example]:
 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> result = stack.pagination('blt8347235938759')
 
         ==============================
@@ -584,6 +622,8 @@ class Stack(object):
 
         [Example]:
 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> result = stack.sync_token('bltsomekeytoput')
 
         ==============================
@@ -634,14 +674,26 @@ class SyncResult:
 
     @property
     def json(self):
+
+        """
+        :return: Json response
+        """
         return self.__resp
 
     @property
     def items(self):
+
+        """
+        :return: Total items
+        """
         return self.__items
 
     @property
     def skip(self):
+
+        """
+        :return: skipped items
+        """
         return self.__skip
 
     @property
@@ -650,7 +702,6 @@ class SyncResult:
         """
         :return: This property returns limit
         :rtype: int
-
         ==============================
 
         Example:

@@ -1,4 +1,3 @@
-
 """
 
 Created by Shailesh Mishra on 22/06/19.
@@ -13,7 +12,6 @@ API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#entr
 
 
 class Entry:
-
     """
     [Note]: If no version is mentioned, this request will retrieve the
     latest published version of the entry.To retrieve a specific version, make use of the version parameter 
@@ -23,7 +21,10 @@ class Entry:
 
     [Example:]
 
-        >>> entry = entry.content_type('product').entry(uid)
+                    >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
         >>> entry = entry.fetch()
 
     ==============================
@@ -97,7 +98,7 @@ class Entry:
         return self
 
     def add_header(self, key, value):
-        
+
         """        
         It is useful to accept the API key, access_token of stack of which you wish to retrieve 
         the content types.
@@ -117,7 +118,11 @@ class Entry:
         ==============================
 
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.add_header('key', 'value')
             >>> entry = entry.fetch() 
 
@@ -151,7 +156,11 @@ class Entry:
         ==============================
 
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.remove_header('key')
             >>> entry = entry.fetch() 
             
@@ -178,7 +187,11 @@ class Entry:
         ==============================
 
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch() 
             >>> entry_uid = entry.uid
 
@@ -206,7 +219,11 @@ class Entry:
         ==============================
 
         [Example:]
-            >>> entry:Entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry.uid = 'bltsomethingasuid'
             >>> entry = entry.fetch() 
 
@@ -217,10 +234,8 @@ class Entry:
         if uid is None or not isinstance(uid, str):
             raise KeyError('Kindly provide a valid uid')
         self.__entry_uid = uid
-    
+
         return self
-
-
 
     @property
     def locale(self):
@@ -234,7 +249,11 @@ class Entry:
         ==============================
 
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch() 
             >>> locale = entry.locale
 
@@ -249,7 +268,7 @@ class Entry:
 
     @locale.setter
     def locale(self, locale):
-        
+
         """
         Locale accepts code of the language of which the entries needs to be included.
         Only the entries published in this locale will be displayed.
@@ -264,7 +283,10 @@ class Entry:
 
         [Example:]
 
-            >>> entry = entry.content_type('product').entry(uid)
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry.locale = 'en-us'
             >>> entry = entry.fetch() 
 
@@ -274,7 +296,6 @@ class Entry:
         if locale is None and not isinstance(locale, str):
             raise KeyError('Kindly provide a valid locale')
         self.__local_params["locale"] = locale
-    
 
     @property
     def title(self):
@@ -287,14 +308,18 @@ class Entry:
         ==============================
 
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch() 
             >>> title = entry.title
 
         ==============================
 
         """
-    
+
         return self.__title
 
     @property
@@ -309,7 +334,11 @@ class Entry:
         ==============================
         
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> url = entry.url
         
@@ -330,7 +359,11 @@ class Entry:
         ==============================
         
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> tags = entry.tags
         
@@ -350,7 +383,11 @@ class Entry:
         ==============================
         
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> content_type = entry.content_type
         
@@ -371,7 +408,11 @@ class Entry:
         ==============================
 
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> headers = entry.headers
 
@@ -393,7 +434,11 @@ class Entry:
         ==============================
         
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> result = entry.json
         
@@ -417,8 +462,11 @@ class Entry:
         ==============================
         
         [Example:]
-            >>> entry = entry.content_type('product').entry()
-            >>> entry = entry.fetch()
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> count = entry.count
         
         ==============================
@@ -435,7 +483,11 @@ class Entry:
         ==============================
 
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> created_at = entry.created_at
 
@@ -454,7 +506,11 @@ class Entry:
         ==============================
 
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> created_by = entry.created_by
 
@@ -473,7 +529,11 @@ class Entry:
         ==============================
 
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> result = entry.updated_at
 
@@ -494,7 +554,11 @@ class Entry:
         ==============================
 
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> result = entry.updated_by
 
@@ -502,7 +566,6 @@ class Entry:
         """
 
         return self.__updated_by
-
 
     def get(self, key):
 
@@ -518,7 +581,11 @@ class Entry:
         ==============================
 
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> result = entry.get('key')
 
@@ -550,7 +617,11 @@ class Entry:
         ==============================
 
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> entry = entry.add_param('key', 'value')
 
@@ -577,8 +648,7 @@ class Entry:
             version {str} -- version if entry
         
         Raises:
-            ValueError: [description]
-            ValueError: [description]
+            ValueError: If version is None or not str type
 
         Returns:
             Entry -- So we can chain the call
@@ -586,7 +656,11 @@ class Entry:
         ==============================
 
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> entry = entry.version('7')
 
@@ -594,12 +668,10 @@ class Entry:
         
         """
 
-        if version is None:
+        if version is None or not isinstance(version, str):
             raise ValueError('Kindly provide valid')
         elif isinstance(version, str):
             self.__local_params["version"] = version
-        else:
-            raise ValueError('Kindly provide a valid input')
 
         return self
 
@@ -617,7 +689,11 @@ class Entry:
         ==============================
         
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> result = entry.get_string('key')
         
@@ -627,8 +703,7 @@ class Entry:
         value = self.get(key)
         if isinstance(value, str):
             return value
-        else:
-            return None
+        return None
 
     def get_boolean(self, key):
 
@@ -636,7 +711,7 @@ class Entry:
         This method returns bool type result of the entry
         
         Arguments:
-            key {str} -- field_uid
+            key {str} -- field_uid 
         
         Raises:
             KeyError: If key instance is not str
@@ -647,7 +722,11 @@ class Entry:
         ==============================
         
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> result = entry.get_boolean('bool_key')
         
@@ -675,7 +754,11 @@ class Entry:
         ==============================
         
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> result = entry.get_json('key')
         
@@ -691,6 +774,8 @@ class Entry:
     def get_list(self, key):
 
         """
+        It returns the list type data
+
         Arguments:
             key {str} -- field_uid
 
@@ -700,14 +785,18 @@ class Entry:
         ==============================
         
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> result = entry.get_list('key')
         
         ==============================
 
         """
-        
+
         value = self.get(key)
         if isinstance(value, list):
             return value
@@ -728,7 +817,11 @@ class Entry:
         ==============================
 
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> result = entry.asset("key")
 
@@ -761,7 +854,11 @@ class Entry:
         ==============================
         
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> result = entry.get_assets("key")
         
@@ -783,7 +880,7 @@ class Entry:
         return assets
 
     def get_all_entries(self, ref_key, ref_content_type):
-        
+
         """
         Get value for the given reference key.
         
@@ -797,14 +894,18 @@ class Entry:
         ==============================
         
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> all_entries = entry.get_all_entries("reference_key", "reference_content_type")
         
         ==============================
 
         """
-        
+
         all_entries = []
         if self.__result_json is not None and isinstance(ref_key, str):
             if ref_key in self.__result_json:
@@ -816,8 +917,7 @@ class Entry:
                         entry._configure(model)
                         all_entries.append(entry)
                     return all_entries
-                else:
-                    return None
+                return None
 
     def excepts(self, *field_uid):
 
@@ -830,14 +930,18 @@ class Entry:
         ==============================
         
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> entry = entry.excepts('title', 'color', 'price_in_usd')
         
         ==============================
 
         """
-        
+
         if field_uid is None:
             raise ValueError('Kindly provide a valid argument')
         self.__except_field = list(field_uid)
@@ -855,7 +959,7 @@ class Entry:
         
         Raises:
             ValueError: reference_field_uid and field_uid should not be None
-            ValueError: reference_field_uid shoud be str
+            ValueError: reference_field_uid should be str type
         
         Returns:
             Entry -- Entry object, so you can chain this call.
@@ -863,14 +967,18 @@ class Entry:
         ==============================
         
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> entry = entry.except_with_reference_uid('reference_field_uid', "field1", 'field2', 'field3')
 
         ==============================
 
         """
-        
+
         if (reference_field_uid, field_uid) is None:
             raise ValueError('Kindly provide valid arguments')
         elif isinstance(reference_field_uid, str):
@@ -882,7 +990,7 @@ class Entry:
         return self
 
     def include_reference(self, *reference_uid):
-        
+
         """
         Add a constraint that requires a particular reference key details.
         
@@ -896,7 +1004,10 @@ class Entry:
         
         [Example:]
 
-            >>> entry = entry.content_type('product').entry(uid)
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> entry.include_reference('uid1', 'uid2', 'uid3')
         
@@ -923,7 +1034,10 @@ class Entry:
         
         [Example:]
 
-            >>> entry = entry.content_type('product').entry(uid)
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> entry.only('uid1', 'uid2', 'uid3')
 
@@ -938,7 +1052,7 @@ class Entry:
         return self
 
     def only_with_reference_uid(self, reference_field_uid, *field_uid):
-        
+
         """
         Specifies an array of only keys that would be included in the response.
         
@@ -955,7 +1069,11 @@ class Entry:
         ==============================
         
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> entry.only_with_reference_uid('reference_uid', 'uid1', 'uid2', 'uid3')
 
@@ -986,7 +1104,11 @@ class Entry:
         ==============================
         
         [Example:]
-            >>> entry = entry.content_type('product').entry(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> entry.include_reference_content_type_uid()
 
@@ -1009,7 +1131,10 @@ class Entry:
         
         [Example:]
 
-            >>> entry = entry.content_type('product').entry(uid)
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
             >>> entry.include_content_type()
         

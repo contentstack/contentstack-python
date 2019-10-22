@@ -11,14 +11,20 @@ class TestAsset(unittest.TestCase):
 
     def setUp(self):
 
-        api_key: str = 'blt20962a819b57e233'
-        access_token: str = 'blt01638c90cc28fb6f'
-        env_prod: str = 'production'
-        self.asset_uid: str = 'blt91af1e5af9c3639f'
+        # api_key: str = 'blt20962a819b57e233'
+        # access_token: str = 'blt01638c90cc28fb6f'
+        # env_prod: str = 'production'
+        # config = Config()
+        # config.region = ContentstackRegion.US
+        # Credentials taken from __init__() class
 
-        config = Config()
-        config.region = ContentstackRegion.US
-        self.__stack = Stack(api_key=api_key, access_token=access_token, environment=env_prod, config=config)
+        from tests import stack_keys
+        self.credentials = stack_keys()
+        api_key = self.credentials['api_key']
+        access_token = self.credentials['access_token']
+        env = self.credentials['environment_prod']
+        self.asset_uid: str = 'blt91af1e5af9c3639f'
+        self.__stack = Stack(api_key=api_key, access_token=access_token, environment=env)
 
     def test_single_asset(self):
         _asset: Asset = self.__stack.asset(self.asset_uid)
@@ -141,7 +147,7 @@ class TestAsset(unittest.TestCase):
         result = _asset.fetch()
         if result is not None:
             if isinstance(result, Asset):
-                self.assertEqual(int, type(result.get_version))
+                self.assertEqual(int, type(result.version))
 
     def test_assets(self):
         _asset = self.__stack.asset()
