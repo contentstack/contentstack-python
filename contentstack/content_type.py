@@ -169,7 +169,7 @@ class ContentType:
         entry._instance(self.__stack_instance)
         if uid is not None:
             if isinstance(uid, str):
-                entry.uid(uid)
+                entry.uid=uid
             else:
                 raise KeyError('entry uid should be str type')
         return entry
