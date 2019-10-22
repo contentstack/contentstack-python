@@ -6,24 +6,30 @@ from contentstack.stack import Stack
 
 
 class TestEntry(unittest.TestCase):
-
     log = logging.getLogger(__name__)
 
     def setUp(self):
 
-        api_key = 'blt20962a819b57e233'
-        access_token = 'cs18efd90468f135a3a5eda3ba'
-        env_prod = 'production'
-        self.entry_uid = 'bltb0256a89e2225a39'
-        config = Config()
-        config.host = 'cdn.contentstack.io'
-        config.region = ContentstackRegion.EU
-        self.stack_entry = Stack(api_key=api_key, access_token=access_token, environment=env_prod, config=config)
+        # config = Config()
+        # config.host = 'cdn.contentstack.io'
+        # config.region = ContentstackRegion.US
+        # api_key = 'blt20962a819b57e233'
+        # access_token = 'cs18efd90468f135a3a5eda3ba'
+        # env = 'production'
+        # self.entry_uid = 'bltb0256a89e2225a39'
+
+        from tests import entry_keys
+        self.credentials = entry_keys()
+        api_key = self.credentials['api_key']
+        access_token = self.credentials['access_token']
+        env = self.credentials['environment']
+        self.entry_uid = self.credentials['entry_uid']
+        self.stack_entry = Stack(api_key=api_key, access_token=access_token, environment=env, config=config)
 
     def test_entry_by_uid(self):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
         result = _entry.fetch()
-        if result is not None:
+        if result is not None and isinstance(result, Entry):
             self.assertEqual(Entry, type(result))
 
     def test_entry_title(self):
@@ -60,7 +66,7 @@ class TestEntry(unittest.TestCase):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
         _entry.locale = 'en-us'
         result = _entry.fetch()
-        if result is not None:
+        if result is not None and isinstance(result, Entry):
             if '-' in result.locale:
                 self.assertEqual('en-us', result.locale)
 
@@ -75,7 +81,7 @@ class TestEntry(unittest.TestCase):
         _entry = self.stack_entry.content_type('product').entry(self.entry_uid)
         _entry.locale = 'en-us'
         result = _entry.fetch()
-        if result is not None:
+        if result is not None and isinstance(result, Entry):
             self.assertEqual(self.entry_uid, result.get('uid'))
 
     def test_entry_string(self):

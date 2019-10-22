@@ -1,4 +1,3 @@
-
 """
 
 Created by Shailesh Mishra on 22/06/19.
@@ -20,10 +19,13 @@ class Asset:
     contentstack.asset
     ==============================
 
-    This module implements the Asset class. API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#assets
+    This module implements the Asset class.
+    API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#assets
         
     [Example]:
-        >>> from stack import Stack as stack
+
+        >>> import stack
+        >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
         >>> asset = stack.asset()
 
     ==============================
@@ -101,20 +103,21 @@ class Asset:
     def uid(self):
 
         """uid property helps to set uid of the asset
-
+        
         Returns:
-        [type] -- str
+            str -- uid of the asset
 
         ==============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> uid = asset.uid
 
         ==============================
-
         """
-
         return self.__uid
 
     @property
@@ -123,12 +126,15 @@ class Asset:
         """count property helps to get the Size of asset objects.
         
         Returns:
-            [type] -- [int]
+            int -- count of asset object
 
         ==============================
         
         [Example]:
-            >>> asset = Asset()
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset()
             >>> count = asset.count
 
         ==============================
@@ -143,18 +149,20 @@ class Asset:
         """This function returns type of the asset file
 
         Returns:
-            [type] -- str
+            str -- type of file
 
         ==============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> file = asset.filetype
 
         ==============================
 
         """
-
         return self.__file_type
 
     @property
@@ -163,12 +171,15 @@ class Asset:
         """Returns size of asset file
         
         Returns:
-            [type] -- str
+            int -- size of asset file
 
         ==============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> size = asset.filesize
 
         ==============================
@@ -183,12 +194,15 @@ class Asset:
         """This property returns the filename asset file.
         
         Returns:
-            [type] -- [str]
+            str -- filename of asset
 
         ==============================
 
         [Example]:
-            >>> aasset = Asset('bltsomethingasuid')
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> filename = asset.filename
 
         ==============================
@@ -203,12 +217,15 @@ class Asset:
         """This property returns the url of the Asset
         
         Returns:
-            [type] -- [str]
+            str -- asset url
 
         ==============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> file_url = asset.url
 
         ==============================
@@ -220,19 +237,23 @@ class Asset:
     @property
     def json(self):
 
-        """This property returns response in json
+        """
+        This property returns response in json
         
         Returns:
-            [{str}] -- [json response of Asset]
+            str -- Json response of Asset
 
         ==============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> response = asset.json
 
         ==============================
-
         """
 
         return self.__response
@@ -240,15 +261,20 @@ class Asset:
     @property
     def created_at(self):
 
-        """This property returns the time when Asset is created.
+        """
+        This property returns the time when Asset is created.
         
         Returns:
-            [str] -- Time when Asset is created
+            str -- Time when Asset is created
 
         ==============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> response = asset.created_at
 
         ==============================
@@ -262,12 +288,15 @@ class Asset:
         """This property created_by returns the owner of the Asset
         
         Returns:
-            [str] -- Owner of the Asset
+            str -- Owner of the Asset
 
         ===============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> response = asset.created_by
         
         ================================
@@ -282,12 +311,15 @@ class Asset:
         """This property updated_at returns the time the Asset was updated.
         
         Returns:
-            [str] -- Time the Asset was updated
+            str -- Time the Asset was updated
 
         ==============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> response = asset.updated_at
 
         ==============================
@@ -303,12 +335,15 @@ class Asset:
         This function returns the time of Asset was updated
         
         Returns:
-            [str] --  Asset was updated by whome
+            str --  Asset was updated by whome
 
         ==============================
 
         [Example]:
-            >>> asset = Asset('bltsomethingasuidasuid')
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> response = asset.updated_by
 
         ==============================
@@ -323,12 +358,15 @@ class Asset:
         """This property returns the list of tag str
         
         Returns:
-            [list] -- list of tags
+            list -- list of tags
 
         ==============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> tags = asset.tags
 
         ==============================
@@ -343,12 +381,15 @@ class Asset:
         """This property returns the version of asset
         
         Returns:
-            [int] -- Version of the asset
+            int -- version of the asset
 
         ==============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> tags = asset.get_version
 
         ==============================
@@ -363,12 +404,15 @@ class Asset:
         """This property returns the dimension of the Asset
         
         Returns:
-            [dict] -- Dimension of the Asset
+            dict -- Dimension of the Asset
 
         ==============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> tags = asset.dimension
 
         ==============================
@@ -391,12 +435,15 @@ class Asset:
             ValueError: key and value should be str type
         
         Returns:
-            [Asset] -- Asset, So we can chain the call
+            Asset -- Asset, So we can chain the call
 
         ==============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> asset = asset.add_header('key', 'value')
 
         ==============================
@@ -422,12 +469,15 @@ class Asset:
             environment {str} -- the name of the environment
 
         Returns:
-            [Asset] -- Asset, So we can chain the call
+            Asset -- Asset, So we can chain the call
 
         ==============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> asset = asset.environment('production')
 
         ==============================
@@ -461,12 +511,14 @@ class Asset:
         ==============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> asset = asset.add_params('key', 'value')
 
         ==============================
         """
-
 
         if None in (key, value):
             raise KeyError('Kindly provide valid params')
@@ -488,7 +540,10 @@ class Asset:
         ==============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> asset = asset.relative_urls()
 
         ==============================
@@ -502,7 +557,7 @@ class Asset:
     def include_dimension(self):
 
         """
-        include the dimensions (height and width) of the image in the response.
+        Include the dimensions (height and width) of the image in the response.
         Supported image types: JPG, GIF, PNG, WebP, BMP, TIFF, SVG, and PSD.
 
         Returns:
@@ -511,7 +566,10 @@ class Asset:
         ==============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> asset = asset.include_dimension()
 
         ==============================
@@ -534,12 +592,15 @@ class Asset:
             ValueError: If key is None
         
         Returns:
-            [Asset] -- Asset, So we can chain the call
+            Asset -- Asset, So we can chain the call
 
         ==============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> asset = asset.remove_header('some_key')
 
         ==============================
@@ -566,12 +627,15 @@ class Asset:
             KeyError: If type of asset_uid is str
         
         Returns:
-            [Asset] -- Asset, so we can chain the call
+            Asset -- Asset, so we can chain the call
 
         ==============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> asset = asset.set_uid('uid')
 
         ==============================
@@ -593,12 +657,15 @@ class Asset:
         include_count is used to return total asset count
 
         Returns:
-            [Asset] -- Asset, so we can chain the call
+            Asset -- Asset, so we can chain the call
 
         ==============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> asset = asset.set_uid('uid')
         
         ==============================
@@ -613,24 +680,27 @@ class Asset:
         """
         Request asset by sort by key, It caould be sorted to ASCENDING and DESCENDING order
         param key: provides the key on which ASC/DESC need to apply.
+        :param key: key that to be constrained
         :param order_by: object option either "asc" or "desc"
         :return self , instance of AssetLibrary
         
         Arguments:
-            key {[type]} -- [description]
-            order_by {[type]} -- [description]
+            key {str} -- field uid
+            order_by {OrderType} -- type of oerder ASC or DES
         
         Raises:
-            ValueError: [description]
-            Exception: [description]
-        
+            ValueError: If key and OrderType is None
+
         Returns:
-            [type] -- [description]
+            Asset -- Asset instance, So call will be chainable.
 
         ==============================
 
         [Example]:
-            >>> asset = stack.asset(uid)
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
             >>> asset = asset.sort('some_key', OrderType.ASC)
         
         ==============================
@@ -643,10 +713,8 @@ class Asset:
                     self.__query_params['asc'] = key
                 else:
                     self.__query_params['desc'] = key
-            else:
-                raise Exception('Kindly provide a valid input')
 
-        return self.__query_params
+        return self
 
     def fetch_all(self):
 
@@ -683,7 +751,6 @@ class Asset:
 
 
 class OrderType(object):
-
     """OrderType is used to choose one of the ascending or descending"""
-    
+
     ASC, DESC = range(0, 2)

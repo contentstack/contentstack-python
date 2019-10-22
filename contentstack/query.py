@@ -68,8 +68,11 @@ class Query(object):
         ==============================
 
         [Example]:
-            >>> from stack import Stack
-            >>> query = stack.content_type('product').query()
+
+>>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> content_type = query.content_type
 
         ==============================
@@ -94,7 +97,10 @@ class Query(object):
         ==============================
 
         [Example]:
-            >>> query = stack.content_type('product').query()
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query.content_type = 'content_type_id'
 
         ==============================
@@ -119,7 +125,10 @@ class Query(object):
         ==============================
 
         [Example]:
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.headers
 
         ==============================
@@ -132,6 +141,9 @@ class Query(object):
 
         """It removes header from the Query headers by key.
         
+        Arguments:
+            key {str} -- key of header param
+        
         Raises:
             ValueError: If key is None or empty
         
@@ -142,7 +154,10 @@ class Query(object):
 
         [Example]:
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.remove_header('key')
             >>> result = query.find()
 
@@ -176,7 +191,10 @@ class Query(object):
 
         [Example]:
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.add_header('key', value)
             >>> result = query.find()
 
@@ -211,7 +229,10 @@ class Query(object):
 
         [Example]:
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.locale('en-us')
             >>> result = query.find()
 
@@ -247,7 +268,10 @@ class Query(object):
 
         [Example]:
 
-            >>> query = stack.content_type('product').query()
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.where("uid", "bltsomething123")
             >>> result = query.find()
 
@@ -266,13 +290,13 @@ class Query(object):
 
     def add_query(self, key, value):
 
-        """Add a custom query against specified key.
+        """
+        Add a custom query against specified key.
         
         Arguments:
             key {str} -- key of query param
             value {str} -- value of the query
     
-        
         Raises:
             ValueError: If key or value is None
             ValueError: if the type of key is not str 
@@ -284,7 +308,10 @@ class Query(object):
 
         [Example]:
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.add_query("query_param_key", "query_param_value")
             >>> result = query.find()
 
@@ -319,7 +346,10 @@ class Query(object):
 
         [Example]:
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.remove_query("query_key")
             >>> result = query.find()
 
@@ -355,7 +385,10 @@ class Query(object):
         The response will contain the entries where the values for Title is 'Redmi Note 3' and Color is 'Gold'
         for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#and-operator]
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query1 = query.where("title", "Redmi Note 3")
             >>> query2 = query.where("color", "Gold")
             >>> query.and_query(query1, query2)
@@ -397,7 +430,10 @@ class Query(object):
         Color field is 'Gold' or 'Black'. The query to be used for such a case would be:
         for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#or-operator]
 
-            >>> query  = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query1 = query.where("color", "Black")
             >>> query2 = query.where("price", "price_in_usd")
             >>> query.or_query(query1, query2)
@@ -441,7 +477,10 @@ class Query(object):
         You can send the parameter as:
         for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#less-than]
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.less_than('price_in_usd', 600)
             >>> result = query.find()
 
@@ -483,7 +522,10 @@ class Query(object):
         set to a value that is less than or equal to 146. To achieve this, send the parameter as:
         for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#less-than-or-equal-to]
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.less_than_or_equal_to('price_in_usd', 146)
             >>> result = query.find()
 
@@ -524,7 +566,10 @@ class Query(object):
         that is greater than but not equal to 146. You can send the parameter as:
         for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#greater-than]
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.greater_than('price_in_usd', 146)
             >>> result = query.find()
 
@@ -565,7 +610,10 @@ class Query(object):
         that is greater than or equal to 146. You can send the parameter as:
         for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#greater-than-or-equal-to]
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.greater_than_or_equal_to('price_in_usd', 146)
             >>> result = query.find()
 
@@ -609,7 +657,10 @@ class Query(object):
         for this field. The parameter can be used as:
         for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#not-equals-operator]
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.not_equal_to('price_in_usd', 146)
             >>> result = query.find()
 
@@ -652,7 +703,10 @@ class Query(object):
         The query fired using the '$in' parameter is given below:
         for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#array-equals-operator]
 
-            >>> query = stack.content_type('product').query()
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.contained_in('price_in_usd', 101, 749)
             >>> result = query.find()
 
@@ -695,7 +749,10 @@ class Query(object):
         where the field value does not fall in the given set. You can send the parameter as:
         for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#array-not-equals-operator]
 
-            >>> query = stack.content_type('product').query()
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.not_contained_in('price_in_usd', 101, 749)
             >>> result = query.find()
 
@@ -736,7 +793,10 @@ class Query(object):
         the content type in which the field exists
         for more: https://www.contentstack.com/docs/apis/content-delivery-api/#exists
 
-            >>> query = stack.content_type('product').query()
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.exists('price_in_usd')
             >>> result = query.find()
 
@@ -777,7 +837,10 @@ class Query(object):
 
         for more: https://www.contentstack.com/docs/apis/content-delivery-api/#not_exists
 
-            >>> query = stack.content_type('product').query()
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.not_exists('price_in_usd')
             >>> result = query.find()
 
@@ -821,7 +884,10 @@ class Query(object):
         reference field
         for more: https://www.contentstack.com/docs/apis/content-delivery-api/#include-reference
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.include_reference('categories')
             >>> result = query.find()
 
@@ -856,7 +922,10 @@ class Query(object):
 
         Example:
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.tags('black', 'gold', 'silver')
             >>> result = query.find()
 
@@ -893,7 +962,10 @@ class Query(object):
         In the Product content type, if you wish to sort the entries with respect to their prices,
         the parameter can be used as:
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.ascending('price_in_usd')
             >>> result = query.find()
 
@@ -931,7 +1003,10 @@ class Query(object):
         In the Product content type, if you wish to sort the entries
         with respect to their prices, the parameter can be used as:
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.descending('price_in_usd')
             >>> result = query.find()
 
@@ -968,7 +1043,10 @@ class Query(object):
         In the Product content type, if you wish to sort the entries
         with respect to their prices, the parameter can be used as:
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> except_field = query.except_field_uid('field_uid1', 'field_uid2')
             >>> result = query.find()
 
@@ -1004,7 +1082,10 @@ class Query(object):
         In the Product content type, if you wish to sort the entries
         with respect to their prices, the parameter can be used as:
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.only('price_in_usd', 'color')
             >>> result = query.find()
 
@@ -1039,7 +1120,10 @@ class Query(object):
         
         [Example:]
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.only_with_reference_uid('reference_field_uid', 'field_uid 1', 'field_uid 2')
             >>> result = query.find()
 
@@ -1074,7 +1158,10 @@ class Query(object):
         
         [Example:]
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.except_with_reference_uid('price_in_usd', 'field_uid 1', 'field_uid 2')
             >>> result = query.find()
 
@@ -1103,7 +1190,10 @@ class Query(object):
         
         [Example:]
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.include_count()
             >>> result = query.find()
 
@@ -1127,7 +1217,10 @@ class Query(object):
         
         [Example:]
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.include_content_type()
             >>> result = query.find()
 
@@ -1140,11 +1233,10 @@ class Query(object):
 
     def skip(self, number):
         
-        """[summary]
+        """The number of objects to skip before returning any.
         
         Arguments:
-            number {int} -- The number of objects to skip
-        
+            number {int} -- No of objects to skip from returned objects
         
         Raises:
             ValueError: If number is None
@@ -1157,7 +1249,10 @@ class Query(object):
         
         [Example:]
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.skip(3)
             >>> result = query.find()
 
@@ -1176,9 +1271,10 @@ class Query(object):
 
     def limit(self, number):
 
-        """
+        """A limit on the number of objects to return.
+
         Arguments:
-            number {int} -- number of objects to limit
+            number {int} -- Number of objects to limit.
         
         Raises:
             ValueError: If number is None
@@ -1191,7 +1287,10 @@ class Query(object):
         
         [Example]
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.limit(3)
             >>> result = query.find()
 
@@ -1217,14 +1316,13 @@ class Query(object):
         Arguments:
             key {str} -- The key to be constrained.
             regex {str} -- The regular expression pattern to match
-            modifiers {str} -- (optional) modifiers Any of the following supported Regular expression modifiers.
-            
+        
+        Keyword Arguments:
+            modifiers {str} -- Any of the following supported Regular expression modifiers (default: {None})
+
             <p>use <b> i </b> for case-insensitive matching.</p>
             <p>use <b> m </b> for making dot match newlines.</p>
             <p>use <b> x </b> for ignoring whitespace in regex</p>
-        
-        Keyword Arguments:
-            modifiers {[type]} -- [description] (default: {None})
         
         Raises:
             ValueError: If key, regex is None
@@ -1236,7 +1334,10 @@ class Query(object):
         
         [Example:]
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.regex("name", "browser")
             >>> result = query.find()
 
@@ -1273,7 +1374,10 @@ class Query(object):
         
         [Example]
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.search("search_keyword")
             >>> result = query.find()
         
@@ -1309,7 +1413,10 @@ class Query(object):
         
         [Example]
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.param("key", "value")
             >>> result = query.find()
         
@@ -1337,7 +1444,10 @@ class Query(object):
 
         [Example]
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.include_reference_content_type_uid()
             >>> result = query.find()
 
@@ -1369,7 +1479,10 @@ class Query(object):
         
         [Example]
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.where_in("brand")
             >>> result = query.find()
 
@@ -1405,7 +1518,10 @@ class Query(object):
         
         [Example]
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> query = query.where_not_in("brand")
             >>> result = query.find()
 
@@ -1461,7 +1577,10 @@ class Query(object):
         
         [Example]:
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> result = query.find()
         
         ==============================
@@ -1487,7 +1606,10 @@ class Query(object):
         
         [Example]:
 
-            >>> query = stack.content_type('product').query() 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
             >>> result = query.find_one()
         
         ==============================

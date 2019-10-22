@@ -1,4 +1,3 @@
-
 """
 
 Created by Shailesh Mishra on 22/06/19.
@@ -13,7 +12,6 @@ API Reference: https://www.contentstack.com/docs/guide/content-types
 
 
 class ContentType:
-
     """Content type defines the structure or schema of a page or a section of your web or mobile property. To create
     content for your application, you are required to first create a content type, and then create entries using the
     content type.
@@ -23,50 +21,25 @@ class ContentType:
     """
 
     def __init__(self, content_type_uid: str):
-
-        """
-
-        Arguments:
-            content_type_uid {str} -- [This is the uid of the content_type]
-        
-        Raises:
-            ValueError: [description]
-
-        ==============================
-        
-        [Example:]
-        
-            >>> from stack import Stack
-            >>> content_type = Stack.content_type('product')
-        
-        ==============================
-
-        """
-
         self.__config = None
         self.__stack_instance = None
         self.__http_request = None
         self.__stack_headers = {}
 
-        if content_type_uid is not None:
+        if content_type_uid is None or not isinstance(content_type_uid, str):
             raise KeyError('content_type_uid can not be None')
-        elif isinstance(content_type_uid, str):
-            self.__content_type_uid = content_type_uid
-        else:
-            raise ValueError('content_type_uid should be str type')
+        self.__content_type_uid = content_type_uid
 
     def _instance(self, stack_instance):
         # _instance is the protected member of the asset, So outsiders can not access this file.
         from contentstack.stack import Stack
         from contentstack.errors import StackException
-        
         if stack_instance is None:
             raise StackException('Kindly initialise stack first')
         self.__stack_instance: Stack = stack_instance
         self.__config = self.__stack_instance.config
         self.__stack_headers.update(self.__stack_instance.headers)
         self.__http_request = self.__stack_instance.get_http_instance
-
 
     @property
     def header(self):
@@ -80,8 +53,10 @@ class ContentType:
         
         [Example:]
 
-            >>> content_type = stack.content_type('product')
-            >>> content_type.header
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> headers = content_type.header
         
         ==============================
 
@@ -108,15 +83,17 @@ class ContentType:
         ==============================
         
         [Example:]
-
-            >>> content_type.add_header('key', 'value')
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> content_type = content_type.add_header('key', 'value')
         
         ==============================
         """
         if None in (key, value):
             raise KeyError('Kindly provide a valid key and value')
         elif isinstance(key, str) and isinstance(value, str):
-                self.__stack_headers[key] = value
+            self.__stack_headers[key] = value
         else:
             raise KeyError('Key and value should be str type')
 
@@ -138,8 +115,10 @@ class ContentType:
         ==============================
         
         [Example:]
-
-            >>> content_type.remove_header('key')
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> content_type = content_type.remove_header('key')
         
         ==============================
 
@@ -174,6 +153,9 @@ class ContentType:
         
         [Example:]
 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
             >>> entry: Entry = content_type.entry('uid')
         
         ==============================
@@ -187,7 +169,7 @@ class ContentType:
         entry._instance(self.__stack_instance)
         if uid is not None:
             if isinstance(uid, str):
-                entry.set_uid(uid)
+                entry.uid(uid)
             else:
                 raise KeyError('entry uid should be str type')
         return entry
@@ -204,6 +186,9 @@ class ContentType:
         
         [Example:]
 
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
             >>> query: Query = content_type.Query
         
         ==============================
@@ -227,6 +212,10 @@ class ContentType:
         ==============================
 
         Example:
+
+            >>> import stack
+            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> content_type = stack.content_type('content_type_uid')
             >>> content_type.add_header('key', 'someheader')
             >>> response = content_type.fetch()
 
