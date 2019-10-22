@@ -22,8 +22,7 @@ from .content_type import ContentType
 from .errors import Error, FileModeWarning
 from .http_connection import HTTPConnection
 
-# Set a default logger to prevent "No handler found" warnings
-# Set default logging handler to avoid "No handler found" warnings.
+
 import logging
 from logging import NullHandler
 logging.getLogger(__name__).addHandler(NullHandler())
