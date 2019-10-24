@@ -4,9 +4,12 @@ from .test_entry import *
 from .test_assets import *
 from .test_query import *
 from .test_stack import *
-
+import stack
+import entry
+import errors
+import asset
+import query
 sys.path.insert(0, os.path.abspath('..'))
-
 logging.basicConfig(filename='reports.log', format='%(asctime)s - %(message)s', level=logging.INFO)
 logging.getLogger(__name__)
 

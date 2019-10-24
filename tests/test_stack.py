@@ -1,6 +1,6 @@
 import logging
 import unittest
-# from config import ContentstackRegion
+from config import ContentstackRegion
 from contentstack import Error, Config
 from contentstack.stack import Stack
 
@@ -12,10 +12,10 @@ class TestStack(unittest.TestCase):
     def setUp(self):
 
         # Credentials taken from __init__() class
-        # self.config = Config()
-        # self.config.host = 'cdn.contentstack.io'
-        # self.config.version('v3')
-        # self.config.region = ContentstackRegion.US
+        self.config = Config()
+        self.config.host = 'cdn.contentstack.io'
+        self.config.version('v3')
+        self.config.region = ContentstackRegion.US
 
         from tests import stack_keys
         self.credentials = stack_keys()

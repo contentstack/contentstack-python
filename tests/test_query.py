@@ -2,6 +2,7 @@ import unittest
 from contentstack.stack import Stack
 import logging
 
+
 class TestQuery(unittest.TestCase):
 
     def setUp(self):

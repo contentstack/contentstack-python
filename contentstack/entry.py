@@ -21,11 +21,11 @@ class Entry:
 
     [Example:]
 
-                    >>> import stack
+            >>> import stack
             >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
-        >>> entry = entry.fetch()
+            >>> entry = entry.fetch()
 
     ==============================
 
@@ -58,7 +58,6 @@ class Entry:
         self.__updated_at = str
         self.__updated_by = str
         self.__version = str
-        self.__count = 0
 
     def _instance(self, stack_instance):
         # This is the protected from outside users, so they can't access this function.
@@ -450,28 +449,6 @@ class Entry:
             return None
         else:
             return self.__result_json
-
-    @property
-    def count(self):
-
-        """ Number of entry onjects
-        
-        Returns:
-            int -- count of the Entry object
-
-        ==============================
-        
-        [Example:]
-
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> count = entry.count
-        
-        ==============================
-        """
-        return self.__count
 
     @property
     def created_at(self):
