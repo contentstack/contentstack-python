@@ -45,13 +45,13 @@ class TestAsset(unittest.TestCase):
         else:
             raise Exception(Error.error_message)
 
-    # def test_asset_version(self):
-    #     _asset = self.__stack.asset(self.asset_uid)
-    #     _asset.version(1)
-    #     result: Asset = _asset.fetch()
-    #     if result is not None:
-    #         self.assertEqual(1, result.get_version)
-    #         logging.debug(result)
+    def test_asset_count(self):
+        _asset = self.__stack.asset()
+        _asset.include_count()
+        result: Asset = _asset.fetch_all()
+        if result is not None:
+            self.assertEqual(37, result.count)
+            logging.debug(result)
 
     def test_asset_include_dimension(self):
         _asset = self.__stack.asset(self.asset_uid)

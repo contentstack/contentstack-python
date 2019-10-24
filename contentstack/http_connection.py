@@ -77,6 +77,7 @@ class HTTPConnection(object):
 
     def __parse_dict(self, response):
         from contentstack.stack import SyncResult
+
         result = response.json()
         if 'stack' in result:
             return result['stack']
@@ -88,10 +89,11 @@ class HTTPConnection(object):
             return self.__parse_entries(entry_list)
         if 'asset' in result:
             dict_asset = result['asset']
-            return self.__parse_assets(dict_asset)
+            return self.__parse_assets(dict_asset, 1)
         if 'assets' in result:
             asset_list = result['assets']
-            return self.__parse_assets(asset_list)
+            asset_count = result['count']
+            return self.__parse_assets(asset_list, asset_count)
         if 'content_type' in result:
             return result['content_type']
         if 'content_types' in result:
@@ -120,7 +122,7 @@ class HTTPConnection(object):
                 return entries
 
     @staticmethod
-    def __parse_assets(result):
+    def __parse_assets(result, asset_count):
         from contentstack import Asset
         assets = []
         asset = Asset()
@@ -132,7 +134,7 @@ class HTTPConnection(object):
                 for asset_obj in result:
                     itr_asset = asset._configure(asset_obj)
                     assets.append(itr_asset)
-
+                asset._count(asset_count)
                 return assets
 
     @staticmethod

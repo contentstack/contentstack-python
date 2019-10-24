@@ -70,8 +70,8 @@ class Asset:
         return self
 
     def _configure(self, response):
-        # _configure is the protected member of the asset, So outsiders can not access this file.
         if response is not None and isinstance(response, dict) and len(response) > 0:
+
             self.__response = response
             if 'filename' in self.__response:
                 self.__file_name = self.__response['filename']
@@ -123,7 +123,8 @@ class Asset:
     @property
     def count(self):
 
-        """count property helps to get the Size of asset objects.
+        """
+        count property helps to get the Size of asset objects.
         
         Returns:
             int -- count of asset object
@@ -142,6 +143,10 @@ class Asset:
         """
 
         return self.__count
+
+    def _count(self, counter):
+        if counter is not None:
+            self.__count = counter
 
     @property
     def filetype(self):
