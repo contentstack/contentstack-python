@@ -1,6 +1,5 @@
 import logging
 import unittest
-from config import ContentstackRegion
 from contentstack import Entry, Config, Error
 from contentstack.stack import Stack
 
@@ -18,7 +17,7 @@ class TestEntry(unittest.TestCase):
         # env = 'production'
         # self.entry_uid = 'bltb0256a89e2225a39'
 
-        from tests import entry_keys
+        from tests.creds import entry_keys
         self.credentials = entry_keys()
         api_key = self.credentials['api_key']
         access_token = self.credentials['access_token']

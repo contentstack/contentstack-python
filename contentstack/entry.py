@@ -21,8 +21,8 @@ class Entry:
 
     [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -118,8 +118,8 @@ class Entry:
 
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.add_header('key', 'value')
@@ -156,8 +156,8 @@ class Entry:
 
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.remove_header('key')
@@ -187,8 +187,8 @@ class Entry:
 
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch() 
@@ -219,8 +219,8 @@ class Entry:
 
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry.uid = 'bltsomethingasuid'
@@ -249,8 +249,8 @@ class Entry:
 
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch() 
@@ -282,8 +282,8 @@ class Entry:
 
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry.locale = 'en-us'
@@ -308,8 +308,8 @@ class Entry:
 
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch() 
@@ -334,8 +334,8 @@ class Entry:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -359,8 +359,8 @@ class Entry:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -383,8 +383,8 @@ class Entry:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -408,8 +408,8 @@ class Entry:
 
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -434,8 +434,8 @@ class Entry:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -461,8 +461,8 @@ class Entry:
 
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -484,8 +484,8 @@ class Entry:
 
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -507,8 +507,8 @@ class Entry:
 
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -532,8 +532,8 @@ class Entry:
 
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -559,8 +559,8 @@ class Entry:
 
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -595,8 +595,8 @@ class Entry:
 
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -634,8 +634,8 @@ class Entry:
 
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -667,8 +667,8 @@ class Entry:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -700,8 +700,8 @@ class Entry:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -732,8 +732,8 @@ class Entry:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -763,8 +763,8 @@ class Entry:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -795,8 +795,8 @@ class Entry:
 
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -832,8 +832,8 @@ class Entry:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -872,8 +872,8 @@ class Entry:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -908,8 +908,8 @@ class Entry:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -945,8 +945,8 @@ class Entry:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -981,8 +981,8 @@ class Entry:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -1011,8 +1011,8 @@ class Entry:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -1047,8 +1047,8 @@ class Entry:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -1082,8 +1082,8 @@ class Entry:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()
@@ -1108,8 +1108,8 @@ class Entry:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
             >>> entry = entry.fetch()

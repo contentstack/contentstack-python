@@ -1,8 +1,8 @@
 import logging
 import unittest
-from contentstack import Asset, Error, Config
-from contentstack.config import ContentstackRegion
+from contentstack import Asset
 from contentstack.stack import Stack
+
 
 
 class TestAsset(unittest.TestCase):
@@ -18,7 +18,7 @@ class TestAsset(unittest.TestCase):
         # config.region = ContentstackRegion.US
         # Credentials taken from __init__() class
 
-        from tests import stack_keys
+        from tests.creds import stack_keys
         self.credentials = stack_keys()
         api_key = self.credentials['api_key']
         access_token = self.credentials['access_token']
@@ -43,13 +43,14 @@ class TestAsset(unittest.TestCase):
             self.assertNotIn('images.contentstack.io/', result.url)
             logging.debug(result)
         else:
+            from contentstack import Error
             raise Exception(Error.error_message)
 
     def test_asset_count(self):
         _asset = self.__stack.asset()
         _asset.include_count()
         result: Asset = _asset.fetch_all()
-        if result is not None:
+        if result is not None and isinstance(result, Asset):
             self.assertEqual(37, result.count)
             logging.debug(result)
 

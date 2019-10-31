@@ -92,7 +92,9 @@ class HTTPConnection(object):
             return self.__parse_assets(dict_asset, 1)
         if 'assets' in result:
             asset_list = result['assets']
-            asset_count = result['count']
+            asset_count = 0
+            if 'count' in result:
+                asset_count = result['count']
             return self.__parse_assets(asset_list, asset_count)
         if 'content_type' in result:
             return result['content_type']
