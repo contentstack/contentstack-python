@@ -1,13 +1,12 @@
+import logging
 import unittest
 from contentstack.stack import Stack
-import logging
-
 
 class TestQuery(unittest.TestCase):
 
     def setUp(self):
 
-        from tests import query_keys
+        from tests.creds import query_keys
         self.credentials = query_keys()
         api_key = self.credentials['api_key']
         access_token = self.credentials['access_token']

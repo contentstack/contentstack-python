@@ -53,8 +53,8 @@ class ContentType:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> headers = content_type.header
         
@@ -83,8 +83,8 @@ class ContentType:
         ==============================
         
         [Example:]
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> content_type = content_type.add_header('key', 'value')
         
@@ -115,8 +115,8 @@ class ContentType:
         ==============================
         
         [Example:]
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> content_type = content_type.remove_header('key')
         
@@ -153,8 +153,8 @@ class ContentType:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry: Entry = content_type.entry('uid')
         
@@ -186,8 +186,8 @@ class ContentType:
         
         [Example:]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> query: Query = content_type.Query
         
@@ -213,8 +213,8 @@ class ContentType:
 
         Example:
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> content_type.add_header('key', 'someheader')
             >>> response = content_type.fetch()

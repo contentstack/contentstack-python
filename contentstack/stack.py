@@ -70,8 +70,8 @@ class Stack(object):
         
         [Example]:
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> api_key = stack.api_key
 
         ==============================
@@ -94,8 +94,8 @@ class Stack(object):
         
         [Example]:
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> http_instance = stack.get_http_instance
         
         ==============================
@@ -116,8 +116,8 @@ class Stack(object):
         
         [Example]:
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> access_token = stack.access_token
         
         ==============================
@@ -142,8 +142,8 @@ class Stack(object):
         
         [Example]:
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> environment = stack.environment
         
         ==============================
@@ -171,8 +171,8 @@ class Stack(object):
         
         [Example]:
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> stack.environment = 'product'
         
         ==============================
@@ -198,8 +198,8 @@ class Stack(object):
         
         [Example]:
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> headers = stack.headers
         
         ==============================
@@ -249,8 +249,8 @@ class Stack(object):
         
         [Example]:
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('product')
         
         ==============================
@@ -284,8 +284,8 @@ class Stack(object):
         
         [Example]:
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_types = stack.get_content_types()
         
         ==============================
@@ -323,8 +323,8 @@ class Stack(object):
         provide asset_uid of the asset you have to find.
         Example: in case to fetch single asset, provide uid of the asset:
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset_instance = stack.asset('bltputyourassetuid')
             >>> asset = asset_instance.fetch()
         
@@ -332,8 +332,8 @@ class Stack(object):
         
         [Example]: [All Assets]
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset_instance = stack.asset()
             >>> assets = asset_instance.fetch_all()
         
@@ -368,8 +368,8 @@ class Stack(object):
 
         [Example]: 
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> stack.image_transform('image_url', width=100, height=100)
 
         ==============================
@@ -395,8 +395,8 @@ class Stack(object):
 
         [Example]:
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> stack = stack.collaborators()
             >>> result = stack.fetch()
 
@@ -422,8 +422,8 @@ class Stack(object):
 
         [Example]:
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> stack = stack.include_stack_variables()
             >>> result = stack.fetch()
 
@@ -446,8 +446,8 @@ class Stack(object):
 
         [Example]:
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> stack = stack.include_discrete_variables()
             >>> result = stack.fetch()
 
@@ -471,8 +471,8 @@ class Stack(object):
 
         [Example]:
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> stack = stack.include_count()
             >>> result = stack.fetch()
 
@@ -495,8 +495,8 @@ class Stack(object):
 
         [Example]:
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> stack = stack.include_count()
             >>> result = stack.fetch()
 
@@ -543,8 +543,8 @@ class Stack(object):
 
         [Example]:
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> result = stack.sync(content_type_uid='content_type_uid', from_date='date', locale='en-us', publish_type='asset_published')
         
         ==============================
@@ -587,8 +587,8 @@ class Stack(object):
 
         [Example]:
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> result = stack.pagination('blt8347235938759')
 
         ==============================
@@ -622,8 +622,8 @@ class Stack(object):
 
         [Example]:
 
-            >>> import stack
-            >>> stack = stack.Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> result = stack.sync_token('bltsomekeytoput')
 
         ==============================
