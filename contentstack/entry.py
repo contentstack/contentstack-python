@@ -1117,7 +1117,8 @@ class Entry:
         
         ==============================
         """
-        include_content_type = {'include_content_type': 'true', 'include_snippet_schema': 'true'}
+        include_content_type = {'include_content_type': 'true',
+                                'include_global_field_schema': 'true'}
         self.__local_params.update(include_content_type)
 
         return self

@@ -1,9 +1,7 @@
 import logging
 import unittest
-
 from contentstack import Error, Config
 from contentstack.stack import Stack
-
 
 class TestStack(unittest.TestCase):
 
@@ -16,7 +14,7 @@ class TestStack(unittest.TestCase):
         self.config = Config()
         self.config.host = 'cdn.contentstack.io'
         self.config.version('v3')
-        self.config.region = ContentstackRegion.US
+        self.config.region = ContentstackRegion.EU
 
         from tests.creds import stack_keys
         self.credentials = stack_keys()
@@ -36,10 +34,14 @@ class TestStack(unittest.TestCase):
         print(self.credentials)
         self.assertEqual(self.credentials['api_key'], self.stack.api_key)
 
+    # def test_stack_config_region(self):
+    #     from config import ContentstackRegion
+    #     config = Config()
+    #     config.region = ContentstackRegion.EU
+    #     host = config.host
+    #     self.assertEqual('cdn.contentstack.com', host)
+
     def test_stack_config_endpoint(self):
-        region = self.config.region
-        host = self.config.host
-        endpoint = self.config.endpoint
         self.assertEqual('https://cdn.contentstack.io/v3', self.config.endpoint)
         print(self.config.endpoint)
 

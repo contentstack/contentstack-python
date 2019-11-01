@@ -1227,7 +1227,9 @@ class Query(object):
         ==============================
         """
 
-        self.__query_params["include_content_type"] = 'true'
+        include_content_type = {'include_content_type': 'true',
+                                'include_global_field_schema': 'true'}
+        self.__query_params.update(include_content_type)
 
         return self
 
@@ -1459,7 +1461,7 @@ class Query(object):
 
         return self
 
-    def where_in(self, key):
+    def where_in(self, key, query_object):
 
         """
         Get entries having values based on referenced fields. This query retrieves all entries that satisfy the query
@@ -1493,13 +1495,17 @@ class Query(object):
         if key is None:
             raise ValueError('Kindly provide a valid key')
         elif isinstance(key, str):
-            self.__query_dict = {key: {'$in_query': self.__query_dict}}
+            if isinstance(query_object, Query):
+                _query = query_object.__query_dict
+                self.__query_dict = {key: {'$in_query': _query}}
+            else:
+                raise ValueError('query_object should be Query type')
         else:
             raise ValueError('key should be str type')
 
         return self
 
-    def where_not_in(self, key):
+    def where_not_in(self, key, query_object):
 
         """Get entries having values based on referenced fields. This query works the opposite of $in_query and
         retrieves all entries that does not satisfy query conditions made on referenced fields.
@@ -1532,7 +1538,11 @@ class Query(object):
         if key is None:
             raise ValueError('Kindly provide a valid key')
         elif isinstance(key, str):
-            self.__query_dict = {key: {'$nin_query': self.__query_dict}}
+            if isinstance(query_object, Query):
+                _query = query_object.__query_dict
+                self.__query_dict = {key: {'$nin_query': _query}}
+            else:
+                raise ValueError('query_object should be Query type')
         else:
             raise ValueError('key should be str type')
 
@@ -1563,7 +1573,6 @@ class Query(object):
     def find(self):
 
         """It fetches the query result.
-        
         List of :class:`Entry <contentstack.entry.Entry>` objects.
 
         Raises:
