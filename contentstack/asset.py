@@ -24,7 +24,7 @@ class Asset:
         
     [Example]:
 
-        >>> from stack import Stack
+        >>> from contentstack import Stack
         >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
         >>> asset = stack.asset()
 
@@ -111,7 +111,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> uid = asset.uid
@@ -133,7 +133,7 @@ class Asset:
         
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset()
             >>> count = asset.count
@@ -160,7 +160,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> file = asset.filetype
@@ -182,7 +182,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> size = asset.filesize
@@ -205,7 +205,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> filename = asset.filename
@@ -228,7 +228,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> file_url = asset.url
@@ -253,7 +253,7 @@ class Asset:
         [Example]:
 
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> response = asset.json
@@ -277,7 +277,7 @@ class Asset:
         [Example]:
 
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> response = asset.created_at
@@ -299,7 +299,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> response = asset.created_by
@@ -322,7 +322,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> response = asset.updated_at
@@ -346,7 +346,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> response = asset.updated_by
@@ -369,7 +369,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> tags = asset.tags
@@ -392,7 +392,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> tags = asset.get_version
@@ -415,7 +415,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> tags = asset.dimension
@@ -446,7 +446,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> asset = asset.add_header('key', 'value')
@@ -480,7 +480,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> asset = asset.environment('production')
@@ -517,7 +517,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> asset = asset.add_params('key', 'value')
@@ -546,7 +546,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> asset = asset.relative_urls()
@@ -572,7 +572,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> asset = asset.include_dimension()
@@ -603,7 +603,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> asset = asset.remove_header('some_key')
@@ -638,7 +638,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> asset = asset.set_uid('uid')
@@ -668,7 +668,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> asset = asset.set_uid('uid')
@@ -703,7 +703,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> asset = asset.sort('some_key', OrderType.ASC)
@@ -737,7 +737,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset()
             >>> result = asset.fetch_all()
@@ -762,7 +762,7 @@ class Asset:
 
         [Example]:
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> result = asset.fetch()

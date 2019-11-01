@@ -21,7 +21,7 @@ class Entry:
 
     [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -118,7 +118,7 @@ class Entry:
 
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -156,7 +156,7 @@ class Entry:
 
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -187,7 +187,7 @@ class Entry:
 
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -219,7 +219,7 @@ class Entry:
 
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -249,7 +249,7 @@ class Entry:
 
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -282,7 +282,7 @@ class Entry:
 
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -308,7 +308,7 @@ class Entry:
 
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -334,7 +334,7 @@ class Entry:
         
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -359,7 +359,7 @@ class Entry:
         
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -383,7 +383,7 @@ class Entry:
         
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -408,7 +408,7 @@ class Entry:
 
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -434,7 +434,7 @@ class Entry:
         
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -461,7 +461,7 @@ class Entry:
 
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -484,7 +484,7 @@ class Entry:
 
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -507,7 +507,7 @@ class Entry:
 
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -532,7 +532,7 @@ class Entry:
 
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -559,7 +559,7 @@ class Entry:
 
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -595,7 +595,7 @@ class Entry:
 
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -634,7 +634,7 @@ class Entry:
 
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -667,7 +667,7 @@ class Entry:
         
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -700,7 +700,7 @@ class Entry:
         
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -732,7 +732,7 @@ class Entry:
         
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -763,7 +763,7 @@ class Entry:
         
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -795,7 +795,7 @@ class Entry:
 
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -832,7 +832,7 @@ class Entry:
         
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -872,7 +872,7 @@ class Entry:
         
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -908,7 +908,7 @@ class Entry:
         
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -945,7 +945,7 @@ class Entry:
         
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -981,7 +981,7 @@ class Entry:
         
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -1011,7 +1011,7 @@ class Entry:
         
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -1047,7 +1047,7 @@ class Entry:
         
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -1082,7 +1082,7 @@ class Entry:
         
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
@@ -1108,7 +1108,7 @@ class Entry:
         
         [Example:]
 
-            >>> from stack import Stack
+            >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
