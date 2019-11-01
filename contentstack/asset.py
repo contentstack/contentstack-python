@@ -684,9 +684,9 @@ class Asset:
 
         """
         Request asset by sort by key, It caould be sorted to ASCENDING and DESCENDING order
-        param key: provides the key on which ASC/DESC need to apply.
+        param key: provides the key on which OrderType.ASC or OrderType.DESC need to apply.
         :param key: key that to be constrained
-        :param order_by: object option either "asc" or "desc"
+        :param order_by: object option either OrderType.ASC or OrderType.DESC
         :return self , instance of AssetLibrary
         
         Arguments:
@@ -726,12 +726,23 @@ class Asset:
         """Assets refer to all the media files (images, videos, PDFs, audio files, and so on)
         uploaded in your Contentstack repository for future use. These files can be
         attached and used in multiple entries.
-        Learn more about Assets 
+        Learn more about Assets
         [https://www.contentstack.com/docs/guide/content-management#working-with-assets].
+        
+        Returns:
+            list[Assets] -- This call fetches the list of all the assets of a particular stack.
+        It also returns the content of each asset in the form of list[Assets]
 
-        :return: This call fetches the list of all the assets of a particular stack.
-        It also returns the content of each asset in the form of list[Assets].
-        :rtype: list[Asset]
+        ==============================
+
+        [Example]:
+
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset()
+            >>> result = asset.fetch_all()
+
+        ==============================
 
         """
 
@@ -743,8 +754,20 @@ class Asset:
 
         """
         This call fetches the latest version of a specific asset of a particular stack.
-        :return: It returns Asset on the basis of asset_uid
-        :rtype: Asset
+        
+        Returns: 
+            Asset -- It returns Asset on the basis of asset_uid
+
+        ==============================
+
+        [Example]:
+
+            >>> from stack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> result = asset.fetch()
+
+        ==============================
 
         """
         if self.__uid is not None and len(self.__uid) > 0:

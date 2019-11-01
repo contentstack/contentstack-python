@@ -15,8 +15,9 @@ You will need python 3 installed on your machine. You can install it from [here]
 
 To use the Contentstack Python SDK to your existing project, perform the steps given below:
 
-1. **pip**
+**Install contentstack pip**
 ```
+pip contentstack
 Not created: (Waiting for repository to get public)
 ```
 

@@ -497,7 +497,7 @@ class TestQuery(unittest.TestCase):
         query = content_type.query()
         query.locale('en-us')
         query.where('title', 'Apple Inc.')
-        query.where_in('brand')
+        query.where_in('brand', query)
         result = query.find()
         if result is not None:
             self.assertEqual(2, len(result))
@@ -511,7 +511,7 @@ class TestQuery(unittest.TestCase):
         query = content_type.query()
         query.locale('en-us')
         query.where('title', 'Apple Inc.')
-        query.where_not_in('brand')
+        query.where_not_in('brand', query)
         result = query.find()
         if result is not None:
             self.assertEqual(5, len(result))

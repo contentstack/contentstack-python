@@ -189,7 +189,7 @@ class ContentType:
             >>> from stack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
-            >>> query: Query = content_type.Query
+            >>> query: Query = content_type.query()
         
         ==============================
 
@@ -200,7 +200,7 @@ class ContentType:
         query._instance(self.__stack_instance)
         return query
 
-    def fetch(self):
+    def fetch(self, params=None):
 
         """This method is useful to fetch ContentType of the of the stack.
         :return: response returns Json
@@ -217,13 +217,17 @@ class ContentType:
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> content_type = stack.content_type('content_type_uid')
             >>> content_type.add_header('key', 'someheader')
-            >>> response = content_type.fetch()
+            >>> some_dict = {'abc':'something'}
+            >>> response = content_type.fetch(some_dict)
 
         ==============================
 
         """
+        params_dict = {}
         endpoint = self.__config.endpoint
         url = '{}/content_types'.format(endpoint)
         content_type_url = '{0}/{1}'.format(url, self.__content_type_uid)
-        result = self.__http_request.get_result(content_type_url, {}, self.__stack_headers)
+        if params is not None and isinstance(dict, params):
+            params_dict.update(params)
+        result = self.__http_request.get_result(content_type_url, params_dict, self.__stack_headers)
         return result
