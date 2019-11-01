@@ -1,7 +1,7 @@
 import logging
 import unittest
 from contentstack import Entry, Config, Error
-from contentstack.stack import Stack
+from contentstack import Stack
 
 
 class TestEntry(unittest.TestCase):

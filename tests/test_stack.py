@@ -1,7 +1,8 @@
 import logging
 import unittest
 from contentstack import Error, Config
-from contentstack.stack import Stack
+from contentstack import Stack
+
 
 class TestStack(unittest.TestCase):
 

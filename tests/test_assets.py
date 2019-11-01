@@ -1,7 +1,7 @@
 import logging
 import unittest
 from contentstack import Asset
-from contentstack.stack import Stack
+from contentstack import Stack
 
 
 

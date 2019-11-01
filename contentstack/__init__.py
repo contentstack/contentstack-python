@@ -21,6 +21,7 @@ from .config import Config
 from .content_type import ContentType
 from .errors import Error, FileModeWarning
 from .http_connection import HTTPConnection
+from .stack import Stack
 
 import logging
 from logging import NullHandler
