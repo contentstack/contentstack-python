@@ -66,6 +66,9 @@ class Config(object):
         """
 
         if region is not None and isinstance(region, ContentstackRegion):
+            if region != ContentstackRegion.US:
+                if self.default["host"] == 'cdn.contentstack.io':
+                    self.default["host"] = 'cdn.contentstack.com'
             self.default['region'] = region
 
     @property
