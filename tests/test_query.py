@@ -1,6 +1,7 @@
 import logging
 import unittest
-from contentstack.stack import Stack
+from contentstack import Stack
+
 
 class TestQuery(unittest.TestCase):
 
