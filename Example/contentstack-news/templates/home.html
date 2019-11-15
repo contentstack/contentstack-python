@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+{% block content %}
+    {% for post in news %}
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="#">{{ post.json.top_news }}</a>
+                    <small class="text-muted">{{ post.json.created_at }}</small>
+                    </div>
+                    <h3><a class="article-title" href="#">{{ post.json.title }}</a></h3>
+                    <p class="article-content">{{ post.json.body | safe }}</p>
+            </div>
+        </article>
+    {% endfor %}
+{% endblock content %}
