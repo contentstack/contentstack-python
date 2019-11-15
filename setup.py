@@ -12,7 +12,6 @@ import os
 import re
 
 ROOT = os.path.dirname(__file__)
-
 VERSION_RE = re.compile(r'''__version__ = ['"]([0-9.]+)['"]''')
 
 with open("README.md", "r") as fh:
