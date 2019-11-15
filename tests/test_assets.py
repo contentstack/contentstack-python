@@ -1,8 +1,8 @@
 import logging
 import unittest
-from contentstack import Asset, Error, Config
-from contentstack.config import ContentstackRegion
-from contentstack.stack import Stack
+from contentstack import Asset
+from contentstack import Stack
+
 
 
 class TestAsset(unittest.TestCase):
@@ -11,18 +11,23 @@ class TestAsset(unittest.TestCase):
 
     def setUp(self):
 
-        api_key: str = 'blt20962a819b57e233'
-        access_token: str = 'blt01638c90cc28fb6f'
-        env_prod: str = 'production'
-        self.asset_uid: str = 'blt91af1e5af9c3639f'
-        config = Config()
-        config.region(ContentstackRegion.US)
+        # api_key: str = 'blt20962a819b57e233'
+        # access_token: str = 'blt01638c90cc28fb6f'
+        # env_prod: str = 'production'
+        # config = Config()
+        # config.region = ContentstackRegion.US
+        # Credentials taken from __init__() class
 
-        self.__stack = Stack(api_key=api_key, access_token=access_token, environment=env_prod, config=config)
+        from tests.creds import stack_keys
+        self.credentials = stack_keys()
+        api_key = self.credentials['api_key']
+        access_token = self.credentials['access_token']
+        env = self.credentials['environment_prod']
+        self.asset_uid: str = 'blt91af1e5af9c3639f'
+        self.__stack = Stack(api_key=api_key, access_token=access_token, environment=env)
 
     def test_single_asset(self):
         _asset: Asset = self.__stack.asset(self.asset_uid)
-        _asset.version(1)
         _asset.relative_urls()
         _asset.include_dimension()
         result: Asset = _asset.fetch()
@@ -38,14 +43,15 @@ class TestAsset(unittest.TestCase):
             self.assertNotIn('images.contentstack.io/', result.url)
             logging.debug(result)
         else:
+            from contentstack import Error
             raise Exception(Error.error_message)
 
-    def test_asset_version(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        _asset.version(1)
-        result: Asset = _asset.fetch()
-        if result is not None:
-            self.assertEqual(1, result.get_version)
+    def test_asset_count(self):
+        _asset = self.__stack.asset()
+        _asset.include_count()
+        result: Asset = _asset.fetch_all()
+        if result is not None and isinstance(result, Asset):
+            self.assertEqual(37, result.count)
             logging.debug(result)
 
     def test_asset_include_dimension(self):
@@ -56,20 +62,11 @@ class TestAsset(unittest.TestCase):
             self.assertEqual(dict, type(result.dimension))
             logging.debug('tuple dimension is %s ' + _asset.dimension.__str__())
 
-    def test_asset_remove_header(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        _asset.remove_header('access_token')
-        result: Asset = _asset.fetch()
-        if result is not None and isinstance(result, Error):
-            self.assertEqual(105, result.error_code)
-        else:
-            self.assertEqual("Default Failed", "Failing")
-
     def test_asset_check_uid_is_valid(self):
         _asset = self.__stack.asset(self.asset_uid)
         result = _asset.fetch()
         if result is not None:
-            self.assertEqual(self.asset_uid, result.asset_uid)
+            self.assertEqual(self.asset_uid, result.uid)
 
     def test_asset_check_filetype(self):
         _asset = self.__stack.asset(self.asset_uid)
@@ -99,17 +96,17 @@ class TestAsset(unittest.TestCase):
         _asset = self.__stack.asset(self.asset_uid)
         result = _asset.fetch()
         if result is not None:
-            self.assertEqual(dict, type(result.to_json))
+            self.assertEqual(dict, type(result.json))
 
-    def test_asset_create_at(self):
+    def test_asset_created_at(self):
         _asset = self.__stack.asset(self.asset_uid)
         result = _asset.fetch()
         if result is not None:
-            sallie: str = result.create_at
+            sallie: str = result.created_at
             var_shailesh, fileid = sallie.split('T')
             self.assertEqual('2017-01-10', var_shailesh)
 
-    def test_asset_create_by(self):
+    def test_asset_created_by(self):
         _asset = self.__stack.asset(self.asset_uid)
         result = _asset.fetch()
         if result is not None:
@@ -117,18 +114,18 @@ class TestAsset(unittest.TestCase):
             var_shailesh, fileid = sallie.split('_')
             self.assertEqual('sys', var_shailesh)
 
-    def test_asset_update_at(self):
+    def test_asset_updated_at(self):
         _asset = self.__stack.asset(self.asset_uid)
         result: Asset = _asset.fetch()
         if result is not None:
             if isinstance(result, Asset):
-                sallie: str = result.update_at
+                sallie: str = result.updated_at
                 var_shailesh, fileid = sallie.split('T')
-                self.assertEqual('2019-08-14', var_shailesh)
+                self.assertEqual('2017-01-10', var_shailesh)
             else:
                 self.assertFalse(True)
 
-    def test_asset_update_by(self):
+    def test_asset_updated_by(self):
         _asset = self.__stack.asset(self.asset_uid)
         result: Asset = _asset.fetch()
         if result is not None:
@@ -151,7 +148,7 @@ class TestAsset(unittest.TestCase):
         result = _asset.fetch()
         if result is not None:
             if isinstance(result, Asset):
-                self.assertEqual(int, type(result.get_version))
+                self.assertEqual(int, type(result.version))
 
     def test_assets(self):
         _asset = self.__stack.asset()

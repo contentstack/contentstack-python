@@ -1,3 +1,7 @@
 
-##v0.0.1
-Initial release of the python Content Delivery API SDK.
+## version 1.0.0
+### date 15-Nov-2019
+
+Initial release for the contentstack-python-sdk for content delivery API.
+
+--------------------------------------------------------------------
