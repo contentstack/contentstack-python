@@ -13,7 +13,7 @@ __status__ = 'debug'
 __version__ = '1.0.0'
 __package__ = 'contentstack'
 __endpoint__ = 'cdn.contentstack.io'
-__email__ = "shailesh.mishra@contentstack.com"
+__email__ = "mobile@contentstack.com"
 
 from .entry import Entry
 from .asset import Asset
