@@ -1,47 +1,40 @@
+"""
 
+Created by Shailesh Mishra on 22/06/19.
+Copyright 2019 Contentstack. All rights reserved.
 
-#  Asset
-#  contentstack
-#
-#  Created by Shailesh Mishra on 22/06/19.
-#  Copyright © 2019 Contentstack. All rights reserved.
+contentstack.asset
+~~~~~~~~~~~~~~~~~~
 
+API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#assets
 
-class OrderType(object):
-
-    """
-    OrderType is used to choose one of the ascending or descending
-
-    """
-    ASC, DESC = range(0, 2)
-
-    pass
+"""
 
 
 class Asset:
 
-    """
-
-    Assets refer to all the media files (images, videos, PDFs, audio files, and so on) uploaded
+    """Assets refer to all the media files (images, videos, PDFs, audio files, and so on) uploaded
     in your Contentstack repository for future use.
     These files can be attached and used in multiple entries.
     contentstack.asset
-    ~~~~~~~~~~~~~~~~~~
+    ==============================
 
     This module implements the Asset class.
     API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#assets
+        
+    [Example]:
+
+        >>> from contentstack import Stack
+        >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+        >>> asset = stack.asset()
+
+    ==============================
 
     """
 
     def __init__(self, uid=None):
-
-        """
-        :param uid: accepts asset_uid (optional) -> it is URI parameter required for fetch() Asset
-        :type : str
-
-        """
         if uid is not None and isinstance(uid, str):
-            self.__asset_uid = uid
+            self.__uid = uid
         self.__config = None
         self.__stack_instance = None
         self.__response = None
@@ -59,41 +52,27 @@ class Asset:
         self.__updated_by = None
         self.__version = None
         self.__dimension = None
-        self.__uid = None
         self.__tags = None
 
-    def instance(self, stack_instance):
-
-        """
-        :param stack_instance: contains stack information like config, headers and http_instance
-        :type stack_instance: contentstack.stack.Stack
-        :return: self
-        :rtype: Asset
-        """
-
+    def _instance(self, stack_instance):
+        # _instance is the protected member of the asset, So outsiders can not access this file.
         from contentstack.stack import Stack
         from contentstack.errors import StackException
         if stack_instance is None:
             raise StackException('Kindly initialise stack first')
-        self.__stack_instance: Stack = stack_instance
-        self.__config = self.__stack_instance.config
-        self.__stack_headers.update(self.__stack_instance.headers)
-        self.__http_request = self.__stack_instance.get_http_instance
+        if isinstance(stack_instance, Stack):
+            self.__stack_instance = stack_instance
+            self.__config = self.__stack_instance.config
+            self.__http_request = self.__stack_instance.get_http_instance
+        else:
+            raise ValueError('Invalid Stack type, Please provide Stack Instance')
 
         return self
 
-    def configure(self, response):
-
-        """
-        :param response: response is Asset result
-        :type response: dict
-        :return: self
-        :rtype: Asset
-
-        """
+    def _configure(self, response):
         if response is not None and isinstance(response, dict) and len(response) > 0:
-            self.__response = response
 
+            self.__response = response
             if 'filename' in self.__response:
                 self.__file_name = self.__response['filename']
             if 'file_size' in self.__response:
@@ -121,67 +100,117 @@ class Asset:
         return self
 
     @property
-    def asset_uid(self):
+    def uid(self):
 
+        """uid property helps to set uid of the asset
+        
+        Returns:
+            str -- uid of the asset
+
+        ==============================
+
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> uid = asset.uid
+
+        ==============================
         """
-        :return: asset_uid function returns asset_uid of the asset
-        :rtype: str
-
-        [Example]
-        uid = asset.asset_uid
-        """
-
         return self.__uid
 
     @property
     def count(self):
 
         """
-        :return: count function returns list of assets.
-        :rtype: int
+        count property helps to get the Size of asset objects.
+        
+        Returns:
+            int -- count of asset object
 
-        [Example]
-        count = asset.count
+        ==============================
+        
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset()
+            >>> count = asset.count
+
+        ==============================
+
         """
 
-        return self.__uid
+        return self.__count
+
+    def _count(self, counter):
+        if counter is not None:
+            self.__count = counter
 
     @property
     def filetype(self):
 
+        """This function returns type of the asset file
+
+        Returns:
+            str -- type of file
+
+        ==============================
+
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> file = asset.filetype
+
+        ==============================
+
         """
-        :return: This function returns type of the asset file
-        :rtype: str
-
-        [Example]
-        file = asset.filetype
-
-        """
-
         return self.__file_type
 
     @property
     def filesize(self):
 
-        """
-        :return: returns size of asset file
-        :rtype: str
+        """Returns size of asset file
+        
+        Returns:
+            int -- size of asset file
 
-        [Example]
-        size = asset.file_size
+        ==============================
+
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> size = asset.filesize
+
+        ==============================
 
         """
+
         return self.__file_size
 
     @property
     def filename(self):
 
-        """
-        :return: this function returns the name of the asset file.
-        :rtype: str
+        """This property returns the filename asset file.
+        
+        Returns:
+            str -- filename of asset
 
-        [Example]
-        filename = asset.filename
+        ==============================
+
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> filename = asset.filename
+
+        ==============================
 
         """
 
@@ -190,324 +219,530 @@ class Asset:
     @property
     def url(self):
 
-        """
-        :return: this function returns the url of the Asset
-        :rtype: str
+        """This property returns the url of the Asset
+        
+        Returns:
+            str -- asset url
 
-        [Example]
-        file_url = asset.file_url
+        ==============================
+
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> file_url = asset.url
+
+        ==============================
 
         """
+
         return self.__file_url
 
     @property
-    def to_json(self):
+    def json(self):
 
         """
-        :return: this function returns json response of Asset
-        :rtype: dict
+        This property returns response in json
+        
+        Returns:
+            str -- Json response of Asset
 
-        [Example]
-        response = asset.to_json
+        ==============================
 
+        [Example]:
+
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> response = asset.json
+
+        ==============================
         """
+
         return self.__response
 
     @property
-    def create_at(self):
+    def created_at(self):
 
         """
-        :return: this function returns the time when Asset is created.
-        :rtype:  str
+        This property returns the time when Asset is created.
+        
+        Returns:
+            str -- Time when Asset is created
 
-        [Example]
-        created_at = asset.created_at
+        ==============================
 
+        [Example]:
+
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> response = asset.created_at
+
+        ==============================
         """
+
         return self.__created_at
 
     @property
     def created_by(self):
 
-        """
-        :return: this function returns the owner of the Asset
-        :rtype: str
+        """This property created_by returns the owner of the Asset
+        
+        Returns:
+            str -- Owner of the Asset
 
-        [Example]
-        created_by = asset.created_by
+        ===============================
+
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> response = asset.created_by
+        
+        ================================
 
         """
+
         return self.__created_by
 
     @property
-    def update_at(self):
+    def updated_at(self):
+
+        """This property updated_at returns the time the Asset was updated.
+        
+        Returns:
+            str -- Time the Asset was updated
+
+        ==============================
+
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> response = asset.updated_at
+
+        ==============================
 
         """
-        :return: this method returns the time the Asset was updated.
-        :rtype: str
 
-        [Example]
-        updated_at = asset.updated_at
-        :return: str updated_at
-
-        """
         return self.__updated_at
 
     @property
     def updated_by(self):
 
         """
-        :return: this function returns the time of Asset was updated
-        :rtype: str
+        This function returns the time of Asset was updated
+        
+        Returns:
+            str --  Asset was updated by whome
 
-        [Example]
-        updated_by = asset.updated_by
+        ==============================
+
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> response = asset.updated_by
+
+        ==============================
 
         """
+
         return self.__updated_by
 
     @property
     def tags(self):
 
-        """
-        :return: this function returns the list of str
-        :rtype: list
+        """This property returns the list of tag str
+        
+        Returns:
+            list -- list of tags
 
-        [Example]
-        tags = asset.tags
+        ==============================
+
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> tags = asset.tags
+
+        ==============================
 
         """
+
         return self.__tags
 
     @property
-    def get_version(self):
+    def version(self):
+
+        """This property returns the version of asset
+        
+        Returns:
+            int -- version of the asset
+
+        ==============================
+
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> tags = asset.get_version
+
+        ==============================
 
         """
-        :return: this returns the version of the asset
-        :rtype: int
 
-        [Example]
-        version = asset.get_version
-
-        """
         return self.__version
 
     @property
     def dimension(self):
 
+        """This property returns the dimension of the Asset
+        
+        Returns:
+            dict -- Dimension of the Asset
+
+        ==============================
+
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> tags = asset.dimension
+
+        ==============================
+
         """
-        :return: this function returns the dimension of the Asset
-        :rtype: dict
 
-        [Example]
-
-        dimension = asset.dimension
-
-        """
         return self.__dimension
 
-    def headers(self, headers):
+    def add_header(self, key, value):
 
         """
-        :param headers: headers is the stack headers for the stack authentication
-        :type headers: dict
-        :return: self
-        :rtype: Asset
+        add_header is the funtion helps to pass additional header to the asset class
+        
+        Arguments:
+            key {str} -- key of the header
+            value {str} -- value of the header
+        
+        Raises:
+            ValueError: Kindly provide valid KEY and Value
+            ValueError: key and value should be str type
+        
+        Returns:
+            Asset -- Asset, So we can chain the call
 
-        [Example]
+        ==============================
 
-        asset_dict = {'api_key':'bltsomething', 'access_token':'someacceesstoken', 'environment':'development'}
-        asset = asset.headers(asset_dict)
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> asset = asset.add_header('key', 'value')
+
+        ==============================
 
         """
-        if headers is not None and isinstance(headers, dict) and len(headers) > 0:
-            self.__stack_headers = headers.copy()
-            if 'environment' in self.__stack_headers:
-                env = self.__stack_headers['environment']
-                self.__query_params['environment'] = env
-                self.__stack_headers.pop('environment', None)
-            else:
-                raise ValueError("Environment Can't Be None")
+
+        if None in (key, value):
+            raise ValueError('Kindly provide valid KEY and Value')
+        elif isinstance(key, str) and isinstance(value, str):
+            self.__stack_headers[key] = value
         else:
-            raise ValueError('Kindly provide a valid input')
+            raise ValueError('KEY and Value should be str type')
 
         return self
 
     def environment(self, environment):
 
         """
-        provide the name of the environment if you wish to retrieve the assets published in a particular environment.
-        Example: production
+        Provide the name of the environment if you wish to retrieve the assets published 
+        in a particular environment.
+        
+        Arguments:
+            environment {str} -- the name of the environment
 
-        :param environment: the name of the environment
-        :type environment: str
-        :return: self
-        :rtype: Asset
+        Returns:
+            Asset -- Asset, So we can chain the call
 
+        ==============================
+
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> asset = asset.environment('production')
+
+        ==============================
         """
 
-        if environment is not None and isinstance(environment, str):
+        if environment is None:
+            raise ValueError('Kindly provide valid environment')
+        elif isinstance(environment, str):
             self.__query_params['environment'] = environment
+        else:
+            raise ValueError('Environment should be str type')
 
         return self
 
-    def params(self, params):
+    def add_params(self, key, value):
 
         """
-        :param params: param function allows to add/update asset query param dictionary.
-        :type params: dict
-        :return: instance of asset self
-        :rtype: Asset
+        add_param is helpful to pass addtional parameters to the asset class
 
-        [Example]
+        Arguments:
+            key {str} -- key of the query parameter
+            value {str} -- value of the query parameter
+        
+        Raises:
+            KeyError: if key is None or type of key is not str
+            ValueError: if value is None
+        
+        Returns:
+            Asset -- [Returns Asset object So we can chain the call]
 
-        asset_param = {'key1':'paramOne', 'key2':'paramTwo', 'key3':'paramThree'}
-        asset = asset.params(asset_param)
+        ==============================
 
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> asset = asset.add_params('key', 'value')
+
+        ==============================
         """
-        if params is not None and isinstance(params, dict) and len(params) > 0:
-            self.__query_params.update(params)
+
+        if None in (key, value):
+            raise KeyError('Kindly provide valid params')
+        elif isinstance(key, str):
+            self.__query_params[key] = value
+        else:
+            raise ValueError('Kindly provide str type KEY')
 
         return self
 
     def relative_urls(self):
 
         """
-        include the relative URLs of the assets in the response.
-        :return: instance of asset self
-        :rtype: Asset
+        Include the relative URLs of the assets in the response.
+        
+        Returns:
+            Asset -- Asset, so we can chain the call
 
-        [Example]
-        asset = asset.relative_urls()
+        ==============================
+
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> asset = asset.relative_urls()
+
+        ==============================
 
         """
+
         self.__query_params['relative_urls'] = 'true'
-
-        return self
-
-    def version(self, version):
-
-        """
-        Note: If no version is mentioned, this request will retrieve the latest published version of the asset.
-        To retrieve a specific version, make use of the version parameter and keep the environment parameter blank.
-
-        Specify the version number of the asset that you wish to retrieve.
-        If the version is not specified, the details of the latest version will be retrieved.
-        To retrieve a specific version, keep the environment parameter blank.
-        Example: 1
-
-        :param version: retrieves asset of a specific version
-        :type version: int
-        :return: instance of asset self
-        :rtype: Asset
-
-        [Example]
-
-        asset = asset.version(1)
-
-        """
-        if version is not None:
-            self.__query_params['version'] = version
 
         return self
 
     def include_dimension(self):
 
         """
-        include the dimensions (height and width) of the image in the response.
+        Include the dimensions (height and width) of the image in the response.
         Supported image types: JPG, GIF, PNG, WebP, BMP, TIFF, SVG, and PSD.
 
-        :return: instance of asset
-        :rtype: Asset
+        Returns:
+            Asset -- Asset, so we can chain the call
 
-        [Example]
-        asset = asset.include_dimension()
+        ==============================
 
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> asset = asset.include_dimension()
+
+        ==============================
+        
         """
+
         self.__query_params['include_dimension'] = "true"
+
         return self
 
     def remove_header(self, key):
 
         """
-        :param key: remove_header function takes key of header developer wants to remove.
-        :type key:
-        :return: instance of asset
-        :rtype: Asset
+        remove_header function helps to delete the existing key from the header.
+        
+        Arguments:
+            key {str} -- existing key of the header parameter
+        
+        Raises:
+            ValueError: If key is None
+        
+        Returns:
+            Asset -- Asset, So we can chain the call
 
-        [Example]
-        asset = asset.remove_header('header_key')
+        ==============================
+
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> asset = asset.remove_header('some_key')
+
+        ==============================
 
         """
-        if key is not None and key in self.__stack_headers:
-            self.__stack_headers.pop(key)
-        else:
-            raise Exception('Kindly provide valid input')
+
+        if key is None:
+            raise ValueError('Kindly provide valid KEY')
+        elif isinstance(key, str) and key in self.__stack_headers:
+            self.__stack_headers.pop(key, None)
 
         return self
 
     def set_uid(self, asset_uid):
 
-        """
+        """        
         Enter the unique ID of the asset of which you wish to retrieve the details.
-        Example: blt91af1e5af9c3639f
+        
+        Arguments:
+            asset_uid {str} -- asset_uid is unique ID of the asset of which you wish to retrieve the details
+        
+        Raises:
+            KeyError: If asset_uid is None
+            KeyError: If type of asset_uid is str
+        
+        Returns:
+            Asset -- Asset, so we can chain the call
 
-        :param asset_uid:  asset_uid is unique ID of the asset of which you wish to retrieve the details
-        :type asset_uid:
-        :return: instance of asset
-        :rtype: Asset
+        ==============================
+
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> asset = asset.set_uid('uid')
+
+        ==============================
+
         """
-        if asset_uid is not None and isinstance(asset_uid, str):
-            self.__asset_uid = asset_uid
+
+        if asset_uid is None:
+            raise KeyError('Invalid asset_uid')
+        elif isinstance(asset_uid, str):
+            self.__uid = asset_uid
         else:
-            raise Exception('Kindly provide valid asset_uid')
+            raise KeyError('Kindly provide str type of asset_uid')
 
         return self
 
     def include_count(self):
 
         """
-        :return: include_count is used to include number of assets, used for fetch_all()
-        :rtype: Asset
+        include_count is used to return total asset count
+
+        Returns:
+            Asset -- Asset, so we can chain the call
+
+        ==============================
+
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> asset = asset.set_uid('uid')
+        
+        ==============================
 
         """
         self.__query_params['include_count'] = 'true'
 
         return self
 
-    def sort(self, key: str, order_by):
+    def sort(self, key, order_by):
 
         """
-        :param key: provides key on which ASC/DESC need to apply.
-        :param order_by: object option either "asc" or "desc"
+        Request asset by sort by key, It caould be sorted to ASCENDING and DESCENDING order
+        param key: provides the key on which OrderType.ASC or OrderType.DESC need to apply.
+        :param key: key that to be constrained
+        :param order_by: object option either OrderType.ASC or OrderType.DESC
         :return self , instance of AssetLibrary
+        
+        Arguments:
+            key {str} -- field uid
+            order_by {OrderType} -- type of oerder ASC or DES
+        
+        Raises:
+            ValueError: If key and OrderType is None
+
+        Returns:
+            Asset -- Asset instance, So call will be chainable.
+
+        ==============================
 
         [Example]:
-        asset = asset.sort(OrderType.ASC)
 
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> asset = asset.sort('some_key', OrderType.ASC)
+        
+        ==============================
         """
+        if None in (key, order_by):
+            raise ValueError('Kindly provide valid arguments')
+        elif isinstance(key, str) and isinstance(order_by, OrderType):
+            if order_by is not None:
+                if order_by == 0:
+                    self.__query_params['asc'] = key
+                else:
+                    self.__query_params['desc'] = key
 
-        if order_by is not None:
-            if order_by == 0:
-                self.__query_params['asc'] = key
-            else:
-                self.__query_params['desc'] = key
-        else:
-            raise Exception('Kindly provide a valid input')
-
-        return self.__query_params
+        return self
 
     def fetch_all(self):
 
-        """
-        Assets refer to all the media files (images, videos, PDFs, audio files, and so on)
+        """Assets refer to all the media files (images, videos, PDFs, audio files, and so on)
         uploaded in your Contentstack repository for future use. These files can be
         attached and used in multiple entries.
-        Learn more about Assets [https://www.contentstack.com/docs/guide/content-management#working-with-assets].
+        Learn more about Assets
+        [https://www.contentstack.com/docs/guide/content-management#working-with-assets].
+        
+        Returns:
+            list[Assets] -- This call fetches the list of all the assets of a particular stack.
+        It also returns the content of each asset in the form of list[Assets]
 
-        :return: This call fetches the list of all the assets of a particular stack.
-        It also returns the content of each asset in the form of list[Assets].
-        :rtype: list[Asset]
+        ==============================
+
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset()
+            >>> result = asset.fetch_all()
+
+        ==============================
 
         """
 
@@ -519,13 +754,31 @@ class Asset:
 
         """
         This call fetches the latest version of a specific asset of a particular stack.
-        :return: It returns Asset on the basis of asset_uid
-        :rtype: Asset
+        
+        Returns: 
+            Asset -- It returns Asset on the basis of asset_uid
+
+        ==============================
+
+        [Example]:
+
+            >>> from contentstack import Stack
+            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> asset = stack.asset('uid')
+            >>> result = asset.fetch()
+
+        ==============================
 
         """
-        if self.__asset_uid is not None and len(self.__asset_uid) > 0:
+        if self.__uid is not None and len(self.__uid) > 0:
             endpoint = self.__config.endpoint
-            url = '{}/assets/{}'.format(endpoint, self.__asset_uid)
+            url = '{}/assets/{}'.format(endpoint, self.__uid)
         else:
             raise Exception("Kindly Provide Asset UID")
         return self.__http_request.get_result(url, self.__query_params, self.__stack_headers)
+
+
+class OrderType(object):
+    """OrderType is used to choose one of the ascending or descending"""
+
+    ASC, DESC = range(0, 2)

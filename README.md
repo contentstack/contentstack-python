@@ -15,9 +15,10 @@ You will need python 3 installed on your machine. You can install it from [here]
 
 To use the Contentstack Python SDK to your existing project, perform the steps given below:
 
-1. **pip**
+**Install contentstack pip**
+
 ```
-Not created: (Waiting for repository to get public)
+pip install contentstack
 ```
 
 
@@ -51,7 +52,7 @@ A publishing environment corresponds to one or more deployment servers or a cont
 
 To initialize the SDK, specify application  API key, access token, and environment name of the stack as shown in the snippet given below (config is optional):
 ```
-stack = contentstack.Stack(api_key=api_key, access_token=access_token, environment=environment, config=config)
+stack = contentstack.Stack(api_key='api_key', access_token='access_token', environment='environment', config=config)
 ```
 To get the API credentials mentioned above, log in to your Contentstack account and then in your top panel navigation, go to Settings &gt; Stack to view the API Key and Access Token.
 
@@ -63,8 +64,8 @@ To retrieve a single entry from a content type use the code snippet given below:
 
 ```
 content_type = stack.content_type("content_type_uid")
-entry: Entry = content_type.entry("entry_uid")
-result = entry.find()
+entry = content_type.entry("entry_uid")
+result = entry.fetch()
 ```
 ##### Get Multiple Entries
 
@@ -100,11 +101,11 @@ imageUrl = stack.image_transform(image_url, **image_params);
 
 //resize the image by specifying width and height
 image_params = {'width': 100, 'height': 100}
-imageUrl = Stack.image_transform(imageUrl, **image_params);
+imageUrl = stack.image_transform(imageUrl, **image_params);
 
 //enable auto optimization for the image
 image_params = {'auto': 'webp'}
-imageUrl = Stack.image_transform(imageUrl, **imageParams);
+imageUrl = stack.image_transform(imageUrl, **imageParams);
 ```
 
 

@@ -1,30 +1,29 @@
 
-#  __init__
-#  contentstack
-#
-#  Created by Shailesh Mishra on 22/06/19.
-#  Copyright © 2019 Contentstack. All rights reserved.
+"""
+__init__.py
+contentstack
+Created by Shailesh Mishra on 22/06/19.
+Copyright 2019 Contentstack. All rights reserved.
+"""
 
 import warnings
-__author__ = 'Shailesh Mishra'
+
+__author__ = 'Contentstack'
 __status__ = 'debug'
 __version__ = '1.0.0'
 __package__ = 'contentstack'
 __endpoint__ = 'cdn.contentstack.io'
+__email__ = "mobile@contentstack.com"
 
 from .entry import Entry
 from .asset import Asset
 from .config import Config
 from .content_type import ContentType
-from .errors import Error, ConfigError, FileModeWarning
+from .errors import Error, FileModeWarning
 from .http_connection import HTTPConnection
+from .stack import Stack
 
-# Set a default logger to prevent "No handler found" warnings
-# Set default logging handler to avoid "No handler found" warnings.
 import logging
 from logging import NullHandler
-
 logging.getLogger(__name__).addHandler(NullHandler())
-
-# FileModeWarnings go off per the default.
 warnings.simplefilter('default', FileModeWarning, append=True)
