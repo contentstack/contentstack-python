@@ -1,32 +1,27 @@
 # !/usr/bin/env python
 # distutils/setuptools install script.
+
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+
 import sys
 import setuptools
 import os
 import re
 
 ROOT = os.path.dirname(__file__)
+
 VERSION_RE = re.compile(r'''__version__ = ['"]([0-9.]+)['"]''')
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-readme = 'Contentstack Python Content Delivery API SDK.\nRead full docs at: ' \
-         'https://github.com/contentstack/contentstack-python.git/ '
-
-# def get_version():
-# init = open(os.path.join(ROOT, 'contentstack', '__init__.py')).read()
-# return VERSION_RE.search(init).group(1)
-
-# def read(fname):
-# return open(os.path.join(os.path.dirname(__file__), fname)).read()
-
 package = 'contentstack'
-
 requirements = [
-    'requests>=2.20.0,<3.0',
-    'python-dateutil'
-    'enum'
+    "requests",
+    "python-dateutil"
 ]
 
 
@@ -34,27 +29,26 @@ def get_version(package):
     """
     Return package version as listed in `__version__` in `init.py`.
     """
-    init_py = open(os.path.join(package, '__init__.py')).read()
-    return re.search("^__version__ = ['\"]([^'\"]+)['\"]",
-                     init_py, re.MULTILINE).group(1)
+    get_file = open(os.path.join(package, '__init__.py')).read()
+    return re.search("^__version__ = ['\"]([^'\"]+)['\"]", get_file, re.MULTILINE).group(1)
 
 
 def get_author(package):
     """
     Return package author as listed in `__author__` in `init.py`.
     """
-    init_py = open(os.path.join(package, '__init__.py')).read()
+    get_file = open(os.path.join(package, '__init__.py')).read()
     return re.search("^__author__ = ['\"]([^'\"]+)['\"]",
-                     init_py, re.MULTILINE).group(1)
+                     get_file, re.MULTILINE).group(1)
 
 
 def get_email(package):
     """
     Return package email as listed in `__email__` in `init.py`.
     """
-    init_py = open(os.path.join(package, '__init__.py')).read()
+    get_file = open(os.path.join(package, '__init__.py')).read()
     return re.search("^__email__ = ['\"]([^'\"]+)['\"]",
-                     init_py, re.MULTILINE).group(1)
+                     get_file, re.MULTILINE).group(1)
 
 
 # python setup.py publish
@@ -68,19 +62,17 @@ if sys.argv[-1] == 'publish':
     sys.exit()
 
 setuptools.setup(
-    name='contentstack',
+    name=package,
     version=get_version(package),
-    py_modules=['contentstack'],
-    scripts=['dokr'],
-    url='https://github.com/contentstack/contentstack-python.git',
-    license='MIT License',
     author=get_author(package),
     author_email='mshaileshr@gmail.com',
-    description='Contentstack. Content Delivery APIs. ',
-    tests_require=['pytest'],
-    long_description=readme,
-    include_package_data=True,
-    test_suite='tests',
+    description="Python SDK for Contentstack's Content Delivery API",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    install_requires=requirements,
+    keywords='contentstack content delivery API, CMS',
+    url='https://github.com/contentstack/contentstack-python.git',
+    packages=setuptools.find_packages(),
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
@@ -89,4 +81,10 @@ setuptools.setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
+    python_requires='>=3.6',
+    py_modules=['contentstack'],
+    license='MIT License',
+    tests_require=['pytest'],
+    include_package_data=True,
+    test_suite='tests',
 )
