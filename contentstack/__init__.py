@@ -10,7 +10,7 @@ import warnings
 
 __author__ = 'Contentstack'
 __status__ = 'debug'
-__version__ = '1.0.0'
+__version__ = '0.1.0'
 __package__ = 'contentstack'
 __endpoint__ = 'cdn.contentstack.io'
 __email__ = "mobile@contentstack.com"
