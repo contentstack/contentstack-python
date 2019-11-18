@@ -72,7 +72,7 @@ result = entry.fetch()
 To retrieve multiple entries of a particular content type, use the code snippet given below:
 
 ```
-//stack is an instance of Stack class
+#stack is an instance of Stack class
 query = stack.content_type("content_type_uid").query()
 result = query.find()
 ```
@@ -95,15 +95,15 @@ For example, if you want to crop an image (with width as 300 and height as 400),
 You can use the Image Delivery API functions in this SDK as well. Here are a few examples of its usage in the SDK.
 
 ```
-//set the image quality to 100
+#set the image quality to 100
 image_params = {'quality': 100}
 imageUrl = stack.image_transform(image_url, **image_params);
 
-//resize the image by specifying width and height
+#resize the image by specifying width and height
 image_params = {'width': 100, 'height': 100}
 imageUrl = stack.image_transform(imageUrl, **image_params);
 
-//enable auto optimization for the image
+#enable auto optimization for the image
 image_params = {'auto': 'webp'}
 imageUrl = stack.image_transform(imageUrl, **imageParams);
 ```
