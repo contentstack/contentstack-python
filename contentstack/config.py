@@ -53,7 +53,7 @@ class Config(object):
             region {ContentstackRegion} -- region refers to the location of the data centers where your organization's
             data resides. (default: {ContentstackRegion.US})
 
-        For more details: https://www.contentstack.com/docs/guide/contentstack-regions
+        For more details: https://www.contentstack.com/docs/developers/contentstack-regions
         
         ==============================
 
@@ -143,7 +143,7 @@ class Config(object):
         """It returns endpoint url of the API
         The base URL for Content Delivery API for the US region is cdn.contentstack.io. and  
         for the European region it is  eu-cdn.contentstack.com
-        For more details: https://www.contentstack.com/docs/apis/content-delivery-api/#base-url
+        For more details: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#base-url
         
         Returns:
             str -- endpoint url of the API
