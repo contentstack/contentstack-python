@@ -7,7 +7,7 @@ Copyright 2019 Contentstack. All rights reserved.
 contentstack.query
 ~~~~~~~~~~~~~~~~~~
 
-API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#queries
+API Reference: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#queries
 
 """
 
@@ -18,7 +18,7 @@ class Query(object):
     Contentstack provides certain queries that you can use to fetch filtered results.
     You can use queries for Entries and Assets API requests.
 
-    [API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#queries]
+    [API Reference: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#queries]
 
     """
 
@@ -383,7 +383,7 @@ class Query(object):
         Let’s say you want to retrieve entries in which the Title field is set to 'Redmi Note 3' and the Color
         field is 'Gold'. The query to be used for such a case would be:
         The response will contain the entries where the values for Title is 'Redmi Note 3' and Color is 'Gold'
-        for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#and-operator]
+        for more: [https://www.contentstack.com/docs/developers/apis/content-delivery-api/#and-operator]
 
             >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
@@ -428,7 +428,7 @@ class Query(object):
         
         Let’s say you want to retrieve entries in which either the value for the
         Color field is 'Gold' or 'Black'. The query to be used for such a case would be:
-        for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#or-operator]
+        for more: [https://www.contentstack.com/docs/developers/apis/content-delivery-api/#or-operator]
 
             >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
@@ -475,7 +475,7 @@ class Query(object):
         Let’s say you want to retrieve all the entries that have value of the 
         Price in USD field set to a value that is less than but not equal to 600. 
         You can send the parameter as:
-        for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#less-than]
+        for more: [https://www.contentstack.com/docs/developers/apis/content-delivery-api/#less-than]
 
             >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
@@ -520,7 +520,7 @@ class Query(object):
         
         Let’s say you want to retrieve all the entries that have value of the Price in USD field
         set to a value that is less than or equal to 146. To achieve this, send the parameter as:
-        for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#less-than-or-equal-to]
+        for more: [https://www.contentstack.com/docs/developers/apis/content-delivery-api/#less-than-or-equal-to]
 
             >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
@@ -564,7 +564,7 @@ class Query(object):
         
         Let’s say you want to retrieve all the entries that have value of the Price in USD field set to a value
         that is greater than but not equal to 146. You can send the parameter as:
-        for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#greater-than]
+        for more: [https://www.contentstack.com/docs/developers/apis/content-delivery-api/#greater-than]
 
             >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
@@ -608,7 +608,7 @@ class Query(object):
         
         Let’s say you want to retrieve all the entries that have value of the Price in USD field set to a value
         that is greater than or equal to 146. You can send the parameter as:
-        for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#greater-than-or-equal-to]
+        for more: [https://www.contentstack.com/docs/developers/apis/content-delivery-api/#greater-than-or-equal-to]
 
             >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
@@ -655,7 +655,7 @@ class Query(object):
         In the Product content type, you have a field named Price in USD. Now,
         you need to retrieve all entries where the value of this field not equal to '146'
         for this field. The parameter can be used as:
-        for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#not-equals-operator]
+        for more: [https://www.contentstack.com/docs/developers/apis/content-delivery-api/#not-equals-operator]
 
             >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
@@ -701,7 +701,7 @@ class Query(object):
         In the Product content type, you have a field named Price in USD. Now,
         you need to retrieve all the entries where value of this field is one among the given set of values.
         The query fired using the '$in' parameter is given below:
-        for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#array-equals-operator]
+        for more: [https://www.contentstack.com/docs/developers/apis/content-delivery-api/#array-equals-operator]
 
             >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
@@ -747,7 +747,7 @@ class Query(object):
         
         In the Product content type, you have a field named Price in USD. Now, you need to retrieve the entries
         where the field value does not fall in the given set. You can send the parameter as:
-        for more: [https://www.contentstack.com/docs/apis/content-delivery-api/#array-not-equals-operator]
+        for more: [https://www.contentstack.com/docs/developers/apis/content-delivery-api/#array-not-equals-operator]
 
             >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
@@ -791,7 +791,7 @@ class Query(object):
         
         In the Product content type, we have a field named Price in USD. Now, you want to retrieve all the entries in
         the content type in which the field exists
-        for more: https://www.contentstack.com/docs/apis/content-delivery-api/#exists
+        for more: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#exists
 
             >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
@@ -835,7 +835,7 @@ class Query(object):
         In the Product content type, we have a field named Price in USD. Now, you want 
         to retrieve all the entries in the content type in which the field does not exists
 
-        for more: https://www.contentstack.com/docs/apis/content-delivery-api/#not_exists
+        for more: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#not_exists
 
             >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
@@ -882,7 +882,7 @@ class Query(object):
         reference field, you need to use the include[] parameter, and specify the UID of the reference field as
         value. This informs Contentstack that the request also includes fetching the entry used in the specified
         reference field
-        for more: https://www.contentstack.com/docs/apis/content-delivery-api/#include-reference
+        for more: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#include-reference
 
             >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')

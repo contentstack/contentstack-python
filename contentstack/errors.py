@@ -7,7 +7,7 @@ Copyright 2019 Contentstack. All rights reserved.
 contentstack.error
 ~~~~~~~~~~~~~~~~~~
 
-API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#error
+API Reference: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#errors
 
 """
 
@@ -17,7 +17,7 @@ class Error:
     """
     This module implements the Error class.
     
-    API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#error
+    API Reference: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#errors
 
     """
 
@@ -27,7 +27,7 @@ class Error:
         self.__error_code = str
         self.__msg = str
 
-    def _config(self, result: dict):
+    def _config(self, result):
         
         # _instance is the protected member of the asset, So outsiders can not access this file.
         if result is not None and len(result) > 0:
@@ -96,7 +96,7 @@ class Error:
         return self.__msg
 
     @property
-    def error_info(self) -> dict:
+    def error_info(self):
 
         """error information
 

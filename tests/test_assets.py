@@ -23,7 +23,7 @@ class TestAsset(unittest.TestCase):
         api_key = self.credentials['api_key']
         access_token = self.credentials['access_token']
         env = self.credentials['environment_prod']
-        self.asset_uid: str = 'blt91af1e5af9c3639f'
+        self.asset_uid = 'blt91af1e5af9c3639f'
         self.__stack = Stack(api_key=api_key, access_token=access_token, environment=env)
 
     def test_single_asset(self):

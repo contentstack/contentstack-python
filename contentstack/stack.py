@@ -11,7 +11,7 @@ Copyright 2019 Contentstack. All rights reserved.
 contentstack.stack
 ~~~~~~~~~~~~~~~~~~
 
-API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#stack
+API Reference: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#stack
 
 """
 
@@ -234,7 +234,7 @@ class Stack(object):
         
         """
         Gets ContentType of the Stack Read more about Content Types.
-        API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#content-types
+        API Reference: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#content-types
         
         Arguments:
             content_type_id {str} -- content_type_id of entry
@@ -269,7 +269,7 @@ class Stack(object):
         """
         Fetches all Content Types from the Stack. This call returns comprehensive information
         of all the content types available in a particular stack in your account.
-        API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#content-types
+        API Reference: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#content-types
         
         Arguments:
             query_params {dict} -- query parameters for the content_types
@@ -290,7 +290,7 @@ class Stack(object):
         
         ==============================
         """
-        content_type_params: dict = {}
+        content_type_params = {}
         if self.config is None:
             raise StackException('Kindly initialise stack')
         endpoint = self.config.endpoint
@@ -308,7 +308,7 @@ class Stack(object):
         uploaded in your Contentstack repository for future use. These files can be
         attached and used in multiple entries. Learn more about Assets.
         Keep uid None to fetch list of all assets
-        API Reference : https://www.contentstack.com/docs/guide/content-management#working-with-assets
+        API Reference : https://www.contentstack.com/docs/developers/guide/content-management#working-with-assets
 
         Keyword Arguments:
             uid {str} -- uid of the asset (default: {None})
@@ -346,7 +346,7 @@ class Stack(object):
         asset._instance(self)
         return asset
 
-    def image_transform(self, image_url: str, **kwargs):
+    def image_transform(self, image_url, **kwargs):
         
         """
         The Image Delivery API is used to retrieve, manipulate and/or convert image
@@ -647,15 +647,15 @@ class Stack(object):
 class SyncResult:
 
     def __init__(self):
-        self.__resp: dict = {}
-        self.__items: list = []
-        self.__skip = int
-        self.__limit = int
-        self.__total_count = int
-        self.__sync_token = str
-        self.__pagination_token = str
+        self.__resp = {}
+        self.__items = []
+        self.__skip = None
+        self.__limit = None
+        self.__total_count= None
+        self.__sync_token = None
+        self.__pagination_token = None
 
-    def _configure(self, result: dict):
+    def _configure(self, result):
         if result is not None and len(result) > 0:
             self.__resp = result
             if 'items' in self.__resp:
