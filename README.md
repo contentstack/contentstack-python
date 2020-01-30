@@ -26,23 +26,23 @@ pip install contentstack
 
 #### Stack
 
-A stack is like a container that holds the content of your app. Learn more about [Stacks](https://www.contentstack.com/docs/guide/stack).
+A stack is like a container that holds the content of your app. Learn more about [Stacks](https://www.contentstack.com/docs/developers/set-up-stack).
 
 #### Content Type
 
-Content type lets you define the structure or blueprint of a page or a section of your digital property. It is a form-like page that gives Content Managers an interface to input and upload content. [Read more](https://www.contentstack.com/docs/guide/content-types).
+Content type lets you define the structure or blueprint of a page or a section of your digital property. It is a form-like page that gives Content Managers an interface to input and upload content. [Read more](https://www.contentstack.com/docs/developers/create-content-types).
 
 #### Entry
 
-An entry is the actual piece of content created using one of the defined content types. Learn more about [Entries](https://www.contentstack.com/docs/guide/content-management#working-with-entries).
+An entry is the actual piece of content created using one of the defined content types. Learn more about [Entries](https://www.contentstack.com/docs/content-managers/work-with-entries).
 
 #### Asset
 
-Assets refer to all the media files (images, videos, PDFs, audio files, and so on) uploaded to Contentstack. These files can be used in multiple entries. Read more about [Assets](https://www.contentstack.com/docs/guide/content-management#working-with-assets).
+Assets refer to all the media files (images, videos, PDFs, audio files, and so on) uploaded to Contentstack. These files can be used in multiple entries. Read more about [Assets](https://www.contentstack.com/docs/content-managers/work-with-assets).
 
 #### Environment
 
-A publishing environment corresponds to one or more deployment servers or a content delivery destination where the entries need to be published. Learn how to work with [Environments](https://www.contentstack.com/docs/guide/environments).
+A publishing environment corresponds to one or more deployment servers or a content delivery destination where the entries need to be published. Learn how to work with [Environments](https://www.contentstack.com/docs/developers/set-up-environments).
 
 
 
@@ -90,7 +90,7 @@ We have introduced Image Delivery APIs that let you retrieve images and then man
 
 For example, if you want to crop an image (with width as 300 and height as 400), you simply need to append query parameters at the end of the image URL, such as, https://images.contentstack.io/v3/assets/blteae40eb499811073/bltc5064f36b5855343/59e0c41ac0eddd140d5a8e3e/download?crop=300,400. There are several more parameters that you can use for your images.
 
-[Read Image Delivery API documentation](https://www.contentstack.com/docs/apis/image-delivery-api/).
+[Read Image Delivery API documentation](https://www.contentstack.com/docs/platforms/python/api-reference/).
 
 You can use the Image Delivery API functions in this SDK as well. Here are a few examples of its usage in the SDK.
 
@@ -108,14 +108,19 @@ image_params = {'auto': 'webp'}
 imageUrl = stack.image_transform(imageUrl, **imageParams);
 ```
 
+### Using the Sync API with Python SDK
 
+The Sync API takes care of syncing your Contentstack data with your application and ensures that the data is always up-to-date by providing delta updates. Contentstack’s Python SDK supports Sync API, which you can use to build powerful applications.
+
+Read through to understand how to use the Sync API with Contentstack Python SDK.
+
+[Using the Sync API with Python SDK](https://www.contentstack.com/docs/developers/python/using-the-sync-api-with-python-sdk)
 
 ### Helpful Links
 
 - [Contentstack Website](https://www.contentstack.com)
 - [Official Documentation](https://contentstack.com/docs)
-- [Content Delivery API Docs](https://contentstack.com/docs/apis/content-delivery-api/)
-
+- [Content Delivery API Docs](https://www.contentstack.com/docs/developers/apis/content-delivery-api/)
 
 ### The MIT License (MIT)
 

@@ -6,7 +6,7 @@ Copyright 2019 Contentstack. All rights reserved.
 contentstack.content_type
 ~~~~~~~~~~~~~~~~~~
 
-API Reference: https://www.contentstack.com/docs/guide/content-types
+API Reference: https://www.contentstack.com/docs/developers/create-content-types/
 
 """
 
@@ -16,11 +16,11 @@ class ContentType:
     content for your application, you are required to first create a content type, and then create entries using the
     content type.
 
-    Read more about Content Types[https://www.contentstack.com/docs/guide/content-types].
+    Read more about Content Types [https://www.contentstack.com/docs/developers/create-content-types].
 
     """
 
-    def __init__(self, content_type_uid: str):
+    def __init__(self, content_type_uid):
         self.__config = None
         self.__stack_instance = None
         self.__http_request = None
@@ -36,7 +36,7 @@ class ContentType:
         from contentstack.errors import StackException
         if stack_instance is None:
             raise StackException('Kindly initialise stack first')
-        self.__stack_instance: Stack = stack_instance
+        self.__stack_instance = stack_instance
         self.__config = self.__stack_instance.config
         self.__stack_headers.update(self.__stack_instance.headers)
         self.__http_request = self.__stack_instance.get_http_instance
@@ -137,7 +137,7 @@ class ContentType:
         """An entry is the actual piece of content created using one of the defined content types.
         
         Read more about Entries. 
-        [https://www.contentstack.com/docs/apis/content-delivery-api/#entries]
+        [https://www.contentstack.com/docs/developers/apis/content-delivery-api/#entries]
 
         Arguments:
             uid {str} -- uid of the entry
@@ -165,7 +165,7 @@ class ContentType:
         from contentstack import Entry
         if self.__http_request is None:
             raise EnvironmentError("Invalid http request")
-        entry: Entry = Entry(content_type_id=self.__content_type_uid)
+        entry = Entry(content_type_id=self.__content_type_uid)
         entry._instance(self.__stack_instance)
         if uid is not None:
             if isinstance(uid, str):

@@ -27,7 +27,3 @@ def query_keys():
         'environment': 'production',
     }
     return credentials
-
-
-class Credentials:
-    pass

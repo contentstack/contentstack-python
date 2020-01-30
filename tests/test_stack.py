@@ -2,6 +2,7 @@ import logging
 import unittest
 from contentstack import Error, Config
 from contentstack import Stack
+from tests.creds import stack_keys as keys
 
 
 class TestStack(unittest.TestCase):
@@ -14,13 +15,11 @@ class TestStack(unittest.TestCase):
         self.config = Config()
         self.config.host = 'cdn.contentstack.io'
         self.config.version('v3')
-        self.config.region = ContentstackRegion.EU
+        # self.config.region = ContentstackRegion.EU
 
-        from tests.creds import stack_keys
-        self.credentials = stack_keys()
-        api_key = self.credentials['api_key']
-        access_token = self.credentials['access_token']
-        environment = self.credentials['environment']
+        api_key = keys['api_key']
+        access_token = keys['access_token']
+        environment = keys['environment']
         self.stack = Stack(api_key=api_key, access_token=access_token, environment=environment)
 
         # [Credentials for SyncStack]
@@ -42,6 +41,9 @@ class TestStack(unittest.TestCase):
     #     self.assertEqual('cdn.contentstack.com', host)
 
     def test_stack_config_endpoint(self):
+        """[config functional test]
+        tests the endpoint        
+        """ 
         self.assertEqual('https://cdn.contentstack.io/v3', self.config.endpoint)
         print(self.config.endpoint)
 

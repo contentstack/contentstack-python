@@ -6,7 +6,7 @@ Copyright 2019 Contentstack. All rights reserved.
 contentstack.entry
 ~~~~~~~~~~~~~~~~~~
 
-API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#entries
+API Reference: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#entries
 
 """
 

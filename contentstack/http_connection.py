@@ -8,9 +8,13 @@ Copyright 2019 Contentstack. All rights reserved.
 
 import logging
 import requests
-from urllib.parse import urlencode
+# from urllib.parse import urlencode
+try:
+    from urllib.parse import urlencode
+except ImportError:
+     from urlparse import urlparse
 from contentstack import Error
-from json import JSONDecodeError
+#from json import JSONDecodeError
 from requests.exceptions import Timeout, HTTPError
 
 
@@ -29,7 +33,7 @@ class HTTPConnection(object):
                 environment = self.__headers['environment']
                 self.__query_params['environment'] = environment
 
-    def get_result(self, url: str, query: dict, headers: dict):
+    def get_result(self, url, query, headers):
 
         if None not in (url, query, headers):
             if len(url) > 0 and len(self.__headers) > 0:
@@ -140,7 +144,7 @@ class HTTPConnection(object):
                 return assets
 
     @staticmethod
-    def __user_agents() -> dict:
+    def __user_agents():
 
         import contentstack
         import platform

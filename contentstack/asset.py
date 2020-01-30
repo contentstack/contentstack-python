@@ -6,7 +6,7 @@ Copyright 2019 Contentstack. All rights reserved.
 contentstack.asset
 ~~~~~~~~~~~~~~~~~~
 
-API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#assets
+API Reference: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#assets
 
 """
 
@@ -20,7 +20,7 @@ class Asset:
     ==============================
 
     This module implements the Asset class.
-    API Reference: https://www.contentstack.com/docs/apis/content-delivery-api/#assets
+    API Reference: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#assets
         
     [Example]:
 
@@ -727,7 +727,7 @@ class Asset:
         uploaded in your Contentstack repository for future use. These files can be
         attached and used in multiple entries.
         Learn more about Assets
-        [https://www.contentstack.com/docs/guide/content-management#working-with-assets].
+        [https://www.contentstack.com/docs/content-managers/work-with-assets].
         
         Returns:
             list[Assets] -- This call fetches the list of all the assets of a particular stack.
