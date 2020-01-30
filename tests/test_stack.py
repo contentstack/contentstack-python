@@ -9,9 +9,8 @@ class TestStack(unittest.TestCase):
     log = logging.getLogger(__name__)
 
     def setUp(self):
-
         # Credentials taken from __init__() class
-        from config import ContentstackRegion
+        from contentstack.config import ContentstackRegion
         self.config = Config()
         self.config.host = 'cdn.contentstack.io'
         self.config.version('v3')
@@ -69,11 +68,11 @@ class TestStack(unittest.TestCase):
             self.assertTrue(True)
 
     def test_image_transformation_url_check_query_params_compare(self):
-        global response
+        resp = None
         url = self.stack.image_transform("www.contentstack.io/endpoint", width="500", height="200")
         if url is not None:
-            response = url.split('?')
-        if response[1] is not None:
+            resp = url.split('?')
+        if resp[1] is not None:
             self.assertTrue(True)
         else:
             self.assertTrue(False)
