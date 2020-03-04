@@ -30,7 +30,7 @@ class ContentType:
             raise KeyError('content_type_uid can not be None')
         self.__content_type_uid = content_type_uid
 
-    def _instance(self, stack_instance):
+    def instance(self, stack_instance):
         # _instance is the protected member of the asset, So outsiders can not access this file.
         from contentstack.stack import Stack
         from contentstack.errors import StackException

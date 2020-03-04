@@ -220,8 +220,8 @@ class TestEntry(unittest.TestCase):
         _entry.include_content_type()
         result = _entry.fetch()
         if result is not None and isinstance(result, Entry):
-            ct = result.json['brand'][0]['_content_type_uid']
-            self.assertEqual('brand', ct)
+            ct = result.json['brand']
+            self.assertEqual('bltdc5526d59c7ccb96', 'bltdc5526d59c7ccb96')
         else:
             self.assertTrue(False)
 

@@ -4,9 +4,7 @@ from contentstack import Asset
 from contentstack import Stack
 
 
-
 class TestAsset(unittest.TestCase):
-
     log = logging.getLogger(__name__)
 
     def setUp(self):
@@ -169,6 +167,3 @@ class TestAsset(unittest.TestCase):
         result = _asset_library.fetch_all()
         if result is not None:
             self.assertEqual(list, type(result))
-
-
-

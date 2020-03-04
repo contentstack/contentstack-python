@@ -7,11 +7,13 @@ Copyright 2019 Contentstack. All rights reserved.
 """
 
 import warnings
+import logging
+from logging import NullHandler
 
 __author__ = 'Contentstack'
 __status__ = 'debug'
 __version__ = '0.1.0'
-__package__ = 'contentstack'
+#__package__ = 'contentstack'
 __endpoint__ = 'cdn.contentstack.io'
 __email__ = "mobile@contentstack.com"
 
@@ -23,7 +25,5 @@ from .errors import Error, FileModeWarning
 from .http_connection import HTTPConnection
 from .stack import Stack
 
-import logging
-from logging import NullHandler
 logging.getLogger(__name__).addHandler(NullHandler())
 warnings.simplefilter('default', FileModeWarning, append=True)

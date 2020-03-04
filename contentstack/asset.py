@@ -12,24 +12,18 @@ API Reference: https://www.contentstack.com/docs/developers/apis/content-deliver
 
 
 class Asset:
-
     """Assets refer to all the media files (images, videos, PDFs, audio files, and so on) uploaded
     in your Contentstack repository for future use.
     These files can be attached and used in multiple entries.
     contentstack.asset
     ==============================
-
     This module implements the Asset class.
     API Reference: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#assets
-        
     [Example]:
-
         >>> from contentstack import Stack
         >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
         >>> asset = stack.asset()
-
     ==============================
-
     """
 
     def __init__(self, uid=None):
@@ -54,7 +48,7 @@ class Asset:
         self.__dimension = None
         self.__tags = None
 
-    def _instance(self, stack_instance):
+    def instance(self, stack_instance):
         # _instance is the protected member of the asset, So outsiders can not access this file.
         from contentstack.stack import Stack
         from contentstack.errors import StackException
@@ -66,7 +60,6 @@ class Asset:
             self.__http_request = self.__stack_instance.get_http_instance
         else:
             raise ValueError('Invalid Stack type, Please provide Stack Instance')
-
         return self
 
     def _configure(self, response):
@@ -101,47 +94,33 @@ class Asset:
 
     @property
     def uid(self):
-
         """uid property helps to set uid of the asset
-        
         Returns:
             str -- uid of the asset
-
         ==============================
-
         [Example]:
 
             >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> uid = asset.uid
-
         ==============================
         """
         return self.__uid
 
     @property
     def count(self):
-
-        """
-        count property helps to get the Size of asset objects.
-        
+        """count property helps to get the Size of asset objects.
         Returns:
             int -- count of asset object
-
         ==============================
-        
         [Example]:
-
             >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset()
             >>> count = asset.count
-
         ==============================
-
         """
-
         return self.__count
 
     def _count(self, counter):
@@ -336,25 +315,17 @@ class Asset:
     @property
     def updated_by(self):
 
-        """
-        This function returns the time of Asset was updated
-        
+        """This function returns the time of Asset was updated
         Returns:
             str --  Asset was updated by whome
-
         ==============================
-
         [Example]:
-
             >>> from contentstack import Stack
             >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
             >>> asset = stack.asset('uid')
             >>> response = asset.updated_by
-
         ==============================
-
         """
-
         return self.__updated_by
 
     @property
