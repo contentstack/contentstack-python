@@ -16,22 +16,21 @@ class TestStack(unittest.TestCase):
         self.config.host = 'cdn.contentstack.io'
         self.config.version('v3')
         # self.config.region = ContentstackRegion.EU
-
-        api_key = keys['api_key']
-        access_token = keys['access_token']
-        environment = keys['environment']
+        
+        api_key = keys().get('api_key')
+        access_token = keys().get('access_token')
+        environment = keys().get('environment')
         self.stack = Stack(api_key=api_key, access_token=access_token, environment=environment)
 
         # [Credentials for SyncStack]
-        self.sync_api_key = self.credentials['sync_api_key']
-        self.sync_delivery__token = self.credentials['sync_delivery__token']
+        self.sync_api_key = keys().get('sync_api_key')
+        self.sync_delivery__token = keys().get('sync_delivery__token')
         self.sync_stack = Stack(api_key=self.sync_api_key, access_token=self.sync_delivery__token, environment='web')
 
     def test_stack(self):
-        self.assertEqual(self.credentials['environment'], self.stack.environment)
-        self.assertEqual(self.credentials['access_token'], self.stack.access_token)
-        print(self.credentials)
-        self.assertEqual(self.credentials['api_key'], self.stack.api_key)
+        self.assertEqual(keys().get('environment'), self.stack.environment)
+        self.assertEqual(keys().get('access_token'), self.stack.access_token)
+        self.assertEqual(keys().get('api_key'), self.stack.api_key)
 
     # def test_stack_config_region(self):
     #     from config import ContentstackRegion
@@ -118,16 +117,16 @@ class TestStack(unittest.TestCase):
             self.assertEqual(31, result.count)
 
     def test_sync_token(self):
-        syncResponse = self.sync_stack.sync_token('bltbb61f31a70a572e6c9506a')
-        if isinstance(syncResponse, Error):
-            self.assertTrue(109, syncResponse.error_code)
+        sync_response = self.sync_stack.sync_token('bltbb61f31a70a572e6c9506a')
+        if isinstance(sync_response, Error):
+            self.assertTrue(109, sync_response.error_code)
 
     def test_content_types(self):
         # passing query params like below as a dictionary
         query_params = {'include_count': 'true'}
         result = self.stack.get_content_types(query_params)
         if result is not None:
-            self.assertEqual(4, len(result))
+            self.assertEqual(6, len(result))
 
     def test_content_type(self):
         content_type = self.stack.content_type('product')
