@@ -418,8 +418,8 @@ class TestQuery(unittest.TestCase):
         if result is not None:
             for entry in result:
                 brand = entry.json['brand']
-                content_type_uid = brand[0]['_content_type_uid']
-                if content_type_uid == 'bltdc5526d59c7ccb96':
+                #content_type_uid = brand[0]['_content_type_uid']
+                if len(brand) == 1:
                     self.assertTrue(True)
                 else:
                     self.assertFalse(True)
