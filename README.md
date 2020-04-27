@@ -80,7 +80,7 @@ result = query.find()
 
 ### Advanced Queries
 
-You can query for content types, entries, assets and more using our Java API Reference.
+You can query for content types, entries, assets and more using our Python API Reference.
 
 [Python API Reference Doc](https://www.contentstack.com/docs/platforms/python/api-reference/)
 
