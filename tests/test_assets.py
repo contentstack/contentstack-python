@@ -1,169 +1,40 @@
-import logging
+from tests import credentials
 import unittest
-from contentstack import Asset
-from contentstack import Stack
+import contentstack
 
 
 class TestAsset(unittest.TestCase):
-    log = logging.getLogger(__name__)
 
     def setUp(self):
+        self.api_key = credentials.keys['api_key']
+        self.access_token = credentials.keys['access_token']
+        self.delivery_token = credentials.keys['delivery_token']
+        self.environment = credentials.keys['environment']
+        asset_uid = credentials.keys['asset_uid']
+        self.stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment)
+        self.asset = self.stack.asset(uid=asset_uid)
+        self.asset_query = self.stack.asset_query()
 
-        # api_key: str = 'blt20962a819b57e233'
-        # access_token: str = 'blt01638c90cc28fb6f'
-        # env_prod: str = 'production'
-        # config = Config()
-        # config.region = ContentstackRegion.US
-        # Credentials taken from __init__() class
-
-        from tests.creds import stack_keys
-        self.credentials = stack_keys()
-        api_key = self.credentials['api_key']
-        access_token = self.credentials['access_token']
-        env = self.credentials['environment_prod']
-        self.asset_uid = 'blt91af1e5af9c3639f'
-        self.__stack = Stack(api_key=api_key, access_token=access_token, environment=env)
-
-    def test_single_asset(self):
-        _asset: Asset = self.__stack.asset(self.asset_uid)
-        _asset.relative_urls()
-        _asset.include_dimension()
-        result: Asset = _asset.fetch()
+    def test_asset_method(self):
+        result = self.asset.relative_urls().include_dimension().fetch()
         if result is not None:
-            self.assertEqual(dict, type(result.dimension))
-            logging.debug(result)
+            self.assertEqual({'height': 171, 'width': 294}, result['asset']['dimension'])
 
-    def test_asset_relative_urls(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        _asset.relative_urls()
-        result = _asset.fetch()
+    def test_asset_uid(self):
+        result = self.asset.fetch()
         if result is not None:
-            self.assertNotIn('images.contentstack.io/', result.url)
-            logging.debug(result)
-        else:
-            from contentstack import Error
-            raise Exception(Error.error_message)
+            self.assertEqual(credentials.keys['asset_uid'], result['asset']['uid'])
 
-    def test_asset_count(self):
-        _asset = self.__stack.asset()
-        _asset.include_count()
-        result: Asset = _asset.fetch_all()
-        if result is not None and isinstance(result, Asset):
-            self.assertEqual(37, result.count)
-            logging.debug(result)
-
-    def test_asset_include_dimension(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        _asset.include_dimension()
-        result: Asset = _asset.fetch()
+    def test_asset_filetype(self):
+        result = self.asset.fetch()
         if result is not None:
-            self.assertEqual(dict, type(result.dimension))
-            logging.debug('tuple dimension is %s ' + _asset.dimension.__str__())
+            self.assertEqual('image/jpeg', result['asset']['content_type'])
 
-    def test_asset_check_uid_is_valid(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
-        if result is not None:
-            self.assertEqual(self.asset_uid, result.uid)
+    ############################################
+    # ==== Asset Query ====
+    ############################################
 
-    def test_asset_check_filetype(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
+    def test_assets_query(self):
+        result = self.asset_query.find()
         if result is not None:
-            self.assertEqual('image/png', result.filetype)
-
-    def test_asset_file_size(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
-        if result is not None:
-            self.assertEqual('63430', result.filesize)
-
-    def test_asset_filename(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
-        if result is not None:
-            self.assertEqual('.png', result.filename[-4:])
-
-    def test_asset_url(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
-        if result is not None:
-            self.assertEqual('.png', result.url[-4:])
-
-    def test_asset_to_json(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
-        if result is not None:
-            self.assertEqual(dict, type(result.json))
-
-    def test_asset_created_at(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
-        if result is not None:
-            sallie: str = result.created_at
-            var_shailesh, fileid = sallie.split('T')
-            self.assertEqual('2017-01-10', var_shailesh)
-
-    def test_asset_created_by(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
-        if result is not None:
-            sallie: str = result.created_by
-            var_shailesh, fileid = sallie.split('_')
-            self.assertEqual('sys', var_shailesh)
-
-    def test_asset_updated_at(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result: Asset = _asset.fetch()
-        if result is not None:
-            if isinstance(result, Asset):
-                sallie: str = result.updated_at
-                var_shailesh, fileid = sallie.split('T')
-                self.assertEqual('2017-01-10', var_shailesh)
-            else:
-                self.assertFalse(True)
-
-    def test_asset_updated_by(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result: Asset = _asset.fetch()
-        if result is not None:
-            if isinstance(result, Asset):
-                sallie: str = result.updated_by
-                var_shailesh, fileid = sallie.split('_')
-                self.assertEqual('sys', var_shailesh)
-            else:
-                self.assertFalse(True)
-
-    def test_asset_tags(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
-        if result is not None:
-            if isinstance(result, Asset):
-                self.assertEqual(list, type(result.tags))
-
-    def test_asset_version_returns_with_type(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
-        if result is not None:
-            if isinstance(result, Asset):
-                self.assertEqual(int, type(result.version))
-
-    def test_assets(self):
-        _asset = self.__stack.asset()
-        result = _asset.fetch_all()
-        if result is not None:
-            self.assertEqual(list, type(result))
-
-    def test_asset_library_check(self):
-        _asset_library = self.__stack.asset()
-        result = _asset_library.fetch_all()
-        if result is not None:
-            self.assertEqual(list, type(result))
-
-    def test_asset_library_example(self):
-        from contentstack.asset import OrderType
-        _asset_library = self.__stack.asset()
-        _asset_library.sort('title', OrderType.DESC)
-        result = _asset_library.fetch_all()
-        if result is not None:
-            self.assertEqual(list, type(result))
+            self.assertEqual(8, len(result['assets']))
