@@ -1,47 +1,58 @@
-"""
-HttpConnection
-contentstack
-Created by Shailesh Mishra on 22/06/19.
-Copyright 2019 Contentstack. All rights reserved.
-
-"""
-
 import logging
+from json import JSONDecodeError
+from urllib.parse import urlencode
 import requests
-# from urllib.parse import urlencode
-try:
-    from urllib.parse import urlencode
-except ImportError:
-     from urlparse import urlparse
-from contentstack import Error
-#from json import JSONDecodeError
 from requests.exceptions import Timeout, HTTPError
+from contentstack import Error
+import contentstack
+import logging
+import platform
 
 
+def get_os_platform():
+    """ returns client platform """
+    os = platform.system()
+    if os == 'Darwin':
+        os = 'macOS'
+    elif not os or os == 'Java':
+        os = None
+    elif os and os not in ['macOS', 'Windows']:
+        os = 'Linux'
+    os_platform = {'name': os, 'version': platform.release()}
+    return os_platform
+
+
+def user_agents():
+    """User Agents for the Https"""
+    header = {'sdk': dict(name=contentstack.__package__, version=contentstack.__version__), 'os': get_os_platform,
+              'Content-Type': 'application/json'}
+    package = "contentstack-python, - {}".format(contentstack.__version__)
+    return {'User-Agent': str(header), "X-User-Agent": package}
+
+
+# R0903: Too few public methods (1/2) (too-few-public-methods)
+# "pylint doesn't know what's best" - use your own judgement but as a rule.
 class HTTPConnection(object):
 
     def __init__(self, url, query, stack_headers):
-
         if None not in (url, query, stack_headers):
             self.__payload = None
             self.__base_url = url
             self.__query_params = query
             self.__headers = stack_headers
-            self.__headers.update(self.__user_agents())
+            self.__headers.update(user_agents())
 
             if 'environment' in self.__headers:
                 environment = self.__headers['environment']
                 self.__query_params['environment'] = environment
 
     def get_result(self, url, query, headers):
-
         if None not in (url, query, headers):
             if len(url) > 0 and len(self.__headers) > 0:
                 self.__base_url = url
                 if len(headers) > 0:
                     self.__headers.update(headers)
                 self.__query_params.update(query)
-
                 # Case: If UIR Parameter contains entries
                 if 'entries' in self.__base_url:
                     self.__payload = self.__execute_entry()
@@ -81,7 +92,6 @@ class HTTPConnection(object):
 
     def __parse_dict(self, response):
         from contentstack.stack import SyncResult
-
         result = response.json()
         if 'stack' in result:
             return result['stack']
@@ -143,29 +153,8 @@ class HTTPConnection(object):
                 asset._count(asset_count)
                 return assets
 
-    @staticmethod
-    def __user_agents():
-
-        import contentstack
-        import platform
-
-        header = {'sdk': dict(name=contentstack.__package__, version=contentstack.__version__)}
-        os = platform.system()
-        if os == 'Darwin':
-            os = 'macOS'
-        elif not os or os == 'Java':
-            os = None
-        elif os and os not in ['macOS', 'Windows']:
-            os = 'Linux'
-        header['os'] = {'name': os, 'version': platform.release()}
-        package = "contentstack-python, - {}".format(contentstack.__version__)
-        local_headers = {'User-Agent': str(header), "Content-Type": 'application/json', "X-User-Agent": package}
-        return local_headers
-
     def __execute_entry(self):
-
         url_param = ''
-
         for (key, value) in self.__query_params.items():
             if key == 'include[]':
                 if isinstance(value, list):
@@ -195,5 +184,3 @@ class HTTPConnection(object):
                 url_param = '{}&{}={}'.format(url_param, key, value)
 
         return url_param
-
-
