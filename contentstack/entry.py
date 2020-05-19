@@ -1,1162 +1,321 @@
 """
-
 Created by Shailesh Mishra on 22/06/19.
 Copyright 2019 Contentstack. All rights reserved.
-
 contentstack.entry
 ~~~~~~~~~~~~~~~~~~
-
+The Get a single entry request fetches a particular entry of a content type.
 API Reference: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#entries
-
 """
+
+
+# ************* Module stack **************
+# Your code has been rated at 9.89/10 by pylint
 
 
 class Entry:
     """
-    [Note]: If no version is mentioned, this request will retrieve the
-    latest published version of the entry.To retrieve a specific version, make use of the version parameter 
-    and keep the environment parameter blank.
+    An entry is the actual piece of content that you want to publish.
+    Entries can be created for one of the available content types.
+    In this section, we will understand how to add, edit, publish,
+    unpublish, and localize an entry.
 
-    ==============================
-
-    [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-
-    ==============================
-
+    - Before we start working with entries,
+    it is important to ensure that the required content types are in place
     """
 
-    def __init__(self, content_type_id=None):
-        self.__content_type_id = content_type_id
-        self.__stack_instance = None
-        self.__http_request = None
-        self.__config = None
-        self.__entry_url = None
+    def __init__(self, http_instance, content_type_uid, entry_uid):
+        self.local_param = {}
+        self.except_field = {}
+        self.http_instance = http_instance
+        self.content_type_id = content_type_uid
+        self.entry_uid = entry_uid
 
-        self.__local_params = {}
-        self.__entry_headers = {}
         self.__only_dict = {}
-        self.__result_json = {}
-
         self.__uid_for_except = {}
         self.__except_field = []
         self.__uid_for_only = []
-        self.__tags = []
 
-        self.__entry_uid = str
-        self.__title = str
-        self.__description = str
-        self.__url = str
-        self.__locale = str
-        self.__created_at = str
-        self.__created_by = str
-        self.__updated_at = str
-        self.__updated_by = str
-        self.__version = str
-
-    def _instance(self, stack_instance):
-        # This is the protected from outside users, so they can't access this function.
-        self.__stack_instance = stack_instance
-        self.__config = self.__stack_instance.config
-        self.__entry_url = self.__config.endpoint
-        if self.__content_type_id is not None:
-            self.__entry_url = '{}/content_types/{}/entries/'.format(self.__entry_url, self.__content_type_id)
-        self.__http_request = self.__stack_instance.get_http_instance
-        return self
-
-    def _configure(self, model):
-        if model is not None and isinstance(model, dict):
-            self.__result_json = model
-            if self.__result_json is not None:
-                if 'title' in self.__result_json:
-                    self.__title = self.__result_json['title']
-                if 'url' in self.__result_json:
-                    self.__url = self.__result_json['url']
-                if 'uid' in self.__result_json:
-                    self.__entry_uid = self.__result_json['uid']
-                if 'tags' in self.__result_json:
-                    self.__tags = self.__result_json['tags']
-                if 'created_by' in self.__result_json:
-                    self.__created_by = self.__result_json['created_by']
-                if 'created_at' in self.__result_json:
-                    self.__created_at = self.__result_json['created_at']
-                if 'updated_at' in self.__result_json:
-                    self.__updated_at = self.__result_json['updated_at']
-                if 'updated_by' in self.__result_json:
-                    self.__updated_by = self.__result_json['updated_by']
-                if 'locale' in self.__result_json:
-                    self.__locale = self.__result_json['locale']
-                if '_version' in self.__result_json:
-                    self.__version = self.__result_json['_version']
-
-        return self
-
-    def add_header(self, key, value):
-
-        """        
-        It is useful to accept the API key, access_token of stack of which you wish to retrieve 
-        the content types.
-        
-        Arguments:
-            key {str} -- key of header
-            value {str} -- value of header
-        
-        Raises:
-            KeyError: If case when key or value is None
-
-            KeyError: key and value type should be str
-        
-        Returns:
-            Entry -- Entry class instance, that helps to chain the call
-        
-        ==============================
-
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.add_header('key', 'value')
-            >>> entry = entry.fetch() 
-
-        ==============================
-
-        """
-
-        if None in (key, value):
-            raise KeyError
-        elif isinstance(key, str) and isinstance(value, str):
-            self.__entry_headers[key] = value
-        else:
-            raise KeyError('key and value type should be str')
-
-        return self
-
-    def remove_header(self, key):
-
-        """
-         To remove desired header key
-        
-        Arguments:
-            key {str} -- existing key of header
-    
-        Raises:
-            KeyError: Kindly provide a valid key, key should not be None or str
-        
-        Returns:
-            Entry -- Entry class object so we can chain the call
-
-        ==============================
-
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.remove_header('key')
-            >>> entry = entry.fetch() 
-            
-        ==============================
-        """
-
-        if key is None or not isinstance(key, str):
-            raise KeyError('Kindly provide valid KEY')
-        elif isinstance(key, str):
-            if key in self.__entry_headers:
-                self.__entry_headers.pop(key, None)
-
-        return self
-
-    @property
-    def uid(self):
-
-        """
-        uid of the entry
-        
-        Returns:
-            str -- str type entry uid
-
-        ==============================
-
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch() 
-            >>> entry_uid = entry.uid
-
-        ==============================
-        """
-        return self.__entry_uid
-
-    @uid.setter
-    def uid(self, uid):
-
-        """
-        The unique ID of the content type of which you wish to retrieve the details.
-        The content type UID is generated based on the title of the content type 
-        and it is unique across a stack.
-        
-        Arguments:
-            uid {str} -- entry uid
-        
-        Raises:
-            KeyError: key should not be None or empty str
-        
-        Returns:
-            Entry -- Entry class object so we can chain the call
-
-        ==============================
-
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry.uid = 'bltsomethingasuid'
-            >>> entry = entry.fetch() 
-
-        ==============================
-
-        """
-
-        if uid is None or not isinstance(uid, str):
-            raise KeyError('Kindly provide a valid uid')
-        self.__entry_uid = uid
-
-        return self
-
-    @property
-    def locale(self):
-
-        """
-        It returns code of the language of which the entries needs to be included.
-        
-        Returns:
-            str -- language of the entry
-        
-        ==============================
-
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch() 
-            >>> locale = entry.locale
-
-        ==============================
-
-        """
-
-        if 'locale' in self.__result_json:
-            return self.__result_json['locale']
-        else:
-            return self.__locale
-
-    @locale.setter
     def locale(self, locale):
-
         """
-        Locale accepts code of the language of which the entries needs to be included.
-        Only the entries published in this locale will be displayed.
-        
-        Arguments:
-            locale {str} -- language code
-        
-        Raises:
-            KeyError: locale should not be None or empty, type of locale should be str
-        
-        ==============================
+        - Locale is optional
+        - When no locale is specified, it returns the entry from the master locale
+        - Specify a locale to get entry/entries of only a particular locale
+          Example: 'en-us'
+        :param locale: {str} -- language code
+        :return: Entry, so you can chain this call.
+        ------------------------------
+        Example::
 
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry.locale = 'en-us'
-            >>> entry = entry.fetch() 
-
-        ==============================
+            >>> entry = content_type.entry(uid='entry_uid')
+            >>> entry.locale('en-us')
+            >>> result = entry.fetch()
+        ------------------------------
         """
-
-        if locale is None and not isinstance(locale, str):
+        if locale is None or not isinstance(locale, str):
             raise KeyError('Kindly provide a valid locale')
-        self.__local_params["locale"] = locale
+        self.local_param["locale"] = locale
+        return self
 
-    @property
-    def title(self):
+    def environment(self, environment):
+        """
+        Enter the name of the environment of which the entries needs to be included
+        Example: production
+        :param environment: {str} environment of which the entries needs to be included
+        :return: Entry, so you can chain this call.
+        ------------------------------
+        Example::
 
-        """This method returns title of the entry
-
-        Returns:
-            str -- title of the entry
-
-        ==============================
-
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch() 
-            >>> title = entry.title
-
-        ==============================
-
+            >>> entry = content_type.entry(uid='entry_uid')
+            >>> entry.environment('production')
+            >>> result = entry.fetch()
+        ------------------------------
         """
-
-        return self.__title
-
-    @property
-    def url(self):
-
-        """
-        This method returns url of the entry
-
-        Returns:
-            str -- url of the entry
-
-        ==============================
-        
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> url = entry.url
-        
-        ==============================
-
-        """
-
-        return self.__url
-
-    @property
-    def tags(self):
-
-        """This method returns list of tags of the entry
-
-        Returns:
-            list -- tags of entry
-        
-        ==============================
-        
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> tags = entry.tags
-        
-        ==============================
-        """
-
-        return self.__tags
-
-    @property
-    def content_type(self):
-
-        """This method returns content_type of the entry
-
-        Returns:
-            str -- content_type_uid of the entry
-        
-        ==============================
-        
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> content_type = entry.content_type
-        
-        ==============================
-
-        """
-
-        return self.__content_type_id
-
-    @property
-    def headers(self):
-
-        """This method is useful to get dictionary of the headers
-
-        Returns:
-            dict -- The method is used to get list of headers.
-
-        ==============================
-
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> headers = entry.headers
-
-        ==============================
-
-        """
-
-        return self.__entry_headers
-
-    @property
-    def json(self):
-
-        """
-        This method returns response of the entry in dictionary formats
-
-        Returns:
-            dict -- response of the entry
-        
-        ==============================
-        
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> result = entry.json
-        
-        ==============================
-
-        """
-        # return None if self.__result_json == None else self.__result_json
-        if self.__result_json is None:
-            return None
-        else:
-            return self.__result_json
-
-    @property
-    def created_at(self):
-
-        """
-        Returns:
-            str -- value of creation time of entry
-
-        ==============================
-
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> created_at = entry.created_at
-
-        ==============================
-        """
-
-        return self.__created_at
-
-    @property
-    def created_by(self):
-
-        """
-        Returns:
-            str -- uid who created this entry
-
-        ==============================
-
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> created_by = entry.created_by
-
-        ==============================
-        """
-
-        return self.__created_by
-
-    @property
-    def updated_at(self):
-
-        """
-        Returns:
-            str -- updating time of entry.
-
-        ==============================
-
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> result = entry.updated_at
-
-        ==============================
-
-        """
-
-        return self.__updated_at
-
-    @property
-    def updated_by(self):
-
-        """
-
-        Returns:
-            str -- uid who updated entry.
-
-        ==============================
-
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> result = entry.updated_by
-
-        ==============================
-        """
-
-        return self.__updated_by
-
-    def get(self, key):
-
-        """
-        This method returns value of respective key of the entry
-        
-        Arguments:
-            key {str} -- field_uid as key
-
-        Returns:
-            object -- onject by key you wants to access
-
-        ==============================
-
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> result = entry.get('key')
-
-        ==============================
-        """
-
-        if key is None:
-            raise ValueError('Kindly provide a valid argument')
-        elif isinstance(key, str):
-            if key in self.__result_json:
-                return self.__result_json[key]
-
-    def add_param(self, key, value):
-
-        """
-        This method is useful to add additional Query parameters to the entry
-        
-        Arguments:
-            key {str} -- key The key as string which needs to be added to an Entry
-            value {object} -- value The value as string which needs to be added to an Entry
-        
-        Raises:
-            ValueError: If key or value is None
-            ValueError: If key is not type of str
-        
-        Returns:
-            Entry -- So can we chain the call
-
-        ==============================
-
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> entry = entry.add_param('key', 'value')
-
-        ==============================
-
-        """
-
-        if None in (key, value):
-            raise ValueError('Kindly provide valid KEY and Value arguments')
-        elif isinstance(key, str):
-            self.__local_params[key] = value
-        else:
-            raise ValueError('Params key should be str')
-
+        if environment is None or not isinstance(environment, str):
+            raise KeyError('Kindly provide a valid environment')
+        self.local_param['environment'] = environment
         return self
 
     def version(self, version):
-
         """
-        Enter the version number of the entry that you want to retrieve. 
-        However, to retrieve a specific version of an entry, you need to keep the environment parameter blank.
-        
-        Arguments:
-            version {str} -- version if entry
-        
-        Raises:
-            ValueError: If version is None or not str type
+        - Version is optional
+        - When no version is specified, it returns the latest version
+        - To retrieve a specific version, specify the version number under this parameter.
+          In such a case, DO NOT specify any environment.
+          Example: 4
+        :param version: {int} -- version
+        :return: Entry, so you can chain this call.
+        ------------------------------
+        Example::
 
-        Returns:
-            Entry -- So we can chain the call
-
-        ==============================
-
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> entry = entry.version('7')
-
-        ==============================
-        
+            >>> entry = content_type.entry(uid='entry_uid')
+            >>> entry.version(4)
+            >>> result = entry.fetch()
+        ------------------------------
         """
-
-        if version is None or not isinstance(version, str):
-            raise ValueError('Kindly provide valid')
-        elif isinstance(version, str):
-            self.__local_params["version"] = version
-
+        if version is None:
+            raise KeyError('Kindly provide a valid version')
+        self.local_param['version'] = version
         return self
 
-    def get_string(self, key):
-
+    def param(self, key, value):
         """
-        This method returns str type result of the entry
-        
-        Arguments:
-            key {str} -- field_uid    
+        This method is useful to add additional Query parameters to the entry
+        :param key: {str} -- key The key as string which needs to be added to an Entry
+        :param value: {object} -- value The value as string which needs to be added to an Entry
+        :return: Entry, so you can chain this call.
+        -----------------------------
+        Example::
 
-        Returns:
-            str -- value from the dict of respective key
-        
-        ==============================
-        
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> result = entry.get_string('key')
-        
-        ==============================
+            >>> entry = content_type.entry(uid='entry_uid')
+            >>> entry = entry.param('key', 'value')
+            >>> result = entry.fetch()
+        -----------------------------
         """
-
-        value = self.get(key)
-        if isinstance(value, str):
-            return value
-        return None
-
-    def get_boolean(self, key):
-
-        """
-        This method returns bool type result of the entry
-        
-        Arguments:
-            key {str} -- field_uid 
-        
-        Raises:
-            KeyError: If key instance is not str
-        
-        Returns:
-            bool -- boolean value
-        
-        ==============================
-        
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> result = entry.get_boolean('bool_key')
-        
-        ==============================
-        """
-
-        if isinstance(key, str):
-            value = self.get(key)
-            if isinstance(value, bool):
-                return value
-        else:
-            raise KeyError('Kindly provide valid KEY')
-
-    def get_json(self, key):
-
-        """
-        This method is useful to get result of respective key if result is dict
-
-        Arguments:
-            key {str} -- field_uid
-
-        Returns:
-            dict -- result dict by key
-        
-        ==============================
-        
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> result = entry.get_json('key')
-        
-        ==============================
-        """
-
-        value = self.get(key)
-        if isinstance(value, dict):
-            return value
-        else:
-            return None
-
-    def get_list(self, key):
-
-        """
-        It returns the list type data
-
-        Arguments:
-            key {str} -- field_uid
-
-        Returns:
-            list -- list of data from the entry
-        
-        ==============================
-        
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> result = entry.get_list('key')
-        
-        ==============================
-
-        """
-
-        value = self.get(key)
-        if isinstance(value, list):
-            return value
-        else:
-            return None
-
-    def asset(self, key):
-
-        """
-        Get an asset from the entry on the basis of the key
-
-        Arguments:
-            key {str} -- field_uid
-
-        Returns:
-            Asset -- Asset of the entry
-
-        ==============================
-
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> result = entry.asset("key")
-
-        ==============================
-        """
-
-        from contentstack import Asset
-        asset = Asset()
-
-        if key is None:
-            raise KeyError('Kindly provide valid key')
-        elif isinstance(key, str):
-            result = self.get_json(key)
-            if result is not None and isinstance(result, dict):
-                asset = asset._configure(result)
-
-        return asset
-
-    def get_assets(self, key):
-
-        """
-        Get an assets from the entry. This works with multiple true fields
-
-        Arguments:
-            key {str} -- field_uid
-
-        Returns:
-            list[Asset] -- list of Asset
-        
-        ==============================
-        
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> result = entry.get_assets("key")
-        
-        ==============================
-        """
-        assets = []
-        from contentstack import Asset
-
-        if key is None:
-            raise KeyError('Kindly provide valid key')
-        elif isinstance(key, str):
-            assetlist = self.get_list(key)
-            if isinstance(assetlist, list):
-                for assetobj in assetlist:
-                    if isinstance(assetobj, dict):
-                        asset = Asset()
-                        model = asset._configure(assetobj)
-                        assets.append(model)
-        return assets
-
-    def get_all_entries(self, ref_key, ref_content_type):
-
-        """
-        Get value for the given reference key.
-        
-        Arguments:
-            ref_key {str} -- ref_key key of a reference field.
-            ref_content_type {str} -- ref_content_type class uid.
-
-        Returns:
-            list[Asset] -- Entry instances. Also specified content_type value will be set as class uid for all
-        
-        ==============================
-        
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> all_entries = entry.get_all_entries("reference_key", "reference_content_type")
-        
-        ==============================
-
-        """
-
-        all_entries = []
-        if self.__result_json is not None and isinstance(ref_key, str):
-            if ref_key in self.__result_json:
-                list_entry = self.__result_json[ref_key]
-                if isinstance(list_entry, list):
-                    for entry_obj in list_entry:
-                        entry = self.__stack_instance.content_type(ref_content_type).entry()
-                        model = list_entry[entry_obj]
-                        entry._configure(model)
-                        all_entries.append(entry)
-                    return all_entries
-                return None
+        if None in (key, value) and not isinstance(key, str):
+            raise ValueError('Kindly provide valid key and value arguments')
+        self.local_param[key] = value
+        return self
 
     def excepts(self, *field_uid):
-
         """
         Specifies list of field field_uid that would be excluded from the response.
+        :param field_uid: list of field field_uid
+        :return: Entry, so you can chain this call.
+        ------------------------------
+        Example::
 
-        Returns:
-            Entry -- Entry object, so you can chain this call.
-        
-        ==============================
-        
-        [Example:]
-
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> entry = entry.excepts('title', 'color', 'price_in_usd')
-        
-        ==============================
-
+            >>> entry = content_type.entry(uid='entry_uid')
+            >>> entry.excepts(['field_uid1', 'field_uid2', 'field_uid3'])
+            >>> result = entry.fetch()
+        -------------------------------
         """
-
         if field_uid is None:
             raise ValueError('Kindly provide a valid argument')
-        self.__except_field = list(field_uid)
-
+        self.except_field = list(field_uid)
         return self
 
     def except_with_reference_uid(self, reference_field_uid, *field_uid):
-
         """
-        Specifies an array of &#39;except&#39; keys that would be excluded in the response.
-
-        Arguments:
-            reference_field_uid {str} -- Key who has reference to some other class object.
-            field_uid {str}: field_uid for variable number of arguments      
-        
-        Raises:
-            ValueError: reference_field_uid and field_uid should not be None
-            ValueError: reference_field_uid should be str type
-        
-        Returns:
-            Entry -- Entry object, so you can chain this call.
-
-        ==============================
-        
+        The except will exclude the data of the specified fields for
+        each entry and will include the data of the rest of the fields.
+        :param reference_field_uid: {str} -- Key who has reference to some other class object.
+        :param field_uid: {str}: field_uid for variable number of arguments
+        :return: Entry, so you can chain this call.
+        -------------------------------
         [Example:]
 
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> entry = entry.except_with_reference_uid('reference_field_uid', "field1", 'field2', 'field3')
-
-        ==============================
-
+            >>> entry = content_type.entry(uid='asset_uid')
+            >>> entry = entry.except_with_reference_uid('reference_field_uid',
+                        ["field1", 'field2', 'field3'])
+            >>> result = entry.fetch()
+        -------------------------------
         """
-
-        if (reference_field_uid, field_uid) is None:
+        if (reference_field_uid, field_uid) is None and not isinstance(reference_field_uid, str):
             raise ValueError('Kindly provide valid arguments')
-        elif isinstance(reference_field_uid, str):
-            self.__uid_for_except[reference_field_uid] = list(field_uid)
-            self.include_reference(reference_field_uid)
-        else:
-            raise ValueError('Kindly provide a valid input')
-
+        self.__uid_for_except[reference_field_uid] = list(field_uid)
+        self.include_reference(reference_field_uid)
         return self
 
     def include_reference(self, *reference_uid):
-
         """
-        Add a constraint that requires a particular reference key details.
-        
-        Raises:
-            ValueError: if reference_uid is None
-        
-        Returns:
-            Entry -- Entry object, so you can chain this call.
-
-        ==============================
-        
+        If you wish to fetch the content of the entry that is included in the reference field,
+        :param reference_uid: reference field of Entry
+        :return: Entry, so you can chain this call.
+        -------------------------------
         [Example:]
 
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> entry.include_reference('uid1', 'uid2', 'uid3')
-        
-        ==============================
+            >>> entry.include_reference(['uid1', 'uid2', 'uid3'])
+            >>> result = entry.fetch()
+        -------------------------------
         """
-
         if reference_uid is None:
             raise ValueError('Kindly provide a valid argument')
-        self.__local_params["include[]"] = list(reference_uid)
-
+        self.local_param["include[]"] = list(reference_uid)
         return self
 
     def only(self, *field_uid):
-
         """
         Specifies an array of only keys in BASE object that would be included in the response.
         :param field_uid: field_uid for variable number of arguments to be included in response.
         field_uid for variable number of arguments
-
-        Returns:
-            Entry -- Entry object, so you can chain this call.
-        
-        ==============================
-        
+        :return: Entry, so you can chain this call.
+        -------------------------------
         [Example:]
 
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> entry.only('uid1', 'uid2', 'uid3')
-
-        ==============================
+            >>> entry.only(['field_uid1', 'field_uid2', 'field_uid3'])
+            >>> result = entry.fetch()
+        -------------------------------
         """
-
         if field_uid is None:
-            raise KeyError
+            raise KeyError('field_uid can not be None')
         for uid in field_uid:
             self.__uid_for_only.append(uid)
-
         return self
 
     def only_with_reference_uid(self, reference_field_uid, *field_uid):
-
         """
         Specifies an array of only keys that would be included in the response.
-        
-        Arguments:
-            reference_field_uid {str} -- Key who has reference to some other class object.
-            field_uid {comma seprated str objects} -- for variable number of arguments
-        
-        Raises:
-            ValueError: If reference_field_uid is None or not str type
-        
-        Returns:
-            Entry -- Entry object, so you can chain this call.
-        
-        ==============================
-        
+        :param reference_field_uid: {str} - Key who has reference to some other class object.
+        :param field_uid: list of field_uid
+        :return: Entry, so you can chain this call.
+        -------------------------------
         [Example:]
 
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
-            >>> entry.only_with_reference_uid('reference_uid', 'uid1', 'uid2', 'uid3')
-
-        ==============================
-
+            >>> entry.only_with_reference_uid('reference_uid', ['uid1', 'uid2', 'uid3'])
+            >>> result = entry.fetch()
+        -------------------------------
         """
-
         field_value_list = []
         for field in field_uid:
             field_value_list.append(field)
         if reference_field_uid is not None and isinstance(reference_field_uid, str):
             self.__only_dict[reference_field_uid] = field_value_list
             self.include_reference(reference_field_uid)
-        else:
-            raise ValueError('Kindly provide a valid input')
-
         return self
 
     def include_reference_content_type_uid(self):
-
         """
-        description  This method also includes the content type UIDs
+        This method also includes the content type UIDs
         of the referenced entries returned in the response.
-        
-        Returns:
-            Entry -- Entry object, so you can chain this call.
-        
-        ==============================
-        
+        :return: Entry, so you can chain this call.
+        -------------------------------
         [Example:]
 
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
             >>> entry.include_reference_content_type_uid()
-
-        ==============================
+            >>> result = entry.fetch()
+        -------------------------------
         """
-
-        self.__local_params['include_reference_content_type_uid'] = 'true'
-
+        self.local_param['include_reference_content_type_uid'] = 'true'
         return self
 
     def include_content_type(self):
-
         """
-        Include the details of the content type along with the entry/entries details.
-        
-        Returns:
-            Entry -- Entry object, so you can chain this call.
-        
-        ==============================
-        
+        This method also includes the ContentType in the entry
+        :return: Entry, so you can chain this call.
+        -------------------------------
         [Example:]
 
-            >>> from contentstack import Stack
-            >>> stack = Stack(api_key='stack_api_key', access_token='stack_access_token', environment='env')
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry('uid')
-            >>> entry = entry.fetch()
             >>> entry.include_content_type()
-        
-        ==============================
+            >>> result = entry.fetch()
+        -------------------------------
         """
         include_content_type = {'include_content_type': 'true',
                                 'include_global_field_schema': 'true'}
-        self.__local_params.update(include_content_type)
-
+        self.local_param.update(include_content_type)
         return self
 
     def __set_include_json(self):
         if self.__uid_for_only is not None and len(self.__uid_for_only) > 0:
-            self.__local_params["only[BASE][]"] = self.__uid_for_only
+            self.local_param["only[BASE][]"] = self.__uid_for_only
             self.__uid_for_only = None
-
         if self.__except_field is not None and len(self.__except_field) > 0:
-            self.__local_params["except[BASE][]"] = self.__except_field
+            self.local_param["except[BASE][]"] = self.__except_field
             self.__except_field = None
-
         if self.__uid_for_except is not None and len(self.__uid_for_except) > 0:
-            self.__local_params["except"] = self.__uid_for_except
+            self.local_param["except"] = self.__uid_for_except
             self.__uid_for_except = None
-
         if self.__only_dict is not None and len(self.__only_dict) > 0:
-            self.__local_params["only"] = self.__only_dict
+            self.local_param["only"] = self.__only_dict
             self.__only_dict = None
 
         return self
 
     def fetch(self):
-
-        """Fetches the latest version of the entries from stack
-        
-        Raises:
-            KeyError: If entry_uid is None
-        
-        Returns:
-            Entry - Entry object, so you can chain this call.
-
         """
+        Fetches the latest version of the entries from stack
+        :return: Entry, so you can chain this call.
+        -------------------------------
+        [Example:]
 
-        if self.__entry_uid is None:
-            raise KeyError('Kindly provide entry uid')
-        self.__set_include_json()
-        self.__entry_url = '{}{}'.format(self.__entry_url, self.__entry_uid)
-        result = self.__http_request.get_result(self.__entry_url, self.__local_params, self.__entry_headers)
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('uid')
+            >>> result = entry.fetch()
+        -------------------------------
+        """
+        if isinstance(self.entry_uid, str):
+            self.__set_include_json()
+        # self.__local_params, self.__entry_headers
+        url = '{}/content_types/{}/entries/{}'.format(self.http_instance.endpoint,
+                                                      self.content_type_id, self.entry_uid)
+        result = self.http_instance.get(url)
         return result

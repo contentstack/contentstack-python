@@ -1,139 +1,135 @@
 import logging
 import unittest
-from contentstack import Error, Config
-from contentstack import Stack
-from tests.creds import stack_keys as keys
+import contentstack
+from contentstack.stack import ContentstackRegion
+from tests import credentials
+
+api_key = credentials.keys['api_key']
+access_token = credentials.keys['access_token']
+delivery_token = credentials.keys['delivery_token']
+environment = credentials.keys['environment']
+stack_instance = contentstack.Stack(api_key, delivery_token, environment)
 
 
 class TestStack(unittest.TestCase):
 
-    log = logging.getLogger(__name__)
-
     def setUp(self):
-        # Credentials taken from __init__() class
-        from contentstack.config import ContentstackRegion
-        self.config = Config()
-        self.config.host = 'cdn.contentstack.io'
-        self.config.version('v3')
-        # self.config.region = ContentstackRegion.EU
-        
-        api_key = keys().get('api_key')
-        access_token = keys().get('access_token')
-        environment = keys().get('environment')
-        self.stack = Stack(api_key=api_key, access_token=access_token, environment=environment)
+        self.api_key = credentials.keys['api_key']
+        self.access_token = credentials.keys['access_token']
+        self.delivery_token = credentials.keys['delivery_token']
+        self.environment = credentials.keys['environment']
+        self.stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment)
 
-        # [Credentials for SyncStack]
-        self.sync_api_key = keys().get('sync_api_key')
-        self.sync_delivery__token = keys().get('sync_delivery__token')
-        self.sync_stack = Stack(api_key=self.sync_api_key, access_token=self.sync_delivery__token, environment='web')
+    def test_stack_credentials(self):
+        self.assertEqual(self.environment, stack_instance.environment)
+        self.assertEqual(self.delivery_token, stack_instance.delivery_token)
+        self.assertEqual(self.api_key, stack_instance.api_key)
 
-    def test_stack(self):
-        self.assertEqual(keys().get('environment'), self.stack.environment)
-        self.assertEqual(keys().get('access_token'), self.stack.access_token)
-        self.assertEqual(keys().get('api_key'), self.stack.api_key)
+    def test_stack_region(self):
+        stack_region = contentstack.Stack(self.api_key, self.delivery_token, self.environment,
+                                          region=ContentstackRegion.EU)
+        self.assertEqual('eu-cdn.contentstack.com', stack_region.host)
 
-    # def test_stack_config_region(self):
-    #     from config import ContentstackRegion
-    #     config = Config()
-    #     config.region = ContentstackRegion.EU
-    #     host = config.host
-    #     self.assertEqual('cdn.contentstack.com', host)
+    def test_stack_endpoint(self):
+        logging.info('endpoint for the stack is {}'.format(self.stack.endpoint))
+        self.assertEqual('https://cdn.contentstack.io/v3', self.stack.endpoint)
 
-    def test_stack_config_endpoint(self):
-        """[config functional test]
-        tests the endpoint        
-        """ 
-        self.assertEqual('https://cdn.contentstack.io/v3', self.config.endpoint)
-        print(self.config.endpoint)
+    def test_fail(self):
+        try:
+            stack_local = contentstack.Stack('', self.delivery_token, self.environment)
+            self.assertEqual(None, stack_local.api_key)
+        except PermissionError as e:
+            if hasattr(e, 'message'):
+                self.assertEqual("'You are not permitted to the stack without valid Api Key'", e.args[0])
 
-    def test_stack_collaborators(self):
-        is_contains = False
-        self.stack.collaborators()
-        result = self.stack.fetch()
-        if result is not None:
-            if 'collaborators' in result:
-                is_contains = True
-            self.assertEqual(True, is_contains)
+    def test_fail_delivery_token(self):
+        try:
+            stack = contentstack.Stack(self.api_key, '', self.environment)
+            self.assertEqual(None, stack.delivery_token)
+        except PermissionError as e:
+            if hasattr(e, 'message'):
+                self.assertEqual("'You are not permitted to the stack without valid Delivery Token'", e.args[0])
 
-    def test_stack_fetch_discrete_variables(self):
-        discrete_var = self.stack.include_discrete_variables()
-        result = discrete_var.fetch()
-        if result is not None:
-            if 'discrete_variables' in result:
-                self.assertTrue(True)
+    @unittest.skip("demonstrating skipping")
+    def test_nothing(self):
+        self.fail("shouldn't happen")
 
-    def test_stack_fetch_stack_variables(self):
-        stack_var = self.stack.include_stack_variables()
-        result = stack_var.fetch()
-        if 'stack_variables' in result:
-            self.assertTrue(True)
+    @unittest.skipIf('', '')
+    def test_format(self):
+        # Tests that work for only a certain version of the library.
+        pass
 
-    def test_image_transformation_url_check_query_params_compare(self):
-        resp = None
-        url = self.stack.image_transform("www.contentstack.io/endpoint", width="500", height="200")
-        if url is not None:
-            resp = url.split('?')
-        if resp[1] is not None:
-            self.assertTrue(True)
-        else:
-            self.assertTrue(False)
+    def test_image_transformation(self):
+        image_transform = self.stack.image_transform("cdn.contentstack.io/v3/endpoint",
+                                                     width=230, height=300, other="filter")
+        result_url = image_transform.get_url()
+        logging.info('result url is: {}'.format(result_url))
+        self.assertEqual('cdn.contentstack.io/v3/endpoint?width=230&height=300&other=filter', result_url)
 
-    # [Sync]
+    def test_image_transformation_get_url_with_height_width(self):
+        image_url = 'https://images.contentstack.io/v3/assets/blteae40eb499811073/bltc5064f36b5855343'\
+                    '/59e0c41ac0eddd140d5a8e3e/download'
+        image_transform = self.stack.image_transform(image_url, width=500, height=550)
+        result_url = image_transform.get_url()
+        self.assertEqual(
+            'https://images.contentstack.io/v3/assets/blteae40eb499811073/bltc5064f36b5855343'
+            '/59e0c41ac0eddd140d5a8e3e/download?width=500&height=550',
+            result_url)
+
+    def test_image_transformation_get_url_with_format(self):
+        image_url = 'https://images.contentstack.io/v3/assets/blteae40eb499811073/bltc5064f36b5855343'\
+                    '/59e0c41ac0eddd140d5a8e3e/download'
+        image_transform = self.stack.image_transform(image_url, format='gif')
+        result_url = image_transform.get_url()
+        self.assertEqual(
+            'https://images.contentstack.io/v3/assets/blteae40eb499811073/bltc5064f36b5855343'
+            '/59e0c41ac0eddd140d5a8e3e/download?format=gif',
+            result_url)
+
+    # [ functional test-cases fot Synchronization ]
 
     def test_sync_pagination(self):
-        result = self.sync_stack.pagination('bltbb61f31a70a572e6c9506a')
+        result = self.stack.pagination('blt376f0470f9334d8e512f5e')
         if result is not None:
-            if isinstance(result, Error):
-                logging.debug(result)
-                self.assertEqual(141, result.error_code)
+            self.assertEqual('blt3f16ec623aaa004a2c2539', result['sync_token'])
 
-    def test_init_sync_with_from_date(self):
-        from contentstack.stack import SyncResult
-        result = self.sync_stack.sync(from_date='2018-01-14T00:00:00.000Z')
+    def test_init_sync_no_params(self):
+        result = self.stack.sync_init()
         if result is not None:
-            print(SyncResult, type(result))
-            self.assertEqual(123, result.count)
+            logging.info(result['total_count'])
+            self.assertEqual(123, result['total_count'])
 
     def test_init_sync_with_content_type_uid(self):
-        from contentstack.stack import SyncResult
-        result = self.sync_stack.sync(content_type_uid='session')
+        result = self.stack.sync_init(content_type_uid='room')
         if result is not None:
-            print(SyncResult, type(result))
-            self.assertEqual(31, result.count)
+            self.assertEqual(29, result['total_count'])
 
     def test_init_sync_with_publish_type(self):
-        from contentstack.stack import SyncResult
-        result = self.sync_stack.sync(publish_type='entry_published')
+        result = self.stack.sync_init(publish_type='entry_published', content_type_uid='track')
         if result is not None:
-            print(SyncResult, type(result))
-            self.assertEqual(123, result.count)
+            self.assertEqual(16, result['total_count'])
 
-    def test_init_sync(self):
-        from contentstack.stack import SyncResult
-        result = self.sync_stack.sync(from_date='2018-01-14T00:00:00.000Z', content_type_uid='session',
-                                      publish_type='entry_published')
+    def test_init_sync_with_all_params(self):
+        result = self.stack.sync_init(from_date='2018-01-14T00:00:00.000Z', content_type_uid='track',
+                                      publish_type='entry_published', locale='en-us', )
         if result is not None:
-            print(SyncResult, type(result))
-            self.assertEqual(31, result.count)
+            self.assertEqual(16, result['total_count'])
 
     def test_sync_token(self):
-        sync_response = self.sync_stack.sync_token('bltbb61f31a70a572e6c9506a')
-        if isinstance(sync_response, Error):
-            self.assertTrue(109, sync_response.error_code)
-
-    def test_content_types(self):
-        # passing query params like below as a dictionary
-        query_params = {'include_count': 'true'}
-        result = self.stack.get_content_types(query_params)
-        if result is not None:
-            self.assertEqual(6, len(result))
+        result = self.stack.sync_token('blt3f16ec623aaa004a2c2539')
+        self.assertTrue('blt3f16ec623aaa004a2c2539', result['sync_token'])
 
     def test_content_type(self):
-        content_type = self.stack.content_type('product')
+        # passing query params like below as a dictionary
+        content_type = self.stack.content_type('application_theme')
         result = content_type.fetch()
         if result is not None:
-            if 'schema' in result:
-                schema_result = result['schema']
-                for schema in schema_result:
-                    logging.debug(schema)
-                self.assertEqual(list, type(schema_result))
+            self.assertEqual('application_theme', result['content_type']['uid'])
+
+    def test_content_types_with_query_param(self):
+        query = {'include_count': 'true'}
+        content_type = self.stack.content_type('application_theme')
+        result = content_type.find(params=query)
+        if result is not None:
+            if 'count' in result['content_types']:
+                self.assertEqual(11, result['content_types']['count'])

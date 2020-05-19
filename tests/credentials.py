@@ -1,29 +1,16 @@
-def stack_keys():
-    credentials = {
-        'api_key': 'blt20962a819b57e233',
-        'access_token': 'blt01638c90cc28fb6f',
+"""
+Stores Credentials for testing the modules
+"""
+
+# --------------------------------------------------------------------
+# Your code has been rated at 10.00/10
+# --------------------------------------------------------------------
+
+keys = {
+        'api_key': 'bltc94709340b84bdd2',
+        'access_token': 'blt4cb0db9f9139b604',
+        'delivery_token': 'csd2e69747f83e59e327d19962',
+        'asset_uid': 'bltb2291d913f97e9cb',
         'environment': 'development',
-        'environment_prod': 'production',
-        'sync_api_key': 'blt477ba55f9a67bcdf',
-        'sync_delivery__token': 'cs7731f03a2feef7713546fde5',
+        'entry_uid': 'blt53ca1231625bdde4',
     }
-    return credentials
-
-
-def entry_keys():
-    credentials = {
-        'api_key': 'blt20962a819b57e233',
-        'access_token': 'cs18efd90468f135a3a5eda3ba',
-        'environment': 'production',
-        'entry_uid': 'bltb0256a89e2225a39',
-    }
-    return credentials
-
-
-def query_keys():
-    credentials = {
-        'api_key': 'blt20962a819b57e233',
-        'access_token': 'blt01638c90cc28fb6f',
-        'environment': 'production',
-    }
-    return credentials

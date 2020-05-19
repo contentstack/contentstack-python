@@ -6,7 +6,6 @@ Contentstack is a headless CMS with an API-first approach. It is a CMS that deve
 
 Contentstack provides Python SDK to build application on top of Python. Given below is the detailed guide and helpful resources to get started with our Python SDK.
 
-
 ### Prerequisite
 
 You will need python 3 installed on your machine. You can install it from [here](https://www.python.org/ftp/python/3.7.4/python-3.7.4-macosx10.9.pkg).

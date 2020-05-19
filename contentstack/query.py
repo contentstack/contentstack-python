@@ -1,11 +1,12 @@
 
-
 """Created by Shailesh Mishra on 22/06/19.
 Copyright 2019 Contentstack. All rights reserved.
 contentstack.query API Reference:
 https://www.contentstack.com/docs/developers/apis/content-delivery-api/#queries
 """
-#pylint: disable-msg=R0904
+
+
+# pylint: disable-msg=R0904
 class Query:
     """Contentstack provides certain queries that you
     can use to fetch filtered results.

@@ -5,9 +5,12 @@ to first create a content type, and then create entries using the
 content type.
 """
 
-
 # ************* Module asset **************
-# Your code has been rated at 9.09/10 by pylint
+# Your code has been rated at 10.00/10 by pylint
+
+from urllib import parse
+from contentstack.entry import Entry
+from contentstack.query import Query
 
 
 class ContentType:
@@ -20,11 +23,12 @@ class ContentType:
     """
 
     def __init__(self, http_instance, content_type_uid):
-        self.__http_instance = http_instance
+        self.http_instance = http_instance
         self.__content_type_uid = content_type_uid
+        self.local_param = {}
 
     def entry(self, uid):
-        """
+        r"""
         An entry is the actual piece of content created using one of the defined content types.
         :param uid: {str} -- uid of the entry
         :return: Entry -- Returns the Entry class object so we can chain the entry functions
@@ -37,8 +41,7 @@ class ContentType:
             >>> entry = content_type.entry(uid='entry_uid')
         --------------------------------
         """
-        from contentstack import Entry
-        entry = Entry(self.__http_instance, self.__content_type_uid, entry_uid=uid)
+        entry = Entry(self.http_instance, self.__content_type_uid, entry_uid=uid)
         return entry
 
     def query(self):
@@ -54,11 +57,33 @@ class ContentType:
             >>> query = content_type.query()
         ------------------------------
         """
-        from contentstack.query import Query
         query = Query(self.__content_type_uid)
         return query
 
-    def fetch(self, params=None):
+    def fetch(self):
+        """
+        This method is useful to fetch ContentType of the of the stack.
+        :return:dict -- contentType response
+        ------------------------------
+        Example:
+
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> some_dict = {'abc':'something'}
+            >>> response = content_type.fetch(some_dict)
+        ------------------------------
+        """
+        if self.__content_type_uid is None:
+            raise KeyError('content_type_uid can not be None to fetch contenttype')
+        self.local_param['environment'] = self.http_instance.headers['environment']
+        uri = '{}/content_types/{}'.format(self.http_instance.endpoint, self.__content_type_uid)
+        encoded_params = parse.urlencode(self.local_param)
+        url = '{}?{}'.format(uri, encoded_params)
+        result = self.http_instance.get(url)
+        return result
+
+    def find(self, params=None):
         """
         This method is useful to fetch ContentType of the of the stack.
         :param params: dictionary of params
@@ -68,19 +93,15 @@ class ContentType:
 
             >>> import contentstack
             >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
-            >>> content_type = stack.content_type('content_type_uid')
-            >>> content_type.add_header('key', 'someheader')
+            >>> content_type = stack.content_type()
             >>> some_dict = {'abc':'something'}
-            >>> response = content_type.fetch(some_dict)
+            >>> response = content_type.find(param=some_dict)
         ------------------------------
         """
-        if params is None:
-            params = {}
-        params_dict = {}
-        url = '{}/content_types'.format(self.__http_instance.endpoint)
-        content_type_url = '{0}/{1}'.format(url, self.__content_type_uid)
-        if params is not None and isinstance(params, dict):
-            params_dict.update(params)
-        # params_dict, self.__stack_headers
-        result = self.__http_instance.get(content_type_url)
+        self.local_param['environment'] = self.http_instance.headers['environment']
+        if params is not None:
+            self.local_param.update(params)
+        encoded_params = parse.urlencode(self.local_param)
+        url = '{}?{}'.format('{}/content_types'.format(self.http_instance.endpoint), encoded_params)
+        result = self.http_instance.get(url)
         return result
