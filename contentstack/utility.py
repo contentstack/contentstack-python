@@ -10,12 +10,15 @@ Copyright 2019 Contentstack. All rights reserved.
 
 
 import logging
+import json
+import urllib.parse as urlparse
 
 
 class Utils:
     """
     Utility for the contentstack
     """
+
     @staticmethod
     def config_logging():
         """ Setting up logging """
@@ -36,7 +39,14 @@ class Utils:
         logging.debug(message)
 
     @staticmethod
-    def do_urlencode(params):
+    def do_url_encode(params):
         from urllib import parse
         return parse.urlencode(params)
-    
+
+    @staticmethod
+    def get_complete_url(base_url: str, params: dict):
+        if 'query' in params:
+            params["query"] = json.dumps(params["query"])
+        query = urlparse.urlencode(params)
+        url = '{}&{}'.format(base_url, query)
+        return url

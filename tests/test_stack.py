@@ -91,7 +91,9 @@ class TestStack(unittest.TestCase):
     def test_sync_pagination(self):
         result = self.stack.pagination('blt376f0470f9334d8e512f5e')
         if result is not None:
-            self.assertEqual('blt3f16ec623aaa004a2c2539', result['sync_token'])
+            # bltce79ab698cd23e4f34748b
+            # blt3f16ec623aaa004a2c2539
+            self.assertEqual('bltce79ab698cd23e4f34748b', result['sync_token'])
 
     def test_init_sync_no_params(self):
         result = self.stack.sync_init()

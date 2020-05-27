@@ -7,21 +7,24 @@ You can also specify the environment of which you wish to get the assets.
 # ************* Module assetquery **************
 # Your code has been rated at 10/10 by pylint
 
-from urllib import parse
+import json
+from contentstack.utility import Utils
+from contentstack.basequery import BaseQuery
 
 
-class AssetQuery:
+class AssetQuery(BaseQuery):
     """
     This call fetches the list of all the assets of a particular stack.
     """
 
     def __init__(self, http_instance):
+        super().__init__()
         self.http_instance = http_instance
         self.__query_params = {}
-        self.base_url = '{}/assets'.format(self.http_instance.endpoint)
-        if 'environment' in self.http_instance.headers:
-            self.__query_params['environment'] = self.http_instance.headers['environment']
-            # self.http_instance.headers.pop('environment')
+        self.base_url = "{}/assets".format(self.http_instance.endpoint)
+        if "environment" in self.http_instance.headers:
+            env = self.http_instance.headers["environment"]
+            self.base_url = "{}?{}".format(self.base_url, "environment={}".format(env))
 
     def environment(self, environment):
         """
@@ -38,7 +41,7 @@ class AssetQuery:
             >>> result = stack.asset_query().environment('production').find()
         ------------------------------
         """
-        self.__query_params['environment'] = environment
+        self.__query_params["environment"] = environment
         return self
 
     def version(self, version):
@@ -58,7 +61,7 @@ class AssetQuery:
             >>> result = stack.asset_query().version(3).find()
         ------------------------------
         """
-        self.__query_params['version'] = version
+        self.__query_params["version"] = version
         return self
 
     def include_dimension(self):
@@ -75,7 +78,7 @@ class AssetQuery:
             >>> result = stack.asset_query().include_dimension().find()
         ------------------------------
         """
-        self.__query_params['include_dimension'] = 'true'
+        self.__query_params["include_dimension"] = "true"
         return self
 
     def relative_url(self):
@@ -91,7 +94,7 @@ class AssetQuery:
             >>> result = stack.asset_query().relative_url().find()
         ------------------------------
         """
-        self.__query_params['relative_urls'] = 'true'
+        self.__query_params["relative_urls"] = "true"
         return self
 
     def include_count(self):
@@ -107,7 +110,7 @@ class AssetQuery:
             >>> result = stack.asset_query().include_count().find()
         ------------------------------
         """
-        self.__query_params['include_count'] = 'true'
+        self.__query_params["include_count"] = "true"
         return self
 
     def find(self):
@@ -116,7 +119,6 @@ class AssetQuery:
         It also returns the content of each asset in JSON format.
         Learn more about Assets
         [https://www.contentstack.com/docs/content-managers/work-with-assets].
-
         :return: json result, List of asset object
 
         -----------------------------
@@ -127,5 +129,7 @@ class AssetQuery:
             >>> result = stack.asset_query().find()
 
         """
-        url = '{}?{}'.format(self.base_url, parse.urlencode(self.__query_params))
+        if self.parameters is not None and len(self.parameters) > 0:
+            self.__query_params["query"] = json.dumps(self.parameters)
+        url = Utils.get_complete_url(self.base_url, self.__query_params)
         return self.http_instance.get(url)

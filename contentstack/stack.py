@@ -4,7 +4,7 @@ this as a container that holds authentication related data.
 """
 
 # ************* Module stack **************
-# Your code has been rated at 9.55/10 by pylint
+# Your code has been rated at 10.00/10
 
 import logging
 import enum
@@ -17,6 +17,9 @@ from contentstack.image_transform import ImageTransform
 
 
 class ContentstackRegion(enum.Enum):
+    """
+    Sets region for the contentstack
+    """
     US = 'us'
     EU = 'eu'
 
@@ -29,6 +32,8 @@ class Stack:
     (API Reference)[https://www.contentstack.com/docs/developers/apis/content-delivery-api/#stack]:
     """
 
+    # pylint: disable=too-many-instance-attributes
+    # pylint: disable=too-many-arguments
     def __init__(self, api_key, delivery_token, environment,
                  host='cdn.contentstack.io',
                  version='v3', region=ContentstackRegion.US):
@@ -64,7 +69,7 @@ class Stack:
         if self.environment is None or self.environment == "":
             raise PermissionError('You are not permitted to the stack without valid Environment')
         # prepare endpoint for the url:
-        if self.region.value is not 'us' and self.host.__eq__('cdn.contentstack.io'):
+        if self.region.value != 'us' and self.host == 'cdn.contentstack.io':
             self.host = 'eu-cdn.contentstack.com'
         self.endpoint = 'https://{}/{}'.format(self.host, self.version)
         # prepare Headers:`
@@ -143,89 +148,6 @@ class Stack:
         -----------------------------
         """
         return AssetQuery(self.http_instance)
-
-    # def collaborators(self):
-    #     """
-    #     A detailed information about collaborators with whome the stacks are shared.
-    #     :return: Stack -- Stack object so we can chain other functions.
-    #     -----------------------------
-    #     Example:
-    #         >>> import contentstack
-    #         >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
-    #         >>> stack = stack.collaborators()
-    #         >>> result = stack.fetch()
-    #     -----------------------------
-    #     """
-    #     self.__query_params['include_collaborators'] = 'true'
-    #     return self
-
-    # def include_stack_variables(self):
-    #     """
-    #     Stack variables are extra information about the stack, such as the description,
-    #     format of date, format of time, and so on. Users can include or exclude stack variables
-    #     in the response
-    #     Returns:
-    #         Stack -- Stack object so we can chain other functions.
-    #     -----------------------------
-    #     Example:
-    #         >>> import contentstack
-    #         >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
-    #         >>> stack = stack.include_stack_variables()
-    #         >>> result = stack.fetch()
-    #     -----------------------------
-    #     """
-    #     self.__query_params['include_stack_variables'] = 'true'
-    #     return self
-
-    # def include_discrete_variables(self):
-    #     """
-    #     Discrete variables of the stack
-    #     :return: Stack object so we can chain other functions.
-    #     Discrete variables of the stack
-    #     -----------------------------
-    #     Example:
-    #         >>> import contentstack
-    #         >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
-    #         >>> stack = stack.include_discrete_variables()
-    #         >>> result = stack.fetch()
-    #     -----------------------------
-    #     """
-    #     self.__query_params['include_discrete_variables'] = 'true'
-    #     return self
-
-    # def include_count(self):
-    #     """
-    #     Includes count of stack response
-    #     :return: Stack object so we can chain other functions.
-    #     -----------------------------
-    #     Example:
-    #         >>> import contentstack
-    #         >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
-    #         >>> stack = stack.include_count()
-    #         >>> result = stack.fetch()
-    #     -----------------------------
-    #     """
-    #     self.__query_params['include_count'] = 'true'
-    #     return self
-
-    # def fetch(self):
-    #     """
-    #     Fetches the stack response as per the functions applied
-    #     :return: result is the response of the stack
-    #     -----------------------------
-    #     [Example]:
-    #         >>> import contentstack
-    #         >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
-    #         >>> result = stack.fetch()
-    #     -----------------------------
-    #     """
-    #     from contentstack.utility import Utils as util
-    #     base_url = '{}/stacks'.format(self.http_instance.endpoint)
-    #     # self.__query_params, self.__stack_headers
-    #     encoded_param = util.do_urlencode(self.__query_params)
-    #     url = '{}?{}'.format(base_url, encoded_param)
-    #     result = self.http_instance.get(url)
-    #     return result
 
     def sync_init(self, content_type_uid=None, from_date=None, locale=None, publish_type=None):
         """
