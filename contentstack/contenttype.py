@@ -87,7 +87,7 @@ class ContentType:
         """
         This method is useful to fetch ContentType of the of the stack.
         :param params: dictionary of params
-        :return:dict -- contentType response
+        :return:dict -- contenttype response
         ------------------------------
         Example:
 

@@ -4,8 +4,7 @@ from .contenttype import ContentType
 from .https_connection import HTTPSConnection
 from .stack import Stack
 from .utility import Utils
-# from contentstack import assetquery, entry, asset, contenttype, https_connection, stack, utility
-
+# from contentstack import *
 
 __author__ = 'Contentstack'
 __status__ = 'debug'
