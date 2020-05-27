@@ -10,6 +10,8 @@ This module implements the Requests API.
 # Your code has been rated at 10.00/10  by pylint
 
 from json import JSONDecodeError
+import json
+import urllib.parse as urlparse
 import platform
 import requests
 from requests.exceptions import Timeout, HTTPError
@@ -73,3 +75,11 @@ class HTTPSConnection:
     def update_connection_timeout(self, timeout: int):
         """Facilitate to update timeout for the https request"""
         self.default_timeout = timeout
+
+    def get_complete_url(self, base_url: str, params:dict):
+        if 'query' in params:
+            params["query"] = json.dumps(params["query"])
+        query = urlparse.urlencode(params)
+        url = '{}&{}'.format(base_url, query)
+        return url
+
