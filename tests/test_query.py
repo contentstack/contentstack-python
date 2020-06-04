@@ -17,13 +17,15 @@ class TestQuery(unittest.TestCase):
         self.environment = credentials.keys['environment']
         stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment)
         self.query = stack.content_type('room').query()
+        self.query1 = stack.content_type('product').query()
+        self.query2 = stack.content_type('app_theme').query()
 
     def test_functional_and_in_query(self):
-        query1 = self.query.where("price", QueryOperation.IS_LESS_THAN, fields=90)
-        query2 = self.query.where("discount", QueryOperation.INCLUDES, fields=[20, 45])
+        query1 = self.query1.where("price", QueryOperation.IS_LESS_THAN, fields=90)
+        query2 = self.query2.where("discount", QueryOperation.INCLUDES, fields=[20, 45])
         query = self.query.and_query(query1, query2)
         logging.info(query.query_params)
-        self.assertEqual({'query': '{"$and": [{"price": {"$lt": 90}, "discount": {"$in": [20, 45]}}]}'},
+        self.assertEqual({'query': '{"$and": [{"price": {"$lt": 90}}, {"discount": {"$in": [20, 45]}}]}'},
                          query.query_params)
 
     def test_functional_or_in_query(self):
@@ -37,7 +39,7 @@ class TestQuery(unittest.TestCase):
     def test_functional_or_in_query_type_common_in_query(self):
         query1 = self.query.where("price", QueryOperation.IS_LESS_THAN, fields=90)
         query2 = self.query.where("discount", QueryOperation.INCLUDES, fields=[20, 45])
-        query = self.query.query(QueryType.OR, query1, query2)
+        query = self.query.query_operator(QueryType.OR, query1, query2)
         logging.info(query.query_params)
         self.assertEqual({'query': '{"$or": [{"price": {"$lt": 90}, "discount": {"$in": [20, 45]}}]}'},
                          query.query_params)
@@ -45,7 +47,7 @@ class TestQuery(unittest.TestCase):
     def test_functional_and_in_query_type_common_in_query(self):
         query1 = self.query.where("price", QueryOperation.IS_LESS_THAN, fields=90)
         query2 = self.query.where("discount", QueryOperation.INCLUDES, fields=[20, 45])
-        query = self.query.query(QueryType.AND, query1, query2)
+        query = self.query.query_operator(QueryType.AND, query1, query2)
         logging.info(query.query_params)
         self.assertEqual({'query': '{"$and": [{"price": {"$lt": 90}, "discount": {"$in": [20, 45]}}]}'},
                          query.query_params)
