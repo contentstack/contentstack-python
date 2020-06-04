@@ -2,13 +2,17 @@
 Contentstack provides certain queries that you can use to fetch filtered results
 """
 import json
+import enum
+from urllib import parse
 from contentstack.basequery import BaseQuery
 from contentstack.entryqueryable import EntryQueryable
-from urllib import parse
-import enum
 
 
 class QueryType(enum.Enum):
+    """
+    Its allows to perform operation of two types:
+    AND, OR
+    """
     AND = "$and"
     OR = '$or'
 
@@ -36,7 +40,7 @@ class Query(BaseQuery, EntryQueryable):
         self.base_url = '{}/content_types/{}/entries' \
             .format(self.http_instance.endpoint, self.content_type_uid)
 
-    def query(self, query_type: QueryType, *query_objects):
+    def query_operator(self, query_type: QueryType, *query_objects):
         """
         Get entries that satisfy all the conditions provided in the '$and' query.
         Arguments:
@@ -58,9 +62,13 @@ class Query(BaseQuery, EntryQueryable):
             >>> result = query.and_query(query_one, query_two).find()
         ---------------------------------
         """
-        self.query_params["query"] = json.dumps({query_type.value: [self.parameters]})
-        if len(self.parameters):
+        __container = []
+        if len(query_objects) > 0:
+            for query in query_objects:
+                __container.append(query.parameters)
+        if len(self.parameters) > 0:
             self.parameters.clear()
+        self.query_params["query"] = json.dumps({query_type.value: __container})
         return self
 
     def and_query(self, *query_objects):
@@ -85,8 +93,12 @@ class Query(BaseQuery, EntryQueryable):
             >>> result = query.and_query(query_one, query_two).find()
         ---------------------------------
         """
-        self.query_params["query"] = json.dumps({"$and": [self.parameters]})
-        if len(self.parameters):
+        __container = []
+        if len(query_objects) > 0:
+            for query in query_objects:
+                __container.append(query.parameters)
+        self.query_params["query"] = json.dumps({"$and": __container})
+        if len(self.parameters) > 0:
             self.parameters.clear()
         return self
 
@@ -114,8 +126,13 @@ class Query(BaseQuery, EntryQueryable):
             >>> result = query.or_query(query_one, query_two).find()
         ----------------------------------
         """
-        self.query_params["query"] = json.dumps({"$or": [self.parameters]})
-        if len(self.parameters):
+        __container = []
+        if len(query_objects) > 0:
+            for i in range(len(query_objects)):
+                obj = query_objects[i].parameters[list(query_objects[i].parameters)[i]]
+                __container.append(obj)
+        self.query_params["query"] = json.dumps({"$or": __container})
+        if len(self.parameters) > 0:
             self.parameters.clear()
         return self
 
@@ -189,7 +206,7 @@ class Query(BaseQuery, EntryQueryable):
         :param key:
         :type query_object: object
         """
-        if isinstance(key, str):
+        if isinstance(key, str) and query_object is not None:
             query_dict = {key: {'$in_query': self.parameters}}
             self.query_params['query'] = query_dict
         else:
@@ -222,7 +239,7 @@ class Query(BaseQuery, EntryQueryable):
         if isinstance(key, str):
             if isinstance(query_object, Query):
                 _query = query_object.__query_dict
-                self.__query_dict = {key: {'$nin_query': _query}}
+                # self.__query_dict = {key: {'$nin_query': _query}}
                 return self
             raise ValueError('query_object should be Query type')
         raise ValueError('key should be str type')
@@ -268,4 +285,4 @@ class Query(BaseQuery, EntryQueryable):
         -------------------------------------
         """
         self.query_params["limit"] = 1
-        return self.__execute_query()
+        # return self.__execute_query()
