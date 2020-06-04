@@ -97,22 +97,6 @@ class AssetQuery(BaseQuery):
         self.__query_params["relative_urls"] = "true"
         return self
 
-    def include_count(self):
-        """
-        include count provides asset count
-        :return: AssetQuery: so we can chain the call
-
-        -----------------------------
-        [Example]:
-
-            >>> import contentstack
-            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
-            >>> result = stack.asset_query().include_count().find()
-        ------------------------------
-        """
-        self.__query_params["include_count"] = "true"
-        return self
-
     def find(self):
         """
         This call fetches the list of all the assets of a particular stack.
