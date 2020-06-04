@@ -14,6 +14,16 @@ import json
 import urllib.parse as urlparse
 
 
+def config_logging(logging_type: logging.WARNING):
+    import logging
+    logging.basicConfig(
+        filename='application.log',
+        level=logging_type,
+        format='[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s',
+        datefmt='%H:%M:%S'
+    )
+
+
 class Utils:
     """
     Utility for the contentstack

@@ -27,21 +27,24 @@ class ContentType:
         self.__content_type_uid = content_type_uid
         self.local_param = {}
 
-    def entry(self, uid):
+    def entry(self, entry_uid: str):
         r"""
         An entry is the actual piece of content created using one of the defined content types.
-        :param uid: {str} -- uid of the entry
+        :param entry_uid: {str} -- unique ID of the entry that you wish to fetch
         :return: Entry -- Returns the Entry class object so we can chain the entry functions
-        --------------------------------
-        [Example:]
 
+        --------------------------------
+
+        [Example:]
             >>> import contentstack
             >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> content_type = stack.content_type('content_type_uid')
             >>> entry = content_type.entry(uid='entry_uid')
         --------------------------------
         """
-        entry = Entry(self.http_instance, self.__content_type_uid, entry_uid=uid)
+        if None in (self.__content_type_uid, entry_uid):
+            raise KeyError('Please provide valid content_type_uid and entry uid')
+        entry = Entry(self.http_instance, self.__content_type_uid, entry_uid=entry_uid)
         return entry
 
     def query(self):
@@ -57,8 +60,9 @@ class ContentType:
             >>> query = content_type.query()
         ------------------------------
         """
-        query = Query(self.__content_type_uid)
-        return query
+        if self.__content_type_uid is None:
+            raise PermissionError('Kindly provide content_type_uid')
+        return Query(self.http_instance, self.__content_type_uid)
 
     def fetch(self):
         """

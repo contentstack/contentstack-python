@@ -43,7 +43,7 @@ class BaseQuery:
 
     def __init__(self):
         self.parameters = {}
-        self.__query_params = {}
+        self.query_params = {}
 
     def where(self, field_uid: str, query_operation: QueryOperation, fields=None):
         """
@@ -59,6 +59,23 @@ class BaseQuery:
             self.parameters[field_uid] = result
         return self
 
+    def include_count(self):
+        """Retrieve count and data of objects in result
+        Returns:
+            [Query] -- Query object, so you can chain this call.
+        ==============================
+        [Example:]
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'access_token', 'environment')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
+            >>> query = query.include_count()
+            >>> result = query.find()
+        ==============================
+        """
+        self.query_params["include_count"] = 'true'
+        return self
+
     def skip(self, skip_count: int):
         """
         The number of objects to skip before returning any.
@@ -66,7 +83,7 @@ class BaseQuery:
         :param skip_count:
         :return: self
         """
-        self.__query_params["skip"] = str(skip_count)
+        self.query_params["skip"] = str(skip_count)
         return self
 
     def limit(self, limit_count: int):
@@ -75,7 +92,7 @@ class BaseQuery:
         :param limit_count:
         :return: self
         """
-        self.__query_params["skip"] = str(limit_count)
+        self.query_params["skip"] = str(limit_count)
         return self
 
     def order_by_ascending(self, key: str):
@@ -86,7 +103,7 @@ class BaseQuery:
         :param key:  key on which ascending order to be implemented
         :return: self
         """
-        self.__query_params["asc"] = str(key)
+        self.query_params["asc"] = str(key)
         return self
 
     def order_by_descending(self, key: str):
@@ -96,7 +113,7 @@ class BaseQuery:
         :param key:  key on which descending order to be implemented
         :return: self - Class instance, So that method chaining can be performed
         """
-        self.__query_params["desc"] = str(key)
+        self.query_params["desc"] = str(key)
         return self
 
     def param(self, key: str, value):
@@ -127,37 +144,54 @@ class BaseQuery:
         """
         if None in (key, value):
             raise KeyError('Invalid key or value')
-        self.__query_params[key] = str(value)
+        self.query_params[key] = str(value)
         return self
 
     def add_params(self, param: dict):
         """
         Adds Parameters to the to the request
-
         Arguments:
-            param {dict} --  paramters
-
+            param {dict} --  parameters
         Returns:
             [self] -- Class instance, So that method chaining can be performed
         """
-        self.__query_params.update(param)
+        self.query_params.update(param)
         return self
 
     def query(self, key: str, value):
         """
         Adds key value pairs to the to the query parameters
-
         Arguments:
             key {[str]} -- key of the query param
             value {[type]} -- value of query param
-
         Raises:
             KeyError: when key or value found None
-
         Returns:
-            [self] -- Class instance, So that method chaining can be performed]
+            self-- Class instance, So that method chaining can be performed
         """
         if None in (key, value):
             raise KeyError('Invalid key or value')
         self.parameters[key] = str(value)
+        return self
+
+    def remove_param(self, key: str):
+        """
+        Remove provided query key from custom query if exist.
+        :param key {str} -- The key to be constrained
+        :return: self -- So that method chaining can be performed
+
+        ----------------------------------
+        [Example]:
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
+            >>> query = query.remove_query("query_key")
+            >>> result = query.find()
+        ----------------------------------
+        """
+        if key is None:
+            raise ValueError('Kindly provide valid key')
+        if key in self.query_params:
+            self.query_params.pop(key, None)
         return self
