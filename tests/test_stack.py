@@ -93,7 +93,7 @@ class TestStack(unittest.TestCase):
         if result is not None:
             # bltce79ab698cd23e4f34748b
             # blt3f16ec623aaa004a2c2539
-            self.assertEqual('bltce79ab698cd23e4f34748b', result['sync_token'])
+            self.assertIsNotNone(result['sync_token'])
 
     def test_init_sync_no_params(self):
         result = self.stack.sync_init()
