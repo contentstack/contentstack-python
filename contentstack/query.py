@@ -9,9 +9,11 @@ from contentstack.entryqueryable import EntryQueryable
 
 
 class QueryType(enum.Enum):
-    """
-    Its allows to perform operation of two types:
-    AND, OR
+    """Get entries that satisfy all the conditions provided by enum(AND, OR)
+    Args:
+        enum ([AND, OR]): Get entries that satisfy all the conditions provided by enum
+        AND: Get entries that satisfy all the conditions provided in the '$and' query
+        OR: Get entries that satisfy all the conditions provided in the '$or' query
     """
     AND = "$and"
     OR = '$or'
@@ -54,12 +56,10 @@ class Query(BaseQuery, EntryQueryable):
         [Example]:
             >>> import contentstack
             >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
-            >>> query = stack.content_type('content_type_uid').query()
-            >>> query_one = query.where('field_uid',
-                                    QueryOperation.EQUALS, fields=['field1', 'field2', 'field3'])
-            >>> query_two = query.where('field_uid',
-                                    QueryOperation.INCLUDE, fields=['field1', 'field2', 'field3'])
-            >>> result = query.and_query(query_one, query_two).find()
+            >>> query1 = self.query1.where("price", QueryOperation.IS_LESS_THAN, fields=90)
+            >>> query2 = self.query2.where("discount", QueryOperation.INCLUDES, fields=[20, 45])
+            >>> query = self.query.and_query(query1, query2)
+            >>> result = query.find()
         ---------------------------------
         """
         __container = []
@@ -71,76 +71,76 @@ class Query(BaseQuery, EntryQueryable):
         self.query_params["query"] = json.dumps({query_type.value: __container})
         return self
 
-    def and_query(self, *query_objects):
-        """
-        Get entries that satisfy all the conditions provided in the '$and' query.
-        Arguments:
-            query_objects {Query} -- query_objects for variable number
-            of arguments of type Query Object.
-        Raises:
-            ValueError: If query_objects is None
-        Returns:
-            Query -- Query object, so you can chain this call.
-        ---------------------------------
-        [Example]:
-            >>> import contentstack
-            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
-            >>> query = stack.content_type('content_type_uid').query()
-            >>> query_one = query.where('field_uid',
-                                    QueryOperation.EQUALS, fields=['field1', 'field2', 'field3'])
-            >>> query_two = query.where('field_uid',
-                                    QueryOperation.EQUALS, fields=['field1', 'field2', 'field3'])
-            >>> result = query.and_query(query_one, query_two).find()
-        ---------------------------------
-        """
-        __container = []
-        if len(query_objects) > 0:
-            for query in query_objects:
-                __container.append(query.parameters)
-        self.query_params["query"] = json.dumps({"$and": __container})
-        if len(self.parameters) > 0:
-            self.parameters.clear()
-        return self
+    # def and_query(self, *query_objects):
+    #     """
+    #     Get entries that satisfy all the conditions provided in the '$and' query.
+    #     Arguments:
+    #         query_objects {Query} -- query_objects for variable number
+    #         of arguments of type Query Object.
+    #     Raises:
+    #         ValueError: If query_objects is None
+    #     Returns:
+    #         Query -- Query object, so you can chain this call.
+    #     ---------------------------------
+    #     [Example]:
+    #         >>> import contentstack
+    #         >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+    #         >>> query = stack.content_type('content_type_uid').query()
+    #         >>> query_one = query.where('field_uid',
+    #                                 QueryOperation.EQUALS, fields=['field1', 'field2', 'field3'])
+    #         >>> query_two = query.where('field_uid',
+    #                                 QueryOperation.EQUALS, fields=['field1', 'field2', 'field3'])
+    #         >>> result = query.and_query(query_one, query_two).find()
+    #     ---------------------------------
+    #     """
+    #     __container = []
+    #     if len(query_objects) > 0:
+    #         for query in query_objects:
+    #             __container.append(query.parameters)
+    #     self.query_params["query"] = json.dumps({"$and": __container})
+    #     if len(self.parameters) > 0:
+    #         self.parameters.clear()
+    #     return self
 
-    def or_query(self, *query_objects):
-        """
-        Get all entries that satisfy at least
-        one of the given conditions provided in the '$or' query.
-        Arguments:
-            query_objects {object} -- query_objects for variable
-            number of arguments of type Query Object.
-        Raises:
-            ValueError: If query_objects is None
-        Returns:
-            Query -- Query object, so you can chain this call.
-        ----------------------------------
-        [Example]:
+    # def or_query(self, *query_objects):
+    #     """
+    #     Get all entries that satisfy at least
+    #     one of the given conditions provided in the '$or' query.
+    #     Arguments:
+    #         query_objects {object} -- query_objects for variable
+    #         number of arguments of type Query Object.
+    #     Raises:
+    #         ValueError: If query_objects is None
+    #     Returns:
+    #         Query -- Query object, so you can chain this call.
+    #     ----------------------------------
+    #     [Example]:
 
-            >>> import contentstack
-            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
-            >>> query = stack.content_type('content_type_uid').query()
-            >>> query_one = query.where('field_uid',
-                                QueryOperation.EQUALS, fields=['field1', 'field2', 'field3'])
-            >>> query_two = query.where('field_uid',
-                                QueryOperation.EQUALS, fields=['field1', 'field2', 'field3'])
-            >>> result = query.or_query(query_one, query_two).find()
-        ----------------------------------
-        """
-        __container = []
-        if len(query_objects) > 0:
-            for i in range(len(query_objects)):
-                obj = query_objects[i].parameters[list(query_objects[i].parameters)[i]]
-                __container.append(obj)
-        self.query_params["query"] = json.dumps({"$or": __container})
-        if len(self.parameters) > 0:
-            self.parameters.clear()
-        return self
+    #         >>> import contentstack
+    #         >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+    #         >>> query = stack.content_type('content_type_uid').query()
+    #         >>> query_one = query.where('field_uid',
+    #                             QueryOperation.EQUALS, fields=['field1', 'field2', 'field3'])
+    #         >>> query_two = query.where('field_uid',
+    #                             QueryOperation.EQUALS, fields=['field1', 'field2', 'field3'])
+    #         >>> result = query.or_query(query_one, query_two).find()
+    #     ----------------------------------
+    #     """
+    #     __container = []
+    #     if len(query_objects) > 0:
+    #         for i in range(len(query_objects)):
+    #             obj = query_objects[i].parameters[list(query_objects[i].parameters)[i]]
+    #             __container.append(obj)
+    #     self.query_params["query"] = json.dumps({"$or": __container})
+    #     if len(self.parameters) > 0:
+    #         self.parameters.clear()
+    #     return self
 
     def tags(self, *tags):
         """
-        Include tags with which to search entries.
+        Include tags with which to search entries accepts variable-length argument lists
         Arguments:
-            tags {list of str} -- tags Comma separated objects with which to search entries.
+            tags {list of str} -- tags accepts variable-length argument lists to search entries.
         Returns:
             [Query] -- Query object, so you can chain this call.
 
@@ -263,13 +263,7 @@ class Query(BaseQuery, EntryQueryable):
         """
         # if len(self.entry_queryable_param) > 0:
         #     self.query_params.update(self.entry_queryable_param)
-        if len(self.parameters) > 0:
-            self.query_params["query"] = json.dumps(self.parameters)
-        if 'environment' in self.http_instance.headers:
-            self.query_params['environment'] = self.http_instance.headers['environment']
-        encoded_string = parse.urlencode(self.query_params, doseq=True)
-        url = '{}?{}'.format(self.base_url, encoded_string)
-        return self.http_instance.get(url)
+        self.__execute_network_call()
 
     def find_one(self):
         """It returns only one result.
@@ -285,4 +279,15 @@ class Query(BaseQuery, EntryQueryable):
         -------------------------------------
         """
         self.query_params["limit"] = 1
-        # return self.__execute_query()
+        return self.__execute_network_call()
+
+    def __execute_network_call(self):
+        # if len(self.entry_queryable_param) > 0:
+        #     self.query_params.update(self.entry_queryable_param)
+        if len(self.parameters) > 0:
+            self.query_params["query"] = json.dumps(self.parameters)
+        if 'environment' in self.http_instance.headers:
+            self.query_params['environment'] = self.http_instance.headers['environment']
+        encoded_string = parse.urlencode(self.query_params, doseq=True)
+        url = '{}?{}'.format(self.base_url, encoded_string)
+        return self.http_instance.get(url)
