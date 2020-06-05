@@ -2,8 +2,8 @@ import logging
 from contentstack.utility import config_logging
 import unittest
 import contentstack
-from basequery import QueryOperation
-from query import QueryType
+from contentstack.basequery import QueryOperation
+from contentstack.query import QueryType
 from tests import credentials
 
 
@@ -70,3 +70,25 @@ class TestQuery(unittest.TestCase):
         self.query.where_in("brand", query1)
         self.assertEqual({'typeahead': 'searching_tag'},
                          self.query.query_params)
+
+    def test_functional_tags_function_query(self):
+        result = self.query.tags('black', 'gold', 'silver').find()
+        logging.info(self.query.query_params)
+        self.assertEqual({'typeahead': 'searching_tag'}, self.query.query_params)
+
+    def test_functional_search_function_query(self):
+        result = self.query.search('search_contents').find()
+        logging.info(self.query.query_params)
+        self.assertEqual({'typeahead': 'searching_tag'}, self.query.query_params)
+
+    def test_functional_where_in_function_query(self):
+        querylimit = self.query.limit(4)
+        result = self.query.where_in('title', querylimit).find()
+        logging.info(self.query.query_params)
+        self.assertEqual({'typeahead': 'searching_tag'}, self.query.query_params)
+
+    def test_functional_where_not_in_function_query(self):
+        querylimit = self.query.limit(4)
+        result = self.query.where_not_in('title', querylimit).find()
+        logging.info(self.query.query_params)
+        self.assertEqual({'typeahead': 'searching_tag'}, self.query.query_params)
