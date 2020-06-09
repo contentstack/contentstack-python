@@ -1,13 +1,11 @@
 import logging
 import unittest
-
-import HtmlTestRunner
 import contentstack
 from contentstack.stack import ContentstackRegion
 from tests import credentials
+import HtmlTestRunner
 
 api_key = credentials.keys['api_key']
-access_token = credentials.keys['access_token']
 delivery_token = credentials.keys['delivery_token']
 environment = credentials.keys['environment']
 stack_instance = contentstack.Stack(api_key, delivery_token, environment)
@@ -17,7 +15,6 @@ class TestStack(unittest.TestCase):
 
     def setUp(self):
         self.api_key = credentials.keys['api_key']
-        self.access_token = credentials.keys['access_token']
         self.delivery_token = credentials.keys['delivery_token']
         self.environment = credentials.keys['environment']
         self.stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment)
@@ -140,8 +137,5 @@ class TestStack(unittest.TestCase):
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestStack)
-outfile = open("reports/test_report.html", "w")
-runner = HtmlTestRunner.HTMLTestRunner(
-                stream=outfile
-                )
+runner = HtmlTestRunner.HTMLTestRunner(combine_reports=True, add_timestamp=False)
 runner.run(suite)

@@ -8,7 +8,6 @@ Stores Credentials for testing the modules
 
 keys = {
         'api_key': 'bltc94709340b84bdd2',
-        'access_token': 'blt4cb0db9f9139b604',
         'delivery_token': 'csd2e69747f83e59e327d19962',
         'environment': 'development',
 
