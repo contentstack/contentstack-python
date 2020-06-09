@@ -7,13 +7,15 @@ from urllib import parse
 from contentstack.basequery import BaseQuery
 from contentstack.entryqueryable import EntryQueryable
 
+# Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+
 
 class QueryType(enum.Enum):
-    """Get entries that satisfy all the conditions provided by enum(AND, OR)
-    Args:
-        enum ([AND, OR]): Get entries that satisfy all the conditions provided by enum
-        AND: Get entries that satisfy all the conditions provided in the '$and' query
-        OR: Get entries that satisfy all the conditions provided in the '$or' query
+    """
+    Get entries that satisfy all the conditions provided by enum(AND, OR)
+    enum ([AND, OR]): Get entries that satisfy all the conditions provided by enum
+    AND: Get entries that satisfy all the conditions provided in the '$and' query
+    OR: Get entries that satisfy all the conditions provided in the '$or' query
     """
     AND = "$and"
     OR = '$or'
@@ -34,7 +36,9 @@ class Query(BaseQuery, EntryQueryable):
     """
 
     def __init__(self, http_instance, content_type_uid):
-        super().__init__()
+        # super().__init__()
+        BaseQuery.__init__(self)
+        EntryQueryable.__init__(self)
         self.content_type_uid = content_type_uid
         self.http_instance = http_instance
         if self.content_type_uid is None:
@@ -55,10 +59,14 @@ class Query(BaseQuery, EntryQueryable):
         ---------------------------------
         [Example]:
             >>> import contentstack
+            >>> from contentstack.basequery import QueryOperation
             >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> query = stack.content_type('content_type1').query()
+            >>> self.query1 = stack.content_type('content_type2').query()
+            >>> self.query2 = stack.content_type('content_type3').query()
             >>> query1 = self.query1.where("price", QueryOperation.IS_LESS_THAN, fields=90)
             >>> query2 = self.query2.where("discount", QueryOperation.INCLUDES, fields=[20, 45])
-            >>> query = self.query.and_query(query1, query2)
+            >>> query = query.query_operator(query1, query2)
             >>> result = query.find()
         ---------------------------------
         """
@@ -239,7 +247,7 @@ class Query(BaseQuery, EntryQueryable):
         if isinstance(key, str):
             if isinstance(query_object, Query):
                 _query = query_object.__query_dict
-                # self.__query_dict = {key: {'$nin_query': _query}}
+                # self.__query_dict = {key: {'$nin_query': query_object.query_params}}
                 return self
             raise ValueError('query_object should be Query type')
         raise ValueError('key should be str type')
@@ -282,8 +290,8 @@ class Query(BaseQuery, EntryQueryable):
         return self.__execute_network_call()
 
     def __execute_network_call(self):
-        # if len(self.entry_queryable_param) > 0:
-        #     self.query_params.update(self.entry_queryable_param)
+        if len(self.entry_queryable_param) > 0:
+            self.query_params.update(self.entry_queryable_param)
         if len(self.parameters) > 0:
             self.query_params["query"] = json.dumps(self.parameters)
         if 'environment' in self.http_instance.headers:
