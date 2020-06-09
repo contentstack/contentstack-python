@@ -1,5 +1,7 @@
 import logging
 import unittest
+
+from HtmlTestRunner import HTMLTestRunner
 import contentstack
 from contentstack.stack import ContentstackRegion
 from tests import credentials
@@ -67,7 +69,7 @@ class TestStack(unittest.TestCase):
         self.assertEqual('cdn.contentstack.io/v3/endpoint?width=230&height=300&other=filter', result_url)
 
     def test_image_transformation_get_url_with_height_width(self):
-        image_url = 'https://images.contentstack.io/v3/assets/blteae40eb499811073/bltc5064f36b5855343'\
+        image_url = 'https://images.contentstack.io/v3/assets/blteae40eb499811073/bltc5064f36b5855343' \
                     '/59e0c41ac0eddd140d5a8e3e/download'
         image_transform = self.stack.image_transform(image_url, width=500, height=550)
         result_url = image_transform.get_url()
@@ -77,7 +79,7 @@ class TestStack(unittest.TestCase):
             result_url)
 
     def test_image_transformation_get_url_with_format(self):
-        image_url = 'https://images.contentstack.io/v3/assets/blteae40eb499811073/bltc5064f36b5855343'\
+        image_url = 'https://images.contentstack.io/v3/assets/blteae40eb499811073/bltc5064f36b5855343' \
                     '/59e0c41ac0eddd140d5a8e3e/download'
         image_transform = self.stack.image_transform(image_url, format='gif')
         result_url = image_transform.get_url()
@@ -135,3 +137,13 @@ class TestStack(unittest.TestCase):
         if result is not None:
             if 'count' in result['content_types']:
                 self.assertEqual(11, result['content_types']['count'])
+
+
+suite = unittest.TestLoader().loadTestsFromTestCase(TestStack)
+outfile = open("test_report_stack.html", "w")
+runner = HTMLTestRunner(
+                stream=outfile,
+                # title='Stack Test Report',
+                # description='This demonstrates the report output by Contentstack Python.'
+                )
+runner.run(suite)

@@ -1,4 +1,5 @@
 from tests import credentials
+import HtmlTestRunner
 import unittest
 import contentstack
 from contentstack.basequery import QueryOperation
@@ -97,9 +98,29 @@ class TestAsset(unittest.TestCase):
         # result = query.find()
         # if result is not None:
         #     self.assertEqual(6, len(result['assets']))
-    
+
     def test_assets_base_query_where_matches(self):
         query = self.asset_query.where('title', QueryOperation.MATCHES,
                                        fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
         self.assertEqual({'title': {'$regex': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}},
                          query.parameters)
+
+
+# if __name__ == "__main__":
+#     ## unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output='example_dir'))
+#     suite = unittest.TestLoader().loadTestsFromTestCase(TestAsset)
+#     unittest.TextTestRunner(verbosity=2).run(suite)
+#     outfile = open("test_report.html", "w")
+#     runner = HtmlTestRunner.HTMLTestRunner(
+#         stream=outfile,
+#     )
+#     runner.run(suite)
+
+suite = unittest.TestLoader().loadTestsFromTestCase(TestAsset)
+outfile = open("test_report_asset.html", "w")
+runner = HtmlTestRunner.HTMLTestRunner(
+                stream=outfile,
+                # title='Stack Test Report',
+                # description='This demonstrates the report output by Contentstack Python.'
+                )
+runner.run(suite)

@@ -1,5 +1,7 @@
 import logging
 import unittest
+
+import HtmlTestRunner
 import contentstack
 from contentstack.entryqueryable import Include
 from tests import credentials
@@ -61,3 +63,13 @@ class TestEntry(unittest.TestCase):
                                      field_uid=['field1', 'field2', 'field3']).fetch()
         self.assertEqual({'except': {'reference_field_uid': ['field1', 'field2', 'field3']}},
                          self.entry.entry_param['include[]'])
+
+
+suite = unittest.TestLoader().loadTestsFromTestCase(TestEntry)
+outfile = open("test_report_entry.html", "w")
+runner = HtmlTestRunner.HTMLTestRunner(
+                stream=outfile,
+                # title='Stack Test Report',
+                # description='This demonstrates the report output by Contentstack Python.'
+                )
+runner.run(suite)
