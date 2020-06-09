@@ -1,8 +1,8 @@
 from tests import credentials
-import HtmlTestRunner
 import unittest
 import contentstack
 from contentstack.basequery import QueryOperation
+import HtmlTestRunner
 
 
 class TestAsset(unittest.TestCase):
@@ -106,21 +106,9 @@ class TestAsset(unittest.TestCase):
                          query.parameters)
 
 
-# if __name__ == "__main__":
-#     ## unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output='example_dir'))
-#     suite = unittest.TestLoader().loadTestsFromTestCase(TestAsset)
-#     unittest.TextTestRunner(verbosity=2).run(suite)
-#     outfile = open("test_report.html", "w")
-#     runner = HtmlTestRunner.HTMLTestRunner(
-#         stream=outfile,
-#     )
-#     runner.run(suite)
-
 suite = unittest.TestLoader().loadTestsFromTestCase(TestAsset)
-outfile = open("test_report_asset.html", "w")
+outfile = open("reports/test_report.html", "w")
 runner = HtmlTestRunner.HTMLTestRunner(
-                stream=outfile,
-                # title='Stack Test Report',
-                # description='This demonstrates the report output by Contentstack Python.'
+                stream=outfile
                 )
 runner.run(suite)

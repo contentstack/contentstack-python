@@ -1,10 +1,9 @@
 import logging
 import unittest
-
+from tests import credentials
 import HtmlTestRunner
 import contentstack
 from contentstack.entryqueryable import Include
-from tests import credentials
 
 
 class TestEntry(unittest.TestCase):
@@ -66,10 +65,8 @@ class TestEntry(unittest.TestCase):
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestEntry)
-outfile = open("test_report_entry.html", "w")
+outfile = open("reports/test_report.html", "w")
 runner = HtmlTestRunner.HTMLTestRunner(
-                stream=outfile,
-                # title='Stack Test Report',
-                # description='This demonstrates the report output by Contentstack Python.'
-                )
+    stream=outfile
+)
 runner.run(suite)
