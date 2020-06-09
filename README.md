@@ -51,7 +51,9 @@ A publishing environment corresponds to one or more deployment servers or a cont
 
 To initialize the SDK, specify application  API key, access token, and environment name of the stack as shown in the snippet given below (config is optional):
 ```
+
 stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+
 ```
 To get the API credentials mentioned above, log in to your Contentstack account and then in your top panel navigation, go to Settings &gt; Stack to view the API Key and Access Token.
 
