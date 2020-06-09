@@ -96,10 +96,8 @@ class TestQuery(unittest.TestCase):
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestQuery)
-outfile = open("test_report_query.html", "w")
+outfile = open("reports/test_report.html", "w")
 runner = HtmlTestRunner.HTMLTestRunner(
-                stream=outfile,
-                # title='Stack Test Report',
-                # description='This demonstrates the report output by Contentstack Python.'
+                stream=outfile
                 )
 runner.run(suite)

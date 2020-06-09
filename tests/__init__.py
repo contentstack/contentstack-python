@@ -14,13 +14,13 @@ def all_tests():
     test_module_entry = TestLoader().loadTestsFromTestCase(TestEntry)
     test_module_query = TestLoader().loadTestsFromTestCase(TestQuery)
     suite = TestSuite([test_module_stack, test_module_asset, test_module_entry, test_module_query])
-    unittest.TextTestRunner(verbosity=2).run(suite)
-    # outfile = open("test_report.html", "w")
-    # runner = HTMLTestRunner(output='test_report_suite')
-    # runner = HTMLTestRunner(
-    #     stream=outfile,
-    # )
-    # runner.run(suite)
+    # unittest.TextTestRunner(verbosity=2).run(suite)
+    outfile = open("test_report.html", "w")
+    runner = HTMLTestRunner(output='test_report_suite')
+    runner = HTMLTestRunner(
+        stream=outfile,
+    )
+    runner.run(suite)
     HTMLTestRunner(combine_reports=True, report_name="test_report", add_timestamp=False).run(suite)
 
     # suite = unittest.TestSuite()

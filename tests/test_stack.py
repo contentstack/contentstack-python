@@ -1,7 +1,7 @@
 import logging
 import unittest
 
-from HtmlTestRunner import HTMLTestRunner
+import HtmlTestRunner
 import contentstack
 from contentstack.stack import ContentstackRegion
 from tests import credentials
@@ -140,10 +140,8 @@ class TestStack(unittest.TestCase):
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestStack)
-outfile = open("test_report_stack.html", "w")
-runner = HTMLTestRunner(
-                stream=outfile,
-                # title='Stack Test Report',
-                # description='This demonstrates the report output by Contentstack Python.'
+outfile = open("reports/test_report.html", "w")
+runner = HtmlTestRunner.HTMLTestRunner(
+                stream=outfile
                 )
 runner.run(suite)
