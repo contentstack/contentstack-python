@@ -13,7 +13,6 @@ class TestQuery(unittest.TestCase):
     def setUp(self):
         config_logging(logging.WARNING)
         self.api_key = credentials.keys['api_key']
-        self.access_token = credentials.keys['access_token']
         self.delivery_token = credentials.keys['delivery_token']
         self.environment = credentials.keys['environment']
         stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment)
@@ -96,8 +95,5 @@ class TestQuery(unittest.TestCase):
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestQuery)
-outfile = open("reports/test_report.html", "w")
-runner = HtmlTestRunner.HTMLTestRunner(
-                stream=outfile
-                )
+runner = HtmlTestRunner.HTMLTestRunner(combine_reports=True, add_timestamp=False)
 runner.run(suite)
