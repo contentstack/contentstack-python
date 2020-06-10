@@ -247,4 +247,6 @@ class Stack:
         :param kwargs: append queries to the asset URL.
         :return: instance of ImageTransform
         """
+        if image_url == None or image_url == '':
+            raise PermissionError('image_url required for the image_transformation')
         return ImageTransform(self.http_instance, image_url, **kwargs)
