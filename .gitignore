@@ -5,7 +5,8 @@ __pycache__/
 
 # C extensions
 *.so
-
+/reports
+/tests/reports
 # Distribution / packaging
 .Python
 build/
