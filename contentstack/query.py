@@ -36,8 +36,8 @@ class Query(BaseQuery, EntryQueryable):
     """
 
     def __init__(self, http_instance, content_type_uid):
-        # super().__init__()
-        BaseQuery.__init__(self)
+        super().__init__()
+        # BaseQuery.__init__(self)
         EntryQueryable.__init__(self)
         self.content_type_uid = content_type_uid
         self.http_instance = http_instance

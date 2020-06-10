@@ -25,3 +25,4 @@ alabaster~=0.7.12
 pyparsing~=2.4.6
 setuptools~=41.6.0
 zipp~=0.6.0
+html-testRunner~=1.2.1

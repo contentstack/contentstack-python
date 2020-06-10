@@ -5,7 +5,7 @@ Common Query for Entry and Assets
 import enum
 
 
-# ************* Module assetquery **************
+# ************* Module basequery.py **************
 # Your code has been rated at 10.00/10
 
 class QueryOperation(enum.Enum):
@@ -38,7 +38,7 @@ def _get_operation_value(fields):
 
 class BaseQuery:
     """
-    Common Query class works for Entry As well as Asset
+    Common Query class works for Query As well as Asset
     """
 
     def __init__(self):
@@ -162,8 +162,8 @@ class BaseQuery:
         """
         Adds key value pairs to the to the query parameters
         Arguments:
-            key {[str]} -- key of the query param
-            value {[type]} -- value of query param
+            key {str} -- key of the query param
+            value {any} -- value of query param
         Raises:
             KeyError: when key or value found None
         Returns:
