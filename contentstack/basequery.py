@@ -50,7 +50,7 @@ class BaseQuery:
         Get entries containing the field values matching the condition in the query.
         Arguments:
             field_uid {str} -- [accept field uid for the operation]
-            query_operation {QueryOperation} -- [Type of operation to perform]
+            query_operation {QueryOperation} -- Type of operation to perform
             fields {list} - list of string
         """
         if None not in (field_uid, query_operation):

@@ -16,17 +16,22 @@ class TestAsset(unittest.TestCase):
         self.asset = self.stack.asset(uid=asset_uid)
         self.asset_query = self.stack.asset_query()
 
-    def test_asset_method(self):
+    def test_01_assets_query_initial_run(self):
+        result = self.asset_query.find()
+        if result is not None:
+            self.assertEqual(8, len(result['assets']))
+
+    def test_02_asset_method(self):
         result = self.asset.relative_urls().include_dimension().fetch()
         if result is not None:
             self.assertEqual({'height': 171, 'width': 294}, result['asset']['dimension'])
 
-    def test_asset_uid(self):
+    def test_03_asset_uid(self):
         result = self.asset.fetch()
         if result is not None:
             self.assertEqual(credentials.keys['asset_uid'], result['asset']['uid'])
 
-    def test_asset_filetype(self):
+    def test_04_asset_filetype(self):
         result = self.asset.fetch()
         if result is not None:
             self.assertEqual('image/jpeg', result['asset']['content_type'])
@@ -35,70 +40,55 @@ class TestAsset(unittest.TestCase):
     # ==== Asset Query ====
     ############################################
 
-    def test_assets_query(self):
+    def test_05_assets_query(self):
         result = self.asset_query.find()
         if result is not None:
             self.assertEqual(8, len(result['assets']))
 
-    def test_assets_base_query_where_exclude_title(self):
+    def test_06_assets_base_query_where_exclude_title(self):
         query = self.asset_query.where('title', QueryOperation.EXCLUDES, fields=['images_(1).jpg'])
         result = query.find()
         if result is not None:
             self.assertEqual(7, len(result['assets']))
 
-    def test_assets_base_query_where_equals_str(self):
+    def test_07_assets_base_query_where_equals_str(self):
         query = self.asset_query.where('title', QueryOperation.EQUALS, fields='images_(1).jpg')
         result = query.find()
         if result is not None:
             self.assertEqual(1, len(result['assets']))
 
-    def test_assets_base_query_where_exclude(self):
+    def test_08_assets_base_query_where_exclude(self):
         query = self.asset_query.where('file_size', QueryOperation.EXCLUDES, fields=[5990, 3200])
         result = query.find()
         if result is not None:
             self.assertEqual(6, len(result['assets']))
 
-    def test_assets_base_query_where_includes(self):
+    def test_09_assets_base_query_where_includes(self):
         query = self.asset_query.where('title', QueryOperation.INCLUDES,
                                        fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
         self.assertEqual({'title': {'$in': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
-        # result = query.find()
-        # if result is not None:
-        #     self.assertEqual(6, len(result['assets']))
 
-    def test_assets_base_query_where_is_less_than(self):
+    def test_10_assets_base_query_where_is_less_than(self):
         query = self.asset_query.where('title', QueryOperation.IS_LESS_THAN,
                                        fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
         self.assertEqual({'title': {'$lt': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
-        # result = query.find()
-        # if result is not None:
-        #     self.assertEqual(6, len(result['assets']))
 
-    def test_assets_base_query_where_is_less_than_or_equal(self):
+    def test_11_assets_base_query_where_is_less_than_or_equal(self):
         query = self.asset_query.where('title', QueryOperation.IS_LESS_THAN_OR_EQUAL,
                                        fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
         self.assertEqual({'title': {'$lte': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
-        # result = query.find()
-        # if result is not None:
-        #     self.assertEqual(6, len(result['assets']))
 
-    def test_assets_base_query_where_is_greater_than(self):
+    def test_12_assets_base_query_where_is_greater_than(self):
         query = self.asset_query.where('title', QueryOperation.IS_GREATER_THAN,
                                        fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
         self.assertEqual({'title': {'$gt': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
-        # result = query.find()
-        # if result is not None:
-        #     self.assertEqual(6, len(result['assets']))
 
-    def test_assets_base_query_where_is_greater_than_or_equal(self):
+    def test_13_assets_base_query_where_is_greater_than_or_equal(self):
         query = self.asset_query.where('title', QueryOperation.IS_GREATER_THAN_OR_EQUAL,
                                        fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
         self.assertEqual({'title': {'$gte': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
-        # result = query.find()
-        # if result is not None:
-        #     self.assertEqual(6, len(result['assets']))
 
-    def test_assets_base_query_where_matches(self):
+    def test_14_assets_base_query_where_matches(self):
         query = self.asset_query.where('title', QueryOperation.MATCHES,
                                        fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
         self.assertEqual({'title': {'$regex': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}},

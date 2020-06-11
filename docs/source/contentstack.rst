@@ -12,26 +12,26 @@ contentstack.asset module
    :undoc-members:
    :show-inheritance:
 
-contentstack.config module
---------------------------
+contentstack.assetquery module
+------------------------------
 
-.. automodule:: contentstack.config
+.. automodule:: contentstack.assetquery
    :members:
    :undoc-members:
    :show-inheritance:
 
-contentstack.content\_type module
----------------------------------
+contentstack.basequery module
+-----------------------------
 
-.. automodule:: contentstack.content_type
+.. automodule:: contentstack.basequery
    :members:
    :undoc-members:
    :show-inheritance:
 
-contentstack.contentstack module
---------------------------------
+contentstack.contenttype module
+-------------------------------
 
-.. automodule:: contentstack.contentstack
+.. automodule:: contentstack.contenttype
    :members:
    :undoc-members:
    :show-inheritance:
@@ -44,18 +44,18 @@ contentstack.entry module
    :undoc-members:
    :show-inheritance:
 
-contentstack.errors module
---------------------------
+contentstack.entryqueryable module
+----------------------------------
 
-.. automodule:: contentstack.errors
+.. automodule:: contentstack.entryqueryable
    :members:
    :undoc-members:
    :show-inheritance:
 
-contentstack.http\_connection module
+contentstack.image\_transform module
 ------------------------------------
 
-.. automodule:: contentstack.http_connection
+.. automodule:: contentstack.image_transform
    :members:
    :undoc-members:
    :show-inheritance:
@@ -76,10 +76,10 @@ contentstack.stack module
    :undoc-members:
    :show-inheritance:
 
-contentstack.utils module
--------------------------
+contentstack.utility module
+---------------------------
 
-.. automodule:: contentstack.utils
+.. automodule:: contentstack.utility
    :members:
    :undoc-members:
    :show-inheritance:

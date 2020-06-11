@@ -1,5 +1,4 @@
-"""
-This call fetches the list of all the assets of a particular stack.
+r"""This call fetches the list of all the assets of a particular stack.
 It also returns the content of each asset in JSON format.
 You can also specify the environment of which you wish to get the assets.
 """
@@ -27,10 +26,11 @@ class AssetQuery(BaseQuery):
             self.base_url = "{}?{}".format(self.base_url, "environment={}".format(env))
 
     def environment(self, environment):
-        """
-        Provide the name of the environment if you wish to retrieve the assets published
+        r"""Provide the name of the environment if you wish to retrieve the assets published
         in a particular environment.
+
         :param environment: environment of the stack
+
         :return: AssetQuery - so we can chain the call
 
         -----------------------------
@@ -45,12 +45,12 @@ class AssetQuery(BaseQuery):
         return self
 
     def version(self, version):
-        """
-        Specify the version number of the asset that you wish to retrieve.
+        r"""Specify the version number of the asset that you wish to retrieve.
         If the version is not specified, the details of the latest version will be retrieved.
         To retrieve a specific version, keep the environment parameter blank.
 
         :param version: version number of the asset that you wish to retrieve
+
         :return: AssetQuery: so we can chain the call
 
         -----------------------------
@@ -65,9 +65,9 @@ class AssetQuery(BaseQuery):
         return self
 
     def include_dimension(self):
-        """
-        include the dimensions (height and width) of the image in the response.
+        r"""Include the dimensions (height and width) of the image in the response.
         Supported image types: JPG, GIF, PNG, WebP, BMP, TIFF, SVG, and PSD
+
         :return: AssetQuery: so we can chain the call
 
         -----------------------------
@@ -82,8 +82,8 @@ class AssetQuery(BaseQuery):
         return self
 
     def relative_url(self):
-        """
-        include the relative URLs of the assets in the response.
+        r"""include the relative URLs of the assets in the response.
+
         :return: AssetQuery: so we can chain the call
 
         -----------------------------
@@ -98,11 +98,11 @@ class AssetQuery(BaseQuery):
         return self
 
     def find(self):
-        """
-        This call fetches the list of all the assets of a particular stack.
+        r"""This call fetches the list of all the assets of a particular stack.
         It also returns the content of each asset in JSON format.
         Learn more about Assets
         [https://www.contentstack.com/docs/content-managers/work-with-assets].
+
         :return: json result, List of asset object
 
         -----------------------------

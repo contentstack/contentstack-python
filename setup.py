@@ -29,7 +29,7 @@ setup(
                      "application frontend, and Contentstack will take care of the rest",
     long_description_content_type="text/markdown",
     url="https://github.com/contentstack/contentstack-python",
-    #packages=setuptools.find_packages(),
+    # packages=setuptools.find_packages(),
     packages=['contentstack'],
     license='MIT',
     test_suite='tests.all_tests',

@@ -42,8 +42,10 @@ class ContentType:
             >>> entry = content_type.entry(uid='entry_uid')
         --------------------------------
         """
-        if None in (self.__content_type_uid, entry_uid):
-            raise KeyError('Please provide valid content_type_uid and entry uid')
+        if self.__content_type_uid is None:
+            raise PermissionError('Please provide valid content_type_uid')
+        elif entry_uid is None:
+            raise PermissionError('Please provide valid entry uid')
         entry = Entry(self.http_instance, self.__content_type_uid, entry_uid=entry_uid)
         return entry
 
