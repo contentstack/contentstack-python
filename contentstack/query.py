@@ -7,6 +7,7 @@ from urllib import parse
 from contentstack.basequery import BaseQuery
 from contentstack.entryqueryable import EntryQueryable
 
+
 # Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 
 
@@ -109,7 +110,7 @@ class Query(BaseQuery, EntryQueryable):
     #     if len(self.parameters) > 0:
     #         self.parameters.clear()
     #     return self
-
+    #
     # def or_query(self, *query_objects):
     #     """
     #     Get all entries that satisfy at least
@@ -123,7 +124,7 @@ class Query(BaseQuery, EntryQueryable):
     #         Query -- Query object, so you can chain this call.
     #     ----------------------------------
     #     [Example]:
-
+    #
     #         >>> import contentstack
     #         >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
     #         >>> query = stack.content_type('content_type_uid').query()
@@ -214,11 +215,10 @@ class Query(BaseQuery, EntryQueryable):
         :param key:
         :type query_object: object
         """
-        if isinstance(key, str) and query_object is not None:
-            query_dict = {key: {'$in_query': self.parameters}}
-            self.query_params['query'] = query_dict
+        if isinstance(key, str) and query_object is not None and isinstance(query_object, Query):
+            self.query_params["query"] = {key: {"$in_query": query_object.parameters}}
         else:
-            raise ValueError('key should be str type')
+            raise ValueError('Invalid Key or Value provided')
         return self
 
     def where_not_in(self, key, query_object):
@@ -244,13 +244,11 @@ class Query(BaseQuery, EntryQueryable):
         -------------------------------------
         """
         # pylint: disable=W0212
-        if isinstance(key, str):
-            if isinstance(query_object, Query):
-                _query = query_object.__query_dict
-                # self.__query_dict = {key: {'$nin_query': query_object.query_params}}
-                return self
-            raise ValueError('query_object should be Query type')
-        raise ValueError('key should be str type')
+        if isinstance(key, str) and query_object is not None and isinstance(query_object, Query):
+            self.query_params["query"] = {key: {"$nin_query": query_object.parameters}}
+        else:
+            raise ValueError('Invalid Key or Value provided')
+        return self
 
     def find(self):
         """It fetches the query result.
@@ -271,7 +269,7 @@ class Query(BaseQuery, EntryQueryable):
         """
         # if len(self.entry_queryable_param) > 0:
         #     self.query_params.update(self.entry_queryable_param)
-        self.__execute_network_call()
+        return self.__execute_network_call()
 
     def find_one(self):
         """It returns only one result.

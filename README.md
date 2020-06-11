@@ -51,11 +51,10 @@ A publishing environment corresponds to one or more deployment servers or a cont
 #### Initializing your SDK
 
 To initialize the SDK, specify application  API key, access token, and environment name of the stack as shown in the snippet given below (config is optional):
-```
 
-stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+    stack = contentstack.Stack('api_key','delivery_token','environment')
 
-```
+
 To get the API credentials mentioned above, log in to your Contentstack account and then in your top panel navigation, go to Settings &gt; Stack to view the API Key and Access Token.
 
 
@@ -65,6 +64,7 @@ To get the API credentials mentioned above, log in to your Contentstack account 
 To retrieve a single entry from a content type use the code snippet given below:
 
 ```
+stack = contentstack.Stack('api_key','delivery_token','environment')
 content_type = stack.content_type("content_type_uid")
 entry = content_type.entry("entry_uid")
 result = entry.fetch()
@@ -74,7 +74,7 @@ result = entry.fetch()
 To retrieve multiple entries of a particular content type, use the code snippet given below:
 
 ```
-#stack is an instance of Stack class
+stack = contentstack.Stack('api_key','delivery_token','environment')
 query = stack.content_type("content_type_uid").query()
 result = query.find()
 ```
@@ -97,17 +97,11 @@ For example, if you want to crop an image (with width as 300 and height as 400),
 You can use the Image Delivery API functions in this SDK as well. Here are a few examples of its usage in the SDK.
 
 ```
-#set the image quality to 100
-image_params = {'quality': 100}
-imageUrl = stack.image_transform(image_url, **image_params);
+image = stack.image_transform(url, {'quality': 100}).get_url()
 
-#resize the image by specifying width and height
-image_params = {'width': 100, 'height': 100}
-imageUrl = stack.image_transform(imageUrl, **image_params);
+image = stack.image_transform(url, {'width': 100, 'height': 100}).get_url()
 
-#enable auto optimization for the image
-image_params = {'auto': 'webp'}
-imageUrl = stack.image_transform(imageUrl, **imageParams);
+image = stack.image_transform(url, {'auto': 'webp'}).get_url()
 ```
 
 ### Using the Sync API with Python SDK

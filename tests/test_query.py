@@ -19,79 +19,55 @@ class TestQuery(unittest.TestCase):
         self.query = stack.content_type('room').query()
         self.query1 = stack.content_type('product').query()
         self.query2 = stack.content_type('app_theme').query()
+        self.query3 = stack.content_type('product').query()
 
-    # def test_functional_and_in_query(self):
-    #     query1 = self.query1.where("price", QueryOperation.IS_LESS_THAN, fields=90)
-    #     query2 = self.query2.where("discount", QueryOperation.INCLUDES, fields=[20, 45])
-    #     query = self.query.and_query(query1, query2)
-    #     logging.info(query.query_params)
-    #     self.assertEqual({'query': '{"$and": [{"price": {"$lt": 90}}, {"discount": {"$in": [20, 45]}}]}'},
-    #                      query.query_params)
-    #
-    # def test_functional_or_in_query(self):
-    #     query1 = self.query.where("price", QueryOperation.IS_LESS_THAN, fields=90)
-    #     query2 = self.query.where("discount", QueryOperation.INCLUDES, fields=[20, 45])
-    #     query = self.query.or_query(query1, query2)
-    #     logging.info(query.query_params)
-    #     self.assertEqual({'query': '{"$or": [{"price": {"$lt": 90}, "discount": {"$in": [20, 45]}}]}'},
-    #                      query.query_params)
-    #
-    # def test_functional_or_in_query_type_common_in_query(self):
-    #     query1 = self.query.where("price", QueryOperation.IS_LESS_THAN, fields=90)
-    #     query2 = self.query.where("discount", QueryOperation.INCLUDES, fields=[20, 45])
-    #     query = self.query.query_operator(QueryType.OR, query1, query2)
-    #     logging.info(query.query_params)
-    #     self.assertEqual({'query': '{"$or": [{"price": {"$lt": 90}, "discount": {"$in": [20, 45]}}]}'},
-    #                      query.query_params)
-    #
-    # def test_functional_and_in_query_type_common_in_query(self):
-    #     query1 = self.query.where("price", QueryOperation.IS_LESS_THAN, fields=90)
-    #     query2 = self.query.where("discount", QueryOperation.INCLUDES, fields=[20, 45])
-    #     query = self.query.query_operator(QueryType.AND, query1, query2)
-    #     logging.info(query.query_params)
-    #     self.assertEqual({'query': '{"$and": [{"price": {"$lt": 90}, "discount": {"$in": [20, 45]}}]}'},
-    #                      query.query_params)
-    #
-    # def test_functional_tag_function_in_query(self):
-    #     query = self.query.tags('title', 'location', 'room', 'description')
-    #     logging.info(query.query_params)
-    #     self.assertEqual({'tags': 'title,location,room,description'},
-    #                      query.query_params)
-    #
+    def test_functional_or_in_query_type_common_in_query(self):
+        query1 = self.query1.where("price", QueryOperation.IS_LESS_THAN, fields=90)
+        query2 = self.query2.where("discount", QueryOperation.INCLUDES, fields=[20, 45])
+        query = self.query.query_operator(QueryType.OR, query1, query2)
+        logging.info(query.query_params)
+        self.assertEqual({'query': '{"$or": [{"price": {"$lt": 90}}, {"discount": {"$in": [20, 45]}}]}'},
+                         query.query_params)
+
+    def test_functional_tag_function_in_query(self):
+        query = self.query.tags('title', 'location', 'room', 'description')
+        logging.info(query.query_params)
+        self.assertEqual({'tags': 'title,location,room,description'},
+                         query.query_params)
+
     def test_functional_search_function_in_query(self):
         query = self.query.search('searching_tag')
         logging.info(query.query_params)
         self.assertEqual({'typeahead': 'searching_tag'},
                          query.query_params)
-    #
-    # def test_functional_search_function_where_in_query(self):
-    #     query1 = self.query.where("title", QueryOperation.EQUALS, "Apple Inc")
-    #     logging.info(self.query.query_params)
-    #     self.query.where_in("brand", query1)
-    #     self.assertEqual({'typeahead': 'searching_tag'},
-    #                      self.query.query_params)
-    #
-    # def test_functional_tags_function_query(self):
-    #     result = self.query.tags('black', 'gold', 'silver').find()
-    #     logging.info(self.query.query_params)
-    #     self.assertEqual({'typeahead': 'searching_tag'}, self.query.query_params)
-    #
-    # def test_functional_search_function_query(self):
-    #     result = self.query.search('search_contents').locale('en-us').find()
-    #     logging.info(self.query.query_params)
-    #     self.assertEqual({'typeahead': 'searching_tag'}, self.query.query_params)
-    #
-    # def test_functional_where_in_function_query(self):
-    #     query_limit = self.query.limit(4)
-    #     result = self.query.where_in('title', query_limit).find()
-    #     logging.info(self.query.query_params)
-    #     self.assertEqual({'typeahead': 'searching_tag'}, self.query.query_params)
-    #
-    # def test_functional_where_not_in_function_query(self):
-    #     query_limit = self.query.limit(4)
-    #     self.query.where_not_in('title', query_limit).find()
-    #     logging.info(self.query.query_params)
-    #     self.assertEqual({'typeahead': 'searching_tag'}, self.query.query_params)
+
+    def test_functional_search_function_where_in_query(self):
+        query1 = self.query.where("title", QueryOperation.EQUALS, "Apple Inc")
+        self.query.where_in("brand", query1)
+        self.assertEqual({'query': {'brand': {'$in_query': {'title': 'Apple Inc'}}}},
+                         self.query.query_params)
+
+    def test_functional_tags_function_query(self):
+        tags = self.query.tags('black', 'gold', 'silver')
+        logging.info(tags.query_params)
+        self.assertEqual({'tags': 'black,gold,silver'}, tags.query_params)
+
+    def test_functional_search_function_query(self):
+        params = self.query.search('search_contents').locale('en-us')
+        logging.info(params.query_params)
+        self.assertEqual({'typeahead': 'search_contents'}, params.query_params)
+
+    def test_functional_where_in_function_query_limit(self):
+        query_limit = self.query3.where('title', QueryOperation.EQUALS, fields='Apple Inc.')
+        self.query.where_in('brand', query_limit)
+        logging.info(self.query.query_params)
+        self.assertEqual({'query': {'brand': {'$in_query': {'title': 'Apple Inc.'}}}}, self.query.query_params)
+
+    def test_functional_where_not_in_function_query(self):
+        query_limit = self.query3.where('title', QueryOperation.EQUALS, fields='Apple Inc.')
+        self.query.where_not_in('brand', query_limit)
+        logging.info(self.query.query_params)
+        self.assertEqual({'query': {'brand': {'$nin_query': {'title': 'Apple Inc.'}}}}, self.query.query_params)
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestQuery)

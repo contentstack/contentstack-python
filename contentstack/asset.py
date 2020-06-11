@@ -1,6 +1,6 @@
-"""
-Assets refer to all the media files (images, videos, PDFs, audio files,
+r"""Assets refer to all the media files (images, videos, PDFs, audio files,
 and so on) uploaded in your Contentstack repository for future use.
+
 These files can be attached and used in multiple entries.
 """
 
@@ -11,11 +11,7 @@ from urllib import parse
 
 
 class Asset:
-    """
-    Asset refer to all the media files (images, videos, PDFs, audio files,
-    and so on) uploaded in your Contentstack repository for future use.
-    These files can be attached and used in multiple entries.
-    """
+    r"""Asset refer to all the media files (images, videos, PDFs, audio files, and so on)."""
 
     def __init__(self, http_instance, uid=None):
         self.http_instance = http_instance
@@ -29,10 +25,11 @@ class Asset:
             # self.http_instance.headers.pop('environment')
 
     def environment(self, environment):
-        """
-        Provide the name of the environment if you wish to retrieve the assets published
+        r"""Provide the name of the environment if you wish to retrieve the assets published
         in a particular environment.
+
         :param environment {str} - name of the environment
+
         :return: Asset, so we can chain the call
 
         -------------------------------
@@ -49,8 +46,8 @@ class Asset:
         return self
 
     def remove_environment(self):
-        """
-        Removes environment from the request params
+        r"""Removes environment from the request params
+
         :return: Asset, so we can chain the call
 
         -------------------------------
@@ -68,9 +65,12 @@ class Asset:
         return self
 
     def params(self, key, value):
-        """params is used to pass additional parameters to the asset query
+        r"""params is used to pass additional parameters to the asset query
+
         :param key: key of the query parameter
+
         :param value: value of the query parameter
+
         :return: Asset, so we can chain the call
 
         -----------------------------
@@ -88,8 +88,8 @@ class Asset:
         return self
 
     def relative_urls(self):
-        """
-        Include the relative URLs of the assets in the response.
+        r"""Include the relative URLs of the assets in the response.
+
         :return: Asset, so we can chain the call
 
         ----------------------------
@@ -105,9 +105,9 @@ class Asset:
         return self
 
     def include_dimension(self):
-        """
-        Include the dimensions (height and width) of the image in the response.
+        r"""Include the dimensions (height and width) of the image in the response.
         Supported image types: JPG, GIF, PNG, WebP, BMP, TIFF, SVG, and PSD.
+
         :return: Asset, so we can chain the call
 
         ----------------------------
@@ -123,8 +123,8 @@ class Asset:
         return self
 
     def fetch(self):
-        """
-        This call fetches the latest version of a specific asset of a particular stack.
+        r"""This call fetches the latest version of a specific asset of a particular stack.
+
         :return: json response of asset
 
         -----------------------------
