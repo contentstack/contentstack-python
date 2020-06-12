@@ -2,6 +2,8 @@
 
 ![Coverage](https://raw.githubusercontent.com/contentstack/contentstack-python/c13bfddf10391924ed2323fdacf1e8914c7c857c/coverage.svg) ![pip](https://img.shields.io/badge/pip-1.0.0-blue?style=plastic) [![GitHub license](https://img.shields.io/github/license/contentstack/contentstack-python?style=plastic)](https://github.com/contentstack/contentstack-python/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/contentstack/contentstack-python?style=plastic)](https://github.com/contentstack/contentstack-python/stargazers)
 
+![Python package](https://github.com/contentstack/contentstack-python/workflows/Python%20package/badge.svg?branch=master)
+
 ## Python SDK for Contentstack
 
 Contentstack is a headless CMS with an API-first approach. It is a CMS that developers can use to build powerful cross-platform applications in their favorite languages. Build your application frontend, and Contentstack will take care of the rest. [Read More](https://www.contentstack.com/).
