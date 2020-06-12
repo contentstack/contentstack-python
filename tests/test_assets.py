@@ -4,6 +4,8 @@ import contentstack
 from contentstack.basequery import QueryOperation
 import HtmlTestRunner
 
+global asset_uid
+
 
 class TestAsset(unittest.TestCase):
 
@@ -11,27 +13,33 @@ class TestAsset(unittest.TestCase):
         self.api_key = credentials.keys['api_key']
         self.delivery_token = credentials.keys['delivery_token']
         self.environment = credentials.keys['environment']
-        asset_uid = credentials.keys['asset_uid']
         self.stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment)
-        self.asset = self.stack.asset(uid=asset_uid)
         self.asset_query = self.stack.asset_query()
 
     def test_01_assets_query_initial_run(self):
         result = self.asset_query.find()
         if result is not None:
+            global asset_uid
+            asset_uid = result['assets'][7]['uid']
             self.assertEqual(8, len(result['assets']))
 
     def test_02_asset_method(self):
+        global asset_uid
+        self.asset = self.stack.asset(uid=asset_uid)
         result = self.asset.relative_urls().include_dimension().fetch()
         if result is not None:
             self.assertEqual({'height': 171, 'width': 294}, result['asset']['dimension'])
 
     def test_03_asset_uid(self):
+        global asset_uid
+        self.asset = self.stack.asset(uid=asset_uid)
         result = self.asset.fetch()
         if result is not None:
             self.assertEqual(credentials.keys['asset_uid'], result['asset']['uid'])
 
     def test_04_asset_filetype(self):
+        global asset_uid
+        self.asset = self.stack.asset(uid=asset_uid)
         result = self.asset.fetch()
         if result is not None:
             self.assertEqual('image/jpeg', result['asset']['content_type'])
