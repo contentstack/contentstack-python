@@ -1,5 +1,27 @@
 [![Contentstack](https://www.contentstack.com/docs/static/images/contentstack.png)](https://www.contentstack.com/)
 
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="99" height="20">
+    <linearGradient id="b" x2="0" y2="100%">
+        <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+        <stop offset="1" stop-opacity=".1"/>
+    </linearGradient>
+    <mask id="a">
+        <rect width="99" height="20" rx="3" fill="#fff"/>
+    </mask>
+    <g mask="url(#a)">
+        <path fill="#555" d="M0 0h63v20H0z"/>
+        <path fill="#a4a61d" d="M63 0h36v20H63z"/>
+        <path fill="url(#b)" d="M0 0h99v20H0z"/>
+    </g>
+    <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="11">
+        <text x="31.5" y="15" fill="#010101" fill-opacity=".3">coverage</text>
+        <text x="31.5" y="14">coverage</text>
+        <text x="80" y="15" fill="#010101" fill-opacity=".3">78%</text>
+        <text x="80" y="14">78%</text>
+    </g>
+</svg>
+
 ## Python SDK for Contentstack
 
 Contentstack is a headless CMS with an API-first approach. It is a CMS that developers can use to build powerful cross-platform applications in their favorite languages. Build your application frontend, and Contentstack will take care of the rest. [Read More](https://www.contentstack.com/).
@@ -98,9 +120,7 @@ You can use the Image Delivery API functions in this SDK as well. Here are a few
 
 ```
 image = stack.image_transform(url, {'quality': 100}).get_url()
-
 image = stack.image_transform(url, {'width': 100, 'height': 100}).get_url()
-
 image = stack.image_transform(url, {'auto': 'webp'}).get_url()
 ```
 
