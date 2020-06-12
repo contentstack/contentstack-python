@@ -1,26 +1,6 @@
 [![Contentstack](https://www.contentstack.com/docs/static/images/contentstack.png)](https://www.contentstack.com/)
 
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="99" height="20">
-    <linearGradient id="b" x2="0" y2="100%">
-        <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
-        <stop offset="1" stop-opacity=".1"/>
-    </linearGradient>
-    <mask id="a">
-        <rect width="99" height="20" rx="3" fill="#fff"/>
-    </mask>
-    <g mask="url(#a)">
-        <path fill="#555" d="M0 0h63v20H0z"/>
-        <path fill="#a4a61d" d="M63 0h36v20H63z"/>
-        <path fill="url(#b)" d="M0 0h99v20H0z"/>
-    </g>
-    <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="11">
-        <text x="31.5" y="15" fill="#010101" fill-opacity=".3">coverage</text>
-        <text x="31.5" y="14">coverage</text>
-        <text x="80" y="15" fill="#010101" fill-opacity=".3">78%</text>
-        <text x="80" y="14">78%</text>
-    </g>
-</svg>
+![Coverage](https://raw.githubusercontent.com/contentstack/contentstack-python/c13bfddf10391924ed2323fdacf1e8914c7c857c/coverage.svg) ![pip](https://img.shields.io/badge/pip-1.0.0-blue?style=plastic) [![GitHub license](https://img.shields.io/github/license/contentstack/contentstack-python?style=plastic)](https://github.com/contentstack/contentstack-python/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/contentstack/contentstack-python?style=plastic)](https://github.com/contentstack/contentstack-python/stargazers)
 
 ## Python SDK for Contentstack
 
@@ -85,21 +65,18 @@ To get the API credentials mentioned above, log in to your Contentstack account 
 
 To retrieve a single entry from a content type use the code snippet given below:
 
-```
-stack = contentstack.Stack('api_key','delivery_token','environment')
-content_type = stack.content_type("content_type_uid")
-entry = content_type.entry("entry_uid")
-result = entry.fetch()
-```
+	stack = contentstack.Stack('api_key','delivery_token','environment')
+	content_type = stack.content_type("content_type_uid")
+	entry = content_type.entry("entry_uid")
+	result = entry.fetch()
+
 ##### Get Multiple Entries
 
 To retrieve multiple entries of a particular content type, use the code snippet given below:
 
-```
-stack = contentstack.Stack('api_key','delivery_token','environment')
-query = stack.content_type("content_type_uid").query()
-result = query.find()
-```
+	stack = contentstack.Stack('api_key','delivery_token','environment')
+	query = stack.content_type("content_type_uid").query()
+	result = query.find()
 
 
 ### Advanced Queries
@@ -118,11 +95,9 @@ For example, if you want to crop an image (with width as 300 and height as 400),
 
 You can use the Image Delivery API functions in this SDK as well. Here are a few examples of its usage in the SDK.
 
-```
-image = stack.image_transform(url, {'quality': 100}).get_url()
-image = stack.image_transform(url, {'width': 100, 'height': 100}).get_url()
-image = stack.image_transform(url, {'auto': 'webp'}).get_url()
-```
+	image = stack.image_transform(url, {'quality': 100}).get_url()
+	image = stack.image_transform(url, {'width': 100, 'height': 100}).get_url()
+	image = stack.image_transform(url, {'auto': 'webp'}).get_url()
 
 ### Using the Sync API with Python SDK
 
