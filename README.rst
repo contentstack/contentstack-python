@@ -58,7 +58,7 @@ Contentstack Python SDK: 5-minute Quickstart
 
 **Initializing your SDK**
 
-    To initialize the SDK, specify application  API key, access token, and environment name of the stack as shown in the snippet given below (config is optional):
+    To initialize the SDK, specify application  API key, access token, and environment name of the stack as shown in the snippet given below:
 
     ```stack = contentstack.Stack('api_key', 'access_token', 'environment')```
 

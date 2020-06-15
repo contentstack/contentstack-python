@@ -2,7 +2,6 @@
 
 ![Python package](https://github.com/contentstack/contentstack-python/workflows/Python%20package/badge.svg?branch=1.0.0)  ![Coverage](https://raw.githubusercontent.com/contentstack/contentstack-python/c13bfddf10391924ed2323fdacf1e8914c7c857c/coverage.svg) ![pip](https://img.shields.io/badge/pip-1.0.0-blue?style=plastic) [![GitHub license](https://img.shields.io/github/license/contentstack/contentstack-python?style=plastic)](https://github.com/contentstack/contentstack-python/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/contentstack/contentstack-python?style=plastic)](https://github.com/contentstack/contentstack-python/stargazers)
 
-
 ## Python SDK for Contentstack
 
 Contentstack is a headless CMS with an API-first approach. It is a CMS that developers can use to build powerful cross-platform applications in their favorite languages. Build your application frontend, and Contentstack will take care of the rest. [Read More](https://www.contentstack.com/).
@@ -17,13 +16,11 @@ You will need python 3 installed on your machine. You can install it from [here]
 
 To use the Contentstack Python SDK to your existing project, perform the steps given below:
 
-**Install contentstack pip**
+### Install contentstack pip
 
-```
-pip install contentstack
-```
+	pip install contentstack
+
 This is the preferred method to install contentstack, as it will always install the most recent stable release. If you don't have [pip](https://pip.pypa.io/) installed, this [Python installation guide](http://docs.python-guide.org/en/latest/starting/installation/) can guide you through the process
-
 
 ### Key Concepts for using Contentstack
 
@@ -47,20 +44,15 @@ Assets refer to all the media files (images, videos, PDFs, audio files, and so o
 
 A publishing environment corresponds to one or more deployment servers or a content delivery destination where the entries need to be published. Learn how to work with [Environments](https://www.contentstack.com/docs/developers/set-up-environments).
 
-
-
 ### Contentstack Python SDK: 5-minute Quickstart
 
 #### Initializing your SDK
 
-To initialize the SDK, specify application  API key, access token, and environment name of the stack as shown in the snippet given below (config is optional):
+To initialize the SDK, specify application  API key, access token, and environment name of the stack as shown in the snippet given below, You can provide optional parameters for config:
 
     stack = contentstack.Stack('api_key','delivery_token','environment')
 
-
 To get the API credentials mentioned above, log in to your Contentstack account and then in your top panel navigation, go to Settings &gt; Stack to view the API Key and Access Token.
-
-
 
 #### Querying content from your stack
 
