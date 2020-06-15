@@ -2,22 +2,24 @@
 CHANGELOG
 =========
 
-*Date: 18-Jun-2020 - initial release*
+*Date: 16-Jun-2020 - initial release*
 
 **v1.0.0**
 ============
 
 - **Stack**
+    - Initialisation of stack has been modified
+    - External config support moved to stack initialisation optional paramters
     - Added support for whereIn(String key) and whereNotIn(String key) methods in Query
 
 - **Assets**
-    - changes for where function that accepts QueryOptions.
+    - changes incorporated in Asset class.
 
 - **Entry**
-    - changes for where function that accepts QueryOptions.
+    - changes incorporated in the entry class.
 
 - **Query**
-    - changes for where function that accepts QueryOptions.
+    - Changes incorporated in the Query class.
 
 
 -----------------------------
