@@ -96,19 +96,9 @@ You can use the Image Delivery API functions in this SDK as well. Here are a few
 
 The Sync API takes care of syncing your Contentstack data with your application and ensures that the data is always up-to-date by providing delta updates. Contentstack’s Python SDK supports Sync API, which you can use to build powerful applications.
 
-```
-#set the image quality to 100
-image_params = {'quality': 100}
-imageUrl = stack.image_transform(image_url, **image_params);
-
-#resize the image by specifying width and height
-image_params = {'width': 100, 'height': 100}
-imageUrl = stack.image_transform(imageUrl, **image_params);
-
-#enable auto optimization for the image
-image_params = {'auto': 'webp'}
-imageUrl = stack.image_transform(imageUrl, **imageParams);
-```
+	url = stack.image_transform(image_url, {'quality': 100})
+	url = stack.image_transform(imageUrl, {'width': 100, 'height': 100})
+	url = stack.image_transform(imageUrl, {'auto': 'webp'})
 
 Read through to understand how to use the Sync API with Contentstack Python SDK.
 
