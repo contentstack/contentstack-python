@@ -12,7 +12,7 @@ CHANGELOG
     - External config support moved to stack initialisation optional paramters
     - Added support for whereIn(String key) and whereNotIn(String key) methods in Query
 
-- **Assets**
+- **Asset**
     - changes incorporated in Asset class.
 
 - **Entry**
