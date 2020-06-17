@@ -1,4 +1,3 @@
-
 CHANGELOG
 =============
 
@@ -29,3 +28,10 @@ CHANGELOG
 **v0.0.1**
 ============
 - Beta release for the contentstack-python SDK for Content Delivery API
+=======
+## Version 0.1.0
+##### November-18, 2019 -beta release
+
+### Initial release for the contentstack-python-sdk for Content Delivery API
+
+-----------------------------

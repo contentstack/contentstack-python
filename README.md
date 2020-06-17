@@ -74,7 +74,7 @@ To retrieve multiple entries of a particular content type, use the code snippet 
 
 ### Advanced Queries
 
-You can query for content types, entries, assets and more using our Java API Reference.
+You can query for content types, entries, assets and more using our Python API Reference.
 
 [Python API Reference Doc](https://www.contentstack.com/docs/platforms/python/api-reference/)
 
@@ -96,6 +96,20 @@ You can use the Image Delivery API functions in this SDK as well. Here are a few
 
 The Sync API takes care of syncing your Contentstack data with your application and ensures that the data is always up-to-date by providing delta updates. Contentstack’s Python SDK supports Sync API, which you can use to build powerful applications.
 
+```
+#set the image quality to 100
+image_params = {'quality': 100}
+imageUrl = stack.image_transform(image_url, **image_params);
+
+#resize the image by specifying width and height
+image_params = {'width': 100, 'height': 100}
+imageUrl = stack.image_transform(imageUrl, **image_params);
+
+#enable auto optimization for the image
+image_params = {'auto': 'webp'}
+imageUrl = stack.image_transform(imageUrl, **imageParams);
+```
+
 Read through to understand how to use the Sync API with Contentstack Python SDK.
 
 [Using the Sync API with Python SDK](https://www.contentstack.com/docs/developers/python/using-the-sync-api-with-python-sdk)
@@ -115,3 +129,5 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+- [Content Delivery API Docs](https://contentstack.com/docs/apis/content-delivery-api/)
