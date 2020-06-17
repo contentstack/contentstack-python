@@ -35,7 +35,7 @@ class TestAsset(unittest.TestCase):
         self.asset = self.stack.asset(uid=asset_uid)
         result = self.asset.fetch()
         if result is not None:
-            self.assertEqual(credentials.keys['asset_uid'], result['asset']['uid'])
+            self.assertEqual(asset_uid, result['asset']['uid'])
 
     def test_04_asset_filetype(self):
         global asset_uid
