@@ -2,7 +2,7 @@
 CHANGELOG
 =========
 
-*Date: 16-Jun-2020 - initial release*
+*Date: 17-Jun-2020 - initial release*
 
 **v1.0.0**
 ============
