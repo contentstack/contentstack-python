@@ -1,8 +1,0 @@
- * 1.0.0
-   - Compatibility fixes for Python 3.6
-   - Relative imports fixes
-   - Breaking changes:
-       - Stack Initialisation formate update
-       - config class removed, config support added to the stack initialication.
-       - models removed
-       - code refactored to improve performance
