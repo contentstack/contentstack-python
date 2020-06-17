@@ -1,174 +1,108 @@
-import logging
+from tests import credentials
 import unittest
-from contentstack import Asset
-from contentstack import Stack
+import contentstack
+from contentstack.basequery import QueryOperation
+import HtmlTestRunner
 
+global asset_uid
 
 
 class TestAsset(unittest.TestCase):
 
-    log = logging.getLogger(__name__)
-
     def setUp(self):
+        self.api_key = credentials.keys['api_key']
+        self.delivery_token = credentials.keys['delivery_token']
+        self.environment = credentials.keys['environment']
+        self.stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment)
+        self.asset_query = self.stack.asset_query()
 
-        # api_key: str = 'blt20962a819b57e233'
-        # access_token: str = 'blt01638c90cc28fb6f'
-        # env_prod: str = 'production'
-        # config = Config()
-        # config.region = ContentstackRegion.US
-        # Credentials taken from __init__() class
-
-        from tests.creds import stack_keys
-        self.credentials = stack_keys()
-        api_key = self.credentials['api_key']
-        access_token = self.credentials['access_token']
-        env = self.credentials['environment_prod']
-        self.asset_uid: str = 'blt91af1e5af9c3639f'
-        self.__stack = Stack(api_key=api_key, access_token=access_token, environment=env)
-
-    def test_single_asset(self):
-        _asset: Asset = self.__stack.asset(self.asset_uid)
-        _asset.relative_urls()
-        _asset.include_dimension()
-        result: Asset = _asset.fetch()
+    def test_01_assets_query_initial_run(self):
+        result = self.asset_query.find()
         if result is not None:
-            self.assertEqual(dict, type(result.dimension))
-            logging.debug(result)
+            global asset_uid
+            asset_uid = result['assets'][7]['uid']
+            self.assertEqual(8, len(result['assets']))
 
-    def test_asset_relative_urls(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        _asset.relative_urls()
-        result = _asset.fetch()
+    def test_02_asset_method(self):
+        global asset_uid
+        self.asset = self.stack.asset(uid=asset_uid)
+        result = self.asset.relative_urls().include_dimension().fetch()
         if result is not None:
-            self.assertNotIn('images.contentstack.io/', result.url)
-            logging.debug(result)
-        else:
-            from contentstack import Error
-            raise Exception(Error.error_message)
+            self.assertEqual({'height': 171, 'width': 294}, result['asset']['dimension'])
 
-    def test_asset_count(self):
-        _asset = self.__stack.asset()
-        _asset.include_count()
-        result: Asset = _asset.fetch_all()
-        if result is not None and isinstance(result, Asset):
-            self.assertEqual(37, result.count)
-            logging.debug(result)
-
-    def test_asset_include_dimension(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        _asset.include_dimension()
-        result: Asset = _asset.fetch()
+    def test_03_asset_uid(self):
+        global asset_uid
+        self.asset = self.stack.asset(uid=asset_uid)
+        result = self.asset.fetch()
         if result is not None:
-            self.assertEqual(dict, type(result.dimension))
-            logging.debug('tuple dimension is %s ' + _asset.dimension.__str__())
+            self.assertEqual(asset_uid, result['asset']['uid'])
 
-    def test_asset_check_uid_is_valid(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
+    def test_04_asset_filetype(self):
+        global asset_uid
+        self.asset = self.stack.asset(uid=asset_uid)
+        result = self.asset.fetch()
         if result is not None:
-            self.assertEqual(self.asset_uid, result.uid)
+            self.assertEqual('image/jpeg', result['asset']['content_type'])
 
-    def test_asset_check_filetype(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
+    ############################################
+    # ==== Asset Query ====
+    ############################################
+
+    def test_05_assets_query(self):
+        result = self.asset_query.find()
         if result is not None:
-            self.assertEqual('image/png', result.filetype)
+            self.assertEqual(8, len(result['assets']))
 
-    def test_asset_file_size(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
+    def test_06_assets_base_query_where_exclude_title(self):
+        query = self.asset_query.where('title', QueryOperation.EXCLUDES, fields=['images_(1).jpg'])
+        result = query.find()
         if result is not None:
-            self.assertEqual('63430', result.filesize)
+            self.assertEqual(7, len(result['assets']))
 
-    def test_asset_filename(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
+    def test_07_assets_base_query_where_equals_str(self):
+        query = self.asset_query.where('title', QueryOperation.EQUALS, fields='images_(1).jpg')
+        result = query.find()
         if result is not None:
-            self.assertEqual('.png', result.filename[-4:])
+            self.assertEqual(1, len(result['assets']))
 
-    def test_asset_url(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
+    def test_08_assets_base_query_where_exclude(self):
+        query = self.asset_query.where('file_size', QueryOperation.EXCLUDES, fields=[5990, 3200])
+        result = query.find()
         if result is not None:
-            self.assertEqual('.png', result.url[-4:])
+            self.assertEqual(6, len(result['assets']))
 
-    def test_asset_to_json(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
-        if result is not None:
-            self.assertEqual(dict, type(result.json))
+    def test_09_assets_base_query_where_includes(self):
+        query = self.asset_query.where('title', QueryOperation.INCLUDES,
+                                       fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
+        self.assertEqual({'title': {'$in': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
 
-    def test_asset_created_at(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
-        if result is not None:
-            sallie: str = result.created_at
-            var_shailesh, fileid = sallie.split('T')
-            self.assertEqual('2017-01-10', var_shailesh)
+    def test_10_assets_base_query_where_is_less_than(self):
+        query = self.asset_query.where('title', QueryOperation.IS_LESS_THAN,
+                                       fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
+        self.assertEqual({'title': {'$lt': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
 
-    def test_asset_created_by(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
-        if result is not None:
-            sallie: str = result.created_by
-            var_shailesh, fileid = sallie.split('_')
-            self.assertEqual('sys', var_shailesh)
+    def test_11_assets_base_query_where_is_less_than_or_equal(self):
+        query = self.asset_query.where('title', QueryOperation.IS_LESS_THAN_OR_EQUAL,
+                                       fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
+        self.assertEqual({'title': {'$lte': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
 
-    def test_asset_updated_at(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result: Asset = _asset.fetch()
-        if result is not None:
-            if isinstance(result, Asset):
-                sallie: str = result.updated_at
-                var_shailesh, fileid = sallie.split('T')
-                self.assertEqual('2017-01-10', var_shailesh)
-            else:
-                self.assertFalse(True)
+    def test_12_assets_base_query_where_is_greater_than(self):
+        query = self.asset_query.where('title', QueryOperation.IS_GREATER_THAN,
+                                       fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
+        self.assertEqual({'title': {'$gt': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
 
-    def test_asset_updated_by(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result: Asset = _asset.fetch()
-        if result is not None:
-            if isinstance(result, Asset):
-                sallie: str = result.updated_by
-                var_shailesh, fileid = sallie.split('_')
-                self.assertEqual('sys', var_shailesh)
-            else:
-                self.assertFalse(True)
+    def test_13_assets_base_query_where_is_greater_than_or_equal(self):
+        query = self.asset_query.where('title', QueryOperation.IS_GREATER_THAN_OR_EQUAL,
+                                       fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
+        self.assertEqual({'title': {'$gte': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
 
-    def test_asset_tags(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
-        if result is not None:
-            if isinstance(result, Asset):
-                self.assertEqual(list, type(result.tags))
-
-    def test_asset_version_returns_with_type(self):
-        _asset = self.__stack.asset(self.asset_uid)
-        result = _asset.fetch()
-        if result is not None:
-            if isinstance(result, Asset):
-                self.assertEqual(int, type(result.version))
-
-    def test_assets(self):
-        _asset = self.__stack.asset()
-        result = _asset.fetch_all()
-        if result is not None:
-            self.assertEqual(list, type(result))
-
-    def test_asset_library_check(self):
-        _asset_library = self.__stack.asset()
-        result = _asset_library.fetch_all()
-        if result is not None:
-            self.assertEqual(list, type(result))
-
-    def test_asset_library_example(self):
-        from contentstack.asset import OrderType
-        _asset_library = self.__stack.asset()
-        _asset_library.sort('title', OrderType.DESC)
-        result = _asset_library.fetch_all()
-        if result is not None:
-            self.assertEqual(list, type(result))
+    def test_14_assets_base_query_where_matches(self):
+        query = self.asset_query.where('title', QueryOperation.MATCHES,
+                                       fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
+        self.assertEqual({'title': {'$regex': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}},
+                         query.parameters)
 
 
-
+suite = unittest.TestLoader().loadTestsFromTestCase(TestAsset)
+runner = HtmlTestRunner.HTMLTestRunner(combine_reports=True, add_timestamp=False)
+runner.run(suite)
