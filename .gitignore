@@ -5,7 +5,8 @@ __pycache__/
 
 # C extensions
 *.so
-
+/reports
+/tests/reports
 # Distribution / packaging
 .Python
 build/
@@ -26,6 +27,10 @@ wheels/
 MANIFEST
 *.DS_Store
 *.DS_Store?
+.pytest_cache
+.idea
+.vscode
+.report.log
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
