@@ -24,6 +24,7 @@ class Entry(EntryQueryable):
 
     def __init__(self, http_instance, content_type_uid, entry_uid):
         super().__init__()
+        EntryQueryable.__init__(self)
         self.entry_param = {}
         self.http_instance = http_instance
         self.content_type_id = content_type_uid
@@ -117,10 +118,11 @@ class Entry(EntryQueryable):
             >>> result = entry.fetch()
         -------------------------------
         """
-        if len(self.entry_queryable_param) > 0:
-            self.entry_param.update(self.entry_queryable_param)
+
         if 'environment' in self.http_instance.headers:
             self.entry_param['environment'] = self.http_instance.headers['environment']
+        if len(self.entry_queryable_param) > 0:
+            self.entry_param.update(self.entry_queryable_param)
         encoded_string = parse.urlencode(self.entry_param, doseq=True)
         url = '{}?{}'.format(self.base_url, encoded_string)
         return self.http_instance.get(url)

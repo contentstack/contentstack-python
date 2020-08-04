@@ -3,7 +3,6 @@ import unittest
 from tests import credentials
 import HtmlTestRunner
 import contentstack
-from contentstack.entryqueryable import Include
 
 global entry_uid
 
@@ -59,38 +58,35 @@ class TestEntry(unittest.TestCase):
         global entry_uid
         entry = self.stack.content_type('faq').entry(entry_uid).only('field_uid')
         entry.fetch()
-        self.assertEqual({'only[BASE][]': 'field_uid', 'environment': 'development'}, entry.entry_param)
+        self.assertEqual({'environment': 'development', 'only[BASE][]': ['field_uid']}, entry.entry_param)
 
     def test_08_entry_base_excepts(self):
         global entry_uid
         entry = self.stack.content_type('faq').entry(entry_uid).excepts('field_uid')
         entry.fetch()
-        self.assertEqual({'except[BASE][]': 'field_uid', 'environment': 'development'}, entry.entry_param)
-
-    def test_09_entry_base_include_reference_default(self):
-        global entry_uid
-        entry = self.stack.content_type('faq').entry(entry_uid).include_reference(Include.DEFAULT,
-                                                                                  'reference_field_uid')
-        entry.fetch()
-        self.assertEqual({'include[]': 'reference_field_uid', 'environment': 'development'}, entry.entry_param)
+        self.assertEqual({'environment': 'development', 'except[BASE][]': ['field_uid']}, entry.entry_param)
 
     def test_10_entry_base_include_reference_only(self):
         global entry_uid
-        entry = self.stack.content_type('faq').entry(entry_uid) \
-            .include_reference(Include.ONLY, 'reference_field_uid',
-                               field_uid=['field1', 'field2', 'field3'])
+        entry = self.stack.content_type('faq').entry(entry_uid).only('field1')
         entry.fetch()
-        self.assertEqual({'only': {'reference_field_uid': ['field1', 'field2', 'field3']}},
-                         entry.entry_param['include[]'])
+        self.assertEqual({'environment': 'development', 'only[BASE][]': ['field1']},
+                         entry.entry_param)
 
     def test_11_entry_base_include_reference_excepts(self):
         global entry_uid
-        entry = self.stack.content_type('faq').entry(entry_uid) \
-            .include_reference(Include.EXCEPT, 'reference_field_uid',
-                               field_uid=['field1', 'field2', 'field3'])
+        entry = self.stack.content_type('faq').entry(entry_uid).excepts('field1')
         entry.fetch()
-        self.assertEqual({'except': {'reference_field_uid': ['field1', 'field2', 'field3']}},
-                         entry.entry_param['include[]'])
+        self.assertEqual({'environment': 'development', 'except[BASE][]': ['field1']},
+                         entry.entry_param)
+
+    def test_12_entry_include_reference_github_issue(self):
+        stack_for_products = contentstack.Stack("blt02f7b45378b008ee", "cs5b69faf35efdebd91d08bcf4",
+                                                "production")
+        entry = stack_for_products.content_type('product').entry("blte63b2ff6f6414d8e") \
+            .include_reference(['categories', 'brand'])
+        response = entry.fetch()
+        print(response)
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestEntry)
