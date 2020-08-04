@@ -7,8 +7,6 @@ class EntryQueryable:
 
     def __init__(self):
         self.entry_queryable_param = {}
-        self.entry_include_array = []
-        self.entry_include_dict = {}
 
     def locale(self, locale: str):
         """
@@ -50,7 +48,7 @@ class EntryQueryable:
         """
         if field_uid is not None:
             if isinstance(field_uid, str):
-                self.entry_queryable_param['only[BASE][]'] = [field_uid]
+                self.entry_queryable_param['only[BASE][]'] = field_uid
             else:
                 raise KeyError("Invalid field_uid provided")
         return self
@@ -64,7 +62,7 @@ class EntryQueryable:
         """
         if field_uid is not None:
             if isinstance(field_uid, str):
-                self.entry_queryable_param['except[BASE][]'] = [field_uid]
+                self.entry_queryable_param['except[BASE][]'] = field_uid
             else:
                 raise KeyError("Invalid field_uid provided")
         return self
@@ -87,9 +85,7 @@ class EntryQueryable:
         Returns:
             self -- So you can chain this call.
         """
-        if field_uid is not None and isinstance(field_uid, str):
-            self.entry_queryable_param["include[]"] = [field_uid]
-        if field_uid is not None and isinstance(field_uid, list) and len(field_uid) > 0:
+        if field_uid is not None and isinstance(field_uid, (str, list)):
             self.entry_queryable_param["include[]"] = field_uid
         return self
 

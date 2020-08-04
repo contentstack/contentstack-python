@@ -13,14 +13,10 @@ except ImportError:
 with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
     long_description = readme.read()
 
-import setuptools
-with open("README.md", "r") as fh:
-    long_description = fh.read()
-
 setup(
     name="contentstack",
     keywords='contentstack-python',
-    version="1.0.0",
+    version="1.1.0",
     author="contentstack",
     author_email="mshaileshr@gmail.com",
     description="Contentstack is a headless CMS with an API-first approach.",
