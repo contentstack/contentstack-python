@@ -1,8 +1,10 @@
 import logging
 import unittest
-from tests import credentials
+
 import HtmlTestRunner
+
 import contentstack
+from tests import credentials
 
 global entry_uid
 
@@ -58,35 +60,35 @@ class TestEntry(unittest.TestCase):
         global entry_uid
         entry = self.stack.content_type('faq').entry(entry_uid).only('field_uid')
         entry.fetch()
-        self.assertEqual({'environment': 'development', 'only[BASE][]': ['field_uid']}, entry.entry_param)
+        self.assertEqual({'environment': 'development', 'only[BASE][]': 'field_uid'}, entry.entry_param)
 
     def test_08_entry_base_excepts(self):
         global entry_uid
         entry = self.stack.content_type('faq').entry(entry_uid).excepts('field_uid')
         entry.fetch()
-        self.assertEqual({'environment': 'development', 'except[BASE][]': ['field_uid']}, entry.entry_param)
+        self.assertEqual({'environment': 'development', 'except[BASE][]': 'field_uid'}, entry.entry_param)
 
     def test_10_entry_base_include_reference_only(self):
         global entry_uid
         entry = self.stack.content_type('faq').entry(entry_uid).only('field1')
         entry.fetch()
-        self.assertEqual({'environment': 'development', 'only[BASE][]': ['field1']},
+        self.assertEqual({'environment': 'development', 'only[BASE][]': 'field1'},
                          entry.entry_param)
 
     def test_11_entry_base_include_reference_excepts(self):
         global entry_uid
         entry = self.stack.content_type('faq').entry(entry_uid).excepts('field1')
         entry.fetch()
-        self.assertEqual({'environment': 'development', 'except[BASE][]': ['field1']},
+        self.assertEqual({'environment': 'development', 'except[BASE][]': 'field1'},
                          entry.entry_param)
 
     def test_12_entry_include_reference_github_issue(self):
-        stack_for_products = contentstack.Stack("blt02f7b45378b008ee", "cs5b69faf35efdebd91d08bcf4",
-                                                "production")
-        entry = stack_for_products.content_type('product').entry("blte63b2ff6f6414d8e") \
-            .include_reference(['categories', 'brand'])
-        response = entry.fetch()
-        print(response)
+        stack_for_products = contentstack.Stack("blt02f7b45378b008ee", "cs5b69faf35efdebd91d08bcf4", "production")
+        github_entry = stack_for_products.content_type('product').entry("blte63b2ff6f6414d8e").include_reference(
+            ["categories",
+             "brand"])
+        response = github_entry.fetch()
+        # print(response)
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestEntry)
