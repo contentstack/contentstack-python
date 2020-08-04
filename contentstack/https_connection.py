@@ -44,6 +44,7 @@ def user_agents():
 # "pylint doesn't know what's best" - use your own judgement but as a rule.
 class HTTPSConnection:
     """Make Https Request to fetch the result as per requested url"""
+
     def __init__(self, endpoint, headers):
         if None not in (endpoint, headers):
             self.payload = None
@@ -76,10 +77,9 @@ class HTTPSConnection:
         """Facilitate to update timeout for the https request"""
         self.default_timeout = timeout
 
-    def get_complete_url(self, base_url: str, params:dict):
+    def get_complete_url(self, base_url: str, params: dict):
         if 'query' in params:
             params["query"] = json.dumps(params["query"])
         query = urlparse.urlencode(params)
         url = '{}&{}'.format(base_url, query)
         return url
-
