@@ -65,7 +65,7 @@ class TestAsset(unittest.TestCase):
         query = self.asset_query.where('title', QueryOperation.EQUALS, fields='images_(1).jpg')
         result = query.find()
         if result is not None:
-            self.assertEqual(1, len(result['assets']))
+            self.assertEqual("images_(1).jpg", result['assets'][0]['filename'])
 
     def test_08_assets_base_query_where_exclude(self):
         query = self.asset_query.where('file_size', QueryOperation.EXCLUDES, fields=[5990, 3200])
