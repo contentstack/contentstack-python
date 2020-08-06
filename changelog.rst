@@ -6,7 +6,7 @@ CHANGELOG
 
 **v1.1.0**
 ============
-- **EntryQueyable**
+- **EntryQueryable**
     - updated include_reference function.
 
 -----------------------------

@@ -3,8 +3,9 @@ The Get a single entry request fetches a particular entry of a content type.
 API Reference: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#single-entry
 """
 
-from contentstack.entryqueryable import EntryQueryable
 from urllib import parse
+
+from contentstack.entryqueryable import EntryQueryable
 
 
 # ************* Module stack **************
@@ -101,7 +102,8 @@ class Entry(EntryQueryable):
     def __get_base_url(self):
         if None in (self.http_instance, self.content_type_id, self.entry_uid):
             raise KeyError('Provide valid http_instance, content_type_uid or entry_uid')
-        url = '{}/content_types/{}/entries/{}'.format(self.http_instance.endpoint, self.content_type_id, self.entry_uid)
+        url = '{}/content_types/{}/entries/{}' \
+            .format(self.http_instance.endpoint, self.content_type_id, self.entry_uid)
         return url
 
     def fetch(self):

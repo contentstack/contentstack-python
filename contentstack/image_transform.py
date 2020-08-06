@@ -6,11 +6,12 @@ value in array form ImageTransform method is define for image manipulation with
 different transform_params in second parameter in array form
 """
 
+
 # ************* Module image_transform **************
 # Your code has been rated at 10.00/10  by pylint
 
 
-class ImageTransform:
+class ImageTransform:  # pylint: disable=too-few-public-methods
     """
     The Image Delivery API is used to retrieve, manipulate and/or convert image
     files
@@ -18,6 +19,7 @@ class ImageTransform:
 
     def __init__(self, http_instance, image_url, **kwargs):
         """
+        creates instance of the ImageTransform class
         :param httpInstance: instance of HttpsConnection
         :param image_url: url on which manipulation required, Image transformation url
         :param kwargs: parameter in which we want to place different
@@ -50,5 +52,3 @@ class ImageTransform:
         if args:
             self.image_url += '?{0}'.format('&'.join(args))
         return self.image_url
-
-

@@ -1,11 +1,12 @@
-import unittest
 # python3 -m unittest tests
-from .test_stack import TestStack
+from unittest import TestLoader, TestSuite
+
+from HtmlTestRunner import HTMLTestRunner
+
 from .test_assets import TestAsset
 from .test_entry import TestEntry
 from .test_query import TestQuery
-from unittest import TestLoader, TestSuite
-from HtmlTestRunner import HTMLTestRunner
+from .test_stack import TestStack
 
 
 def all_tests():

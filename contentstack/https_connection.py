@@ -1,20 +1,16 @@
 """
-# -*- coding: utf-8 -*-
-requests.api
-~~~~~~~~~~~~
-
 This module implements the Requests API.
 """
 
 # ************* Module https_connection.py **************
 # Your code has been rated at 10.00/10  by pylint
 
-from json import JSONDecodeError
-import json
-import urllib.parse as urlparse
 import platform
+from json import JSONDecodeError
+
 import requests
 from requests.exceptions import Timeout, HTTPError
+
 import contentstack
 
 
@@ -77,9 +73,14 @@ class HTTPSConnection:
         """Facilitate to update timeout for the https request"""
         self.default_timeout = timeout
 
-    def get_complete_url(self, base_url: str, params: dict):
-        if 'query' in params:
-            params["query"] = json.dumps(params["query"])
-        query = urlparse.urlencode(params)
-        url = '{}&{}'.format(base_url, query)
-        return url
+    # def get_complete_url(self, base_url: str, params: dict):
+    #     """
+    #     creates complete url with the help of base_url and query parameters
+    #     :param base_url: base url
+    #     :param params: query parameters
+    #     :return: url
+    #     """
+    #     if 'query' in params:
+    #         params["query"] = json.dumps(params["query"])
+    #     query = urlparse.urlencode(params)
+    #     return '{}&{}'.format(base_url, query)
