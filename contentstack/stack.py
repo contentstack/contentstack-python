@@ -204,8 +204,7 @@ class Stack:
         return self.__sync_request()
 
     def sync_token(self, sync_token):
-        """
-        You can use the sync token (that you receive after initial sync)
+        """You can use the sync token (that you receive after initial sync)
         to get the updated content next time. The sync token fetches
         only the content that was added
         after your last sync, and the details of the content that was deleted or updated.

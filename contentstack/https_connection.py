@@ -32,13 +32,11 @@ def user_agents():
     header = {'sdk': dict(name=contentstack.__package__, version=contentstack.__version__),
               'os': get_os_platform,
               'Content-Type': 'application/json'}
-    package = "contentstack-python, - {}".format(contentstack.__version__)
+    package = "contentstack-python/v{}".format(contentstack.__version__)
     return {'User-Agent': str(header), "X-User-Agent": package}
 
 
-# R0903: Too few public methods (1/2) (too-few-public-methods)
-# "pylint doesn't know what's best" - use your own judgement but as a rule.
-class HTTPSConnection:
+class HTTPSConnection:  # R0903: Too few public methods
     """Make Https Request to fetch the result as per requested url"""
 
     def __init__(self, endpoint, headers):
@@ -72,15 +70,3 @@ class HTTPSConnection:
     def update_connection_timeout(self, timeout: int):
         """Facilitate to update timeout for the https request"""
         self.default_timeout = timeout
-
-    # def get_complete_url(self, base_url: str, params: dict):
-    #     """
-    #     creates complete url with the help of base_url and query parameters
-    #     :param base_url: base url
-    #     :param params: query parameters
-    #     :return: url
-    #     """
-    #     if 'query' in params:
-    #         params["query"] = json.dumps(params["query"])
-    #     query = urlparse.urlencode(params)
-    #     return '{}&{}'.format(base_url, query)
