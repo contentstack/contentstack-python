@@ -16,7 +16,7 @@ with open(os.path.join(os.path.dirname(__file__), 'readme.rst')) as readme:
     long_description = readme.read()
 
 setup(
-    title="contentstack-python sdk for content-delivery-api",
+    title="contentstack-python",
     name="Contentstack",
     status="Active",
     type="process",

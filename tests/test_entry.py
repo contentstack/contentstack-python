@@ -88,7 +88,6 @@ class TestEntry(unittest.TestCase):
             ["categories",
              "brand"])
         response = github_entry.fetch()
-        # print(response)
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestEntry)
