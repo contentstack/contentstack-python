@@ -21,7 +21,7 @@ def config_logging(logging_type: logging.WARNING):
     :return: basicConfig instance
     """
     logging.basicConfig(
-        filename='application.log',
+        filename='app.log',
         level=logging_type,
         format='[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s',
         datefmt='%H:%M:%S'
@@ -63,8 +63,7 @@ class Utils:
 
     @staticmethod
     def get_complete_url(base_url: str, params: dict):
-        """
-        creates complete url using base_url and their respective parameters
+        """ creates complete url using base_url and their respective parameters
         :param base_url:
         :param params:
         :return:

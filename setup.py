@@ -10,11 +10,15 @@ try:
 except ImportError:
     from distutils.core import setup
 
-with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
+with open(os.path.join(os.path.dirname(__file__), 'readme.rst')) as readme:
     long_description = readme.read()
 
 setup(
-    name="contentstack",
+    title="contentstack-python sdk for content-delivery-api",
+    name="Contentstack",
+    status="Active",
+    type="process",
+    created="17 Jun",
     keywords='contentstack-python',
     version="1.1.0",
     author="Contentstack",
