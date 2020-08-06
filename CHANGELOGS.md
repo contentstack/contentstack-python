@@ -1,6 +1,17 @@
 CHANGELOG
 =============
 
+
+
+*Date: 7-Aug-2020 - initial release*
+
+**v1.1.0**
+============
+- **EntryQueryable**
+    - updated include_reference function.
+
+-----------------------------
+
 *Date: 17-Jun-2020 - initial release*
 
 **v1.0.0**
