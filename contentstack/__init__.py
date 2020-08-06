@@ -16,7 +16,7 @@ from .stack import Stack
 from .utility import Utils
 # from contentstack import *
 
-__title__ = 'Contentstack-python'
+__title__ = 'contentstack-python'
 __author__ = 'Contentstack'
 __status__ = 'debug'
 __version__ = '1.1.0'
