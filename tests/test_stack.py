@@ -1,9 +1,11 @@
 import logging
 import unittest
+
+import HtmlTestRunner
+
 import contentstack
 from contentstack.stack import ContentstackRegion
 from tests import credentials
-import HtmlTestRunner
 
 api_key = credentials.keys['api_key']
 delivery_token = credentials.keys['delivery_token']

@@ -1,10 +1,12 @@
 import logging
-import HtmlTestRunner
-from contentstack.utility import config_logging
 import unittest
+
+import HtmlTestRunner
+
 import contentstack
 from contentstack.basequery import QueryOperation
 from contentstack.query import QueryType
+from contentstack.utility import config_logging
 from tests import credentials
 
 

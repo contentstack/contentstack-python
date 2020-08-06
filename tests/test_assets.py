@@ -1,8 +1,10 @@
-from tests import credentials
 import unittest
+
+import HtmlTestRunner
+
 import contentstack
 from contentstack.basequery import QueryOperation
-import HtmlTestRunner
+from tests import credentials
 
 global asset_uid
 

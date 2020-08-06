@@ -1,3 +1,7 @@
+"""
+EntryQueryable class contains common functions
+that is used as parents class for the query and entry classes
+"""
 
 
 class EntryQueryable:
@@ -80,10 +84,17 @@ class EntryQueryable:
 
         Arguments:
         Array of the only reference keys to be included in response
-        field_uid {str or list of str} -- [str/list of str] of field_uid on which include operation to perform
+        field_uid {str or list of str} -- [str/list of str] of field_uid on
+        which include operation to perform
 
         Returns:
             self -- So you can chain this call.
+
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> entry = stack.content_type('content_type')
+            >>> entry("entry_uid").include_reference(["categories", "brand"])
+            >>> result = entry.fetch()
         """
         if field_uid is not None and isinstance(field_uid, (str, list)):
             self.entry_queryable_param["include[]"] = field_uid
