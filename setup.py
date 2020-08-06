@@ -5,6 +5,8 @@
 
 import os
 
+import contentstack
+
 try:
     from setuptools import setup
 except ImportError:
@@ -19,8 +21,8 @@ setup(
     status="Active",
     type="process",
     created="17 Jun",
-    keywords='contentstack-python',
-    version="1.1.0",
+    keywords=contentstack.__title__,
+    version=contentstack.__version__,
     author="Contentstack",
     author_email="shailesh.mishra@contentstack.com",
     description="Contentstack is a headless CMS with an API-first approach.",

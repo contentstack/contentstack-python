@@ -1,7 +1,7 @@
 import logging
 import unittest
 
-import HtmlTestRunner
+from HtmlTestRunner import HTMLTestRunner
 
 import contentstack
 from contentstack.basequery import QueryOperation
@@ -73,5 +73,5 @@ class TestQuery(unittest.TestCase):
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestQuery)
-runner = HtmlTestRunner.HTMLTestRunner(combine_reports=True, add_timestamp=False)
+runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
 runner.run(suite)

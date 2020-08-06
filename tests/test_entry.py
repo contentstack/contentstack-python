@@ -1,7 +1,7 @@
 import logging
 import unittest
 
-import HtmlTestRunner
+from HtmlTestRunner import HTMLTestRunner
 
 import contentstack
 from tests import credentials
@@ -92,5 +92,5 @@ class TestEntry(unittest.TestCase):
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestEntry)
-runner = HtmlTestRunner.HTMLTestRunner(combine_reports=True, add_timestamp=False)
+runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
 runner.run(suite)

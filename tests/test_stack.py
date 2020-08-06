@@ -1,7 +1,7 @@
 import logging
 import unittest
 
-import HtmlTestRunner
+from HtmlTestRunner import HTMLTestRunner
 
 import contentstack
 from contentstack.stack import ContentstackRegion
@@ -139,5 +139,5 @@ class TestStack(unittest.TestCase):
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestStack)
-runner = HtmlTestRunner.HTMLTestRunner(combine_reports=True, add_timestamp=False)
+runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
 runner.run(suite)

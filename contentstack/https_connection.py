@@ -32,7 +32,7 @@ def user_agents():
     header = {'sdk': dict(name=contentstack.__package__, version=contentstack.__version__),
               'os': get_os_platform,
               'Content-Type': 'application/json'}
-    package = "contentstack-python/v{}".format(contentstack.__version__)
+    package = "contentstack-python/{}".format(contentstack.__version__)
     return {'User-Agent': str(header), "X-User-Agent": package}
 
 
