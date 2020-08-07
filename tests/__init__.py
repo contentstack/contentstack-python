@@ -1,4 +1,6 @@
 # python3 -m unittest tests
+# clean all the .pyc files
+# find . -name \*.pyc -delete
 from unittest import TestLoader, TestSuite
 
 from HtmlTestRunner import HTMLTestRunner

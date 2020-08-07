@@ -32,7 +32,7 @@ class Entry(EntryQueryable):
         self.entry_uid = entry_uid
         self.base_url = self.__get_base_url()
 
-    def environment(self, environment: str):
+    def environment(self, environment):
         """
         Enter the name of the environment of which the entries needs to be included
         Example: production
@@ -54,7 +54,7 @@ class Entry(EntryQueryable):
         self.http_instance.headers['environment'] = environment
         return self
 
-    def version(self, version: int):
+    def version(self, version):
         """When no version is specified, it returns the latest version
         To retrieve a specific version, specify the version number under this parameter.
         In such a case, DO NOT specify any environment. Example: 4
