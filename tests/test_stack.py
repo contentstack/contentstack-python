@@ -89,12 +89,12 @@ class TestStack(unittest.TestCase):
 
     # [ functional test-cases fot Synchronization ]
 
-    def test_sync_pagination(self):
-        result = self.stack.pagination('blt376f0470f9334d8e512f5e')
-        if result is not None:
-            sync_token = result['sync_token']
-            print(sync_token)
-            # self.assertIsNotNone(result['sync_token'])
+    # def test_sync_pagination(self):
+    #     result = self.stack.pagination('blt376f0470f9334d8e512f5e')
+    #     if result is not None:
+    #         sync_token = result['sync_token']
+    #         print(sync_token)
+    #         # self.assertIsNotNone(result['sync_token'])
 
     def test_init_sync_no_params(self):
         result = self.stack.sync_init()
