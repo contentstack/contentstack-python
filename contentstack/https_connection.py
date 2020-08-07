@@ -54,8 +54,7 @@ class HTTPSConnection:  # R0903: Too few public methods
         """
         try:
             self.headers.update(user_agents())
-            response = requests.get(url, verify=True,
-                                    timeout=self.default_timeout, headers=self.headers)
+            response = requests.get(url, verify=True, headers=self.headers)
             response.encoding = 'utf-8'
             return response.json()
         except Timeout:

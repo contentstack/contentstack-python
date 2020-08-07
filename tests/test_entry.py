@@ -18,7 +18,8 @@ class TestEntry(unittest.TestCase):
         self.stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment)
 
     def test_01_run_initial_query(self):
-        result = self.stack.content_type('faq').query().find()
+        query = self.stack.content_type('faq').query()
+        result = query.find()
         if result is not None:
             global entry_uid
             entry_uid = result['entries'][0]['uid']
@@ -28,7 +29,8 @@ class TestEntry(unittest.TestCase):
 
     def test_02_entry_by_uid(self):
         global entry_uid
-        result = self.stack.content_type('faq').entry(entry_uid).fetch()
+        entry = self.stack.content_type('faq').entry(entry_uid)
+        result = entry.fetch()
         if result is not None:
             logging.info(' => entry result is: {}'.format(result['entry']))
             self.assertEqual('blt53ca1231625bdde4', result['entry']['uid'])

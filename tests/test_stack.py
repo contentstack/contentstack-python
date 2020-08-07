@@ -92,9 +92,9 @@ class TestStack(unittest.TestCase):
     def test_sync_pagination(self):
         result = self.stack.pagination('blt376f0470f9334d8e512f5e')
         if result is not None:
-            # bltce79ab698cd23e4f34748b
-            # blt3f16ec623aaa004a2c2539
-            self.assertIsNotNone(result['sync_token'])
+            sync_token = result['sync_token']
+            print(sync_token)
+            # self.assertIsNotNone(result['sync_token'])
 
     def test_init_sync_no_params(self):
         result = self.stack.sync_init()
@@ -120,10 +120,10 @@ class TestStack(unittest.TestCase):
 
     def test_sync_token(self):
         result = self.stack.sync_token('blt3f16ec623aaa004a2c2539')
-        self.assertTrue('blt3f16ec623aaa004a2c2539', result['sync_token'])
+        sync_token = result['sync_token']
+        print(sync_token)
 
     def test_content_type(self):
-        # passing query params like below as a dictionary
         content_type = self.stack.content_type('application_theme')
         result = content_type.fetch()
         if result is not None:
