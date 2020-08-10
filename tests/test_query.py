@@ -71,6 +71,50 @@ class TestQuery(unittest.TestCase):
         logging.info(self.query.query_params)
         self.assertEqual({'query': {'brand': {'$nin_query': {'title': 'Apple Inc.'}}}}, self.query.query_params)
 
+    def test_09_base_query_include_count(self):
+        query = self.query3.include_count()
+        logging.info(query.base_url)
+        self.assertEqual('true', query.query_params['include_count'])
+
+    def test_10_base_query_skip(self):
+        query = self.query3.skip(3)
+        logging.info(query.base_url)
+        self.assertEqual('3', query.query_params['skip'])
+
+    def test_11_base_query_limit(self):
+        query = self.query3.limit(3)
+        logging.info(query.base_url)
+        self.assertEqual('3', query.query_params['limit'])
+
+    def test_12_base_query_order_by_ascending(self):
+        query = self.query3.order_by_ascending('title')
+        logging.info(query.base_url)
+        self.assertEqual('title', query.query_params['asc'])
+
+    def test_13_base_query_order_by_descending(self):
+        query = self.query3.order_by_descending('title')
+        logging.info(query.base_url)
+        self.assertEqual('title', query.query_params['desc'])
+
+    def test_14_base_query_param(self):
+        query = self.query3.param("keyOne", 'valueOne')
+        logging.info(query.base_url)
+        self.assertEqual('valueOne', query.query_params['keyOne'])
+
+    def test_15_base_query_add_params(self):
+        query = self.query3.add_params({'keyOne': 'valueOne', 'keyTwo': 'valueTwo'})
+        logging.info(query.base_url)
+        self.assertEqual(2, len(query.query_params))
+
+    def test_16_base_query(self):
+        query = self.query3.query('keyOne', 'valueOne')
+        logging.info(query.base_url)
+        self.assertEqual('valueOne', query.parameters['keyOne'])
+
+    def test_17_base_remove_param(self):
+        query = self.query3.remove_param("keyOne")
+        logging.info(query.base_url)
+
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestQuery)
 runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)

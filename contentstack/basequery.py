@@ -92,7 +92,7 @@ class BaseQuery:
         :param limit_count:
         :return: self
         """
-        self.query_params["skip"] = str(limit_count)
+        self.query_params["limit"] = str(limit_count)
         return self
 
     def order_by_ascending(self, key: str):

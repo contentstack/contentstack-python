@@ -46,6 +46,24 @@ class TestAsset(unittest.TestCase):
         if result is not None:
             self.assertEqual('image/jpeg', result['asset']['content_type'])
 
+    def test_16_remove_environment(self):
+        global asset_uid
+        self.asset = self.stack.asset(uid=asset_uid)
+        self.asset.remove_environment()
+        self.assertEqual(False, 'environment' in self.asset.http_instance.headers)
+
+    def test_17_add_environment(self):
+        global asset_uid
+        self.asset = self.stack.asset(uid=asset_uid)
+        self.asset.environment("dev")
+        self.assertEqual('dev', self.asset.http_instance.headers['environment'])
+
+    def test_18_add_param(self):
+        global asset_uid
+        self.asset = self.stack.asset(uid=asset_uid)
+        self.asset.params("paramKey", 'paramValue')
+        print(self.asset.base_url)
+
     ############################################
     # ==== Asset Query ====
     ############################################
@@ -103,6 +121,10 @@ class TestAsset(unittest.TestCase):
                                        fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
         self.assertEqual({'title': {'$regex': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}},
                          query.parameters)
+
+    def test_15_environment(self):
+        query = self.asset_query.environment("dev")
+        self.assertEqual('dev', query.http_instance.headers['environment'])
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestAsset)
