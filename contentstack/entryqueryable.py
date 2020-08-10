@@ -1,25 +1,14 @@
-import enum
-
-
-class Include(enum.Enum):
-    """
-    Include is enum that Provides Options to perform operation to query the result.
-
-    Available Options for QueryOperation are below.
-    DEFAULT, ONLY, EXCEPT
-
-    Arguments:
-        enum {Include} -- Type of IncludeReference
-    """
-    EXCEPT = 'except'
-    ONLY = 'only'
-    DEFAULT = ''
+"""
+EntryQueryable class contains common functions
+that is used as parents class for the query and entry classes
+"""
 
 
 class EntryQueryable:
     """
     This class is base class for the Entry and Query class that shares common functions
     """
+
     def __init__(self):
         self.entry_queryable_param = {}
 
@@ -53,7 +42,7 @@ class EntryQueryable:
         self.entry_queryable_param['locale'] = locale
         return self
 
-    def only(self, field_uid):
+    def only(self, field_uid: str):
         """
         Specifies an array of only keys in BASE object that would be included in the response.
         It refers to the top-level fields of the schema
@@ -62,10 +51,13 @@ class EntryQueryable:
             self -- so you can chain this call.
         """
         if field_uid is not None:
-            self.entry_queryable_param['only[BASE][]'] = field_uid
-            return self
+            if isinstance(field_uid, str):
+                self.entry_queryable_param['only[BASE][]'] = field_uid
+            else:
+                raise KeyError("Invalid field_uid provided")
+        return self
 
-    def excepts(self, field_uid):
+    def excepts(self, field_uid: str):
         """
         Specifies list of field_uid that would be excluded from the response.
         It refers to the top-level fields of the schema
@@ -73,10 +65,13 @@ class EntryQueryable:
         :return: self -- so you can chain this call.
         """
         if field_uid is not None:
-            self.entry_queryable_param['except[BASE][]'] = field_uid
-            return self
+            if isinstance(field_uid, str):
+                self.entry_queryable_param['except[BASE][]'] = field_uid
+            else:
+                raise KeyError("Invalid field_uid provided")
+        return self
 
-    def include_reference(self, include_reference_type:  Include, reference_field_uid: str, field_uid=None):
+    def include_reference(self, field_uid):
         """
         **Include Reference:**
         When you fetch an entry of a content type that has a reference field,
@@ -84,35 +79,33 @@ class EntryQueryable:
         It only fetches the UID of the referred entry, along with the content of
         the specified entry.
 
+        Note: The maximum reference depth limit to which a multiple content type
+        referencing Reference field works is three levels deep
+
         Arguments:
-        reference_field_uid {str} -- Key who has reference to some other class object.
         Array of the only reference keys to be included in response
-        include_type {Include} -- Provides three options, none, only and except
-        i.e accepts list of field_uid
-        field_uid {list} -- list of field_uid on which include operation to perform
+        field_uid {str or list of str} -- [str/list of str] of field_uid on
+        which include operation to perform
 
         Returns:
             self -- So you can chain this call.
+
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> entry = stack.content_type('content_type')
+            >>> entry("entry_uid").include_reference(["categories", "brand"])
+            >>> result = entry.fetch()
         """
-        container = {}
-        if reference_field_uid is None:
-            raise KeyError("reference_field_uid can't be None")
-        if include_reference_type.name == 'DEFAULT':
-            self.entry_queryable_param["include[]"] = reference_field_uid
-        else:
-            container[reference_field_uid] = field_uid
-            self.entry_queryable_param["include[]"] = {include_reference_type.value: container}
+        if field_uid is not None and isinstance(field_uid, (str, list)):
+            self.entry_queryable_param["include[]"] = field_uid
         return self
 
     def include_content_type(self):
         """
         This method also includes the ContentType in the entry
         :return: self: so you can chain this call.
-
         -------------------------------
-
         [Example: for Entry]
-
             >>> import contentstack
             >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> content_type = stack.content_type('content_type_uid')

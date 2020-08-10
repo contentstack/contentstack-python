@@ -1,23 +1,27 @@
 """
 Utils
 contentstack
-Created by Shailesh Mishra on 22/06/19.
+Last modified by Shailesh Mishra on 06/08/20.
 Copyright 2019 Contentstack. All rights reserved.
 """
 
-# ************* Module utility **************
-# Your code has been rated at 10.00/10
+# ************* Module utility checked using pylint **************
+# Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 
 
-import logging
 import json
-import urllib.parse as urlparse
+import logging
+from urllib import parse
 
 
 def config_logging(logging_type: logging.WARNING):
-    import logging
+    """
+    This is to create logging config
+    :param logging_type:  Level of the logging
+    :return: basicConfig instance
+    """
     logging.basicConfig(
-        filename='application.log',
+        filename='app.log',
         level=logging_type,
         format='[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s',
         datefmt='%H:%M:%S'
@@ -50,13 +54,21 @@ class Utils:
 
     @staticmethod
     def do_url_encode(params):
-        from urllib import parse
+        """
+        To encode url with query parameters
+        :param params:
+        :return: encoded url
+        """
         return parse.urlencode(params)
 
     @staticmethod
     def get_complete_url(base_url: str, params: dict):
+        """ creates complete url using base_url and their respective parameters
+        :param base_url:
+        :param params:
+        :return:
+        """
         if 'query' in params:
             params["query"] = json.dumps(params["query"])
-        query = urlparse.urlencode(params)
-        url = '{}&{}'.format(base_url, query)
-        return url
+        query = parse.urlencode(params)
+        return '{}&{}'.format(base_url, query)
