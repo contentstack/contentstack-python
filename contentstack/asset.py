@@ -42,7 +42,7 @@ class Asset:
         -------------------------------
         """
         if environment is not None or environment is str:
-            self.__query_params['environment'] = environment
+            self.http_instance.headers['environment'] = environment
         return self
 
     def remove_environment(self):
