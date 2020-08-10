@@ -41,7 +41,8 @@ class AssetQuery(BaseQuery):
             >>> result = stack.asset_query().environment('production').find()
         ------------------------------
         """
-        self.__query_params["environment"] = environment
+        if isinstance(environment, str):
+            self.http_instance.headers['environment'] = environment
         return self
 
     def version(self, version):
