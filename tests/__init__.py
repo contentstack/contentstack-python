@@ -1,10 +1,9 @@
 # python3 -m unittest tests
 # clean all the .pyc files
 # find . -name \*.pyc -delete
+import unittest
 from unittest import TestLoader, TestSuite
-
 from HtmlTestRunner import HTMLTestRunner
-
 from .test_assets import TestAsset
 from .test_entry import TestEntry
 from .test_query import TestQuery
@@ -22,7 +21,7 @@ def all_tests():
         test_module_entry,
         test_module_query,
     ])
-    runner = HtmlTestRunner.HTMLTestRunner(output='reports')
+    runner = HTMLTestRunner(output='reports')
     test_suite = unittest.TestLoader().discover('./', '*_test.py', '.')
     runner.run(test_suite)
 
