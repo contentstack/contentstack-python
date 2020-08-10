@@ -22,5 +22,7 @@ def all_tests():
         test_module_entry,
         test_module_query,
     ])
-    runner = HTMLTestRunner(combine_reports=True, report_name="test_report", add_timestamp=False)
-    runner.run(suite)
+    runner = HtmlTestRunner.HTMLTestRunner(output='reports')
+    test_suite = unittest.TestLoader().discover('./', '*_test.py', '.')
+    runner.run(test_suite)
+

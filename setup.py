@@ -12,7 +12,7 @@ try:
 except ImportError:
     from distutils.core import setup
 
-with open(os.path.join(os.path.dirname(__file__), 'readme.rst')) as readme:
+with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
     long_description = readme.read()
 
 setup(
@@ -26,9 +26,7 @@ setup(
     author="Contentstack",
     author_email="shailesh.mishra@contentstack.com",
     description="Contentstack is a headless CMS with an API-first approach.",
-    long_description="Contentstack is a headless CMS with an API-first approach. It is a CMS that developers can use "
-                     "to build powerful cross-platform applications in their favorite languages. Build your "
-                     "application frontend, and Contentstack will take care of the rest",
+    long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/contentstack/contentstack-python",
     packages=['contentstack'],
