@@ -73,7 +73,7 @@ class EntryQueryable:
 
     def include_reference(self, field_uid):
         """
-        **Include Reference:**
+        **[Include Reference]:**
         When you fetch an entry of a content type that has a reference field,
         by default, the content of the referred entry is not fetched.
         It only fetches the UID of the referred entry, along with the content of
@@ -112,9 +112,7 @@ class EntryQueryable:
             >>> entry = content_type.entry('uid')
             >>> entry.include_content_type()
             >>> result = entry.fetch()
-
         -------------------------------
-
         [Example: for Query:]
 
             >>> import contentstack

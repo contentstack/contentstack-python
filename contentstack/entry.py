@@ -98,6 +98,25 @@ class Entry(EntryQueryable):
             raise ValueError('Kindly provide valid key and value arguments')
         self.entry_param[key] = value
         return self
+    
+    def include_fallback(self):
+        r"""Include the fallback locale publish content, if specified locale content is not publish.
+
+        :return: Entry, so we can chain the call
+
+        ----------------------------
+        Example::
+
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry(uid='entry_uid')
+            >>> entry = entry.include_fallback()
+            >>> result = entry.fetch()
+        ----------------------------
+        """
+        self.entry_param['include_fallback'] = "true"
+        return self
 
     def __get_base_url(self):
         if None in (self.http_instance, self.content_type_id, self.entry_uid):

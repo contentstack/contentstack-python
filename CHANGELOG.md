@@ -1,8 +1,31 @@
 # CHANGELOG
 
-Date: 10-Aug-2020 - include_reference issue fixed
+
+*v1.2.0*
+============
+
+_Date: 20-Oct-2020_
+
+ - include_fallback Support Added
+ - Timeout support included
+
+- Entry 
+   - added support for include_fallback.
+- Asset
+   - added support for include_fallback.
+- AssetQueryable
+   - added support for include_fallback.
+- Query
+   - added support for include_fallback.
+
+-----------------------------
+
+
+
 
 ## _v1.1.0_
+
+_Date: 10-Aug-2020 - include_reference issue fixed_
 
 EntryQueryable
 
@@ -10,9 +33,11 @@ EntryQueryable
 
 -----------------------------
 
-Date: 17-Jun-2020 - initial release
+
 
 ## _v1.0.0_
+
+_Date: 17-Jun-2020 - initial release_
 
 Stack
 
@@ -34,11 +59,10 @@ Query
 
 -----------------------------
 
-Date: 18-Nov-2019 - beta release
 
 ## _v0.1.0_
 
-November-18, 2019 -beta release
+_November-18, 2019 -beta release_
 
 Initial release for the contentstack-python-sdk for Content Delivery API
 

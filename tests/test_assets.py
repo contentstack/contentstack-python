@@ -6,6 +6,7 @@ import contentstack
 from contentstack.basequery import QueryOperation
 from tests import credentials
 
+# global asset_uid
 global asset_uid
 
 
@@ -62,6 +63,12 @@ class TestAsset(unittest.TestCase):
         global asset_uid
         self.asset = self.stack.asset(uid=asset_uid)
         self.asset.params("paramKey", 'paramValue')
+        print(self.asset.base_url)
+
+    def test_19_support_include_fallback(self):
+        global asset_uid
+        self.asset = self.stack.asset(uid=asset_uid)
+        self.asset.include_fallback()
         print(self.asset.base_url)
 
     ############################################
@@ -125,6 +132,11 @@ class TestAsset(unittest.TestCase):
     def test_15_environment(self):
         query = self.asset_query.environment("dev")
         self.assertEqual('dev', query.http_instance.headers['environment'])
+
+    def test_16_support_include_fallback(self):
+        query = self.asset_query.include_fallback()
+        result = query.find()
+        self.assertEqual(True, result)
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestAsset)

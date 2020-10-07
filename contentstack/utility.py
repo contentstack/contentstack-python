@@ -63,7 +63,8 @@ class Utils:
 
     @staticmethod
     def get_complete_url(base_url: str, params: dict):
-        """ creates complete url using base_url and their respective parameters
+        """
+        creates complete url using base_url and their respective parameters
         :param base_url:
         :param params:
         :return:
