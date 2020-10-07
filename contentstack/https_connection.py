@@ -10,8 +10,10 @@ from json import JSONDecodeError
 
 import requests
 from requests.exceptions import Timeout, HTTPError
-
 import contentstack
+
+# from requests.adapters import HTTPAdapter
+# from requests.packages.urllib3.util.retry import Retry
 
 
 def get_os_platform():
@@ -52,9 +54,19 @@ class HTTPSConnection:  # R0903: Too few public methods
         We use requests.get method since we are sending a GET request.
         The four arguments we pass are url, verify(ssl), timeout, headers
         """
+        
+        # retry_strategy = Retry(
+        # total=3,
+        # status_forcelist=[429, 500, 502, 503, 504],
+        # method_whitelist=["GET"]
+        # )
+        # adapter = HTTPAdapter(max_retries=retry_strategy)
+        # http = requests.Session()
+        # http.mount("https://", adapter)
+            
         try:
             self.headers.update(user_agents())
-            response = requests.get(url, verify=True, headers=self.headers)
+            response = requests.get(url, verify=True, timeout=(10, 8), headers=self.headers)
             response.encoding = 'utf-8'
             return response.json()
         except Timeout:
