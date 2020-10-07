@@ -90,6 +90,11 @@ class TestEntry(unittest.TestCase):
             ["categories",
              "brand"])
         response = github_entry.fetch()
+        
+    def test_13_entry_support_include_fallback(self):
+        global entry_uid
+        entry = self.stack.content_type('faq').entry(entry_uid).include_fallback()
+        self.assertEqual(True, entry.entry_param.__contains__('include_fallback'))
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestEntry)

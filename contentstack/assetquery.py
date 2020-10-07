@@ -97,6 +97,22 @@ class AssetQuery(BaseQuery):
         """
         self.__query_params["relative_urls"] = "true"
         return self
+    
+    def include_fallback(self):
+        r"""Include the fallback locale publish content, if specified locale content is not publish.
+
+        :return: AssetQuery, so we can chain the call
+
+        ----------------------------
+        Example::
+
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> result = stack.asset_query().include_fallback().find()
+        ----------------------------
+        """
+        self.__query_params['include_fallback'] = "true"
+        return self
 
     def find(self):
         r"""This call fetches the list of all the assets of a particular stack.

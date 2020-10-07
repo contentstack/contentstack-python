@@ -19,6 +19,6 @@ from .utility import Utils
 __title__ = 'contentstack-python'
 __author__ = 'Contentstack'
 __status__ = 'debug'
-__version__ = '1.1.0'
+__version__ = '1.2.0'
 __endpoint__ = 'cdn.contentstack.io'
 __email__ = 'shailesh.mishra@contentstack.com'

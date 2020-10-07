@@ -121,6 +121,24 @@ class Asset:
         """
         self.__query_params['include_dimension'] = "true"
         return self
+  
+    
+    def include_fallback(self):
+        r"""Include the fallback locale publish content, if specified locale content is not publish.
+
+        :return: Asset, so we can chain the call
+
+        ----------------------------
+        Example::
+
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> asset = stack.asset(uid='asset_uid')
+            >>> asset = asset.include_fallback()
+        ----------------------------
+        """
+        self.__query_params['include_fallback'] = "true"
+        return self
 
     def fetch(self):
         r"""This call fetches the latest version of a specific asset of a particular stack.

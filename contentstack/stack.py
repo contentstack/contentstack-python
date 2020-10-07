@@ -151,8 +151,8 @@ class Stack:
 
     def sync_init(self, content_type_uid=None, from_date=None, locale=None, publish_type=None):
         """
-        Constructs and initialises sync if no params provided else
-        below mentioned params can be provided to get the response accordingly
+        Constructs and initialises sync if no params provided else below mentioned params 
+        can be provided to get the response accordingly
         :param content_type_uid: subsequent syncs will only include the entries
                                  of the specified content_type.
         :param from_date: use from_date and specify the start date as its value.

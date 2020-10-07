@@ -114,6 +114,16 @@ class TestQuery(unittest.TestCase):
     def test_17_base_remove_param(self):
         query = self.query3.remove_param("keyOne")
         logging.info(query.base_url)
+        
+    def test_18_support_include_fallback(self):
+        query = self.query3.include_fallback()
+        logging.info(query.base_url)
+        self.assertEqual('true', query.query_params['include_fallback'])
+        
+    def test_18_support_include_fallback_url(self):
+        query = self.query3.include_fallback()
+        logging.info(query.base_url)
+        self.assertEqual({'include_fallback': 'true'}, query.query_params)
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestQuery)
