@@ -15,13 +15,13 @@ class Asset:
 
     def __init__(self, http_instance, uid=None):
         self.http_instance = http_instance
-        self.__query_params = {}
+        self.asset_params = {}
         self.__uid = uid
         if self.__uid is None or self.__uid.strip() == 0:
             raise KeyError('Please provide valid uid')
         self.base_url = '{}/assets/{}'.format(self.http_instance.endpoint, self.__uid)
         if 'environment' in self.http_instance.headers:
-            self.__query_params['environment'] = self.http_instance.headers['environment']
+            self.asset_params['environment'] = self.http_instance.headers['environment']
             # self.http_instance.headers.pop('environment')
 
     def environment(self, environment):
@@ -84,7 +84,7 @@ class Asset:
         """
         if None in (key, value) or not isinstance(key, str):
             raise KeyError('Kindly provide valid params')
-        self.__query_params[key] = value
+        self.asset_params[key] = value
         return self
 
     def relative_urls(self):
@@ -101,7 +101,7 @@ class Asset:
             >>> asset = asset.relative_urls()
         ----------------------------
         """
-        self.__query_params['relative_urls'] = 'true'
+        self.asset_params['relative_urls'] = 'true'
         return self
 
     def include_dimension(self):
@@ -119,10 +119,9 @@ class Asset:
             >>> asset = asset.include_dimension()
         ----------------------------
         """
-        self.__query_params['include_dimension'] = "true"
+        self.asset_params['include_dimension'] = "true"
         return self
-  
-    
+
     def include_fallback(self):
         r"""Include the fallback locale publish content, if specified locale content is not publish.
 
@@ -137,7 +136,7 @@ class Asset:
             >>> asset = asset.include_fallback()
         ----------------------------
         """
-        self.__query_params['include_fallback'] = "true"
+        self.asset_params['include_fallback'] = "true"
         return self
 
     def fetch(self):
@@ -154,5 +153,5 @@ class Asset:
             >>> result = asset.fetch()
         ------------------------------
         """
-        url = '{}?{}'.format(self.base_url, parse.urlencode(self.__query_params))
+        url = '{}?{}'.format(self.base_url, parse.urlencode(self.asset_params))
         return self.http_instance.get(url)
