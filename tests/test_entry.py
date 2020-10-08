@@ -90,11 +90,25 @@ class TestEntry(unittest.TestCase):
             ["categories",
              "brand"])
         response = github_entry.fetch()
-        
-    def test_13_entry_support_include_fallback(self):
+
+    def test_13_entry_support_include_fallback_unit_test(self):
         global entry_uid
         entry = self.stack.content_type('faq').entry(entry_uid).include_fallback()
         self.assertEqual(True, entry.entry_param.__contains__('include_fallback'))
+
+    def test_14_entry_support_include_fallback_api_test(self):
+
+        api_key = 'blt2585ce4a79ba8bdf'
+        delivery_token = 'csaa34e51f8cb3e91fb506a469'
+        environment = 'dev'
+        dev_host = 'dev9-cdn.contentstack.com'
+        content_type = 'testincludefallback'
+        ifb_entry_uid = 'blt50b71bcec5a6b720'
+
+        ifb_stack = contentstack.Stack(api_key, delivery_token, environment, host=dev_host)
+        entry = ifb_stack.content_type(content_type).entry(ifb_entry_uid)
+        result = entry.include_fallback().locale('mr-in').fetch()
+        self.assertEqual('en-us', result['entry']['locale'])
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestEntry)

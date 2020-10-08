@@ -19,7 +19,7 @@ class AssetQuery(BaseQuery):
     def __init__(self, http_instance):
         super().__init__()
         self.http_instance = http_instance
-        self.__query_params = {}
+        self.asset_query_params = {}
         self.base_url = "{}/assets".format(self.http_instance.endpoint)
         if "environment" in self.http_instance.headers:
             env = self.http_instance.headers["environment"]
@@ -62,7 +62,7 @@ class AssetQuery(BaseQuery):
             >>> result = stack.asset_query().version(3).find()
         ------------------------------
         """
-        self.__query_params["version"] = version
+        self.asset_query_params["version"] = version
         return self
 
     def include_dimension(self):
@@ -79,7 +79,7 @@ class AssetQuery(BaseQuery):
             >>> result = stack.asset_query().include_dimension().find()
         ------------------------------
         """
-        self.__query_params["include_dimension"] = "true"
+        self.asset_query_params["include_dimension"] = "true"
         return self
 
     def relative_url(self):
@@ -95,7 +95,7 @@ class AssetQuery(BaseQuery):
             >>> result = stack.asset_query().relative_url().find()
         ------------------------------
         """
-        self.__query_params["relative_urls"] = "true"
+        self.asset_query_params["relative_urls"] = "true"
         return self
     
     def include_fallback(self):
@@ -111,7 +111,7 @@ class AssetQuery(BaseQuery):
             >>> result = stack.asset_query().include_fallback().find()
         ----------------------------
         """
-        self.__query_params['include_fallback'] = "true"
+        self.asset_query_params['include_fallback'] = "true"
         return self
 
     def find(self):
@@ -131,6 +131,6 @@ class AssetQuery(BaseQuery):
 
         """
         if self.parameters is not None and len(self.parameters) > 0:
-            self.__query_params["query"] = json.dumps(self.parameters)
-        url = Utils.get_complete_url(self.base_url, self.__query_params)
+            self.asset_query_params["query"] = json.dumps(self.parameters)
+        url = Utils.get_complete_url(self.base_url, self.asset_query_params)
         return self.http_instance.get(url)

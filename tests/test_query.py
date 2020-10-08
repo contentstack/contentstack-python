@@ -125,6 +125,19 @@ class TestQuery(unittest.TestCase):
         logging.info(query.base_url)
         self.assertEqual({'include_fallback': 'true'}, query.query_params)
 
+    def test_19_entry_support_include_fallback_api_test(self):
+
+        api_key = 'blt2585ce4a79ba8bdf'
+        delivery_token = 'csaa34e51f8cb3e91fb506a469'
+        environment = 'dev'
+        dev_host = 'dev9-cdn.contentstack.com'
+        content_type = 'testincludefallback'
+
+        ifb_stack = contentstack.Stack(api_key, delivery_token, environment, host=dev_host)
+        query = ifb_stack.content_type(content_type).query()
+        result = query.include_fallback().locale('mr-in').find()
+        self.assertEqual('en-us', result['entries'][0]['locale'])
+
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestQuery)
 runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)

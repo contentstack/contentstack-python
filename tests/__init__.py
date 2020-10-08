@@ -1,6 +1,7 @@
 # python3 -m unittest tests
 # clean all the .pyc files
 # find . -name \*.pyc -delete
+# pytest --cov=contentstack
 import unittest
 from unittest import TestLoader, TestSuite
 from HtmlTestRunner import HTMLTestRunner

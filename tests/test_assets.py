@@ -47,96 +47,107 @@ class TestAsset(unittest.TestCase):
         if result is not None:
             self.assertEqual('image/jpeg', result['asset']['content_type'])
 
-    def test_16_remove_environment(self):
+    def test_05_remove_environment(self):
         global asset_uid
         self.asset = self.stack.asset(uid=asset_uid)
         self.asset.remove_environment()
         self.assertEqual(False, 'environment' in self.asset.http_instance.headers)
 
-    def test_17_add_environment(self):
+    def test_06_add_environment(self):
         global asset_uid
         self.asset = self.stack.asset(uid=asset_uid)
         self.asset.environment("dev")
         self.assertEqual('dev', self.asset.http_instance.headers['environment'])
 
-    def test_18_add_param(self):
+    def test_07_add_param(self):
         global asset_uid
         self.asset = self.stack.asset(uid=asset_uid)
         self.asset.params("paramKey", 'paramValue')
         print(self.asset.base_url)
 
-    def test_19_support_include_fallback(self):
+    def test_08_support_include_fallback(self):
         global asset_uid
         self.asset = self.stack.asset(uid=asset_uid)
-        self.asset.include_fallback()
-        print(self.asset.base_url)
+        asset_params = self.asset.include_fallback().asset_params
+        self.assertEqual({'environment': 'development', 'include_fallback': 'true'}, asset_params)
 
     ############################################
     # ==== Asset Query ====
     ############################################
 
-    def test_05_assets_query(self):
+    def test_09_assets_query(self):
         result = self.asset_query.find()
         if result is not None:
             self.assertEqual(8, len(result['assets']))
 
-    def test_06_assets_base_query_where_exclude_title(self):
+    def test_10_assets_base_query_where_exclude_title(self):
         query = self.asset_query.where('title', QueryOperation.EXCLUDES, fields=['images_(1).jpg'])
         result = query.find()
         if result is not None:
             self.assertEqual(7, len(result['assets']))
 
-    def test_07_assets_base_query_where_equals_str(self):
+    def test_11_assets_base_query_where_equals_str(self):
         query = self.asset_query.where('title', QueryOperation.EQUALS, fields='images_(1).jpg')
         result = query.find()
         if result is not None:
             self.assertEqual("images_(1).jpg", result['assets'][0]['filename'])
 
-    def test_08_assets_base_query_where_exclude(self):
+    def test_12_assets_base_query_where_exclude(self):
         query = self.asset_query.where('file_size', QueryOperation.EXCLUDES, fields=[5990, 3200])
         result = query.find()
         if result is not None:
             self.assertEqual(6, len(result['assets']))
 
-    def test_09_assets_base_query_where_includes(self):
+    def test_13_assets_base_query_where_includes(self):
         query = self.asset_query.where('title', QueryOperation.INCLUDES,
                                        fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
         self.assertEqual({'title': {'$in': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
 
-    def test_10_assets_base_query_where_is_less_than(self):
+    def test_14_assets_base_query_where_is_less_than(self):
         query = self.asset_query.where('title', QueryOperation.IS_LESS_THAN,
                                        fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
         self.assertEqual({'title': {'$lt': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
 
-    def test_11_assets_base_query_where_is_less_than_or_equal(self):
+    def test_15_assets_base_query_where_is_less_than_or_equal(self):
         query = self.asset_query.where('title', QueryOperation.IS_LESS_THAN_OR_EQUAL,
                                        fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
         self.assertEqual({'title': {'$lte': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
 
-    def test_12_assets_base_query_where_is_greater_than(self):
+    def test_16_assets_base_query_where_is_greater_than(self):
         query = self.asset_query.where('title', QueryOperation.IS_GREATER_THAN,
                                        fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
         self.assertEqual({'title': {'$gt': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
 
-    def test_13_assets_base_query_where_is_greater_than_or_equal(self):
+    def test_17_assets_base_query_where_is_greater_than_or_equal(self):
         query = self.asset_query.where('title', QueryOperation.IS_GREATER_THAN_OR_EQUAL,
                                        fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
         self.assertEqual({'title': {'$gte': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
 
-    def test_14_assets_base_query_where_matches(self):
+    def test_18_assets_base_query_where_matches(self):
         query = self.asset_query.where('title', QueryOperation.MATCHES,
                                        fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
         self.assertEqual({'title': {'$regex': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}},
                          query.parameters)
 
-    def test_15_environment(self):
+    def test_19_environment(self):
         query = self.asset_query.environment("dev")
         self.assertEqual('dev', query.http_instance.headers['environment'])
 
-    def test_16_support_include_fallback(self):
+    def test_20_asset_query_with_version(self):
+        query = self.asset_query.environment("dev").version("1")
+        self.assertEqual({'version': '1'}, query.asset_query_params)
+
+    def test_21_asset_query_with_include_dimension(self):
+        query = self.asset_query.environment("dev").include_dimension();
+        self.assertEqual({'include_dimension': 'true'}, query.asset_query_params)
+
+    def test_22_asset_query_with_relative_url(self):
+        query = self.asset_query.environment("dev").relative_url();
+        self.assertEqual({'relative_urls': 'true'}, query.asset_query_params)
+
+    def test_23_support_include_fallback(self):
         query = self.asset_query.include_fallback()
-        result = query.find()
-        self.assertEqual(True, result)
+        self.assertEqual({'include_fallback': 'true'}, query.asset_query_params)
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestAsset)
