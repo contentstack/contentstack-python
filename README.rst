@@ -21,7 +21,7 @@ Setup and Installation
 
 .. code-block:: python
 
-   Install contentstack pip
+   install contentstack pip
 
 
 This is the preferred method to install contentstack, as it will always install the most recent stable release. If you don't have `pip <https://pip.pypa.io/>`_
@@ -103,7 +103,7 @@ To retrieve multiple entries of a particular content type, use the code snippet 
 
 *For example:*
 
-    if you want to crop an image (with a width of 300 and height of 400), you simply need to append query parameters at the end of the image URL, such as
+    If you want to crop an image (with a width of 300 and height of 400), you simply need to append query parameters at the end of the image URL, such as
 
 .. code-block:: python
 

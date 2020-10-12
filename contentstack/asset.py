@@ -88,7 +88,7 @@ class Asset:
         return self
 
     def relative_urls(self):
-        r"""Include the relative URLs of the assets in the response.
+        """Include the relative URLs of the assets in the response.
 
         :return: Asset, so we can chain the call
 

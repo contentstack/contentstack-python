@@ -2,6 +2,8 @@
 **CHANGELOG**
 ================
 
+ENHANCEMENT, NEW FEATURE, BUG RESOLVE
+
 *v1.2.0*
 ============
 

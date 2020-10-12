@@ -2,6 +2,7 @@
 # clean all the .pyc files
 # find . -name \*.pyc -delete
 # pytest --cov=contentstack
+# pytest -v --cov=contentstack --cov-report=html
 import unittest
 from unittest import TestLoader, TestSuite
 from HtmlTestRunner import HTMLTestRunner

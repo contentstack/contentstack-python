@@ -100,7 +100,7 @@ class Entry(EntryQueryable):
         return self
     
     def include_fallback(self):
-        r"""Include the fallback locale publish content, if specified locale content is not publish.
+        """Include the fallback locale publish content, if specified locale content is not publish.
 
         :return: Entry, so we can chain the call
 
