@@ -54,15 +54,6 @@ class HTTPSConnection:  # R0903: Too few public methods
         We use requests.get method since we are sending a GET request.
         The four arguments we pass are url, verify(ssl), timeout, headers
         """
-        
-        # retry_strategy = Retry(
-        # total=3,
-        # status_forcelist=[429, 500, 502, 503, 504],
-        # method_whitelist=["GET"]
-        # )
-        # adapter = HTTPAdapter(max_retries=retry_strategy)
-        # http = requests.Session()
-        # http.mount("https://", adapter)
             
         try:
             self.headers.update(user_agents())
