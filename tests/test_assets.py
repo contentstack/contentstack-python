@@ -16,7 +16,8 @@ class TestAsset(unittest.TestCase):
         self.api_key = credentials.keys['api_key']
         self.delivery_token = credentials.keys['delivery_token']
         self.environment = credentials.keys['environment']
-        self.stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment)
+        self.host = credentials.keys['host']
+        self.stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment, host=self.host)
         self.asset_query = self.stack.asset_query()
 
     def test_01_assets_query_initial_run(self):
@@ -31,7 +32,8 @@ class TestAsset(unittest.TestCase):
         self.asset = self.stack.asset(uid=asset_uid)
         result = self.asset.relative_urls().include_dimension().fetch()
         if result is not None:
-            self.assertEqual({'height': 171, 'width': 294}, result['asset']['dimension'])
+            result = result['asset']['dimension']
+            self.assertEqual({'height': 315, 'width': 600}, result)
 
     def test_03_asset_uid(self):
         global asset_uid
@@ -45,7 +47,7 @@ class TestAsset(unittest.TestCase):
         self.asset = self.stack.asset(uid=asset_uid)
         result = self.asset.fetch()
         if result is not None:
-            self.assertEqual('image/jpeg', result['asset']['content_type'])
+            self.assertEqual('image/png', result['asset']['content_type'])
 
     def test_05_remove_environment(self):
         global asset_uid
@@ -64,6 +66,19 @@ class TestAsset(unittest.TestCase):
         self.asset = self.stack.asset(uid=asset_uid)
         self.asset.params("paramKey", 'paramValue')
         print(self.asset.base_url)
+
+    def test_071_check_none_coverage(self):
+        try:
+            self.asset = self.stack.asset(None)
+        except Exception as inst:
+            self.assertEqual('Please provide a valid uid', inst.args[0])
+
+    def test_072_check_none_coverage_test(self):
+        try:
+            self.asset = self.stack.asset(uid=asset_uid)
+            self.asset.params(2, 'value')
+        except Exception as inst:
+            self.assertEqual('Kindly provide valid params', inst.args[0])
 
     def test_08_support_include_fallback(self):
         global asset_uid
@@ -148,6 +163,14 @@ class TestAsset(unittest.TestCase):
     def test_23_support_include_fallback(self):
         query = self.asset_query.include_fallback()
         self.assertEqual({'include_fallback': 'true'}, query.asset_query_params)
+
+    def test_24_default_find_no_fallback(self):
+        _in = ['ja-jp']
+        entry = self.asset_query.locale('ja-jp').find()
+        self.assertEqual(0, entry['assets'].__len__())
+        entry_locale = 'publish_details' in entry
+        flag = entry_locale in entry['assets']
+        self.assertEqual(False, flag)
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestAsset)

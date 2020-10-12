@@ -17,11 +17,13 @@ class TestQuery(unittest.TestCase):
         self.api_key = credentials.keys['api_key']
         self.delivery_token = credentials.keys['delivery_token']
         self.environment = credentials.keys['environment']
-        stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment)
-        self.query = stack.content_type('room').query()
-        self.query1 = stack.content_type('product').query()
-        self.query2 = stack.content_type('app_theme').query()
-        self.query3 = stack.content_type('product').query()
+        self.host = credentials.keys['host']
+        self.stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment, host=self.host)
+
+        self.query = self.stack.content_type('room').query()
+        self.query1 = self.stack.content_type('product').query()
+        self.query2 = self.stack.content_type('app_theme').query()
+        self.query3 = self.stack.content_type('product').query()
 
     def test_01_functional_or_in_query_type_common_in_query(self):
         query1 = self.query1.where("price", QueryOperation.IS_LESS_THAN, fields=90)
@@ -125,18 +127,12 @@ class TestQuery(unittest.TestCase):
         logging.info(query.base_url)
         self.assertEqual({'include_fallback': 'true'}, query.query_params)
 
-    def test_19_entry_support_include_fallback_api_test(self):
-
-        api_key = 'blt2585ce4a79ba8bdf'
-        delivery_token = 'csaa34e51f8cb3e91fb506a469'
-        environment = 'dev'
-        dev_host = 'dev9-cdn.contentstack.com'
-        content_type = 'testincludefallback'
-
-        ifb_stack = contentstack.Stack(api_key, delivery_token, environment, host=dev_host)
-        query = ifb_stack.content_type(content_type).query()
-        result = query.include_fallback().locale('mr-in').find()
-        self.assertEqual('en-us', result['entries'][0]['locale'])
+    def test_19_default_find_one_fallback(self):
+        _in = ['ja-jp', 'en-us']
+        entry = self.query.locale('ja-jp').include_fallback().find_one()
+        self.assertEqual("Language was not found. Please try again.", entry['error_message'])
+        entry_locale = 'publish_details' in entry
+        self.assertEqual(False, entry_locale)
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestQuery)

@@ -186,12 +186,12 @@ class Query(BaseQuery, EntryQueryable):
         return self
     
     def include_fallback(self):
-        r"""Include the fallback locale publish content, if specified locale content is not publish.
+        """Include the fallback locale publish content, if specified locale content is not publish.
 
         :return: Query, so we can chain the call
 
         ----------------------------
-        Example::
+        Example:
 
             >>> import contentstack
             >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
