@@ -97,9 +97,9 @@ class AssetQuery(BaseQuery):
         """
         self.asset_query_params["relative_urls"] = "true"
         return self
-    
+
     def include_fallback(self):
-        r"""Include the fallback locale publish content, if specified locale content is not publish.
+        """Include the fallback locale publish content, if specified locale content is not publish.
 
         :return: AssetQuery, so we can chain the call
 
@@ -112,6 +112,23 @@ class AssetQuery(BaseQuery):
         ----------------------------
         """
         self.asset_query_params['include_fallback'] = "true"
+        return self
+
+    def locale(self, locale: str):
+        """Enter locale code. e.g., en-us
+        This retrieves published entries of specific locale..
+
+        :return: AssetQuery, so we can chain the call
+
+        ----------------------------
+        Example::
+
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> result = stack.asset_query().locale('en-us').find()
+        ----------------------------
+        """
+        self.asset_query_params['locale'] = locale
         return self
 
     def find(self):
