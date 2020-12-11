@@ -1,13 +1,12 @@
 import unittest
 
 from HtmlTestRunner import HTMLTestRunner
-
 import contentstack
 from contentstack.basequery import QueryOperation
 from tests import credentials
 
 # global asset_uid
-asset_uid = None
+asset_uid = 'bltbac3c14819c8da59'
 
 
 class TestAsset(unittest.TestCase):
@@ -25,15 +24,15 @@ class TestAsset(unittest.TestCase):
         if result is not None:
             global asset_uid
             self.asset_uid = result['assets'][7]['uid']
-            self.assertEqual(8, len(result['assets']))
+            self.assertEqual(9, len(result['assets']))
 
     def test_02_asset_method(self):
-        global asset_uid
+        # global asset_uid
         self.asset = self.stack.asset(uid=asset_uid)
         result = self.asset.relative_urls().include_dimension().fetch()
         if result is not None:
             result = result['asset']['dimension']
-            self.assertEqual({'height': 315, 'width': 600}, result)
+            self.assertEqual({'height': 50, 'width': 50}, result)
 
     def test_03_asset_uid(self):
         global asset_uid
@@ -93,7 +92,7 @@ class TestAsset(unittest.TestCase):
     def test_09_assets_query(self):
         result = self.asset_query.find()
         if result is not None:
-            self.assertEqual(8, len(result['assets']))
+            self.assertEqual(9, len(result['assets']))
 
     def test_10_assets_base_query_where_exclude_title(self):
         query = self.asset_query.where('title', QueryOperation.EXCLUDES, fields=['images_(1).jpg'])
@@ -174,10 +173,8 @@ class TestAsset(unittest.TestCase):
         self.assertEqual(False, flag)
 
 
-# suite = unittest.TestLoader().loadTestsFromTestCase(TestAsset)
-# runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
-# runner.run(suite)
+suite = unittest.TestLoader().loadTestsFromTestCase(TestAsset)
+runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
+runner.run(suite)
 
-if __name__ == '__main__':
-    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output='example_dir'))
 

@@ -1,7 +1,6 @@
 import logging
 import unittest
-
-import HtmlTestRunner
+from HtmlTestRunner import HTMLTestRunner
 import contentstack
 from tests import credentials
 entry_uid = None
@@ -140,11 +139,9 @@ class TestEntry(unittest.TestCase):
         content_type = self.stack.content_type('faq')
         entry = content_type.entry("878783238783").include_fallback()
         result = entry.fetch()
-        self.assertEqual({'include_fallback': 'true'}, entry.entry_param)
+        self.assertEqual({'environment': 'development', 'include_fallback': 'true'}, entry.entry_param)
 
 
-# suite = unittest.TestLoader().loadTestsFromTestCase(TestEntry)
-# runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
-# runner.run(suite)
-if __name__ == '__main__':
-    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output='example_dir'))
+suite = unittest.TestLoader().loadTestsFromTestCase(TestEntry)
+runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
+runner.run(suite)

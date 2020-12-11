@@ -55,12 +55,12 @@ class HTTPSConnection:  # R0903: Too few public methods
         """
         try:
             self.headers.update(user_agents())
-            # session = requests.Session()
-            # retry = Retry(connect=3, backoff_factor=0.5)
-            # adapter = HTTPAdapter(max_retries=retry)
-            # session.mount('https://', adapter)
-            # response = session.get(url, verify=True, headers=self.headers)
-            response = requests.get(url, verify=True, headers=self.headers)
+            session = requests.Session()
+            retry = Retry(connect=3, backoff_factor=0.5)
+            adapter = HTTPAdapter(max_retries=retry)
+            session.mount('https://', adapter)
+            response = session.get(url, verify=True, headers=self.headers)
+            # response = requests.get(url, verify=True, headers=self.headers)
             response.encoding = 'utf-8'
             return response.json()
         except Timeout:
