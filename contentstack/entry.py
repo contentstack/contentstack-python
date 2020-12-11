@@ -8,8 +8,8 @@ from urllib import parse
 from contentstack.entryqueryable import EntryQueryable
 
 
-# ************* Module stack **************
-# Your code has been rated at 9.89/10 by pylint
+# ************* Module Entry **************
+# Your code has been rated at 10/10 by pylint
 
 
 class Entry(EntryQueryable):
@@ -20,7 +20,7 @@ class Entry(EntryQueryable):
     Entry works with
     version={version_number}
     environment={environment_name}
-    locale={locale_code
+    locale={locale_code}
     """
 
     def __init__(self, http_instance, content_type_uid, entry_uid):
@@ -97,6 +97,25 @@ class Entry(EntryQueryable):
         if None in (key, value) and not isinstance(key, str):
             raise ValueError('Kindly provide valid key and value arguments')
         self.entry_param[key] = value
+        return self
+
+    def include_fallback(self):
+        """Retrieve the published content of the fallback locale if an entry is
+        not localized in specified locale.
+        :return: Entry, so we can chain the call
+        ----------------------------
+        Example::
+
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry(uid='entry_uid')
+            >>> entry = entry.include_fallback()
+            >>> result = entry.fetch()
+        ----------------------------
+        """
+        print('Requesting fallback....')
+        self.entry_param['include_fallback'] = 'true'
         return self
 
     def __get_base_url(self):

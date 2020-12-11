@@ -165,7 +165,7 @@ class BaseQuery:
             key {str} -- key of the query param
             value {any} -- value of query param
         Raises:
-            KeyError: when key or value found None
+            `KeyError`: when key or value found None
         Returns:
             self-- Class instance, So that method chaining can be performed
         """

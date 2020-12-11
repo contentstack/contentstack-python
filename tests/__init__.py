@@ -1,6 +1,8 @@
 # python3 -m unittest tests
 # clean all the .pyc files
 # find . -name \*.pyc -delete
+# pytest --cov=contentstack
+# pytest -v --cov=contentstack --cov-report=html
 import unittest
 from unittest import TestLoader, TestSuite
 from HtmlTestRunner import HTMLTestRunner
@@ -24,4 +26,3 @@ def all_tests():
     runner = HTMLTestRunner(output='reports')
     test_suite = unittest.TestLoader().discover('./', '*_test.py', '.')
     runner.run(test_suite)
-

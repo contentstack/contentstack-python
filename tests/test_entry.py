@@ -1,12 +1,9 @@
 import logging
 import unittest
-
 from HtmlTestRunner import HTMLTestRunner
-
 import contentstack
 from tests import credentials
-
-global entry_uid
+entry_uid = None
 
 
 class TestEntry(unittest.TestCase):
@@ -15,7 +12,8 @@ class TestEntry(unittest.TestCase):
         self.api_key = credentials.keys['api_key']
         self.delivery_token = credentials.keys['delivery_token']
         self.environment = credentials.keys['environment']
-        self.stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment)
+        self.host = credentials.keys['host']
+        self.stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment, host=self.host)
 
     def test_01_run_initial_query(self):
         query = self.stack.content_type('faq').query()
@@ -25,7 +23,7 @@ class TestEntry(unittest.TestCase):
             entry_uid = result['entries'][0]['uid']
             logging.debug(entry_uid)
             logging.info(' => query result is: {}'.format(result['entries']))
-            self.assertEqual('blt53ca1231625bdde4', result['entries'][0]['uid'])
+            self.assertEqual(entry_uid, result['entries'][0]['uid'])
 
     def test_02_entry_by_uid(self):
         global entry_uid
@@ -33,7 +31,8 @@ class TestEntry(unittest.TestCase):
         result = entry.fetch()
         if result is not None:
             logging.info(' => entry result is: {}'.format(result['entry']))
-            self.assertEqual('blt53ca1231625bdde4', result['entry']['uid'])
+            entry_uid = result['entry']['uid']
+            self.assertEqual(entry_uid, result['entry']['uid'])
 
     def test_03_entry_environment(self):
         global entry_uid
@@ -90,6 +89,57 @@ class TestEntry(unittest.TestCase):
             ["categories",
              "brand"])
         response = github_entry.fetch()
+        print(response)
+        categories = response['entry']['categories']
+        self.assertEqual(2, len(categories))
+
+    def test_13_entry_support_include_fallback_unit_test(self):
+        global entry_uid
+        entry = self.stack.content_type('faq').entry(entry_uid).include_fallback()
+        self.assertEqual(True, entry.entry_param.__contains__('include_fallback'))
+
+    def test_14_entry_queryable_only(self):
+        try:
+            entry = self.stack.content_type('faq').entry(entry_uid).only(4)
+            result = entry.fetch()
+            self.assertEqual(None, result['uid'])
+        except KeyError as e:
+            if hasattr(e, 'message'):
+                self.assertEqual("Invalid field_uid provided", e.args[0])
+
+    def test_15_entry_queryable_excepts(self):
+        try:
+            entry = self.stack.content_type('faq').entry(entry_uid).excepts(4)
+            result = entry.fetch()
+            self.assertEqual(None, result['uid'])
+        except KeyError as e:
+            if hasattr(e, 'message'):
+                self.assertEqual("Invalid field_uid provided", e.args[0])
+
+    def test_16_entry_queryable_include_content_type(self):
+        entry = self.stack.content_type('faq').entry(entry_uid).include_content_type()
+        self.assertEqual({'include_content_type': 'true', 'include_global_field_schema': 'true'},
+                         entry.entry_queryable_param)
+
+    def test_17_entry_queryable_include_reference_content_type(self):
+        entry = self.stack.content_type('faq').entry(entry_uid).include_content_type()
+        self.assertEqual({'include_content_type': 'true', 'include_global_field_schema': 'true'},
+                         entry.entry_queryable_param)
+
+    def test_18_entry_queryable_include_reference_content_type_uid(self):
+        entry = self.stack.content_type('faq').entry(entry_uid).include_reference_content_type_uid()
+        self.assertEqual({'include_reference_content_type_uid': 'true'},
+                         entry.entry_queryable_param)
+
+    def test_19_entry_queryable_add_param(self):
+        entry = self.stack.content_type('faq').entry(entry_uid).add_param('cms', 'contentstack')
+        self.assertEqual({'cms': 'contentstack'}, entry.entry_queryable_param)
+
+    def test_20_entry_include_fallback(self):
+        content_type = self.stack.content_type('faq')
+        entry = content_type.entry("878783238783").include_fallback()
+        result = entry.fetch()
+        self.assertEqual({'environment': 'development', 'include_fallback': 'true'}, entry.entry_param)
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestEntry)

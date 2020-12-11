@@ -11,18 +11,17 @@ from urllib import parse
 
 
 class Asset:
-    r"""Asset refer to all the media files (images, videos, PDFs, audio files, and so on)."""
+    r"""`Asset` refer to all the media files (images, videos, PDFs, audio files, and so on)."""
 
     def __init__(self, http_instance, uid=None):
         self.http_instance = http_instance
-        self.__query_params = {}
+        self.asset_params = {}
         self.__uid = uid
         if self.__uid is None or self.__uid.strip() == 0:
             raise KeyError('Please provide valid uid')
         self.base_url = '{}/assets/{}'.format(self.http_instance.endpoint, self.__uid)
         if 'environment' in self.http_instance.headers:
-            self.__query_params['environment'] = self.http_instance.headers['environment']
-            # self.http_instance.headers.pop('environment')
+            self.asset_params['environment'] = self.http_instance.headers['environment']
 
     def environment(self, environment):
         r"""Provide the name of the environment if you wish to retrieve the assets published
@@ -30,7 +29,7 @@ class Asset:
 
         :param environment {str} - name of the environment
 
-        :return: Asset, so we can chain the call
+        :return: `Asset`, so we can chain the call
 
         -------------------------------
         [Example]:
@@ -48,7 +47,7 @@ class Asset:
     def remove_environment(self):
         r"""Removes environment from the request params
 
-        :return: Asset, so we can chain the call
+        :return: `Asset`, so we can chain the call
 
         -------------------------------
         [Example]:
@@ -71,7 +70,7 @@ class Asset:
 
         :param value: value of the query parameter
 
-        :return: Asset, so we can chain the call
+        :return: `Asset`, so we can chain the call
 
         -----------------------------
         Example::
@@ -84,13 +83,13 @@ class Asset:
         """
         if None in (key, value) or not isinstance(key, str):
             raise KeyError('Kindly provide valid params')
-        self.__query_params[key] = value
+        self.asset_params[key] = value
         return self
 
     def relative_urls(self):
-        r"""Include the relative URLs of the assets in the response.
+        """Include the relative URLs of the assets in the response.
 
-        :return: Asset, so we can chain the call
+        :return: `Asset`, so we can chain the call
 
         ----------------------------
         Example::
@@ -101,14 +100,14 @@ class Asset:
             >>> asset = asset.relative_urls()
         ----------------------------
         """
-        self.__query_params['relative_urls'] = 'true'
+        self.asset_params['relative_urls'] = 'true'
         return self
 
     def include_dimension(self):
         r"""Include the dimensions (height and width) of the image in the response.
         Supported image types: JPG, GIF, PNG, WebP, BMP, TIFF, SVG, and PSD.
 
-        :return: Asset, so we can chain the call
+        :return: `Asset`, so we can chain the call
 
         ----------------------------
         Example::
@@ -119,7 +118,24 @@ class Asset:
             >>> asset = asset.include_dimension()
         ----------------------------
         """
-        self.__query_params['include_dimension'] = "true"
+        self.asset_params['include_dimension'] = "true"
+        return self
+
+    def include_fallback(self):
+        r"""Retrieve the published content of the fallback locale if an
+        entry is not localized in specified locale
+        :return: `Asset`, so we can chain the call
+
+        ----------------------------
+        Example::
+
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> asset = stack.asset(uid='asset_uid')
+            >>> result = asset.include_fallback().fetch()
+        ----------------------------
+        """
+        self.asset_params['include_fallback'] = "true"
         return self
 
     def fetch(self):
@@ -136,5 +152,5 @@ class Asset:
             >>> result = asset.fetch()
         ------------------------------
         """
-        url = '{}?{}'.format(self.base_url, parse.urlencode(self.__query_params))
+        url = '{}?{}'.format(self.base_url, parse.urlencode(self.asset_params))
         return self.http_instance.get(url)

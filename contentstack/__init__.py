@@ -14,11 +14,10 @@ from .contenttype import ContentType
 from .https_connection import HTTPSConnection
 from .stack import Stack
 from .utility import Utils
-# from contentstack import *
 
 __title__ = 'contentstack-python'
 __author__ = 'Contentstack'
 __status__ = 'debug'
-__version__ = '1.1.0'
+__version__ = '1.2.0'
 __endpoint__ = 'cdn.contentstack.io'
 __email__ = 'shailesh.mishra@contentstack.com'

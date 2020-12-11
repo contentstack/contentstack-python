@@ -5,7 +5,7 @@ to first create a content type, and then create entries using the
 content type.
 """
 
-# ************* Module asset **************
+# ************* Module ContentType **************
 # Your code has been rated at 10.00/10 by pylint
 
 from urllib import parse

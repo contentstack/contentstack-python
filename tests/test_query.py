@@ -1,8 +1,6 @@
 import logging
 import unittest
-
 from HtmlTestRunner import HTMLTestRunner
-
 import contentstack
 from contentstack.basequery import QueryOperation
 from contentstack.query import QueryType
@@ -17,11 +15,13 @@ class TestQuery(unittest.TestCase):
         self.api_key = credentials.keys['api_key']
         self.delivery_token = credentials.keys['delivery_token']
         self.environment = credentials.keys['environment']
-        stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment)
-        self.query = stack.content_type('room').query()
-        self.query1 = stack.content_type('product').query()
-        self.query2 = stack.content_type('app_theme').query()
-        self.query3 = stack.content_type('product').query()
+        self.host = credentials.keys['host']
+        self.stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment, host=self.host)
+
+        self.query = self.stack.content_type('room').query()
+        self.query1 = self.stack.content_type('product').query()
+        self.query2 = self.stack.content_type('app_theme').query()
+        self.query3 = self.stack.content_type('product').query()
 
     def test_01_functional_or_in_query_type_common_in_query(self):
         query1 = self.query1.where("price", QueryOperation.IS_LESS_THAN, fields=90)
@@ -114,8 +114,32 @@ class TestQuery(unittest.TestCase):
     def test_17_base_remove_param(self):
         query = self.query3.remove_param("keyOne")
         logging.info(query.base_url)
+        
+    def test_18_support_include_fallback(self):
+        query = self.query3.include_fallback()
+        logging.info(query.base_url)
+        self.assertEqual('true', query.query_params['include_fallback'])
+        
+    def test_18_support_include_fallback_url(self):
+        query = self.query3.include_fallback()
+        logging.info(query.base_url)
+        self.assertEqual({'include_fallback': 'true'}, query.query_params)
+
+    def test_19_default_find_without_fallback(self):
+        _in = ['en-gb', 'en-us']
+        entry = self.query.locale('en-gb').find()
+        uid = entry['entries'][0]['uid']
+        self.assertEqual('bltc7911efae23cac48', uid)
+        self.assertEqual(1, len(entry))
+
+    def test_20_default_find_with_fallback(self):
+        _in = ['en-gb', 'en-us']
+        entry = self.query.locale('en-gb').include_fallback().find()
+        entries = entry['entries']
+        self.assertEqual(29, len(entries))
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestQuery)
 runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
 runner.run(suite)
+

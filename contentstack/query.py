@@ -8,7 +8,8 @@ from contentstack.basequery import BaseQuery
 from contentstack.entryqueryable import EntryQueryable
 
 
-# Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+# ************* Module query.py **************
+# Your code has been rated at 10.00/10  by pylint
 
 
 class QueryType(enum.Enum):
@@ -79,71 +80,6 @@ class Query(BaseQuery, EntryQueryable):
             self.parameters.clear()
         self.query_params["query"] = json.dumps({query_type.value: __container})
         return self
-
-    # def and_query(self, *query_objects):
-    #     """
-    #     Get entries that satisfy all the conditions provided in the '$and' query.
-    #     Arguments:
-    #         query_objects {Query} -- query_objects for variable number
-    #         of arguments of type Query Object.
-    #     Raises:
-    #         ValueError: If query_objects is None
-    #     Returns:
-    #         Query -- Query object, so you can chain this call.
-    #     ---------------------------------
-    #     [Example]:
-    #         >>> import contentstack
-    #         >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
-    #         >>> query = stack.content_type('content_type_uid').query()
-    #         >>> query_one = query.where('field_uid',
-    #                                 QueryOperation.EQUALS, fields=['field1', 'field2', 'field3'])
-    #         >>> query_two = query.where('field_uid',
-    #                                 QueryOperation.EQUALS, fields=['field1', 'field2', 'field3'])
-    #         >>> result = query.and_query(query_one, query_two).find()
-    #     ---------------------------------
-    #     """
-    #     __container = []
-    #     if len(query_objects) > 0:
-    #         for query in query_objects:
-    #             __container.append(query.parameters)
-    #     self.query_params["query"] = json.dumps({"$and": __container})
-    #     if len(self.parameters) > 0:
-    #         self.parameters.clear()
-    #     return self
-    #
-    # def or_query(self, *query_objects):
-    #     """
-    #     Get all entries that satisfy at least
-    #     one of the given conditions provided in the '$or' query.
-    #     Arguments:
-    #         query_objects {object} -- query_objects for variable
-    #         number of arguments of type Query Object.
-    #     Raises:
-    #         ValueError: If query_objects is None
-    #     Returns:
-    #         Query -- Query object, so you can chain this call.
-    #     ----------------------------------
-    #     [Example]:
-    #
-    #         >>> import contentstack
-    #         >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
-    #         >>> query = stack.content_type('content_type_uid').query()
-    #         >>> query_one = query.where('field_uid',
-    #                             QueryOperation.EQUALS, fields=['field1', 'field2', 'field3'])
-    #         >>> query_two = query.where('field_uid',
-    #                             QueryOperation.EQUALS, fields=['field1', 'field2', 'field3'])
-    #         >>> result = query.or_query(query_one, query_two).find()
-    #     ----------------------------------
-    #     """
-    #     __container = []
-    #     if len(query_objects) > 0:
-    #         for i in range(len(query_objects)):
-    #             obj = query_objects[i].parameters[list(query_objects[i].parameters)[i]]
-    #             __container.append(obj)
-    #     self.query_params["query"] = json.dumps({"$or": __container})
-    #     if len(self.parameters) > 0:
-    #         self.parameters.clear()
-    #     return self
 
     def tags(self, *tags):
         """
@@ -250,6 +186,27 @@ class Query(BaseQuery, EntryQueryable):
             raise ValueError('Invalid Key or Value provided')
         return self
 
+
+    def include_fallback(self):
+        """Retrieve the published content of the fallback locale if an
+        entry is not localized in specified locale.
+
+        :return: Query, so we can chain the call
+
+        ----------------------------
+        Example:
+
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
+            >>> query = query.include_fallback()
+            >>> result = query.find()
+        ----------------------------
+        """
+        self.query_params['include_fallback'] = "true"
+        return self
+
     def find(self):
         """It fetches the query result.
         List of :class:`Entry <contentstack.entry.Entry>` objects.
@@ -267,8 +224,6 @@ class Query(BaseQuery, EntryQueryable):
             >>> result = query.find()
         -------------------------------------
         """
-        # if len(self.entry_queryable_param) > 0:
-        #     self.query_params.update(self.entry_queryable_param)
         return self.__execute_network_call()
 
     def find_one(self):
