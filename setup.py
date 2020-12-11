@@ -33,6 +33,7 @@ setup(
     license='MIT',
     test_suite='tests',
     install_requires=['requests>=1.1.0'],
+    include_package_data=True,
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
