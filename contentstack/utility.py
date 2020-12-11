@@ -6,7 +6,7 @@ Copyright 2019 Contentstack. All rights reserved.
 """
 
 # ************* Module utility checked using pylint **************
-# Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+# Your code has been rated at 10.00/10
 
 
 import json
@@ -63,7 +63,8 @@ class Utils:
 
     @staticmethod
     def get_complete_url(base_url: str, params: dict):
-        """ creates complete url using base_url and their respective parameters
+        """
+        creates complete url using base_url and their respective parameters
         :param base_url:
         :param params:
         :return:

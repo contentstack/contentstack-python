@@ -7,7 +7,8 @@ This module implements the Requests API.
 
 import platform
 from json import JSONDecodeError
-
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 import requests
 from requests.exceptions import Timeout, HTTPError
 
@@ -54,7 +55,12 @@ class HTTPSConnection:  # R0903: Too few public methods
         """
         try:
             self.headers.update(user_agents())
-            response = requests.get(url, verify=True, headers=self.headers)
+            session = requests.Session()
+            retry = Retry(connect=3, backoff_factor=0.5)
+            adapter = HTTPAdapter(max_retries=retry)
+            session.mount('https://', adapter)
+            response = session.get(url, verify=True, headers=self.headers)
+            # response = requests.get(url, verify=True, headers=self.headers)
             response.encoding = 'utf-8'
             return response.json()
         except Timeout:
