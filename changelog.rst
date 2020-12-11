@@ -9,18 +9,17 @@ ENHANCEMENT, NEW FEATURE, BUG RESOLVE
 
 **Date: 20-Oct-2020**
 
- - include_fallback Support Added
- - Timeout support included
+- **include_fallback support added**
+`entry`
+ - added support for include_fallback.
+`asset`
+ - added support for include_fallback.
+`assetquery`
+ - added support for include_fallback.
+`query`
+ - added support for include_fallback.
 
-
-**Entry**
- - Added support for include_fallback.
-**Asset**
- - Added support for include_fallback.
-**AssetQuery**
- - Added support for include_fallback.
-**Query**
- - Added support for include_fallback.
+- **Timeout support included**
 
 ============
 

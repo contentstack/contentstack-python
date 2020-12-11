@@ -1,7 +1,8 @@
 docutils==0.16
-keyring==21.4.0
-pkginfo==1.5.0.1
-requests==2.24.0
-pip~=20.2.3
+keyring==21.5.0
+pkginfo==1.6.1
+requests==2.25.0
+pip~=20.3.1
 py~=1.9.0
-setuptools~=50.3.0
+setuptools~=51.0.0
+html-testRunner==1.2.1

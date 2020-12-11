@@ -20,7 +20,7 @@ setup(
     name="Contentstack",
     status="Active",
     type="process",
-    created="17 Jun",
+    created="09 Jun 2020",
     keywords=contentstack.__title__,
     version=contentstack.__version__,
     author="Contentstack",
@@ -31,7 +31,7 @@ setup(
     url="https://github.com/contentstack/contentstack-python",
     packages=['contentstack'],
     license='MIT',
-    test_suite='tests.all_tests',
+    test_suite='tests',
     install_requires=['requests>=1.1.0'],
     classifiers=[
         "License :: OSI Approved :: MIT License",
