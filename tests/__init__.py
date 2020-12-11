@@ -26,4 +26,3 @@ def all_tests():
     runner = HTMLTestRunner(output='reports')
     test_suite = unittest.TestLoader().discover('./', '*_test.py', '.')
     runner.run(test_suite)
-

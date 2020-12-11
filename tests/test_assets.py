@@ -7,7 +7,7 @@ from contentstack.basequery import QueryOperation
 from tests import credentials
 
 # global asset_uid
-global asset_uid
+asset_uid = None
 
 
 class TestAsset(unittest.TestCase):
@@ -24,7 +24,7 @@ class TestAsset(unittest.TestCase):
         result = self.asset_query.find()
         if result is not None:
             global asset_uid
-            asset_uid = result['assets'][7]['uid']
+            self.asset_uid = result['assets'][7]['uid']
             self.assertEqual(8, len(result['assets']))
 
     def test_02_asset_method(self):
@@ -162,6 +162,7 @@ class TestAsset(unittest.TestCase):
 
     def test_23_support_include_fallback(self):
         query = self.asset_query.include_fallback()
+        result = query.find()
         self.assertEqual({'include_fallback': 'true'}, query.asset_query_params)
 
     def test_24_default_find_no_fallback(self):
@@ -173,6 +174,10 @@ class TestAsset(unittest.TestCase):
         self.assertEqual(False, flag)
 
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestAsset)
-runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
-runner.run(suite)
+# suite = unittest.TestLoader().loadTestsFromTestCase(TestAsset)
+# runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
+# runner.run(suite)
+
+if __name__ == '__main__':
+    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output='example_dir'))
+

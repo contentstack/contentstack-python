@@ -8,7 +8,8 @@ from contentstack.basequery import BaseQuery
 from contentstack.entryqueryable import EntryQueryable
 
 
-# Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+# ************* Module query.py **************
+# Your code has been rated at 10.00/10  by pylint
 
 
 class QueryType(enum.Enum):
@@ -184,9 +185,11 @@ class Query(BaseQuery, EntryQueryable):
         else:
             raise ValueError('Invalid Key or Value provided')
         return self
-    
+
+
     def include_fallback(self):
-        """Include the fallback locale publish content, if specified locale content is not publish.
+        """Retrieve the published content of the fallback locale if an
+        entry is not localized in specified locale.
 
         :return: Query, so we can chain the call
 

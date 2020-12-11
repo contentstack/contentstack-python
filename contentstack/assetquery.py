@@ -99,7 +99,8 @@ class AssetQuery(BaseQuery):
         return self
 
     def include_fallback(self):
-        """Include the fallback locale publish content, if specified locale content is not publish.
+        """Retrieve the published content of the fallback locale if an
+        entry is not localized in specified locale.
 
         :return: AssetQuery, so we can chain the call
 
@@ -111,7 +112,7 @@ class AssetQuery(BaseQuery):
             >>> result = stack.asset_query().include_fallback().find()
         ----------------------------
         """
-        self.asset_query_params['include_fallback'] = "true"
+        self.asset_query_params['include_fallback'] = 'true'
         return self
 
     def locale(self, locale: str):

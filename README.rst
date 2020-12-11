@@ -62,7 +62,7 @@ Contentstack Python SDK: 5-minute Quickstart
 
 .. code-block:: python
 
-   stack = contentstack.Stack('api_key', 'access_token', 'environment')
+   stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
 
 
 To get the API credentials mentioned above, log in to your Contentstack account and then in your top panel navigation, go to Settings &gt; Stack to view the API Key and Access Token.

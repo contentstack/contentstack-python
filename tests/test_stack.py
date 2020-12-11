@@ -1,8 +1,7 @@
 import logging
 import unittest
 
-from HtmlTestRunner import HTMLTestRunner
-
+import HtmlTestRunner
 import contentstack
 from contentstack.stack import ContentstackRegion
 from tests import credentials
@@ -167,6 +166,8 @@ class TestStack(unittest.TestCase):
                 self.assertEqual(11, result['content_types']['count'])
 
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestStack)
-runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
-runner.run(suite)
+# suite = unittest.TestLoader().loadTestsFromTestCase(TestStack)
+# runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
+# runner.run(suite)
+if __name__ == '__main__':
+    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output='example_dir'))
