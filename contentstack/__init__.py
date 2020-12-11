@@ -14,7 +14,6 @@ from .contenttype import ContentType
 from .https_connection import HTTPSConnection
 from .stack import Stack
 from .utility import Utils
-# from contentstack import *
 
 __title__ = 'contentstack-python'
 __author__ = 'Contentstack'

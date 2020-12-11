@@ -1,13 +1,13 @@
 # CHANGELOG
 
 
-*v1.2.0*
+## _v1.2.0_
 ============
 
-_Date: 20-Oct-2020_
+_Date: 08-Dec-2020_
 
- - include_fallback Support Added
- - Timeout support included
+- include_fallback Support Added
+- Timeout support included
 
 - Entry 
    - added support for include_fallback.

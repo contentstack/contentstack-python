@@ -1,12 +1,10 @@
 import logging
 import unittest
 
-from HtmlTestRunner import HTMLTestRunner
-
+import HtmlTestRunner
 import contentstack
 from tests import credentials
-
-global entry_uid
+entry_uid = None
 
 
 class TestEntry(unittest.TestCase):
@@ -17,7 +15,6 @@ class TestEntry(unittest.TestCase):
         self.environment = credentials.keys['environment']
         self.host = credentials.keys['host']
         self.stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment, host=self.host)
-        # self.stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment)
 
     def test_01_run_initial_query(self):
         query = self.stack.content_type('faq').query()
@@ -94,6 +91,8 @@ class TestEntry(unittest.TestCase):
              "brand"])
         response = github_entry.fetch()
         print(response)
+        categories = response['entry']['categories']
+        self.assertEqual(2, len(categories))
 
     def test_13_entry_support_include_fallback_unit_test(self):
         global entry_uid
@@ -137,7 +136,15 @@ class TestEntry(unittest.TestCase):
         entry = self.stack.content_type('faq').entry(entry_uid).add_param('cms', 'contentstack')
         self.assertEqual({'cms': 'contentstack'}, entry.entry_queryable_param)
 
+    def test_20_entry_include_fallback(self):
+        content_type = self.stack.content_type('faq')
+        entry = content_type.entry("878783238783").include_fallback()
+        result = entry.fetch()
+        self.assertEqual({'include_fallback': 'true'}, entry.entry_param)
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestEntry)
-runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
-runner.run(suite)
+
+# suite = unittest.TestLoader().loadTestsFromTestCase(TestEntry)
+# runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
+# runner.run(suite)
+if __name__ == '__main__':
+    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output='example_dir'))

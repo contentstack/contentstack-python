@@ -1,7 +1,8 @@
 import logging
 import unittest
 
-from HtmlTestRunner import HTMLTestRunner
+# from HtmlTestRunner import HTMLTestRunner
+import HtmlTestRunner
 
 import contentstack
 from contentstack.basequery import QueryOperation
@@ -127,14 +128,17 @@ class TestQuery(unittest.TestCase):
         logging.info(query.base_url)
         self.assertEqual({'include_fallback': 'true'}, query.query_params)
 
-    def test_19_default_find_one_fallback(self):
-        _in = ['ja-jp', 'en-us']
-        entry = self.query.locale('ja-jp').include_fallback().find_one()
-        self.assertEqual("Language was not found. Please try again.", entry['error_message'])
-        entry_locale = 'publish_details' in entry
-        self.assertEqual(False, entry_locale)
+    # def test_19_default_find_fallback(self):
+    #     _in = ['ja-jp', 'en-us']
+    #     entry = self.query.locale('ja-jp').include_fallback().find()
+    #     self.assertEqual("Language was not found. Please try again.", entry['error_message'])
+    #     entry_locale = 'publish_details' in entry
+    #     self.assertEqual(False, entry_locale)
 
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestQuery)
-runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
-runner.run(suite)
+# suite = unittest.TestLoader().loadTestsFromTestCase(TestQuery)
+# runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
+# runner.run(suite)
+if __name__ == '__main__':
+    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output='example_dir'))
+

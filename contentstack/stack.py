@@ -127,7 +127,7 @@ class Stack:
             >>> import contentstack
             >>> stack = Stack('api_key', 'delivery_token', 'environment')
             >>> asset_instance = stack.asset(uid='asset_uid')
-            >>> asset = asset_instance.fetch()
+            >>> result = asset_instance.fetch()
         -----------------------------
         """
         if uid is None or not isinstance(uid, str):
@@ -151,7 +151,7 @@ class Stack:
 
     def sync_init(self, content_type_uid=None, from_date=None, locale=None, publish_type=None):
         """
-        Constructs and initialises sync if no params provided else below mentioned params 
+        Constructs and initialises sync if no params provided else below mentioned params
         can be provided to get the response accordingly
         :param content_type_uid: subsequent syncs will only include the entries
                                  of the specified content_type.
