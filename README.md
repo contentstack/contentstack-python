@@ -1,22 +1,22 @@
 [![Contentstack](https://www.contentstack.com/docs/static/images/contentstack.png)](https://www.contentstack.com/)
 
-![Python package](https://github.com/contentstack/contentstack-python/workflows/Python%20package/badge.svg?branch=1.2.0)  ![Coverage](https://raw.githubusercontent.com/contentstack/contentstack-python/b4edf799276f586dce3e57fa5502036cd5fd8da3/coverage.svg) ![pip](https://img.shields.io/badge/pip-1.2.0-blue?style=plastic) [![GitHub license](https://img.shields.io/github/license/contentstack/contentstack-python?style=plastic)](https://github.com/contentstack/contentstack-python/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/contentstack/contentstack-python?style=plastic)](https://github.com/contentstack/contentstack-python/stargazers)
+![Python package](https://github.com/contentstack/contentstack-python/workflows/Python%20package/badge.svg?branch=master)  ![Coverage](https://raw.githubusercontent.com/contentstack/contentstack-python/b4edf799276f586dce3e57fa5502036cd5fd8da3/coverage.svg) ![pip](https://img.shields.io/badge/pip-1.2.0-blue?style=plastic) [![GitHub license](https://img.shields.io/github/license/contentstack/contentstack-python?style=plastic)](https://github.com/contentstack/contentstack-python/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/contentstack/contentstack-python?style=plastic)](https://github.com/contentstack/contentstack-python/stargazers)
 
-## `Python SDK for Contentstack`
+## Python SDK for Contentstack
 
 Contentstack is a headless CMS with an API-first approach. It is a CMS that developers can use to build powerful cross-platform applications in their favorite languages. Build your application frontend, and Contentstack will take care of the rest. [`Read More`](https://www.contentstack.com/).
 
 Contentstack provides Python SDK to build application on top of Python. Given below is the detailed guide and helpful resources to get started with our Python SDK.
 
-### `Prerequisite`
+### Prerequisite
 
-You will need python 3 installed on your machine. You can install it from [`here`](https://www.python.org/ftp/python/3.7.4/python-3.7.4-macosx10.9.pkg).
+You will need python 3 installed on your machine. You can install it from [here](https://www.python.org/ftp/python/3.7.4/python-3.7.4-macosx10.9.pkg).
 
-### `Setup and Installation`
+### Setup and Installation
 
 To use the Contentstack Python SDK to your existing project, perform the steps given below:
 
-### `Install contentstack pip`
+### Install contentstack pip
 
 	```pyhton
 	pip install contentstack
@@ -25,31 +25,31 @@ To use the Contentstack Python SDK to your existing project, perform the steps g
 
 This is the preferred method to install contentstack, as it will always install the most recent stable release. If you don't have [`pip`](https://pip.pypa.io/) installed, this [`Python installation guide`](http://docs.python-guide.org/en/latest/starting/installation/) can guide you through the process
 
-### `Key Concepts for using Contentstack`
+### Key Concepts for using Contentstack
 
-#### `Stack`
+#### Stack
 
 A stack is like a container that holds the content of your app. Learn more about [`Stacks`](https://www.contentstack.com/docs/developers/set-up-stack).
 
-#### `Content Type`
+#### Content Type
 
 Content type lets you define the structure or blueprint of a page or a section of your digital property. It is a form-like page that gives Content Managers an interface to input and upload content. [`Read more`](https://www.contentstack.com/docs/developers/create-content-types).
 
-#### `Entry`
+#### Entry
 
 An entry is the actual piece of content created using one of the defined content types. Learn more about [`Entries`](https://www.contentstack.com/docs/content-managers/work-with-entries).
 
-#### `Asset`
+#### Asset
 
 Assets refer to all the media files (images, videos, PDFs, audio files, and so on) uploaded to Contentstack. These files can be used in multiple entries. Read more about [`Assets`](https://www.contentstack.com/docs/content-managers/work-with-assets).
 
-#### `Environment`
+#### Environment
 
 A publishing environment corresponds to one or more deployment servers or a content delivery destination where the entries need to be published. Learn how to work with [`Environments`](https://www.contentstack.com/docs/developers/set-up-environments).
 
-### `Contentstack Python SDK: 5-minute Quickstart`
+### Contentstack Python SDK: 5-minute Quickstart
 
-#### `Initializing your SDK`
+#### Initializing your SDK
 
 To initialize the SDK, specify application  API key, access token, and environment name of the stack as shown in the snippet given below, You can provide optional parameters for config:
 
