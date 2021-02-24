@@ -20,9 +20,7 @@ Setup and Installation
   To use the Contentstack Python SDK to your existing project, perform the steps given below:
 
 .. code-block:: python
-
-   install contentstack pip
-
+    install contentstack pip
 
 This is the preferred method to install contentstack, as it will always install the most recent stable release. If you don't have `pip <https://pip.pypa.io/>`_
 installed, this `Python installation guide <http://docs.python-guide.org/en/latest/starting/installation/>`_ can guide you through the process

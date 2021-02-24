@@ -8,6 +8,7 @@ this as a container that holds authentication related data.
 
 import logging
 import enum
+from urllib3.util import Retry
 from urllib import parse
 from contentstack.asset import Asset
 from contentstack.assetquery import AssetQuery
@@ -36,7 +37,7 @@ class Stack:
     # pylint: disable=too-many-arguments
     def __init__(self, api_key, delivery_token, environment,
                  host='cdn.contentstack.io',
-                 version='v3', region=ContentstackRegion.US):
+                 version='v3', region=ContentstackRegion.US, timeout=30, retry_strategy=Retry()):
         """
         Class that wraps the credentials of the authenticated user. Think of
         this as a container that holds authentication related data.
@@ -46,6 +47,14 @@ class Stack:
         :param host: (optional) host of the stack default is cdm.contentstack.io
         :param version: (optional) apiVersion of the stack default is v3
         :param region: (optional) region support of the stack default is ContentstackRegion.US
+        :param retry_strategy (optional) custom retry_strategy can be set.
+        ```
+        # Method to create retry_strategy: create object of Retry() and provide the
+        # required parameters like below
+        **Example:**
+        >>> retry_strategy = Retry(total=5, backoff_factor=1, status_forcelist=[408, 429])
+        >>> stack = contentstack.Stack("APIKey", "deliveryToken", "environment", retry_strategy= retry_strategy)
+        ```
         """
         logging.basicConfig(level=logging.DEBUG)
         self.headers = {}
@@ -59,6 +68,8 @@ class Stack:
         self.host = host
         self.version = version
         self.region = region
+        self.timeout = timeout
+        self.retry_strategy = retry_strategy
         self.__validate_stack()
 
     def __validate_stack(self):
@@ -75,8 +86,10 @@ class Stack:
         # prepare Headers:`
         self.headers = {'api_key': self.api_key, 'access_token': self.delivery_token,
                         'environment': self.environment}
-        self.http_instance = HTTPSConnection(endpoint=self.endpoint, headers=self.headers)
+        self.http_instance = HTTPSConnection(endpoint=self.endpoint,
+                                             headers=self.headers, timeout=self.timeout, retry_strategy=self.retry_strategy)
         # call httpRequest instance & pass the endpoint and headers
+
 
     @property
     def get_api_key(self):

@@ -1,8 +1,11 @@
 # python3 -m unittest tests
+# nosetests --with-coverage --cover-html
 # clean all the .pyc files
 # find . -name \*.pyc -delete
+# nosetests --with-coverage --cover-html
 # pytest --cov=contentstack
 # pytest -v --cov=contentstack --cov-report=html
+# pytest --html=report/test-report.html
 import unittest
 from unittest import TestLoader, TestSuite
 from HtmlTestRunner import HTMLTestRunner
@@ -23,6 +26,6 @@ def all_tests():
         test_module_entry,
         test_module_query,
     ])
-    runner = HTMLTestRunner(output='reports')
+    runner = HTMLTestRunner(output='reports', combine_reports=True, add_timestamp=False)
     test_suite = unittest.TestLoader().discover('./', '*_test.py', '.')
     runner.run(test_suite)

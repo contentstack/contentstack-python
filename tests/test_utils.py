@@ -2,6 +2,7 @@ import unittest
 
 from HtmlTestRunner import HTMLTestRunner
 from contentstack import Utils
+import contentstack
 
 
 class TestUtils(unittest.TestCase):

@@ -5,19 +5,13 @@ import contentstack
 from contentstack.basequery import QueryOperation
 from contentstack.query import QueryType
 from contentstack.utility import config_logging
-from tests import credentials
+import config
 
 
 class TestQuery(unittest.TestCase):
 
     def setUp(self):
-        config_logging(logging.WARNING)
-        self.api_key = credentials.keys['api_key']
-        self.delivery_token = credentials.keys['delivery_token']
-        self.environment = credentials.keys['environment']
-        self.host = credentials.keys['host']
-        self.stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment, host=self.host)
-
+        self.stack = contentstack.Stack(config.APIKey, config.delivery_token, config.environment, host=config.host)
         self.query = self.stack.content_type('room').query()
         self.query1 = self.stack.content_type('product').query()
         self.query2 = self.stack.content_type('app_theme').query()

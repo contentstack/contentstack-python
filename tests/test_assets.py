@@ -1,23 +1,24 @@
 import unittest
-
-from HtmlTestRunner import HTMLTestRunner
+import config
 import contentstack
 from contentstack.basequery import QueryOperation
-from tests import credentials
-
-# global asset_uid
+from HtmlTestRunner import HTMLTestRunner
 asset_uid = 'bltbac3c14819c8da59'
 
-
 class TestAsset(unittest.TestCase):
+    asset_uid = None
 
     def setUp(self):
-        self.api_key = credentials.keys['api_key']
-        self.delivery_token = credentials.keys['delivery_token']
-        self.environment = credentials.keys['environment']
-        self.host = credentials.keys['host']
-        self.stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment, host=self.host)
+        self.stack = contentstack.Stack(config.APIKey, config.delivery_token, config.environment, host=config.host)
         self.asset_query = self.stack.asset_query()
+
+    def test_011_setting_timeout(self):
+        excepted = 13  # setting a custom timeout
+        self.stack = contentstack.Stack(config.APIKey, config.delivery_token, config.environment, host=config.host,
+                                        timeout=excepted)
+        self.assertEqual(excepted, self.stack.timeout)
+        asset_query = self.stack.asset_query()
+        result = asset_query.find()
 
     def test_01_assets_query_initial_run(self):
         result = self.asset_query.find()
@@ -176,5 +177,3 @@ class TestAsset(unittest.TestCase):
 suite = unittest.TestLoader().loadTestsFromTestCase(TestAsset)
 runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
 runner.run(suite)
-
-

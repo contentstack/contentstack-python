@@ -1,31 +1,39 @@
 # CHANGELOG
 
+## _v1.2.1_
 
-## _v1.2.0_
 ============
 
-_Date: 08-Dec-2020_
+Date: 24-Feb-2021
+
+- Retry policy and timeout support included
+- set default timeout 30 sec
+-----------------------------
+
+
+## _v1.2.0_
+
+============
+
+Date: 08-Dec-2020
 
 - include_fallback Support Added
 - Timeout support included
 
-- Entry 
-   - added support for include_fallback.
+- Entry
+  - added support for include_fallback.
 - Asset
-   - added support for include_fallback.
+  - added support for include_fallback.
 - AssetQueryable
-   - added support for include_fallback.
+  - added support for include_fallback.
 - Query
-   - added support for include_fallback.
+  - added support for include_fallback.
 
 -----------------------------
 
-
-
-
 ## _v1.1.0_
 
-_Date: 10-Aug-2020 - include_reference issue fixed_
+Date: 10-Aug-2020 - include_reference issue fixed
 
 EntryQueryable
 
@@ -33,11 +41,9 @@ EntryQueryable
 
 -----------------------------
 
-
-
 ## _v1.0.0_
 
-_Date: 17-Jun-2020 - initial release_
+Date: 17-Jun-2020 - initial release
 
 Stack
 
@@ -59,10 +65,9 @@ Query
 
 -----------------------------
 
-
 ## _v0.1.0_
 
-_November-18, 2019 -beta release_
+November-18, 2019 -beta release
 
 Initial release for the contentstack-python-sdk for Content Delivery API
 

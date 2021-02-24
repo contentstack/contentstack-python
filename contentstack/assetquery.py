@@ -28,9 +28,7 @@ class AssetQuery(BaseQuery):
     def environment(self, environment):
         r"""Provide the name of the environment if you wish to retrieve the assets published
         in a particular environment.
-
         :param environment: environment of the stack
-
         :return: AssetQuery - so we can chain the call
 
         -----------------------------
@@ -49,9 +47,7 @@ class AssetQuery(BaseQuery):
         r"""Specify the version number of the asset that you wish to retrieve.
         If the version is not specified, the details of the latest version will be retrieved.
         To retrieve a specific version, keep the environment parameter blank.
-
         :param version: version number of the asset that you wish to retrieve
-
         :return: AssetQuery: so we can chain the call
 
         -----------------------------

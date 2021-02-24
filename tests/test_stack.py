@@ -1,26 +1,25 @@
 import logging
 import unittest
 
-import HtmlTestRunner
+import config
 import contentstack
 from contentstack.stack import ContentstackRegion
-from tests import credentials
 
-api_key = credentials.keys['api_key']
-delivery_token = credentials.keys['delivery_token']
-environment = credentials.keys['environment']
-host = credentials.keys['host']
-stack_instance = contentstack.Stack(api_key, delivery_token, environment, host=host)
+api_key = config.APIKey
+delivery_token = config.delivery_token
+environment = config.environment
+host = config.host
+stack_instance = contentstack.Stack(config.APIKey, config.delivery_token, config.environment, host=config.host)
 
 
 class TestStack(unittest.TestCase):
 
     def setUp(self):
-        self.api_key = credentials.keys['api_key']
-        self.delivery_token = credentials.keys['delivery_token']
-        self.environment = credentials.keys['environment']
-        self.host = credentials.keys['host']
-        self.stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment, host=self.host)
+        self.api_key = config.APIKey
+        self.delivery_token = config.delivery_token
+        self.environment = config.environment
+        self.host = config.host
+        self.stack = contentstack.Stack(config.APIKey, config.delivery_token, config.environment, host=config.host)
 
     def test_01_stack_credentials(self):
         self.assertEqual(self.environment, stack_instance.environment)
@@ -167,7 +166,5 @@ class TestStack(unittest.TestCase):
 
 
 # suite = unittest.TestLoader().loadTestsFromTestCase(TestStack)
-# runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
+# runner = HtmlTestRunner(combine_reports=True, add_timestamp=False)
 # runner.run(suite)
-if __name__ == '__main__':
-    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output='example_dir'))

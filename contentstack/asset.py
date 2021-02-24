@@ -26,14 +26,10 @@ class Asset:
     def environment(self, environment):
         r"""Provide the name of the environment if you wish to retrieve the assets published
         in a particular environment.
-
         :param environment {str} - name of the environment
-
         :return: `Asset`, so we can chain the call
-
         -------------------------------
         [Example]:
-
             >>> import contentstack
             >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> asset = stack.asset(uid='asset_uid')
@@ -46,12 +42,9 @@ class Asset:
 
     def remove_environment(self):
         r"""Removes environment from the request params
-
         :return: `Asset`, so we can chain the call
-
         -------------------------------
         [Example]:
-
             >>> import contentstack
             >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> asset = stack.asset(uid='asset_uid')
@@ -65,16 +58,11 @@ class Asset:
 
     def params(self, key, value):
         r"""params is used to pass additional parameters to the asset query
-
         :param key: key of the query parameter
-
         :param value: value of the query parameter
-
         :return: `Asset`, so we can chain the call
-
         -----------------------------
         Example::
-
             >>> import contentstack
             >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> asset = stack.asset(uid='asset_uid')
@@ -88,12 +76,9 @@ class Asset:
 
     def relative_urls(self):
         """Include the relative URLs of the assets in the response.
-
         :return: `Asset`, so we can chain the call
-
         ----------------------------
         Example::
-
             >>> import contentstack
             >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> asset = stack.asset(uid='asset_uid')
@@ -106,12 +91,9 @@ class Asset:
     def include_dimension(self):
         r"""Include the dimensions (height and width) of the image in the response.
         Supported image types: JPG, GIF, PNG, WebP, BMP, TIFF, SVG, and PSD.
-
         :return: `Asset`, so we can chain the call
-
         ----------------------------
         Example::
-
             >>> import contentstack
             >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> asset = stack.asset(uid='asset_uid')
@@ -125,10 +107,8 @@ class Asset:
         r"""Retrieve the published content of the fallback locale if an
         entry is not localized in specified locale
         :return: `Asset`, so we can chain the call
-
         ----------------------------
         Example::
-
             >>> import contentstack
             >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> asset = stack.asset(uid='asset_uid')
@@ -140,12 +120,9 @@ class Asset:
 
     def fetch(self):
         r"""This call fetches the latest version of a specific asset of a particular stack.
-
         :return: json response of asset
-
         -----------------------------
         [Example]:
-
             >>> import contentstack
             >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> asset = stack.asset(uid='asset_uid')

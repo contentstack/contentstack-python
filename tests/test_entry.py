@@ -2,18 +2,14 @@ import logging
 import unittest
 from HtmlTestRunner import HTMLTestRunner
 import contentstack
-from tests import credentials
+import config
 entry_uid = None
 
 
 class TestEntry(unittest.TestCase):
 
     def setUp(self):
-        self.api_key = credentials.keys['api_key']
-        self.delivery_token = credentials.keys['delivery_token']
-        self.environment = credentials.keys['environment']
-        self.host = credentials.keys['host']
-        self.stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment, host=self.host)
+        self.stack = contentstack.Stack(config.APIKey, config.delivery_token, config.environment, host=config.host)
 
     def test_01_run_initial_query(self):
         query = self.stack.content_type('faq').query()
