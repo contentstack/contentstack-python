@@ -2,6 +2,19 @@
 **CHANGELOG**
 ================
 
+Retry Policy and timeout support added
+
+*v1.2.1*
+
+============
+
+**Date: 24-Feb-2021**
+
+- Retry policy and timeout support included
+- set default timeout 30 sec
+
+============
+
 ENHANCEMENT, NEW FEATURE, BUG RESOLVE
 
 *v1.2.0*
@@ -10,13 +23,13 @@ ENHANCEMENT, NEW FEATURE, BUG RESOLVE
 **Date: 20-Oct-2020**
 
 - **include_fallback support added**
-`entry`
+entry
  - added support for include_fallback.
-`asset`
+asset
  - added support for include_fallback.
-`assetquery`
+assetquery
  - added support for include_fallback.
-`query`
+query
  - added support for include_fallback.
 
 - **Timeout support included**

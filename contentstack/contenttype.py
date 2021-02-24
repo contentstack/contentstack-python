@@ -9,7 +9,6 @@ content type.
 # Your code has been rated at 10.00/10 by pylint
 
 from urllib import parse
-
 from contentstack.entry import Entry
 from contentstack.query import Query
 

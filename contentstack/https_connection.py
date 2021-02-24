@@ -8,14 +8,16 @@ This module implements the Requests API.
 import platform
 from json import JSONDecodeError
 from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
+from urllib3.util import Retry
 import requests
 from requests.exceptions import Timeout, HTTPError
-
+import logging
 import contentstack
 
+log = logging.getLogger(__name__)
 
-def get_os_platform():
+
+def __get_os_platform():
     """ returns client platform """
     os_platform = platform.system()
     if os_platform == 'Darwin':
@@ -31,7 +33,7 @@ def get_os_platform():
 def user_agents():
     """User Agents for the Https"""
     header = {'sdk': dict(name=contentstack.__package__, version=contentstack.__version__),
-              'os': get_os_platform,
+              'os': __get_os_platform,
               'Content-Type': 'application/json'}
     package = "contentstack-python/{}".format(contentstack.__version__)
     return {'User-Agent': str(header), "X-User-Agent": package}
@@ -39,30 +41,46 @@ def user_agents():
 
 class HTTPSConnection:  # R0903: Too few public methods
     """Make Https Request to fetch the result as per requested url"""
+    # BACKOFF_MAX = 120
 
-    def __init__(self, endpoint, headers):
+    def __init__(self, endpoint, headers, timeout, retry_strategy):
         if None not in (endpoint, headers):
             self.payload = None
             self.endpoint = endpoint
             self.headers = headers
-            self.default_timeout = 10
+            self.timeout = timeout
+            self.retry_strategy = retry_strategy  # default timeout (period=30) seconds
 
     def get(self, url):
         """
-        Here we create a response object ‘response’ which will store the request-response.
+        Here we create a response object, `response` which will store the request-response.
         We use requests.get method since we are sending a GET request.
         The four arguments we pass are url, verify(ssl), timeout, headers
         """
         try:
             self.headers.update(user_agents())
+
+            # Setting up custom retry adapter
             session = requests.Session()
-            retry = Retry(connect=3, backoff_factor=0.5)
-            adapter = HTTPAdapter(max_retries=retry)
+            # retry on 429 rate limit exceeded
+            # Diagnosing a 408 request timeout
+            # backoff_factor works on algorithm {backoff factor} * (2 ** ({number of total retries} - 1))
+            # This value is by default 0, meaning no exponential backoff will be set and
+            # retries will immediately execute. Make sure to set this to 1 in to avoid hammering your servers!.
+            # retries = Retry(total=5, backoff_factor=1, status_forcelist=[408, 429], allowed_methods=["GET"])
+
+            adapter = HTTPAdapter(max_retries=self.retry_strategy)
             session.mount('https://', adapter)
-            response = session.get(url, verify=True, headers=self.headers)
-            # response = requests.get(url, verify=True, headers=self.headers)
-            response.encoding = 'utf-8'
-            return response.json()
+            log.info('url: %s', url)
+            response = session.get(url, verify=True, headers=self.headers, timeout=self.timeout)
+            if response.encoding is None:
+                response.encoding = 'utf-8'
+
+            if response is not None:
+                return response.json()
+            else:
+                return {"error": "Unknown error", "error_code": 000, "error_message": "Unknown error"}
+
         except Timeout:
             raise TimeoutError('The request timed out')
         except ConnectionError:
@@ -72,6 +90,3 @@ class HTTPSConnection:  # R0903: Too few public methods
         except HTTPError:
             raise HTTPError('Http Error Occurred')
 
-    def update_connection_timeout(self, timeout: int):
-        """Facilitate to update timeout for the https request"""
-        self.default_timeout = timeout

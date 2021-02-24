@@ -5,4 +5,5 @@ requests==2.25.0
 pip~=20.3.1
 py~=1.9.0
 setuptools~=51.0.0
-html-testRunner==1.2.1
+wheel==0.35.1
+urllib3==1.26.3
