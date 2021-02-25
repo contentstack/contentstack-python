@@ -5,13 +5,14 @@ This module implements the Requests API.
 # ************* Module https_connection.py **************
 # Your code has been rated at 10.00/10  by pylint
 
+import logging
 import platform
 from json import JSONDecodeError
-from requests.adapters import HTTPAdapter
-from urllib3.util import Retry
+
 import requests
+from requests.adapters import HTTPAdapter
 from requests.exceptions import Timeout, HTTPError
-import logging
+
 import contentstack
 
 log = logging.getLogger(__name__)
@@ -41,15 +42,14 @@ def user_agents():
 
 class HTTPSConnection:  # R0903: Too few public methods
     """Make Https Request to fetch the result as per requested url"""
-    # BACKOFF_MAX = 120
 
     def __init__(self, endpoint, headers, timeout, retry_strategy):
         if None not in (endpoint, headers):
             self.payload = None
             self.endpoint = endpoint
             self.headers = headers
-            self.timeout = timeout
-            self.retry_strategy = retry_strategy  # default timeout (period=30) seconds
+            self.timeout = timeout  # default timeout (period=30) seconds
+            self.retry_strategy = retry_strategy
 
     def get(self, url):
         """
@@ -59,28 +59,17 @@ class HTTPSConnection:  # R0903: Too few public methods
         """
         try:
             self.headers.update(user_agents())
-
-            # Setting up custom retry adapter
             session = requests.Session()
-            # retry on 429 rate limit exceeded
-            # Diagnosing a 408 request timeout
-            # backoff_factor works on algorithm {backoff factor} * (2 ** ({number of total retries} - 1))
-            # This value is by default 0, meaning no exponential backoff will be set and
-            # retries will immediately execute. Make sure to set this to 1 in to avoid hammering your servers!.
-            # retries = Retry(total=5, backoff_factor=1, status_forcelist=[408, 429], allowed_methods=["GET"])
-
             adapter = HTTPAdapter(max_retries=self.retry_strategy)
             session.mount('https://', adapter)
-            log.info('url: %s', url)
+            # log.info('url: %s', url)
             response = session.get(url, verify=True, headers=self.headers, timeout=self.timeout)
             if response.encoding is None:
                 response.encoding = 'utf-8'
-
             if response is not None:
                 return response.json()
             else:
-                return {"error": "Unknown error", "error_code": 000, "error_message": "Unknown error"}
-
+                return {"error": "error details not found", "error_code": 422, "error_message": "unknown error"}
         except Timeout:
             raise TimeoutError('The request timed out')
         except ConnectionError:
@@ -89,4 +78,3 @@ class HTTPSConnection:  # R0903: Too few public methods
             raise TypeError('Invalid JSON in request')
         except HTTPError:
             raise HTTPError('Http Error Occurred')
-
