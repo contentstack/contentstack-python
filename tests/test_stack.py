@@ -5,10 +5,6 @@ import config
 import contentstack
 from contentstack.stack import ContentstackRegion
 
-api_key = config.api_key
-delivery_token = config.delivery_token
-environment = config.environment
-host = config.host
 stack_instance = contentstack.Stack(config.api_key, config.delivery_token, config.environment, host=config.host)
 
 
@@ -159,7 +155,6 @@ class TestStack(unittest.TestCase):
         if result is not None:
             if 'count' in result['content_types']:
                 self.assertEqual(11, result['content_types']['count'])
-
 
 # suite = unittest.TestLoader().loadTestsFromTestCase(TestStack)
 # runner = HtmlTestRunner(combine_reports=True, add_timestamp=False)
