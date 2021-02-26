@@ -8,7 +8,9 @@
 # pytest --html=report/test-report.html
 import unittest
 from unittest import TestLoader, TestSuite
+
 from HtmlTestRunner import HTMLTestRunner
+
 from .test_assets import TestAsset
 from .test_entry import TestEntry
 from .test_query import TestQuery

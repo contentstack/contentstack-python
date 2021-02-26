@@ -6,10 +6,12 @@ this as a container that holds authentication related data.
 # ************* Module stack **************
 # Your code has been rated at 10.00/10
 
-import logging
 import enum
-from urllib3.util import Retry
+import logging
 from urllib import parse
+
+from urllib3.util import Retry
+
 from contentstack.asset import Asset
 from contentstack.assetquery import AssetQuery
 from contentstack.contenttype import ContentType
@@ -37,7 +39,8 @@ class Stack:
     # pylint: disable=too-many-arguments
     def __init__(self, api_key, delivery_token, environment,
                  host='cdn.contentstack.io',
-                 version='v3', region=ContentstackRegion.US, timeout=30, retry_strategy=Retry()):
+                 version='v3', region=ContentstackRegion.US, timeout=30,
+                 retry_strategy=Retry(total=5, backoff_factor=0, status_forcelist=[408, 429])):
         """
         Class that wraps the credentials of the authenticated user. Think of
         this as a container that holds authentication related data.

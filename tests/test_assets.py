@@ -1,34 +1,55 @@
 import unittest
+
 import config
 import contentstack
 from contentstack.basequery import QueryOperation
 from HtmlTestRunner import HTMLTestRunner
-asset_uid = 'bltbac3c14819c8da59'
+
 
 class TestAsset(unittest.TestCase):
-    asset_uid = None
+    global asset_uid
 
     def setUp(self):
-        self.stack = contentstack.Stack(config.APIKey, config.delivery_token, config.environment, host=config.host)
+        self.asset_uid = None
+        self.stack = contentstack.Stack(config.api_key, config.delivery_token, config.environment, host=config.host)
         self.asset_query = self.stack.asset_query()
 
     def test_011_setting_timeout(self):
         excepted = 13  # setting a custom timeout
-        self.stack = contentstack.Stack(config.APIKey, config.delivery_token, config.environment, host=config.host,
+        self.stack = contentstack.Stack(config.api_key, config.delivery_token, config.environment, host=config.host,
                                         timeout=excepted)
         self.assertEqual(excepted, self.stack.timeout)
-        asset_query = self.stack.asset_query()
-        result = asset_query.find()
+
+    def test_011_setting_retry_strategy_unit(self):
+        from urllib3 import Retry
+        self.stack = contentstack.Stack(config.api_key, config.delivery_token,
+                                        config.environment, host=config.host,
+                                        retry_strategy=Retry(total=3, backoff_factor=1, status_forcelist=[408]))
+        self.assertEqual(1, self.stack.retry_strategy.backoff_factor)
+        self.assertEqual(3, self.stack.retry_strategy.total)
+        self.assertEqual([408], self.stack.retry_strategy.status_forcelist)
+
+    def test_011_setting_retry_strategy_api(self):
+        from urllib3 import Retry
+        self.stack = contentstack.Stack(config.api_key, config.delivery_token,
+                                        config.environment, host=config.host,
+                                        retry_strategy=Retry(total=5, backoff_factor=0, status_forcelist=[408, 429]))
+        self.assertEqual(0, self.stack.retry_strategy.backoff_factor)
+        self.assertEqual(5, self.stack.retry_strategy.total)
+        self.assertEqual([408, 429], self.stack.retry_strategy.status_forcelist)
 
     def test_01_assets_query_initial_run(self):
         result = self.asset_query.find()
         if result is not None:
-            global asset_uid
-            self.asset_uid = result['assets'][7]['uid']
-            self.assertEqual(9, len(result['assets']))
+            assets = result['assets']
+            for item in assets:
+                if item['title'] == 'if_icon-72-lightning_316154_(1).png':
+                    self.asset_uid = item['uid']
+                    global asset_uid
+                    asset_uid = item['uid']
+        self.assertEqual(9, len(assets))
 
     def test_02_asset_method(self):
-        # global asset_uid
         self.asset = self.stack.asset(uid=asset_uid)
         result = self.asset.relative_urls().include_dimension().fetch()
         if result is not None:
@@ -36,33 +57,29 @@ class TestAsset(unittest.TestCase):
             self.assertEqual({'height': 50, 'width': 50}, result)
 
     def test_03_asset_uid(self):
-        global asset_uid
+
         self.asset = self.stack.asset(uid=asset_uid)
         result = self.asset.fetch()
         if result is not None:
             self.assertEqual(asset_uid, result['asset']['uid'])
 
     def test_04_asset_filetype(self):
-        global asset_uid
         self.asset = self.stack.asset(uid=asset_uid)
         result = self.asset.fetch()
         if result is not None:
             self.assertEqual('image/png', result['asset']['content_type'])
 
     def test_05_remove_environment(self):
-        global asset_uid
         self.asset = self.stack.asset(uid=asset_uid)
         self.asset.remove_environment()
         self.assertEqual(False, 'environment' in self.asset.http_instance.headers)
 
     def test_06_add_environment(self):
-        global asset_uid
         self.asset = self.stack.asset(uid=asset_uid)
         self.asset.environment("dev")
         self.assertEqual('dev', self.asset.http_instance.headers['environment'])
 
     def test_07_add_param(self):
-        global asset_uid
         self.asset = self.stack.asset(uid=asset_uid)
         self.asset.params("paramKey", 'paramValue')
         print(self.asset.base_url)
@@ -81,7 +98,6 @@ class TestAsset(unittest.TestCase):
             self.assertEqual('Kindly provide valid params', inst.args[0])
 
     def test_08_support_include_fallback(self):
-        global asset_uid
         self.asset = self.stack.asset(uid=asset_uid)
         asset_params = self.asset.include_fallback().asset_params
         self.assertEqual({'environment': 'development', 'include_fallback': 'true'}, asset_params)
@@ -153,16 +169,15 @@ class TestAsset(unittest.TestCase):
         self.assertEqual({'version': '1'}, query.asset_query_params)
 
     def test_21_asset_query_with_include_dimension(self):
-        query = self.asset_query.environment("dev").include_dimension();
+        query = self.asset_query.environment("dev").include_dimension()
         self.assertEqual({'include_dimension': 'true'}, query.asset_query_params)
 
     def test_22_asset_query_with_relative_url(self):
-        query = self.asset_query.environment("dev").relative_url();
+        query = self.asset_query.environment("dev").relative_url()
         self.assertEqual({'relative_urls': 'true'}, query.asset_query_params)
 
     def test_23_support_include_fallback(self):
         query = self.asset_query.include_fallback()
-        result = query.find()
         self.assertEqual({'include_fallback': 'true'}, query.asset_query_params)
 
     def test_24_default_find_no_fallback(self):

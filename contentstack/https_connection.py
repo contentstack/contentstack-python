@@ -11,7 +11,7 @@ from json import JSONDecodeError
 
 import requests
 from requests.adapters import HTTPAdapter
-from requests.exceptions import Timeout, HTTPError
+from requests.exceptions import HTTPError, Timeout
 
 import contentstack
 

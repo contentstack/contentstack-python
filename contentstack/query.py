@@ -1,12 +1,12 @@
 """
 Contentstack provides certain queries that you can use to fetch filtered results
 """
-import json
 import enum
+import json
 from urllib import parse
+
 from contentstack.basequery import BaseQuery
 from contentstack.entryqueryable import EntryQueryable
-
 
 # ************* Module query.py **************
 # Your code has been rated at 10.00/10  by pylint

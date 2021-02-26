@@ -7,7 +7,6 @@ from urllib import parse
 
 from contentstack.entryqueryable import EntryQueryable
 
-
 # ************* Module Entry **************
 # Your code has been rated at 10/10 by pylint
 

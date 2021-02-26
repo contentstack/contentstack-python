@@ -9,7 +9,7 @@ entry_uid = None
 class TestEntry(unittest.TestCase):
 
     def setUp(self):
-        self.stack = contentstack.Stack(config.APIKey, config.delivery_token, config.environment, host=config.host)
+        self.stack = contentstack.Stack(config.api_key, config.delivery_token, config.environment, host=config.host)
 
     def test_01_run_initial_query(self):
         query = self.stack.content_type('faq').query()

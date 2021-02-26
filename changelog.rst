@@ -2,16 +2,13 @@
 **CHANGELOG**
 ================
 
-Retry Policy and timeout support added
-
-*v1.2.1*
-
+*v1.3.0*
 ============
 
-**Date: 24-Feb-2021**
+**Date: 26-Feb-2021**
 
 - Retry policy and timeout support included
-- set default timeout 30 sec
+- Set default timeout to 30 sec
 
 ============
 

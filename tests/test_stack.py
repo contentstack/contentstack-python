@@ -5,40 +5,36 @@ import config
 import contentstack
 from contentstack.stack import ContentstackRegion
 
-api_key = config.APIKey
+api_key = config.api_key
 delivery_token = config.delivery_token
 environment = config.environment
 host = config.host
-stack_instance = contentstack.Stack(config.APIKey, config.delivery_token, config.environment, host=config.host)
+stack_instance = contentstack.Stack(config.api_key, config.delivery_token, config.environment, host=config.host)
 
 
 class TestStack(unittest.TestCase):
 
     def setUp(self):
-        self.api_key = config.APIKey
-        self.delivery_token = config.delivery_token
-        self.environment = config.environment
-        self.host = config.host
-        self.stack = contentstack.Stack(config.APIKey, config.delivery_token, config.environment, host=config.host)
+        self.stack = contentstack.Stack(config.api_key, config.delivery_token, config.environment, host=config.host)
 
     def test_01_stack_credentials(self):
-        self.assertEqual(self.environment, stack_instance.environment)
-        self.assertEqual(self.delivery_token, stack_instance.delivery_token)
-        self.assertEqual(self.environment, stack_instance.environment)
-        self.assertEqual(self.api_key, stack_instance.api_key)
+        self.assertEqual(config.environment, stack_instance.environment)
+        self.assertEqual(config.delivery_token, stack_instance.delivery_token)
+        self.assertEqual(config.api_key, stack_instance.api_key)
+        self.assertEqual(config.host, stack_instance.host)
 
     def test_02_stack_region(self):
-        stack_region = contentstack.Stack(self.api_key, self.delivery_token, self.environment,
+        stack_region = contentstack.Stack(config.api_key, config.delivery_token, config.environment,
                                           region=ContentstackRegion.EU)
         self.assertEqual('eu-cdn.contentstack.com', stack_region.host)
 
     def test_03_stack_endpoint(self):
         logging.info('endpoint for the stack is {}'.format(self.stack.endpoint))
-        self.assertEqual("https://{}/v3".format(self.host), self.stack.endpoint)
+        self.assertEqual("https://{}/v3".format(config.host), self.stack.endpoint)
 
     def test_04_permission_error_api_key(self):
         try:
-            stack_local = contentstack.Stack('', self.delivery_token, self.environment)
+            stack_local = contentstack.Stack('', config.delivery_token, config.environment)
             self.assertEqual(None, stack_local.api_key)
         except PermissionError as e:
             if hasattr(e, 'message'):
@@ -46,7 +42,7 @@ class TestStack(unittest.TestCase):
 
     def test_05_permission_error_delivery_token(self):
         try:
-            stack = contentstack.Stack(self.api_key, '', self.environment)
+            stack = contentstack.Stack(config.api_key, '', config.environment)
             self.assertEqual(None, stack.delivery_token)
         except PermissionError as e:
             if hasattr(e, 'message'):
@@ -54,7 +50,7 @@ class TestStack(unittest.TestCase):
 
     def test_05_permission_error_environment(self):
         try:
-            stack = contentstack.Stack(self.api_key, self.delivery_token, '')
+            stack = contentstack.Stack(config.api_key, config.delivery_token, '')
             self.assertEqual(None, stack.delivery_token)
         except PermissionError as e:
             if hasattr(e, 'message'):
@@ -65,19 +61,19 @@ class TestStack(unittest.TestCase):
         self.fail("shouldn't happen")
 
     def test_07_get_api_key(self):
-        stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment)
-        self.assertEqual(self.api_key, stack.get_api_key)
+        stack = contentstack.Stack(config.api_key, config.delivery_token, config.environment)
+        self.assertEqual(config.api_key, stack.get_api_key)
 
     def test_08_get_delivery_token(self):
-        stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment)
-        self.assertEqual(self.delivery_token, stack.get_delivery_token)
+        stack = contentstack.Stack(config.api_key, config.delivery_token, config.environment)
+        self.assertEqual(config.delivery_token, stack.get_delivery_token)
 
     def test_09_get_environment(self):
-        stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment)
-        self.assertEqual(self.environment, stack.get_environment)
+        stack = contentstack.Stack(config.api_key, config.delivery_token, config.environment)
+        self.assertEqual(config.environment, stack.get_environment)
 
     def test_10_get_headers(self):
-        stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment)
+        stack = contentstack.Stack(config.api_key, config.delivery_token, config.environment)
         self.assertEqual(True, 'api_key' in stack.headers)
         self.assertEqual(True, 'access_token' in stack.get_headers)
         self.assertEqual(True, 'environment' in stack.get_headers)

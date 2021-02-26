@@ -1,17 +1,18 @@
 import logging
 import unittest
+
 from HtmlTestRunner import HTMLTestRunner
+
+import config
 import contentstack
 from contentstack.basequery import QueryOperation
 from contentstack.query import QueryType
-from contentstack.utility import config_logging
-import config
 
 
 class TestQuery(unittest.TestCase):
 
     def setUp(self):
-        self.stack = contentstack.Stack(config.APIKey, config.delivery_token, config.environment, host=config.host)
+        self.stack = contentstack.Stack(config.api_key, config.delivery_token, config.environment, host=config.host)
         self.query = self.stack.content_type('room').query()
         self.query1 = self.stack.content_type('product').query()
         self.query2 = self.stack.content_type('app_theme').query()
