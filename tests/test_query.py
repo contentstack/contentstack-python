@@ -1,12 +1,11 @@
 import logging
 import unittest
 
-from HtmlTestRunner import HTMLTestRunner
-
 import config
 import contentstack
 from contentstack.basequery import QueryOperation
 from contentstack.query import QueryType
+from HtmlTestRunner import HTMLTestRunner
 
 
 class TestQuery(unittest.TestCase):

@@ -1,8 +1,10 @@
 import logging
 import unittest
-from HtmlTestRunner import HTMLTestRunner
-import contentstack
+
 import config
+import contentstack
+from HtmlTestRunner import HTMLTestRunner
+
 entry_uid = None
 
 

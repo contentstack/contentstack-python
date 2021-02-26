@@ -20,7 +20,17 @@ class TestAsset(unittest.TestCase):
                                         timeout=excepted)
         self.assertEqual(excepted, self.stack.timeout)
 
-    def test_011_setting_retry_strategy_unit(self):
+    def test_12_setting_timeout_failure(self):
+        try:
+            excepted = 0.01  # setting a custom timeout
+            self.stack = contentstack.Stack(config.api_key, config.delivery_token, config.environment, host=config.host,
+                                            timeout=excepted)
+            # self.assertEqual(1, self.stack.timeout)
+            result = self.stack.asset_query().find()
+        except TimeoutError:
+            self.assertEquals('Timeout expired.', TimeoutError.__doc__, 'testing for  timeout error')
+
+    def test_013_setting_retry_strategy_unit(self):
         from urllib3 import Retry
         self.stack = contentstack.Stack(config.api_key, config.delivery_token,
                                         config.environment, host=config.host,
@@ -29,7 +39,7 @@ class TestAsset(unittest.TestCase):
         self.assertEqual(3, self.stack.retry_strategy.total)
         self.assertEqual([408], self.stack.retry_strategy.status_forcelist)
 
-    def test_011_setting_retry_strategy_api(self):
+    def test_014_setting_retry_strategy_api(self):
         from urllib3 import Retry
         self.stack = contentstack.Stack(config.api_key, config.delivery_token,
                                         config.environment, host=config.host,

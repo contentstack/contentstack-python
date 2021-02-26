@@ -1,8 +1,7 @@
 import unittest
 
-from HtmlTestRunner import HTMLTestRunner
-
 from contentstack import Utils
+from HtmlTestRunner import HTMLTestRunner
 
 
 class TestUtils(unittest.TestCase):
