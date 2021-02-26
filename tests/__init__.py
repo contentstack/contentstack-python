@@ -1,15 +1,14 @@
-# python3 -m unittest tests
+# pytest --html=tests/report/test-report.html 
+# above command runs tests and test reports generates in tests/report location.
 # nosetests --with-coverage --cover-html
 # clean all the .pyc files
 # find . -name \*.pyc -delete
 # nosetests --with-coverage --cover-html
 # pytest --cov=contentstack
 # pytest -v --cov=contentstack --cov-report=html
-# pytest --html=report/test-report.html
+# pytest --html=tests/report/test-report.html
 import unittest
 from unittest import TestLoader, TestSuite
-
-from HtmlTestRunner import HTMLTestRunner
 
 from .test_assets import TestAsset
 from .test_entry import TestEntry
@@ -28,6 +27,4 @@ def all_tests():
         test_module_entry,
         test_module_query,
     ])
-    runner = HTMLTestRunner(output='reports', combine_reports=True, add_timestamp=False)
-    test_suite = unittest.TestLoader().discover('./', '*_test.py', '.')
-    runner.run(test_suite)
+

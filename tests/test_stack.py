@@ -156,6 +156,3 @@ class TestStack(unittest.TestCase):
             if 'count' in result['content_types']:
                 self.assertEqual(11, result['content_types']['count'])
 
-# suite = unittest.TestLoader().loadTestsFromTestCase(TestStack)
-# runner = HtmlTestRunner(combine_reports=True, add_timestamp=False)
-# runner.run(suite)

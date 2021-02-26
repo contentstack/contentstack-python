@@ -5,7 +5,6 @@ import config
 import contentstack
 from contentstack.basequery import QueryOperation
 from contentstack.query import QueryType
-from HtmlTestRunner import HTMLTestRunner
 
 
 class TestQuery(unittest.TestCase):
@@ -132,8 +131,4 @@ class TestQuery(unittest.TestCase):
         entries = entry['entries']
         self.assertEqual(29, len(entries))
 
-
-suite = unittest.TestLoader().loadTestsFromTestCase(TestQuery)
-runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
-runner.run(suite)
 

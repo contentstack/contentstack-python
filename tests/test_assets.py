@@ -3,7 +3,6 @@ import unittest
 import config
 import contentstack
 from contentstack.basequery import QueryOperation
-from HtmlTestRunner import HTMLTestRunner
 
 
 class TestAsset(unittest.TestCase):
@@ -28,7 +27,7 @@ class TestAsset(unittest.TestCase):
             # self.assertEqual(1, self.stack.timeout)
             result = self.stack.asset_query().find()
         except TimeoutError:
-            self.assertEquals('Timeout expired.', TimeoutError.__doc__, 'testing for  timeout error')
+            self.assertEqual('Timeout expired.', TimeoutError.__doc__)
 
     def test_013_setting_retry_strategy_unit(self):
         from urllib3 import Retry
@@ -198,7 +197,3 @@ class TestAsset(unittest.TestCase):
         flag = entry_locale in entry['assets']
         self.assertEqual(False, flag)
 
-
-suite = unittest.TestLoader().loadTestsFromTestCase(TestAsset)
-runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
-runner.run(suite)

@@ -3,10 +3,8 @@ import unittest
 
 import config
 import contentstack
-from HtmlTestRunner import HTMLTestRunner
 
 entry_uid = None
-
 
 class TestEntry(unittest.TestCase):
 
@@ -139,7 +137,3 @@ class TestEntry(unittest.TestCase):
         result = entry.fetch()
         self.assertEqual({'environment': 'development', 'include_fallback': 'true'}, entry.entry_param)
 
-
-suite = unittest.TestLoader().loadTestsFromTestCase(TestEntry)
-runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
-runner.run(suite)

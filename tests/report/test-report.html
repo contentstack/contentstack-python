@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Test Report</title>
+    <link href="assets/style.css" rel="stylesheet" type="text/css"/></head>
+  <body onLoad="init()">
+    <script>/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+
+function toArray(iter) {
+    if (iter === null) {
+        return null;
+    }
+    return Array.prototype.slice.call(iter);
+}
+
+function find(selector, elem) { // eslint-disable-line no-redeclare
+    if (!elem) {
+        elem = document;
+    }
+    return elem.querySelector(selector);
+}
+
+function findAll(selector, elem) {
+    if (!elem) {
+        elem = document;
+    }
+    return toArray(elem.querySelectorAll(selector));
+}
+
+function sortColumn(elem) {
+    toggleSortStates(elem);
+    const colIndex = toArray(elem.parentNode.childNodes).indexOf(elem);
+    let key;
+    if (elem.classList.contains('result')) {
+        key = keyResult;
+    } else if (elem.classList.contains('links')) {
+        key = keyLink;
+    } else {
+        key = keyAlpha;
+    }
+    sortTable(elem, key(colIndex));
+}
+
+function showAllExtras() { // eslint-disable-line no-unused-vars
+    findAll('.col-result').forEach(showExtras);
+}
+
+function hideAllExtras() { // eslint-disable-line no-unused-vars
+    findAll('.col-result').forEach(hideExtras);
+}
+
+function showExtras(colresultElem) {
+    const extras = colresultElem.parentNode.nextElementSibling;
+    const expandcollapse = colresultElem.firstElementChild;
+    extras.classList.remove('collapsed');
+    expandcollapse.classList.remove('expander');
+    expandcollapse.classList.add('collapser');
+}
+
+function hideExtras(colresultElem) {
+    const extras = colresultElem.parentNode.nextElementSibling;
+    const expandcollapse = colresultElem.firstElementChild;
+    extras.classList.add('collapsed');
+    expandcollapse.classList.remove('collapser');
+    expandcollapse.classList.add('expander');
+}
+
+function showFilters() {
+    const filterItems = document.getElementsByClassName('filter');
+    for (let i = 0; i < filterItems.length; i++)
+        filterItems[i].hidden = false;
+}
+
+function addCollapse() {
+    // Add links for show/hide all
+    const resulttable = find('table#results-table');
+    const showhideall = document.createElement('p');
+    showhideall.innerHTML = '<a href="javascript:showAllExtras()">Show all details</a> / ' +
+                            '<a href="javascript:hideAllExtras()">Hide all details</a>';
+    resulttable.parentElement.insertBefore(showhideall, resulttable);
+
+    // Add show/hide link to each result
+    findAll('.col-result').forEach(function(elem) {
+        const collapsed = getQueryParameter('collapsed') || 'Passed';
+        const extras = elem.parentNode.nextElementSibling;
+        const expandcollapse = document.createElement('span');
+        if (extras.classList.contains('collapsed')) {
+            expandcollapse.classList.add('expander');
+        } else if (collapsed.includes(elem.innerHTML)) {
+            extras.classList.add('collapsed');
+            expandcollapse.classList.add('expander');
+        } else {
+            expandcollapse.classList.add('collapser');
+        }
+        elem.appendChild(expandcollapse);
+
+        elem.addEventListener('click', function(event) {
+            if (event.currentTarget.parentNode.nextElementSibling.classList.contains('collapsed')) {
+                showExtras(event.currentTarget);
+            } else {
+                hideExtras(event.currentTarget);
+            }
+        });
+    });
+}
+
+function getQueryParameter(name) {
+    const match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+
+function init () { // eslint-disable-line no-unused-vars
+    resetSortHeaders();
+
+    addCollapse();
+
+    showFilters();
+
+    sortColumn(find('.initial-sort'));
+
+    findAll('.sortable').forEach(function(elem) {
+        elem.addEventListener('click',
+            function() {
+                sortColumn(elem);
+            }, false);
+    });
+}
+
+function sortTable(clicked, keyFunc) {
+    const rows = findAll('.results-table-row');
+    const reversed = !clicked.classList.contains('asc');
+    const sortedRows = sort(rows, keyFunc, reversed);
+    /* Whole table is removed here because browsers acts much slower
+     * when appending existing elements.
+     */
+    const thead = document.getElementById('results-table-head');
+    document.getElementById('results-table').remove();
+    const parent = document.createElement('table');
+    parent.id = 'results-table';
+    parent.appendChild(thead);
+    sortedRows.forEach(function(elem) {
+        parent.appendChild(elem);
+    });
+    document.getElementsByTagName('BODY')[0].appendChild(parent);
+}
+
+function sort(items, keyFunc, reversed) {
+    const sortArray = items.map(function(item, i) {
+        return [keyFunc(item), i];
+    });
+
+    sortArray.sort(function(a, b) {
+        const keyA = a[0];
+        const keyB = b[0];
+
+        if (keyA == keyB) return 0;
+
+        if (reversed) {
+            return keyA < keyB ? 1 : -1;
+        } else {
+            return keyA > keyB ? 1 : -1;
+        }
+    });
+
+    return sortArray.map(function(item) {
+        const index = item[1];
+        return items[index];
+    });
+}
+
+function keyAlpha(colIndex) {
+    return function(elem) {
+        return elem.childNodes[1].childNodes[colIndex].firstChild.data.toLowerCase();
+    };
+}
+
+function keyLink(colIndex) {
+    return function(elem) {
+        const dataCell = elem.childNodes[1].childNodes[colIndex].firstChild;
+        return dataCell == null ? '' : dataCell.innerText.toLowerCase();
+    };
+}
+
+function keyResult(colIndex) {
+    return function(elem) {
+        const strings = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed',
+            'Skipped', 'Passed'];
+        return strings.indexOf(elem.childNodes[1].childNodes[colIndex].firstChild.data);
+    };
+}
+
+function resetSortHeaders() {
+    findAll('.sort-icon').forEach(function(elem) {
+        elem.parentNode.removeChild(elem);
+    });
+    findAll('.sortable').forEach(function(elem) {
+        const icon = document.createElement('div');
+        icon.className = 'sort-icon';
+        icon.textContent = 'vvv';
+        elem.insertBefore(icon, elem.firstChild);
+        elem.classList.remove('desc', 'active');
+        elem.classList.add('asc', 'inactive');
+    });
+}
+
+function toggleSortStates(elem) {
+    //if active, toggle between asc and desc
+    if (elem.classList.contains('active')) {
+        elem.classList.toggle('asc');
+        elem.classList.toggle('desc');
+    }
+
+    //if inactive, reset all other functions and add ascending active
+    if (elem.classList.contains('inactive')) {
+        resetSortHeaders();
+        elem.classList.remove('inactive');
+        elem.classList.add('active');
+    }
+}
+
+function isAllRowsHidden(value) {
+    return value.hidden == false;
+}
+
+function filterTable(elem) { // eslint-disable-line no-unused-vars
+    const outcomeAtt = 'data-test-result';
+    const outcome = elem.getAttribute(outcomeAtt);
+    const classOutcome = outcome + ' results-table-row';
+    const outcomeRows = document.getElementsByClassName(classOutcome);
+
+    for(let i = 0; i < outcomeRows.length; i++){
+        outcomeRows[i].hidden = !elem.checked;
+    }
+
+    const rows = findAll('.results-table-row').filter(isAllRowsHidden);
+    const allRowsHidden = rows.length == 0 ? true : false;
+    const notFoundMessage = document.getElementById('not-found-message');
+    notFoundMessage.hidden = !allRowsHidden;
+}
+</script>
+    <h1>test-report.html</h1>
+    <p>Report generated on 26-Feb-2021 at 18:44:15 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.1.1</p>
+    <h2>Environment</h2>
+    <table id="environment">
+      <tr>
+        <td>Packages</td>
+        <td>{"pluggy": "0.13.1", "py": "1.9.0", "pytest": "6.2.1"}</td></tr>
+      <tr>
+        <td>Platform</td>
+        <td>macOS-10.16-x86_64-i386-64bit</td></tr>
+      <tr>
+        <td>Plugins</td>
+        <td>{"html": "3.1.1", "metadata": "1.11.0"}</td></tr>
+      <tr>
+        <td>Python</td>
+        <td>3.8.5</td></tr></table>
+    <h2>Summary</h2>
+    <p>96 tests ran in 4.99 seconds. </p>
+    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="passed">96 passed</span>, <input checked="true" class="filter" data-test-result="skipped" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="skipped">1 skipped</span>, <input checked="true" class="filter" data-test-result="failed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="failed">0 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>
+    <h2>Results</h2>
+    <table id="results-table">
+      <thead id="results-table-head">
+        <tr>
+          <th class="sortable result initial-sort" col="result">Result</th>
+          <th class="sortable" col="name">Test</th>
+          <th class="sortable" col="duration">Duration</th>
+          <th class="sortable links" col="links">Links</th></tr>
+        <tr hidden="true" id="not-found-message">
+          <th colspan="4">No results found. Try to check the filters</th></tr></thead>
+      <tbody class="skipped results-table-row">
+        <tr>
+          <td class="col-result">Skipped</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_06_skip_for_nothing</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">(&#x27;/Users/shaileshmishra/Documents/workspace/contentstack/python/contentstack-python/tests/test_stack.py&#x27;, 55, &#x27;Skipped: demonstrating skipping&#x27;)<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_011_setting_timeout</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_013_setting_retry_strategy_unit</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_014_setting_retry_strategy_api</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_01_assets_query_initial_run</td>
+          <td class="col-duration">0.07</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_02_asset_method</td>
+          <td class="col-duration">0.05</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_03_asset_uid</td>
+          <td class="col-duration">0.06</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_04_asset_filetype</td>
+          <td class="col-duration">0.07</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_05_remove_environment</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_06_add_environment</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_071_check_none_coverage</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_072_check_none_coverage_test</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_07_add_param</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>https://cdn.contentstack.io/v3/assets/bltbac3c14819c8da59
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_08_support_include_fallback</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_09_assets_query</td>
+          <td class="col-duration">0.05</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_10_assets_base_query_where_exclude_title</td>
+          <td class="col-duration">0.07</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_11_assets_base_query_where_equals_str</td>
+          <td class="col-duration">0.05</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_12_assets_base_query_where_exclude</td>
+          <td class="col-duration">0.05</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_12_setting_timeout_failure</td>
+          <td class="col-duration">0.11</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> -------------------------------Captured log call-------------------------------- <br/>WARNING  urllib3.connectionpool:connectionpool.py:780 Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by &#x27;ReadTimeoutError(&quot;HTTPSConnectionPool(host=&#x27;cdn.contentstack.io&#x27;, port=443): Read timed out. (read timeout=0.01)&quot;)&#x27;: /v3/assets?environment=development&amp;
+WARNING  urllib3.connectionpool:connectionpool.py:780 Retrying (Retry(total=3, connect=None, read=None, redirect=None, status=None)) after connection broken by &#x27;ConnectTimeoutError(&lt;urllib3.connection.HTTPSConnection object at 0x7fbdcf7f27f0&gt;, &#x27;Connection to cdn.contentstack.io timed out. (connect timeout=0.01)&#x27;)&#x27;: /v3/assets?environment=development&amp;
+WARNING  urllib3.connectionpool:connectionpool.py:780 Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by &#x27;ConnectTimeoutError(&lt;urllib3.connection.HTTPSConnection object at 0x7fbdcf7f29a0&gt;, &#x27;Connection to cdn.contentstack.io timed out. (connect timeout=0.01)&#x27;)&#x27;: /v3/assets?environment=development&amp;
+WARNING  urllib3.connectionpool:connectionpool.py:780 Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by &#x27;ConnectTimeoutError(&lt;urllib3.connection.HTTPSConnection object at 0x7fbdcf7f2b50&gt;, &#x27;Connection to cdn.contentstack.io timed out. (connect timeout=0.01)&#x27;)&#x27;: /v3/assets?environment=development&amp;
+WARNING  urllib3.connectionpool:connectionpool.py:780 Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by &#x27;ReadTimeoutError(&quot;HTTPSConnectionPool(host=&#x27;cdn.contentstack.io&#x27;, port=443): Read timed out. (read timeout=0.01)&quot;)&#x27;: /v3/assets?environment=development&amp;<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_13_assets_base_query_where_includes</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_14_assets_base_query_where_is_less_than</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_15_assets_base_query_where_is_less_than_or_equal</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_16_assets_base_query_where_is_greater_than</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_17_assets_base_query_where_is_greater_than_or_equal</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_18_assets_base_query_where_matches</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_19_environment</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_20_asset_query_with_version</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_21_asset_query_with_include_dimension</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_22_asset_query_with_relative_url</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_23_support_include_fallback</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_assets.py::TestAsset::test_24_default_find_no_fallback</td>
+          <td class="col-duration">0.05</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_entry.py::TestEntry::test_01_run_initial_query</td>
+          <td class="col-duration">0.09</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_entry.py::TestEntry::test_02_entry_by_uid</td>
+          <td class="col-duration">0.05</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_entry.py::TestEntry::test_03_entry_environment</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_entry.py::TestEntry::test_04_entry_locale</td>
+          <td class="col-duration">0.43</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_entry.py::TestEntry::test_05_entry_version</td>
+          <td class="col-duration">1.12</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_entry.py::TestEntry::test_06_entry_params</td>
+          <td class="col-duration">0.05</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_entry.py::TestEntry::test_07_entry_base_only</td>
+          <td class="col-duration">0.20</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_entry.py::TestEntry::test_08_entry_base_excepts</td>
+          <td class="col-duration">0.05</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_entry.py::TestEntry::test_10_entry_base_include_reference_only</td>
+          <td class="col-duration">0.05</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_entry.py::TestEntry::test_11_entry_base_include_reference_excepts</td>
+          <td class="col-duration">0.05</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_entry.py::TestEntry::test_12_entry_include_reference_github_issue</td>
+          <td class="col-duration">0.06</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>{&#x27;entry&#x27;: {&#x27;title&#x27;: &#x27;Redmi Note Prime&#x27;, &#x27;url&#x27;: &#x27;/redmi-note-prime&#x27;, &#x27;description&#x27;: &#x27;&lt;p&gt;64-bit Qualcomm® SnapdragonTM 410, 2GB RAM,&lt;/p&gt;\n&lt;p&gt;16GB Flash (up to 32GB microSD support), 13.97cm (5.5) HD IPS display, 13MP rear camera, 4G dual SIM, 3100mAh removable battery&lt;/p&gt;&#x27;, &#x27;images&#x27;: [{&#x27;uid&#x27;: &#x27;blt50a7a9dd6866776f&#x27;, &#x27;title&#x27;: &#x27;01.jpg&#x27;, &#x27;created_by&#x27;: &#x27;bltcd82b2c6bf913241&#x27;, &#x27;updated_by&#x27;: &#x27;bltcd82b2c6bf913241&#x27;, &#x27;created_at&#x27;: &#x27;2019-08-16T08:05:18.932Z&#x27;, &#x27;updated_at&#x27;: &#x27;2019-08-16T08:05:18.932Z&#x27;, &#x27;content_type&#x27;: &#x27;image/jpeg&#x27;, &#x27;file_size&#x27;: &#x27;145200&#x27;, &#x27;filename&#x27;: &#x27;01.jpg&#x27;, &#x27;ACL&#x27;: [], &#x27;_version&#x27;: 1, &#x27;is_dir&#x27;: False, &#x27;tags&#x27;: [], &#x27;publish_details&#x27;: {&#x27;environment&#x27;: &#x27;blta39a4441696e35e0&#x27;, &#x27;locale&#x27;: &#x27;en-us&#x27;, &#x27;time&#x27;: &#x27;2019-08-19T12:28:56.964Z&#x27;, &#x27;user&#x27;: &#x27;blt587a89fc7883c56700a95bfe&#x27;}, &#x27;url&#x27;: &#x27;https://images.contentstack.io/v3/assets/blt02f7b45378b008ee/blt50a7a9dd6866776f/5d5663be34d39437c37c5376/01.jpg&#x27;}], &#x27;categories&#x27;: [{&#x27;locale&#x27;: &#x27;en-us&#x27;, &#x27;title&#x27;: &#x27;Mobiles&#x27;, &#x27;description&#x27;: &#x27;&lt;p&gt;Find the latest smartphones of 2017&amp;nbsp;by leading brands at one stop. We cover all phones from all the brands to help you to buy the latest mobile in India.&lt;/p&gt;&#x27;, &#x27;tags&#x27;: [], &#x27;ACL&#x27;: {}, &#x27;uid&#x27;: &#x27;blt9d72fa3afc11d27f&#x27;, &#x27;created_by&#x27;: &#x27;bltcd82b2c6bf913241&#x27;, &#x27;updated_by&#x27;: &#x27;bltcd82b2c6bf913241&#x27;, &#x27;created_at&#x27;: &#x27;2019-08-16T08:19:32.498Z&#x27;, &#x27;updated_at&#x27;: &#x27;2019-08-16T08:19:32.498Z&#x27;, &#x27;_content_type_uid&#x27;: &#x27;category&#x27;, &#x27;_version&#x27;: 1, &#x27;_in_progress&#x27;: False, &#x27;publish_details&#x27;: {&#x27;environment&#x27;: &#x27;blta39a4441696e35e0&#x27;, &#x27;locale&#x27;: &#x27;en-us&#x27;, &#x27;time&#x27;: &#x27;2020-07-23T14:25:55.920Z&#x27;, &#x27;user&#x27;: &#x27;blta3007b105b17e5d8&#x27;}}, {&#x27;locale&#x27;: &#x27;en-us&#x27;, &#x27;title&#x27;: &#x27;Bestseller&#x27;, &#x27;description&#x27;: &#x27;&lt;p&gt;The top-selling products based on the&amp;nbsp;currently&amp;nbsp;trend&amp;nbsp;in the market.&lt;/p&gt;&#x27;, &#x27;tags&#x27;: [], &#x27;ACL&#x27;: {}, &#x27;uid&#x27;: &#x27;blt9fa0f59d03862aa7&#x27;, &#x27;created_by&#x27;: &#x27;bltcd82b2c6bf913241&#x27;, &#x27;updated_by&#x27;: &#x27;bltcd82b2c6bf913241&#x27;, &#x27;created_at&#x27;: &#x27;2019-08-16T08:19:30.742Z&#x27;, &#x27;updated_at&#x27;: &#x27;2019-08-16T08:19:30.742Z&#x27;, &#x27;_content_type_uid&#x27;: &#x27;category&#x27;, &#x27;_version&#x27;: 1, &#x27;_in_progress&#x27;: False, &#x27;publish_details&#x27;: {&#x27;environment&#x27;: &#x27;blta39a4441696e35e0&#x27;, &#x27;locale&#x27;: &#x27;en-us&#x27;, &#x27;time&#x27;: &#x27;2020-07-23T14:25:55.920Z&#x27;, &#x27;user&#x27;: &#x27;blta3007b105b17e5d8&#x27;}}], &#x27;price_in_usd&#x27;: 117.3, &#x27;brand&#x27;: [{&#x27;locale&#x27;: &#x27;en-us&#x27;, &#x27;title&#x27;: &#x27;Xiaomi&#x27;, &#x27;logo&#x27;: {&#x27;uid&#x27;: &#x27;blt6045a4b8db103c2b&#x27;, &#x27;title&#x27;: &#x27;download.png&#x27;, &#x27;created_by&#x27;: &#x27;bltcd82b2c6bf913241&#x27;, &#x27;updated_by&#x27;: &#x27;bltcd82b2c6bf913241&#x27;, &#x27;created_at&#x27;: &#x27;2019-08-16T08:05:30.173Z&#x27;, &#x27;updated_at&#x27;: &#x27;2019-08-16T08:05:30.173Z&#x27;, &#x27;content_type&#x27;: &#x27;image/png&#x27;, &#x27;file_size&#x27;: &#x27;2185&#x27;, &#x27;filename&#x27;: &#x27;download.png&#x27;, &#x27;ACL&#x27;: [], &#x27;_version&#x27;: 1, &#x27;is_dir&#x27;: False, &#x27;tags&#x27;: [], &#x27;publish_details&#x27;: {&#x27;environment&#x27;: &#x27;blta39a4441696e35e0&#x27;, &#x27;locale&#x27;: &#x27;en-us&#x27;, &#x27;time&#x27;: &#x27;2019-08-19T12:28:47.432Z&#x27;, &#x27;user&#x27;: &#x27;blt587a89fc7883c56700a95bfe&#x27;}, &#x27;url&#x27;: &#x27;https://images.contentstack.io/v3/assets/blt02f7b45378b008ee/blt6045a4b8db103c2b/5d5663ca1a1b7e3885350f53/download.png&#x27;}, &#x27;description&#x27;: &quot;&lt;p&gt;Xiaomi Inc. is a privately owned Chinese electronics company headquartered in Beijing. It is the world&#x27;s 4th largest smartphone maker. Xiaomi designs, develops, and sells smartphones, mobile apps, laptops, and related consumer electronics.&lt;/p&gt;&quot;, &#x27;website&#x27;: &#x27;http://www.mi.com/en&#x27;, &#x27;email&#x27;: &#x27;support@xiaomi.com&#x27;, &#x27;phone&#x27;: 861060606666, &#x27;tags&#x27;: [], &#x27;head_office_address&#x27;: {&#x27;street&#x27;: &#x27;Haidian District&#x27;, &#x27;city&#x27;: &#x27;Beijing&#x27;, &#x27;country&#x27;: &#x27;China&#x27;}, &#x27;ACL&#x27;: {}, &#x27;uid&#x27;: &#x27;blta2e0d2130eb86263&#x27;, &#x27;created_by&#x27;: &#x27;bltcd82b2c6bf913241&#x27;, &#x27;updated_by&#x27;: &#x27;bltcd82b2c6bf913241&#x27;, &#x27;created_at&#x27;: &#x27;2019-08-16T08:19:34.275Z&#x27;, &#x27;updated_at&#x27;: &#x27;2019-08-16T08:19:34.275Z&#x27;, &#x27;_content_type_uid&#x27;: &#x27;brand&#x27;, &#x27;_version&#x27;: 1, &#x27;_in_progress&#x27;: False, &#x27;publish_details&#x27;: {&#x27;environment&#x27;: &#x27;blta39a4441696e35e0&#x27;, &#x27;locale&#x27;: &#x27;en-us&#x27;, &#x27;time&#x27;: &#x27;2020-07-23T14:26:14.433Z&#x27;, &#x27;user&#x27;: &#x27;blta3007b105b17e5d8&#x27;}}], &#x27;launch_date&#x27;: &#x27;2016-08-17&#x27;, &#x27;instock&#x27;: True, &#x27;tags&#x27;: [], &#x27;locale&#x27;: &#x27;en-us&#x27;, &#x27;size&#x27;: 16, &#x27;color&#x27;: &#x27;Black&#x27;, &#x27;additional_info&#x27;: [{&#x27;rating&#x27;: {&#x27;stars&#x27;: 2}}, {&#x27;deals&#x27;: {&#x27;deal_name&#x27;: &#x27;Deals of the Day&#x27;, &#x27;deal_details&#x27;: &quot;If you are looking for good Amazon deals and bargains, Deal&#x27;s of The Day Deals is the place to come. We are your online one-stop shop for savings and specials on our products.&quot;, &#x27;coupons&#x27;: [{&#x27;daily_coupons&#x27;: {&#x27;coupon_name&#x27;: &#x27;Lucky Twenty&#x27;, &#x27;coupon_details&#x27;: &#x27;First five users to purchase an electronic item receive a discount of 20 percent on that item.&#x27;, &#x27;coupon_discount_rate&#x27;: 20}}, {&#x27;special_coupons&#x27;: {&#x27;special_coupon_name&#x27;: &#x27;Kitchen Bonanza&#x27;, &#x27;special_coupon_details&#x27;: &#x27;Save 60 percent when you purchase kitchen appliances worth a total price of 3000 USD.&#x27;, &#x27;special_coupon_discount_rate&#x27;: 60}}]}}, {&#x27;related_products&#x27;: {&#x27;products&#x27;: [{&#x27;uid&#x27;: &#x27;blta250054cfa4f5aab&#x27;, &#x27;_content_type_uid&#x27;: &#x27;product&#x27;}, {&#x27;uid&#x27;: &#x27;bltd383742b89bef7af&#x27;, &#x27;_content_type_uid&#x27;: &#x27;product&#x27;}], &#x27;home_appliances&#x27;: [{&#x27;uid&#x27;: &#x27;blt2349e9c0b7ce06fa&#x27;, &#x27;_content_type_uid&#x27;: &#x27;electronics&#x27;}, {&#x27;uid&#x27;: &#x27;blt46128ea08fdeb168&#x27;, &#x27;_content_type_uid&#x27;: &#x27;kitchen_appliances&#x27;}]}}], &#x27;bank_offers&#x27;: [{&#x27;bank&#x27;: [{&#x27;uid&#x27;: &#x27;blt27729fae9269607c&#x27;, &#x27;_content_type_uid&#x27;: &#x27;bank&#x27;}], &#x27;card_type&#x27;: [&#x27;Debit Card&#x27;], &#x27;discount_in_percentage&#x27;: 27}, {&#x27;bank&#x27;: [{&#x27;uid&#x27;: &#x27;bltfbe674ca5af1ffa3&#x27;, &#x27;_content_type_uid&#x27;: &#x27;bank&#x27;}], &#x27;card_type&#x27;: [&#x27;Debit Card&#x27;, &#x27;Credit Card&#x27;], &#x27;discount_in_percentage&#x27;: 24}], &#x27;uid&#x27;: &#x27;blte63b2ff6f6414d8e&#x27;, &#x27;created_by&#x27;: &#x27;blt42e55757d70d5f81026a2b9f&#x27;, &#x27;updated_by&#x27;: &#x27;blt6563a9b067fc1bc9&#x27;, &#x27;created_at&#x27;: &#x27;2020-05-11T12:44:49.928Z&#x27;, &#x27;updated_at&#x27;: &#x27;2020-09-24T10:16:25.411Z&#x27;, &#x27;ACL&#x27;: {}, &#x27;_version&#x27;: 5, &#x27;_in_progress&#x27;: False, &#x27;frequently_bought_together&#x27;: [{&#x27;uid&#x27;: &#x27;blt7375bb3c0e4859de&#x27;, &#x27;_content_type_uid&#x27;: &#x27;electronics&#x27;}, {&#x27;uid&#x27;: &#x27;blt2349e9c0b7ce06fa&#x27;, &#x27;_content_type_uid&#x27;: &#x27;electronics&#x27;}, {&#x27;uid&#x27;: &#x27;blt7d3413d9daf14f5f&#x27;, &#x27;_content_type_uid&#x27;: &#x27;electronics&#x27;}, {&#x27;uid&#x27;: &#x27;blt46128ea08fdeb168&#x27;, &#x27;_content_type_uid&#x27;: &#x27;kitchen_appliances&#x27;}], &#x27;product_rating&#x27;: 4, &#x27;helpful_links&#x27;: {&#x27;seller&#x27;: &#x27;https://company-name.com&#x27;, &#x27;return-policy&#x27;: &#x27;https://policies.com&#x27;}, &#x27;publish_details&#x27;: {&#x27;environment&#x27;: &#x27;blta39a4441696e35e0&#x27;, &#x27;locale&#x27;: &#x27;en-us&#x27;, &#x27;time&#x27;: &#x27;2021-01-30T11:45:51.693Z&#x27;, &#x27;user&#x27;: &#x27;blt6563a9b067fc1bc9&#x27;}}}
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_entry.py::TestEntry::test_13_entry_support_include_fallback_unit_test</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>Requesting fallback....
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_entry.py::TestEntry::test_14_entry_queryable_only</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_entry.py::TestEntry::test_15_entry_queryable_excepts</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_entry.py::TestEntry::test_16_entry_queryable_include_content_type</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_entry.py::TestEntry::test_17_entry_queryable_include_reference_content_type</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_entry.py::TestEntry::test_18_entry_queryable_include_reference_content_type_uid</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_entry.py::TestEntry::test_19_entry_queryable_add_param</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_entry.py::TestEntry::test_20_entry_include_fallback</td>
+          <td class="col-duration">0.40</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>Requesting fallback....
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_01_functional_or_in_query_type_common_in_query</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_02_functional_tag_function_in_query</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_03_functional_search_function_in_query</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_04_functional_search_function_where_in_query</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_05_functional_tags_function_query</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_06_functional_search_function_query</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_07_functional_where_in_function_query_limit</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_08_functional_where_not_in_function_query</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_09_base_query_include_count</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_10_base_query_skip</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_11_base_query_limit</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_12_base_query_order_by_ascending</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_13_base_query_order_by_descending</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_14_base_query_param</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_15_base_query_add_params</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_16_base_query</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_17_base_remove_param</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_18_support_include_fallback</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_18_support_include_fallback_url</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_19_default_find_without_fallback</td>
+          <td class="col-duration">0.06</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_query.py::TestQuery::test_20_default_find_with_fallback</td>
+          <td class="col-duration">0.08</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_01_stack_credentials</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_02_stack_region</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_03_stack_endpoint</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_04_permission_error_api_key</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_05_permission_error_delivery_token</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_05_permission_error_environment</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_07_get_api_key</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_08_get_delivery_token</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_09_get_environment</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_10_get_headers</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_11_image_transformation</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_12_image_transformation_get_url_with_height_width</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_13_image_transformation_get_url_with_format</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_14_image_transformation_invalid_input</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_16_initialise_sync</td>
+          <td class="col-duration">0.07</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_17_entry_with_sync_token</td>
+          <td class="col-duration">0.32</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_18_init_sync_with_content_type_uid</td>
+          <td class="col-duration">0.07</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_19_init_sync_with_publish_type</td>
+          <td class="col-duration">0.08</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_20_init_sync_with_all_params</td>
+          <td class="col-duration">0.07</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_21_content_type</td>
+          <td class="col-duration">0.08</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test_22_content_types_with_query_param</td>
+          <td class="col-duration">0.06</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_stack.py::TestStack::test__15_sync_pagination_with_invalid_pagination_token</td>
+          <td class="col-duration">0.45</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_utils.py::TestUtils::test_01_config_logging</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_utils.py::TestUtils::test_02_setup_logger</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_utils.py::TestUtils::test_03_log</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/test_utils.py::TestUtils::test_04_do_url_encode</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody></table></body></html>

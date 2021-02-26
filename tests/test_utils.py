@@ -1,7 +1,6 @@
 import unittest
 
 from contentstack import Utils
-from HtmlTestRunner import HTMLTestRunner
 
 
 class TestUtils(unittest.TestCase):
@@ -29,7 +28,3 @@ class TestUtils(unittest.TestCase):
         result = Utils.do_url_encode({'key': 'value', 'contentstack': 'cms'})
         self.assertEqual('key=value&contentstack=cms', result)
 
-
-suite = unittest.TestLoader().loadTestsFromTestCase(TestUtils)
-runner = HTMLTestRunner(combine_reports=True, add_timestamp=False)
-runner.run(suite)

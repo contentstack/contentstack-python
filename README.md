@@ -60,7 +60,7 @@ stack = contentstack.Stack('api_key','delivery_token','environment')
 
 To get the API credentials mentioned above, log in to your Contentstack account and then in your top panel navigation, go to Settings &gt; Stack to view the API Key and Access Token.
 
-#### `Querying content from your stack`
+#### Querying content from your stack
 
 To retrieve a single entry from a content type use the code snippet given below:
 
@@ -71,7 +71,7 @@ entry = content_type.entry("entry_uid")
 result = entry.fetch()
 ```
 
-##### `Get Multiple Entries`
+##### Get Multiple Entries
 
 To retrieve multiple entries of a particular content type, use the code snippet given below:
 
@@ -81,13 +81,13 @@ query = stack.content_type("content_type_uid").query()
 result = query.find()
 ```
 
-### `Advanced Queries`
+### Advanced Queries
 
 You can query for content types, entries, assets and more using our Python API Reference.
 
 [Python API Reference Doc](https://www.contentstack.com/docs/platforms/python/api-reference/)
 
-### `Working with Images`
+### Working with Images
 
 We have introduced Image Delivery APIs that let you retrieve images and then manipulate and optimize them for your digital properties. It lets you perform a host of other actions such as crop, trim, resize, rotate, overlay, and so on.
 
@@ -103,7 +103,7 @@ image = stack.image_transform(url, {'width': 100, 'height': 100}).get_url()
 image = stack.image_transform(url, {'auto': 'webp'}).get_url()
 ```
 
-### `Using the Sync API with Python SDK`
+### Using the Sync API with Python SDK
 
 The Sync API takes care of syncing your Contentstack data with your application and ensures that the data is always up-to-date by providing delta updates. Contentstack’s Python SDK supports Sync API, which you can use to build powerful applications.
 
