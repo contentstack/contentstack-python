@@ -1,10 +1,10 @@
 # CHANGELOG
 
-## _v1.2.1_
+## _v1.3.0_
 
 ============
 
-Date: 24-Feb-2021
+Date: 26-Feb-2021
 
 - Retry policy and timeout support included
 - set default timeout 30 sec

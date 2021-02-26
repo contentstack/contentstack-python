@@ -7,3 +7,5 @@ py~=1.9.0
 setuptools~=51.0.0
 wheel==0.35.1
 urllib3==1.26.3
+utils==1.0.1
+twython==3.8.2

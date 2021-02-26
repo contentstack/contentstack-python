@@ -7,8 +7,9 @@ You can also specify the environment of which you wish to get the assets.
 # Your code has been rated at 10/10 by pylint
 
 import json
-from contentstack.utility import Utils
+
 from contentstack.basequery import BaseQuery
+from contentstack.utility import Utils
 
 
 class AssetQuery(BaseQuery):
