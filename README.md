@@ -3,7 +3,7 @@
 [![Contentstack](https://www.contentstack.com/docs/static/images/contentstack.png)](https://www.contentstack.com/)
 
 <!-- ![Python package](https://github.com/contentstack/contentstack-python/workflows/Python%20package/badge.svg?branch=master) -->
-![Coverage](https://raw.githubusercontent.com/contentstack/contentstack-python/b4edf799276f586dce3e57fa5502036cd5fd8da3/coverage.svg) ![pip](https://img.shields.io/badge/pip-1.2.0-blue?style=plastic) [![GitHub license](https://img.shields.io/github/license/contentstack/contentstack-python?style=plastic)](https://github.com/contentstack/contentstack-python/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/contentstack/contentstack-python?style=plastic)](https://github.com/contentstack/contentstack-python/stargazers)
+![Coverage](https://raw.githubusercontent.com/contentstack/contentstack-python/b4edf799276f586dce3e57fa5502036cd5fd8da3/coverage.svg) ![pip](https://img.shields.io/badge/pip-1.3.0-blue?style=plastic) [![GitHub license](https://img.shields.io/github/license/contentstack/contentstack-python?style=plastic)](https://github.com/contentstack/contentstack-python/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/contentstack/contentstack-python?style=plastic)](https://github.com/contentstack/contentstack-python/stargazers)
 
 ## Python SDK for Contentstack
 
