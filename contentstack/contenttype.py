@@ -8,11 +8,13 @@ content type.
 # ************* Module ContentType **************
 # Your code has been rated at 10.00/10 by pylint
 
+import logging
 from urllib import parse
 
 from contentstack.entry import Entry
 from contentstack.query import Query
 
+log = logging.getLogger(__name__)
 
 class ContentType:
     """

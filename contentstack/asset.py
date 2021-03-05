@@ -7,7 +7,10 @@ These files can be attached and used in multiple entries.
 # ************* Module asset **************
 # Your code has been rated at 10/10 by pylint
 
+import logging
 from urllib import parse
+
+log = logging.getLogger(__name__)
 
 
 class Asset:

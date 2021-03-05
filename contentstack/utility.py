@@ -8,10 +8,11 @@ Copyright 2019 Contentstack. All rights reserved.
 # ************* Module utility checked using pylint **************
 # Your code has been rated at 10.00/10
 
-
 import json
 import logging
 from urllib import parse
+
+log = logging.getLogger(__name__)
 
 
 def config_logging(logging_type: logging.WARNING):

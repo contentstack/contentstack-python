@@ -3,12 +3,16 @@ The Get a single entry request fetches a particular entry of a content type.
 API Reference: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#single-entry
 """
 
+import logging
 from urllib import parse
 
 from contentstack.entryqueryable import EntryQueryable
 
 # ************* Module Entry **************
 # Your code has been rated at 10/10 by pylint
+
+
+log = logging.getLogger(__name__)
 
 
 class Entry(EntryQueryable):

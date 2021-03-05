@@ -18,6 +18,8 @@ from contentstack.contenttype import ContentType
 from contentstack.https_connection import HTTPSConnection
 from contentstack.image_transform import ImageTransform
 
+log = logging.getLogger(__name__)
+
 
 class ContentstackRegion(enum.Enum):
     """

@@ -3,6 +3,7 @@ Contentstack provides certain queries that you can use to fetch filtered results
 """
 import enum
 import json
+import logging
 from urllib import parse
 
 from contentstack.basequery import BaseQuery
@@ -11,6 +12,7 @@ from contentstack.entryqueryable import EntryQueryable
 # ************* Module query.py **************
 # Your code has been rated at 10.00/10  by pylint
 
+log = logging.getLogger(__name__)
 
 class QueryType(enum.Enum):
     """

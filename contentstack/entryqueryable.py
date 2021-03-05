@@ -2,10 +2,12 @@
 EntryQueryable class contains common functions
 that is used as parents class for the query and entry classes
 """
-
+import logging
 
 # ************* Module EntryQueryable **************
 # Your code has been rated at 10/10 by pylint
+
+log = logging.getLogger(__name__)
 
 
 class EntryQueryable:

@@ -3,6 +3,9 @@ Missing docstring
 Common Query for Entry and Assets
 """
 import enum
+import logging
+
+log = logging.getLogger(__name__)
 
 
 # ************* Module basequery.py **************

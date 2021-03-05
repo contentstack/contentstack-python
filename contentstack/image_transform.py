@@ -6,10 +6,12 @@ value in array form ImageTransform method is define for image manipulation with
 different transform_params in second parameter in array form
 """
 
+import logging
 
 # ************* Module image_transform **************
 # Your code has been rated at 10.00/10  by pylint
 
+log = logging.getLogger(__name__)
 
 class ImageTransform:  # pylint: disable=too-few-public-methods
     """
