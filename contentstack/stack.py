@@ -6,14 +6,16 @@ this as a container that holds authentication related data.
 # ************* Module stack **************
 # Your code has been rated at 10.00/10
 
-import logging
 import enum
+import logging
 from urllib import parse
 from contentstack.asset import Asset
 from contentstack.assetquery import AssetQuery
 from contentstack.contenttype import ContentType
 from contentstack.https_connection import HTTPSConnection
 from contentstack.image_transform import ImageTransform
+
+log = logging.getLogger(__name__)
 
 
 class ContentstackRegion(enum.Enum):
@@ -25,6 +27,7 @@ class ContentstackRegion(enum.Enum):
 
 
 class Stack:
+    from urllib3.util import Retry
     """
     A stack can be defined as a pool of data or a container that holds all
     the content/assets related to a site. It is a collaboration space where multiple users can work
@@ -36,7 +39,8 @@ class Stack:
     # pylint: disable=too-many-arguments
     def __init__(self, api_key, delivery_token, environment,
                  host='cdn.contentstack.io',
-                 version='v3', region=ContentstackRegion.US):
+                 version='v3', region=ContentstackRegion.US, timeout=30,
+                 retry_strategy=Retry(total=5, backoff_factor=0, status_forcelist=[408, 429])):
         """
         Class that wraps the credentials of the authenticated user. Think of
         this as a container that holds authentication related data.
@@ -46,6 +50,14 @@ class Stack:
         :param host: (optional) host of the stack default is cdm.contentstack.io
         :param version: (optional) apiVersion of the stack default is v3
         :param region: (optional) region support of the stack default is ContentstackRegion.US
+        :param retry_strategy (optional) custom retry_strategy can be set.
+        ```
+        # Method to create retry_strategy: create object of Retry() and provide the
+        # required parameters like below
+        **Example:**
+        >>> retry_strategy = Retry(total=5, backoff_factor=1, status_forcelist=[408, 429])
+        >>> stack = contentstack.Stack("APIKey", "deliveryToken", "environment", retry_strategy= retry_strategy)
+        ```
         """
         logging.basicConfig(level=logging.DEBUG)
         self.headers = {}
@@ -59,10 +71,12 @@ class Stack:
         self.host = host
         self.version = version
         self.region = region
+        self.timeout = timeout
+        self.retry_strategy = retry_strategy
         self.__validate_stack()
 
     def __validate_stack(self):
-        if self.api_key is None or self.api_key == "":
+        if self.api_key is None or self.api_key == '':
             raise PermissionError('You are not permitted to the stack without valid Api Key')
         if self.delivery_token is None or self.delivery_token == "":
             raise PermissionError('You are not permitted to the stack without valid Delivery Token')
@@ -75,8 +89,10 @@ class Stack:
         # prepare Headers:`
         self.headers = {'api_key': self.api_key, 'access_token': self.delivery_token,
                         'environment': self.environment}
-        self.http_instance = HTTPSConnection(endpoint=self.endpoint, headers=self.headers)
+        self.http_instance = HTTPSConnection(endpoint=self.endpoint,
+                                             headers=self.headers, timeout=self.timeout, retry_strategy=self.retry_strategy)
         # call httpRequest instance & pass the endpoint and headers
+
 
     @property
     def get_api_key(self):
@@ -127,7 +143,7 @@ class Stack:
             >>> import contentstack
             >>> stack = Stack('api_key', 'delivery_token', 'environment')
             >>> asset_instance = stack.asset(uid='asset_uid')
-            >>> asset = asset_instance.fetch()
+            >>> result = asset_instance.fetch()
         -----------------------------
         """
         if uid is None or not isinstance(uid, str):
@@ -151,8 +167,8 @@ class Stack:
 
     def sync_init(self, content_type_uid=None, from_date=None, locale=None, publish_type=None):
         """
-        Constructs and initialises sync if no params provided else
-        below mentioned params can be provided to get the response accordingly
+        Constructs and initialises sync if no params provided else below mentioned params
+        can be provided to get the response accordingly
         :param content_type_uid: subsequent syncs will only include the entries
                                  of the specified content_type.
         :param from_date: use from_date and specify the start date as its value.
@@ -204,8 +220,7 @@ class Stack:
         return self.__sync_request()
 
     def sync_token(self, sync_token):
-        """
-        You can use the sync token (that you receive after initial sync)
+        """You can use the sync token (that you receive after initial sync)
         to get the updated content next time. The sync token fetches
         only the content that was added
         after your last sync, and the details of the content that was deleted or updated.
@@ -247,6 +262,6 @@ class Stack:
         :param kwargs: append queries to the asset URL.
         :return: instance of ImageTransform
         """
-        if image_url == None or image_url == '':
+        if image_url is None or image_url == '':
             raise PermissionError('image_url required for the image_transformation')
         return ImageTransform(self.http_instance, image_url, **kwargs)

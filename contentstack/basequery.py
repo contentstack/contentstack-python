@@ -3,6 +3,9 @@ Missing docstring
 Common Query for Entry and Assets
 """
 import enum
+import logging
+
+log = logging.getLogger(__name__)
 
 
 # ************* Module basequery.py **************
@@ -92,7 +95,7 @@ class BaseQuery:
         :param limit_count:
         :return: self
         """
-        self.query_params["skip"] = str(limit_count)
+        self.query_params["limit"] = str(limit_count)
         return self
 
     def order_by_ascending(self, key: str):
@@ -165,7 +168,7 @@ class BaseQuery:
             key {str} -- key of the query param
             value {any} -- value of query param
         Raises:
-            KeyError: when key or value found None
+            `KeyError`: when key or value found None
         Returns:
             self-- Class instance, So that method chaining can be performed
         """

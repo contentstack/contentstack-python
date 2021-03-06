@@ -5,13 +5,16 @@ to first create a content type, and then create entries using the
 content type.
 """
 
-# ************* Module asset **************
+# ************* Module ContentType **************
 # Your code has been rated at 10.00/10 by pylint
 
+import logging
 from urllib import parse
+
 from contentstack.entry import Entry
 from contentstack.query import Query
 
+log = logging.getLogger(__name__)
 
 class ContentType:
     """
@@ -44,7 +47,7 @@ class ContentType:
         """
         if self.__content_type_uid is None:
             raise PermissionError('Please provide valid content_type_uid')
-        elif entry_uid is None:
+        if entry_uid is None:
             raise PermissionError('Please provide valid entry uid')
         entry = Entry(self.http_instance, self.__content_type_uid, entry_uid=entry_uid)
         return entry

@@ -3,12 +3,16 @@ The Get a single entry request fetches a particular entry of a content type.
 API Reference: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#single-entry
 """
 
-from contentstack.entryqueryable import EntryQueryable
+import logging
 from urllib import parse
 
+from contentstack.entryqueryable import EntryQueryable
 
-# ************* Module stack **************
-# Your code has been rated at 9.89/10 by pylint
+# ************* Module Entry **************
+# Your code has been rated at 10/10 by pylint
+
+
+log = logging.getLogger(__name__)
 
 
 class Entry(EntryQueryable):
@@ -19,18 +23,19 @@ class Entry(EntryQueryable):
     Entry works with
     version={version_number}
     environment={environment_name}
-    locale={locale_code
+    locale={locale_code}
     """
 
     def __init__(self, http_instance, content_type_uid, entry_uid):
         super().__init__()
+        EntryQueryable.__init__(self)
         self.entry_param = {}
         self.http_instance = http_instance
         self.content_type_id = content_type_uid
         self.entry_uid = entry_uid
         self.base_url = self.__get_base_url()
 
-    def environment(self, environment: str):
+    def environment(self, environment):
         """
         Enter the name of the environment of which the entries needs to be included
         Example: production
@@ -52,7 +57,7 @@ class Entry(EntryQueryable):
         self.http_instance.headers['environment'] = environment
         return self
 
-    def version(self, version: int):
+    def version(self, version):
         """When no version is specified, it returns the latest version
         To retrieve a specific version, specify the version number under this parameter.
         In such a case, DO NOT specify any environment. Example: 4
@@ -75,7 +80,7 @@ class Entry(EntryQueryable):
         self.entry_param['version'] = version
         return self
 
-    def param(self, key: str, value: any):
+    def param(self, key, value):
         """
         This method is useful to add additional Query parameters to the entry
         :param key: {str} -- key The key as string which needs to be added to an Entry
@@ -97,10 +102,30 @@ class Entry(EntryQueryable):
         self.entry_param[key] = value
         return self
 
+    def include_fallback(self):
+        """Retrieve the published content of the fallback locale if an entry is
+        not localized in specified locale.
+        :return: Entry, so we can chain the call
+        ----------------------------
+        Example::
+
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry(uid='entry_uid')
+            >>> entry = entry.include_fallback()
+            >>> result = entry.fetch()
+        ----------------------------
+        """
+        print('Requesting fallback....')
+        self.entry_param['include_fallback'] = 'true'
+        return self
+
     def __get_base_url(self):
         if None in (self.http_instance, self.content_type_id, self.entry_uid):
             raise KeyError('Provide valid http_instance, content_type_uid or entry_uid')
-        url = '{}/content_types/{}/entries/{}'.format(self.http_instance.endpoint, self.content_type_id, self.entry_uid)
+        url = '{}/content_types/{}/entries/{}' \
+            .format(self.http_instance.endpoint, self.content_type_id, self.entry_uid)
         return url
 
     def fetch(self):
@@ -117,10 +142,11 @@ class Entry(EntryQueryable):
             >>> result = entry.fetch()
         -------------------------------
         """
-        if len(self.entry_queryable_param) > 0:
-            self.entry_param.update(self.entry_queryable_param)
+
         if 'environment' in self.http_instance.headers:
             self.entry_param['environment'] = self.http_instance.headers['environment']
+        if len(self.entry_queryable_param) > 0:
+            self.entry_param.update(self.entry_queryable_param)
         encoded_string = parse.urlencode(self.entry_param, doseq=True)
         url = '{}?{}'.format(self.base_url, encoded_string)
         return self.http_instance.get(url)
