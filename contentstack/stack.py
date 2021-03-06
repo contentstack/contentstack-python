@@ -9,9 +9,6 @@ this as a container that holds authentication related data.
 import enum
 import logging
 from urllib import parse
-
-from urllib3.util import Retry
-
 from contentstack.asset import Asset
 from contentstack.assetquery import AssetQuery
 from contentstack.contenttype import ContentType
@@ -30,6 +27,7 @@ class ContentstackRegion(enum.Enum):
 
 
 class Stack:
+    from urllib3.util import Retry
     """
     A stack can be defined as a pool of data or a container that holds all
     the content/assets related to a site. It is a collaboration space where multiple users can work

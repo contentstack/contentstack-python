@@ -5,8 +5,6 @@
 
 import os
 
-import contentstack
-
 try:
     from setuptools import setup
 except ImportError:
@@ -15,14 +13,19 @@ except ImportError:
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
     long_description = readme.read()
 
+requirements = [
+    'requests>=2.20.0,<3.0',
+    'python-dateutil'
+]
+
 setup(
     title="contentstack-python",
     name="Contentstack",
     status="Active",
     type="process",
     created="09 Jun 2020",
-    keywords=contentstack.__title__,
-    version=contentstack.__version__,
+    keywords="contentstack-python",
+    version="1.3.0",
     author="Contentstack",
     author_email="shailesh.mishra@contentstack.com",
     description="Contentstack is a headless CMS with an API-first approach.",
@@ -32,8 +35,9 @@ setup(
     packages=['contentstack'],
     license='MIT',
     test_suite='tests',
-    install_requires=['requests>=1.1.0'],
+    install_requires=requirements,
     include_package_data=True,
+    universal=1,
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
@@ -41,6 +45,8 @@ setup(
         'Natural Language :: English',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
     python_requires='>=3.6',
     zip_safe=False,

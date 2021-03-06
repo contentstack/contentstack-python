@@ -7,9 +7,9 @@
 Date: 26-Feb-2021
 
 - Retry policy and timeout support included
-- set default timeout 30 sec
------------------------------
+- Set default timeout 30 sec
 
+-----------------------------
 
 ## _v1.2.0_
 

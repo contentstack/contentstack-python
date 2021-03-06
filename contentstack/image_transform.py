@@ -50,7 +50,8 @@ class ImageTransform:  # pylint: disable=too-few-public-methods
             >>> result = image_url.fetch()
         ------------------------------
         """
-        args = ['{0}={1}'.format(k, v) for k, v in self.image_params.items()]
+        # args = ['{0}={1}'.format(k, v) for k, v in self.image_params.items()]
+        args = ['{0}={1}'.format(k, v) for k, v in list(self.image_params.items())]
         if args:
             self.image_url += '?{0}'.format('&'.join(args))
         return self.image_url

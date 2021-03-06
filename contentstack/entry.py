@@ -80,7 +80,7 @@ class Entry(EntryQueryable):
         self.entry_param['version'] = version
         return self
 
-    def param(self, key: str, value: any):
+    def param(self, key, value):
         """
         This method is useful to add additional Query parameters to the entry
         :param key: {str} -- key The key as string which needs to be added to an Entry
