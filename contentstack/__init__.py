@@ -12,7 +12,7 @@ from .entry import Entry
 from .asset import Asset
 from .contenttype import ContentType
 from .https_connection import HTTPSConnection
-from .stack import Stack
+from contentstack.stack import Stack
 from .utility import Utils
 
 __title__ = 'contentstack-python'

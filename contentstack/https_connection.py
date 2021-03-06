@@ -8,11 +8,6 @@ This module implements the Requests API.
 import logging
 import platform
 from json import JSONDecodeError
-
-import requests
-from requests.adapters import HTTPAdapter
-from requests.exceptions import HTTPError, Timeout
-
 import contentstack
 
 log = logging.getLogger(__name__)
@@ -52,6 +47,11 @@ class HTTPSConnection:  # R0903: Too few public methods
             self.retry_strategy = retry_strategy
 
     def get(self, url):
+
+        import requests
+        from requests.adapters import HTTPAdapter
+        from requests.exceptions import HTTPError, Timeout
+
         """
         Here we create a response object, `response` which will store the request-response.
         We use requests.get method since we are sending a GET request.
