@@ -2,6 +2,18 @@
 **CHANGELOG**
 ================
 
+*v1.4.0*
+============
+
+**Date: 05-Apr-2021**
+
+Entry
+    - include_embedded_objects support added
+Query
+    - include_embedded_objects support added
+
+============
+
 *v1.3.0*
 ============
 

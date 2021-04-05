@@ -209,6 +209,25 @@ class Query(BaseQuery, EntryQueryable):
         self.query_params['include_fallback'] = "true"
         return self
 
+    def include_embedded_items(self):
+        """include_embedded_items instance of Query
+        include_embedded_objects (Entries and Assets) along with entry/entries details.
+        :return: Query, so we can chain the call
+
+        ----------------------------
+        Example:
+
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
+            >>> query = query.include_embedded_items()
+            >>> result = query.find()
+        ----------------------------
+        """
+        self.query_params['include_embedded_items'] = "BASE"
+        return self
+
     def find(self):
         """It fetches the query result.
         List of :class:`Entry <contentstack.entry.Entry>` objects.
