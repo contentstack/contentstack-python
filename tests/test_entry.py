@@ -137,3 +137,9 @@ class TestEntry(unittest.TestCase):
         result = entry.fetch()
         self.assertEqual({'environment': 'development', 'include_fallback': 'true'}, entry.entry_param)
 
+    def test_21_entry_include_embedded_items(self):
+        content_type = self.stack.content_type('faq')
+        entry = content_type.entry("878783238783").include_embedded_items()
+        result = entry.fetch()
+        self.assertEqual({'environment': 'development', 'include_embedded_items[]': 'BASE'}, entry.entry_param)
+
