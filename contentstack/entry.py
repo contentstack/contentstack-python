@@ -137,7 +137,7 @@ class Entry(EntryQueryable):
             >>> result = entry.fetch()
         ----------------------------
         """
-        self.entry_param['include_embedded_items'] = "BASE"
+        self.entry_param['include_embedded_items[]'] = "BASE"
         return self
 
     def __get_base_url(self):

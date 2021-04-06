@@ -225,7 +225,7 @@ class Query(BaseQuery, EntryQueryable):
             >>> result = query.find()
         ----------------------------
         """
-        self.query_params['include_embedded_items'] = "BASE"
+        self.query_params['include_embedded_items[]'] = "BASE"
         return self
 
     def find(self):
