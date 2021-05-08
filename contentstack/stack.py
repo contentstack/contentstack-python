@@ -39,6 +39,7 @@ class Stack:
     # pylint: disable=too-many-arguments
     def __init__(self, api_key, delivery_token, environment,
                  host='cdn.contentstack.io',
+                 branch='',
                  version='v3', region=ContentstackRegion.US, timeout=30,
                  retry_strategy=Retry(total=5, backoff_factor=0, status_forcelist=[408, 429])):
         """
@@ -69,6 +70,7 @@ class Stack:
         self.delivery_token = delivery_token
         self.environment = environment
         self.host = host
+        self.branch = branch
         self.version = version
         self.region = region
         self.timeout = timeout
@@ -89,10 +91,12 @@ class Stack:
         # prepare Headers:`
         self.headers = {'api_key': self.api_key, 'access_token': self.delivery_token,
                         'environment': self.environment}
+        if len(self.branch) is not 0:
+            self.headers['branch'] = self.branch
         self.http_instance = HTTPSConnection(endpoint=self.endpoint,
-                                             headers=self.headers, timeout=self.timeout, retry_strategy=self.retry_strategy)
+                                             headers=self.headers, timeout=self.timeout,
+                                             retry_strategy=self.retry_strategy)
         # call httpRequest instance & pass the endpoint and headers
-
 
     @property
     def get_api_key(self):
