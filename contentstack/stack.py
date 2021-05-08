@@ -49,6 +49,7 @@ class Stack:
         :param delivery_token: delivery_token of the stack
         :param environment: environment of the stack
         :param host: (optional) host of the stack default is cdm.contentstack.io
+        :param branch: (optional) branch of the stack default is empty
         :param version: (optional) apiVersion of the stack default is v3
         :param region: (optional) region support of the stack default is ContentstackRegion.US
         :param retry_strategy (optional) custom retry_strategy can be set.
