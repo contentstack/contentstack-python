@@ -1,7 +1,7 @@
 twython~=3.8.2
 setuptools~=51.1.0
 urllib3~=1.26.2
-contentstack_utils~=1.0.0
+contentstack-utils==1.1.0
 python-dateutil==2.8.1
 requests>=2.20.0,<3.0
 coverage==4.3.4

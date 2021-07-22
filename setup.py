@@ -25,7 +25,7 @@ setup(
     type="process",
     created="09 Jun 2020",
     keywords="contentstack-python",
-    version="1.4.0",
+    version="1.5.0",
     author="Contentstack",
     author_email="shailesh.mishra@contentstack.com",
     description="Contentstack is a headless CMS with an API-first approach.",
