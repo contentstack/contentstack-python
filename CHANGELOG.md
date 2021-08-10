@@ -1,5 +1,35 @@
 # CHANGELOG
 
+## _v1.5.1_
+
+============
+
+**Date: 1-Aug-2021**
+
+Issue #17 resolved.
+Stack.sync_init uses wrong parameter names
+
+## _v1.5.0_
+
+============
+
+**Date: 22-Jul-2021**
+
+contentstack-utils updated to v1.1.0
+
+## _v1.4.0_
+
+============
+
+**Date: 05-Apr-2021**
+
+Entry
+    - include_embedded_objects support added
+Query
+    - include_embedded_objects support added
+
+-----------------------------
+
 ## _v1.3.0_
 
 ============
