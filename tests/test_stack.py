@@ -132,13 +132,13 @@ class TestStack(unittest.TestCase):
             self.assertEqual(30, result['total_count'])
 
     def test_19_init_sync_with_publish_type(self):
-        result = self.stack.sync_init(publish_type='entry_published', content_type_uid='track')
+        result = self.stack.sync_init(type='entry_published', content_type_uid='track')
         if result is not None:
             self.assertEqual(17, result['total_count'])
 
     def test_20_init_sync_with_all_params(self):
-        result = self.stack.sync_init(from_date='2018-01-14T00:00:00.000Z', content_type_uid='track',
-                                      publish_type='entry_published', locale='en-us', )
+        result = self.stack.sync_init(start_from='2018-01-14T00:00:00.000Z', content_type_uid='track',
+                                      type='entry_published', locale='en-us', )
         if result is not None:
             self.assertEqual(16, result['total_count'])
 

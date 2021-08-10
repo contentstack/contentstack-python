@@ -55,8 +55,8 @@ class Stack:
         # Method to create retry_strategy: create object of Retry() and provide the
         # required parameters like below
         **Example:**
-        >>> retry_strategy = Retry(total=5, backoff_factor=1, status_forcelist=[408, 429])
-        >>> stack = contentstack.Stack("APIKey", "deliveryToken", "environment", retry_strategy= retry_strategy)
+        >>> _strategy = Retry(total=5, backoff_factor=1, status_forcelist=[408, 429])
+        >>> stack = contentstack.Stack("APIKey", "deliveryToken", "environment", retry_strategy= _strategy)
         ```
         """
         logging.basicConfig(level=logging.DEBUG)
@@ -165,38 +165,40 @@ class Stack:
         """
         return AssetQuery(self.http_instance)
 
-    def sync_init(self, content_type_uid=None, from_date=None, locale=None, publish_type=None):
+    def sync_init(self, content_type_uid=None, start_from=None, locale=None, type=None):
         """
-        Constructs and initialises sync if no params provided else below mentioned params
-        can be provided to get the response accordingly
-        :param content_type_uid: subsequent syncs will only include the entries
-                                 of the specified content_type.
-        :param from_date: use from_date and specify the start date as its value.
-        :param locale: specify the locale code as its value. However, if you do this,
-                       the subsequent syncs will only include the entries of the specified locales.
-        :param publish_type: Use the type parameter to get a specific
-                             type of content. pass as follows:
-        ``asset_published``, ``entry_published``,
-        ``asset_unpublished``, ``asset_deleted``,
-        ``entry_unpublished``, ``entry_deleted``, or ``content_type_deleted``.
+        Set init to ‘true’ if you want to sync all the published entries and assets. This is usually used when the
+        app does not have any content and you want to get all the content for the first time.
+
+        :param content_type_uid: content type UID. e.g., products
+                                 This retrieves published entries of specified content type
+        :param start_from: The start date. e.g., 2018-08-14T00:00:00.000Z
+                           This retrieves published entries starting from a specific date
+        :param locale: locale code. e.g., en-us
+                       This retrieves published entries of specific locale.
+        :param type: If you do not specify any value, it will bring all published entries and published assets.
+                     You can pass multiple types as comma-separated values,
+                     for example, entry_published,entry_unpublished,asset_published
         :return: list of sync items
         -------------------------------
+
         Example:
+
             >>> import contentstack
             >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> result = stack.sync_init(content_type_uid='content_type_uid',
-                         from_date='date', locale='en-us', publish_type='asset_published')
+                         start_from='date', locale='en-us', type='asset_published')
         -------------------------------
         """
         self.sync_param['init'] = 'true'
         if content_type_uid is not None and isinstance(content_type_uid, str):
             self.sync_param['content_type_uid'] = content_type_uid
-        if from_date is not None and isinstance(from_date, str):
-            self.sync_param['from_date'] = from_date
+        if start_from is not None and isinstance(start_from, str):
+            self.sync_param['start_from'] = start_from
         if locale is not None and isinstance(locale, str):
             self.sync_param['locale'] = locale
-        if publish_type is not None and isinstance(publish_type, str):
-            self.sync_param['publish_type'] = publish_type
+        if type is not None and isinstance(type, str):
+            self.sync_param['type'] = type
         return self.__sync_request()
 
     def pagination(self, pagination_token: str):
