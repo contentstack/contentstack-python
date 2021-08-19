@@ -27,4 +27,3 @@ class TestUtils(unittest.TestCase):
     def test_04_do_url_encode(self):
         result = Utils.do_url_encode({'key': 'value', 'contentstack': 'cms'})
         self.assertEqual('key=value&contentstack=cms', result)
-

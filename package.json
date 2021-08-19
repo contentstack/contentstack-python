@@ -1,9 +1,9 @@
 {
-  "name": "contentstack.python",
-  "version": "1.5.1",
-  "developer": "shaileshmishra",
-  "license": "MIT",
-  "author": {"name": "shaileshmishra", "email": "mshaileshr@gmail.com"},
-  "homepage": "www.contentstack.com",
-  "readme": "./readme"
+    "name": "contentstack.python",
+    "version": "1.6.0",
+    "developer": "shaileshmishra",
+    "license": "MIT",
+    "author": { "name": "shaileshmishra", "email": "mshaileshr@gmail.com" },
+    "homepage": "www.contentstack.com",
+    "readme": "./readme"
 }

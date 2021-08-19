@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 
 def __get_os_platform():
-    """ returns client platform """
+    """ Returns client platform """
     os_platform = platform.system()
     if os_platform == 'Darwin':
         os_platform = 'macOS'
@@ -28,9 +28,12 @@ def __get_os_platform():
 
 def user_agents():
     """User Agents for the Https"""
-    header = {'sdk': dict(name=contentstack.__package__, version=contentstack.__version__),
-              'os': __get_os_platform,
-              'Content-Type': 'application/json'}
+    header = {'sdk': dict(
+        name=contentstack.__package__,
+        version=contentstack.__version__
+    ),
+        'os': __get_os_platform,
+        'Content-Type': 'application/json'}
     package = "contentstack-python/{}".format(contentstack.__version__)
     return {'User-Agent': str(header), "X-User-Agent": package}
 
@@ -38,13 +41,14 @@ def user_agents():
 class HTTPSConnection:  # R0903: Too few public methods
     """Make Https Request to fetch the result as per requested url"""
 
-    def __init__(self, endpoint, headers, timeout, retry_strategy):
+    def __init__(self, endpoint, headers, timeout, retry_strategy, live_preview):
         if None not in (endpoint, headers):
             self.payload = None
             self.endpoint = endpoint
             self.headers = headers
             self.timeout = timeout  # default timeout (period=30) seconds
             self.retry_strategy = retry_strategy
+            self.live_preview = live_preview
 
     def get(self, url):
 
@@ -62,8 +66,8 @@ class HTTPSConnection:  # R0903: Too few public methods
             session = requests.Session()
             adapter = HTTPAdapter(max_retries=self.retry_strategy)
             session.mount('https://', adapter)
-            # log.info('url: %s', url)
-            response = session.get(url, verify=True, headers=self.headers, timeout=self.timeout)
+            response = session.get(
+                url, verify=True, headers=self.headers, timeout=self.timeout)
             if response.encoding is None:
                 response.encoding = 'utf-8'
             if response is not None:

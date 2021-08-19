@@ -6,6 +6,8 @@ import json
 import logging
 from urllib import parse
 
+from pyparsing import empty
+
 from contentstack.basequery import BaseQuery
 from contentstack.entryqueryable import EntryQueryable
 
@@ -13,6 +15,7 @@ from contentstack.entryqueryable import EntryQueryable
 # Your code has been rated at 10.00/10  by pylint
 
 log = logging.getLogger(__name__)
+
 
 class QueryType(enum.Enum):
     """
@@ -46,9 +49,22 @@ class Query(BaseQuery, EntryQueryable):
         self.content_type_uid = content_type_uid
         self.http_instance = http_instance
         if self.content_type_uid is None:
-            raise PermissionError('You are not allowed here without content_type_uid')
-        self.base_url = '{}/content_types/{}/entries' \
+            raise PermissionError(
+                'You are not allowed here without content_type_uid')
+        # self.base_url = '{}/content_types/{}/entries' \
+        #     .format(self.http_instance.endpoint, self.content_type_uid)
+        self.base_url = self.__get_base_url()
+
+    def __get_base_url(self, endpoint=''):
+        if endpoint is not None and not empty:
+            self.http_instance.endpoint = endpoint
+        if None in (self.http_instance, self.content_type_uid):
+            raise KeyError(
+                'Provide valid http_instance, content_type_uid or entry_uid')
+        url = '{}/content_types/{}/entries' \
             .format(self.http_instance.endpoint, self.content_type_uid)
+
+        return url
 
     def query_operator(self, query_type: QueryType, *query_objects):
         """
@@ -80,7 +96,8 @@ class Query(BaseQuery, EntryQueryable):
                 __container.append(query.parameters)
         if len(self.parameters) > 0:
             self.parameters.clear()
-        self.query_params["query"] = json.dumps({query_type.value: __container})
+        self.query_params["query"] = json.dumps(
+            {query_type.value: __container})
         return self
 
     def tags(self, *tags):
@@ -154,7 +171,8 @@ class Query(BaseQuery, EntryQueryable):
         :type query_object: object
         """
         if isinstance(key, str) and query_object is not None and isinstance(query_object, Query):
-            self.query_params["query"] = {key: {"$in_query": query_object.parameters}}
+            self.query_params["query"] = {
+                key: {"$in_query": query_object.parameters}}
         else:
             raise ValueError('Invalid Key or Value provided')
         return self
@@ -183,11 +201,11 @@ class Query(BaseQuery, EntryQueryable):
         """
         # pylint: disable=W0212
         if isinstance(key, str) and query_object is not None and isinstance(query_object, Query):
-            self.query_params["query"] = {key: {"$nin_query": query_object.parameters}}
+            self.query_params["query"] = {
+                key: {"$nin_query": query_object.parameters}}
         else:
             raise ValueError('Invalid Key or Value provided')
         return self
-
 
     def include_fallback(self):
         """Retrieve the published content of the fallback locale if an
@@ -263,6 +281,25 @@ class Query(BaseQuery, EntryQueryable):
         self.query_params["limit"] = 1
         return self.__execute_network_call()
 
+    def __validate_live_preview(self):
+        live_preview = self.http_instance.live_preview
+        headers = self.http_instance.headers
+        if 'enable' in live_preview and live_preview['enable'] \
+                and self.content_type_uid == live_preview['content_type_uid']:
+            if 'hash' in live_preview:
+                hash_value = live_preview['hash']
+                if hash_value is not None and hash_value is not empty:
+                    headers['hash'] = hash_value
+            else:
+                headers['hash'] = 'init'
+            if 'authorization' in live_preview:
+                headers['authorization'] = live_preview['authorization']
+                headers.pop('access_token')
+                headers.pop('environment')
+            if 'host' in live_preview:
+                self.base_url = self.__get_base_url(
+                    endpoint='https://{}/v3'.format(self.http_instance.live_preview['host']))
+
     def __execute_network_call(self):
         if len(self.entry_queryable_param) > 0:
             self.query_params.update(self.entry_queryable_param)
@@ -270,6 +307,9 @@ class Query(BaseQuery, EntryQueryable):
             self.query_params["query"] = json.dumps(self.parameters)
         if 'environment' in self.http_instance.headers:
             self.query_params['environment'] = self.http_instance.headers['environment']
+        # Check if live preview enabled
+        if self.http_instance.live_preview is not None and 'enable' in self.http_instance.live_preview:
+            self.__validate_live_preview()
         encoded_string = parse.urlencode(self.query_params, doseq=True)
         url = '{}?{}'.format(self.base_url, encoded_string)
         return self.http_instance.get(url)

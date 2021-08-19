@@ -9,3 +9,12 @@ tox==2.5.0
 virtualenv==15.1.0
 Sphinx==1.6.3
 sphinxcontrib-websupport==1.0.1
+pip~=21.2.3
+build~=0.6.0.post1
+wheel~=0.35.1
+py~=1.9.0
+lxml~=4.6.2
+utils~=1.0.1
+keyring~=21.5.0
+docutils~=0.16
+pyparsing~=2.4.7

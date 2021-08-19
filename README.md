@@ -1,10 +1,9 @@
 #
 
 [![Contentstack](https://www.contentstack.com/docs/static/images/contentstack.png)](https://www.contentstack.com/)
-
 <!-- ![Python package](https://github.com/contentstack/contentstack-python/workflows/Python%20package/badge.svg?branch=master) -->
 ![build](https://img.shields.io/badge/build-passing-green?style=plastic)
-![Coverage](https://raw.githubusercontent.com/contentstack/contentstack-python/b4edf799276f586dce3e57fa5502036cd5fd8da3/coverage.svg) ![pip](https://img.shields.io/badge/pip-v1.5.1-blue?style=plastic) ![python](https://img.shields.io/badge/python-3.5|3.6|3.7|3.8-blue?style=plastic) [![GitHub license](https://img.shields.io/github/license/contentstack/contentstack-python?style=plastic)](https://github.com/contentstack/contentstack-python/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/contentstack/contentstack-python?style=plastic)](https://github.com/contentstack/contentstack-python/stargazers)
+![Coverage](https://raw.githubusercontent.com/contentstack/contentstack-python/b4edf799276f586dce3e57fa5502036cd5fd8da3/coverage.svg) ![pip](https://img.shields.io/badge/pip-v1.6.0-blue?style=plastic) ![python](https://img.shields.io/badge/python-3.5|3.6|3.7|3.8-blue?style=plastic) [![GitHub license](https://img.shields.io/github/license/contentstack/contentstack-python?style=plastic)](https://github.com/contentstack/contentstack-python/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/contentstack/contentstack-python?style=plastic)](https://github.com/contentstack/contentstack-python/stargazers)
 
 ## Python SDK for Contentstack
 
@@ -129,7 +128,7 @@ Read through to understand how to use the Sync API with Contentstack Python SDK.
 
 ### The MIT License (MIT)
 
-Copyright © 2012-2020 [`Contentstack`](https://www.contentstack.com/). All Rights Reserved
+Copyright © 2012-2021 [`Contentstack`](https://www.contentstack.com/). All Rights Reserved
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

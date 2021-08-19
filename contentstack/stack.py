@@ -9,6 +9,9 @@ this as a container that holds authentication related data.
 import enum
 import logging
 from urllib import parse
+
+from pyparsing import empty
+
 from contentstack.asset import Asset
 from contentstack.assetquery import AssetQuery
 from contentstack.contenttype import ContentType
@@ -35,33 +38,55 @@ class Stack:
     (API Reference)[https://www.contentstack.com/docs/developers/apis/content-delivery-api/#stack]:
     """
 
-    # pylint: disable=too-many-instance-attributes
-    # pylint: disable=too-many-arguments
-    def __init__(self, api_key, delivery_token, environment,
+    def __init__(self, api_key: str, delivery_token: str, environment: str,
                  host='cdn.contentstack.io',
-                 version='v3', region=ContentstackRegion.US, timeout=30,
-                 retry_strategy=Retry(total=5, backoff_factor=0, status_forcelist=[408, 429])):
+                 version='v3',
+                 region=ContentstackRegion.US,
+                 timeout=30,
+                 retry_strategy=Retry(total=5, backoff_factor=0,
+                                      status_forcelist=[408, 429]),
+                 live_preview={},
+                 ):
         """
         Class that wraps the credentials of the authenticated user. Think of
         this as a container that holds authentication related data.
+
         :param api_key: api_key of the stack
+
         :param delivery_token: delivery_token of the stack
+
         :param environment: environment of the stack
+
         :param host: (optional) host of the stack default is cdm.contentstack.io
+
         :param version: (optional) apiVersion of the stack default is v3
+
         :param region: (optional) region support of the stack default is ContentstackRegion.US
+
+        :param live_preview: (optional) sets live_preview option for request,
+
+        takes input as dictionary object. containing one/multiple key value pair like below.
+
+        live_preview = {
+            'enable': True,
+            'authorization': 'management_token',
+            'host': 'api.contentstack.com',
+            'include_edit_tags': True,
+            'edit_tags_type': object | str,
+        }
         :param retry_strategy (optional) custom retry_strategy can be set.
         ```
         # Method to create retry_strategy: create object of Retry() and provide the
         # required parameters like below
         **Example:**
         >>> _strategy = Retry(total=5, backoff_factor=1, status_forcelist=[408, 429])
-        >>> stack = contentstack.Stack("APIKey", "deliveryToken", "environment", retry_strategy= _strategy)
+        >>> stack = contentstack.Stack("APIKey", "deliveryToken", "environment", 
+            live_preview={enable=True, authorization='your auth token'}, retry_strategy= _strategy)
         ```
         """
         logging.basicConfig(level=logging.DEBUG)
         self.headers = {}
-        self.__query_params = {}
+        self._query_params = {}
         self.sync_param = {}
         self.endpoint = None
         self.http_instance = None
@@ -73,26 +98,47 @@ class Stack:
         self.region = region
         self.timeout = timeout
         self.retry_strategy = retry_strategy
+        self.live_preview_dict = live_preview
+        self._hash_live_review = None
+        self._auth_live_review = None
+
+        # validate stack
         self.__validate_stack()
 
     def __validate_stack(self):
         if self.api_key is None or self.api_key == '':
-            raise PermissionError('You are not permitted to the stack without valid Api Key')
+            raise PermissionError(
+                'You are not permitted to the stack without valid APIKey')
         if self.delivery_token is None or self.delivery_token == "":
-            raise PermissionError('You are not permitted to the stack without valid Delivery Token')
+            raise PermissionError(
+                'You are not permitted to the stack without valid Delivery Token')
         if self.environment is None or self.environment == "":
-            raise PermissionError('You are not permitted to the stack without valid Environment')
+            raise PermissionError(
+                'You are not permitted to the stack without valid Environment')
         # prepare endpoint for the url:
         if self.region.value != 'us' and self.host == 'cdn.contentstack.io':
             self.host = 'eu-cdn.contentstack.com'
         self.endpoint = 'https://{}/{}'.format(self.host, self.version)
         # prepare Headers:`
-        self.headers = {'api_key': self.api_key, 'access_token': self.delivery_token,
-                        'environment': self.environment}
-        self.http_instance = HTTPSConnection(endpoint=self.endpoint,
-                                             headers=self.headers, timeout=self.timeout,
-                                             retry_strategy=self.retry_strategy)
-        # call httpRequest instance & pass the endpoint and headers
+        self.headers = {
+            'api_key': self.api_key,
+            'access_token': self.delivery_token,
+            'environment': self.environment
+        }
+
+        self.http_instance = HTTPSConnection(
+            endpoint=self.endpoint,
+            headers=self.headers, timeout=self.timeout,
+            retry_strategy=self.retry_strategy,
+            live_preview=self.live_preview_dict
+        )
+
+    def _check_live_preview(self):
+        if 'enable' in self.live_preview_dict and self.live_preview_dict['enable']:
+            self.headers.pop('access_token')
+            self.headers.pop('environment')
+            if 'authorization' in self.live_preview_dict:
+                self.headers['authorization'] = self.live_preview_dict['authorization']
 
     @property
     def get_api_key(self):
@@ -121,6 +167,13 @@ class Stack:
         :return: validating credentials http header of the stack
         """
         return self.headers
+
+    @property
+    def get_live_preview(self):
+        """
+        :return: live preview dictionary
+        """
+        return self.live_preview_dict
 
     def content_type(self, content_type_uid=None):
         """
@@ -168,17 +221,16 @@ class Stack:
     def sync_init(self, content_type_uid=None, start_from=None, locale=None, type=None):
         """
         Set init to ‘true’ if you want to sync all the published entries and assets. This is usually used when the
-        app does not have any content and you want to get all the content for the first time.
+        app does not have any content and you want to get all the content for the first time.\n
 
-        :param content_type_uid: content type UID. e.g., products
-                                 This retrieves published entries of specified content type
-        :param start_from: The start date. e.g., 2018-08-14T00:00:00.000Z
-                           This retrieves published entries starting from a specific date
-        :param locale: locale code. e.g., en-us
-                       This retrieves published entries of specific locale.
-        :param type: If you do not specify any value, it will bring all published entries and published assets.
-                     You can pass multiple types as comma-separated values,
-                     for example, entry_published,entry_unpublished,asset_published
+        :param content_type_uid: (optional) content type UID. e.g., products
+                    This retrieves published entries of specified content type
+        :param start_from: (optional) The start date. e.g., 2018-08-14T00:00:00.000Z
+                    This retrieves published entries starting from a specific date
+        :param locale: (optional) locale code. e.g., en-us, This retrieves published entries of specific locale.
+        :param type: (optional) If you do not specify any value, it will bring all published 
+                    entries and published assets. You can pass multiple types as comma-separated values,
+                    for example, entry_published,entry_unpublished,asset_published
         :return: list of sync items
         -------------------------------
 
@@ -258,12 +310,23 @@ class Stack:
         """
         This document is a detailed reference to Contentstack’s Image Delivery
         API and covers the parameters that you can add to the URL to retrieve,
-        manipulate (or convert) image files and display
-        it to your web or mobile properties.
+        manipulate (or convert) image files and display it to your web or 
+        mobile properties.\n
+
         :param image_url: base url on which queries to apply
         :param kwargs: append queries to the asset URL.
         :return: instance of ImageTransform
         """
         if image_url is None or image_url == '':
-            raise PermissionError('image_url required for the image_transformation')
+            raise PermissionError(
+                'image_url required for the image_transformation')
         return ImageTransform(self.http_instance, image_url, **kwargs)
+
+    def live_preview_query(self, **kwargs):
+        """
+        live_preview_query accepts key value pair objects to the query
+        i.e hash and content_type_uid
+        """
+        self.live_preview_dict.update(kwargs)
+
+

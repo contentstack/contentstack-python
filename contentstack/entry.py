@@ -6,6 +6,8 @@ API Reference: https://www.contentstack.com/docs/developers/apis/content-deliver
 import logging
 from urllib import parse
 
+from pyparsing import empty
+
 from contentstack.entryqueryable import EntryQueryable
 
 # ************* Module Entry **************
@@ -140,12 +142,34 @@ class Entry(EntryQueryable):
         self.entry_param['include_embedded_items[]'] = "BASE"
         return self
 
-    def __get_base_url(self):
+    def __get_base_url(self, endpoint=''):
+        if endpoint is not None and not empty:
+            self.http_instance.endpoint = endpoint
         if None in (self.http_instance, self.content_type_id, self.entry_uid):
-            raise KeyError('Provide valid http_instance, content_type_uid or entry_uid')
+            raise KeyError(
+                'Provide valid http_instance, content_type_uid or entry_uid')
         url = '{}/content_types/{}/entries/{}' \
             .format(self.http_instance.endpoint, self.content_type_id, self.entry_uid)
         return url
+
+    def __validate_live_preview(self):
+        live_preview = self.http_instance.live_preview
+        headers = self.http_instance.headers
+        if 'enable' in live_preview and live_preview['enable'] \
+                and self.content_type_id == live_preview['content_type_uid']:
+            if 'hash' in live_preview:
+                hash_value = live_preview['hash']
+                if hash_value is not None and hash_value is not empty:
+                    headers['hash'] = hash_value
+            else:
+                headers['hash'] = 'init'
+            if 'authorization' in live_preview:
+                headers['authorization'] = live_preview['authorization']
+                headers.pop('access_token')
+                headers.pop('environment')
+            if 'host' in live_preview:
+                self.base_url = self.__get_base_url(
+                    endpoint='https://{}/v3'.format(self.http_instance.live_preview['host']))
 
     def fetch(self):
         """
@@ -164,6 +188,9 @@ class Entry(EntryQueryable):
 
         if 'environment' in self.http_instance.headers:
             self.entry_param['environment'] = self.http_instance.headers['environment']
+        # Check if live preview enabled
+        if self.http_instance.live_preview is not None and 'enable' in self.http_instance.live_preview:
+            self.__validate_live_preview()
         if len(self.entry_queryable_param) > 0:
             self.entry_param.update(self.entry_queryable_param)
         encoded_string = parse.urlencode(self.entry_param, doseq=True)

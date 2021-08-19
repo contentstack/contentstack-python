@@ -27,7 +27,8 @@ class AssetQuery(BaseQuery):
         self.base_url = "{}/assets".format(self.http_instance.endpoint)
         if "environment" in self.http_instance.headers:
             env = self.http_instance.headers["environment"]
-            self.base_url = "{}?{}".format(self.base_url, "environment={}".format(env))
+            self.base_url = "{}?{}".format(
+                self.base_url, "environment={}".format(env))
 
     def environment(self, environment):
         r"""Provide the name of the environment if you wish to retrieve the assets published

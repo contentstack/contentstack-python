@@ -10,15 +10,19 @@ from contentstack.query import QueryType
 class TestQuery(unittest.TestCase):
 
     def setUp(self):
-        self.stack = contentstack.Stack(config.api_key, config.delivery_token, config.environment, host=config.host)
+        self.const_value = 'Apple Inc.'
+        self.stack = contentstack.Stack(
+            config.api_key, config.delivery_token, config.environment, host=config.host)
         self.query = self.stack.content_type('room').query()
         self.query1 = self.stack.content_type('product').query()
         self.query2 = self.stack.content_type('app_theme').query()
         self.query3 = self.stack.content_type('product').query()
 
     def test_01_functional_or_in_query_type_common_in_query(self):
-        query1 = self.query1.where("price", QueryOperation.IS_LESS_THAN, fields=90)
-        query2 = self.query2.where("discount", QueryOperation.INCLUDES, fields=[20, 45])
+        query1 = self.query1.where(
+            "price", QueryOperation.IS_LESS_THAN, fields=90)
+        query2 = self.query2.where(
+            "discount", QueryOperation.INCLUDES, fields=[20, 45])
         query = self.query.query_operator(QueryType.OR, query1, query2)
         logging.info(query.query_params)
         self.assertEqual({'query': '{"$or": [{"price": {"$lt": 90}}, {"discount": {"$in": [20, 45]}}]}'},
@@ -53,16 +57,20 @@ class TestQuery(unittest.TestCase):
         self.assertEqual({'typeahead': 'search_contents'}, params.query_params)
 
     def test_07_functional_where_in_function_query_limit(self):
-        query_limit = self.query3.where('title', QueryOperation.EQUALS, fields='Apple Inc.')
+        query_limit = self.query3.where(
+            'title', QueryOperation.EQUALS, fields=self.const_value)
         self.query.where_in('brand', query_limit)
         logging.info(self.query.query_params)
-        self.assertEqual({'query': {'brand': {'$in_query': {'title': 'Apple Inc.'}}}}, self.query.query_params)
+        self.assertEqual({'query': {'brand': {'$in_query': {
+                         'title': self.const_value}}}}, self.query.query_params)
 
     def test_08_functional_where_not_in_function_query(self):
-        query_limit = self.query3.where('title', QueryOperation.EQUALS, fields='Apple Inc.')
+        query_limit = self.query3.where(
+            'title', QueryOperation.EQUALS, fields=self.const_value)
         self.query.where_not_in('brand', query_limit)
         logging.info(self.query.query_params)
-        self.assertEqual({'query': {'brand': {'$nin_query': {'title': 'Apple Inc.'}}}}, self.query.query_params)
+        self.assertEqual({'query': {'brand': {'$nin_query': {
+                         'title': self.const_value}}}}, self.query.query_params)
 
     def test_09_base_query_include_count(self):
         query = self.query3.include_count()
@@ -95,7 +103,8 @@ class TestQuery(unittest.TestCase):
         self.assertEqual('valueOne', query.query_params['keyOne'])
 
     def test_15_base_query_add_params(self):
-        query = self.query3.add_params({'keyOne': 'valueOne', 'keyTwo': 'valueTwo'})
+        query = self.query3.add_params(
+            {'keyOne': 'valueOne', 'keyTwo': 'valueTwo'})
         logging.info(query.base_url)
         self.assertEqual(2, len(query.query_params))
 
@@ -107,12 +116,12 @@ class TestQuery(unittest.TestCase):
     def test_17_base_remove_param(self):
         query = self.query3.remove_param("keyOne")
         logging.info(query.base_url)
-        
+
     def test_18_support_include_fallback(self):
         query = self.query3.include_fallback()
         logging.info(query.base_url)
         self.assertEqual('true', query.query_params['include_fallback'])
-        
+
     def test_18_support_include_fallback_url(self):
         query = self.query3.include_fallback()
         logging.info(query.base_url)
@@ -130,5 +139,3 @@ class TestQuery(unittest.TestCase):
         entry = self.query.locale('en-gb').include_fallback().find()
         entries = entry['entries']
         self.assertEqual(29, len(entries))
-
-
