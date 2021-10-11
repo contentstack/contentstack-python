@@ -43,8 +43,7 @@ class Stack:
                  version='v3',
                  region=ContentstackRegion.US,
                  timeout=30,
-                 retry_strategy=Retry(total=5, backoff_factor=0,
-                                      status_forcelist=[408, 429]),
+                 retry_strategy=Retry(total=5, backoff_factor=0, status_forcelist=[408, 429]),
                  live_preview={},
                  ):
         """
@@ -69,7 +68,7 @@ class Stack:
 
         live_preview = {
             'enable': True,
-            'management_token': 'management_token',
+            'authorization': 'your_management_token',
             'host': 'api.contentstack.com',
             'include_edit_tags': True,
             'edit_tags_type': object | str,
@@ -137,8 +136,8 @@ class Stack:
         if 'enable' in self.live_preview_dict and self.live_preview_dict['enable']:
             self.headers.pop('access_token')
             self.headers.pop('environment')
-            if 'management_token' in self.live_preview_dict:
-                self.headers['management_token'] = self.live_preview_dict['management_token']
+            if 'authorization' in self.live_preview_dict:
+                self.headers['authorization'] = self.live_preview_dict['authorization']
 
     @property
     def get_api_key(self):
