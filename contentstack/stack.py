@@ -69,7 +69,7 @@ class Stack:
 
         live_preview = {
             'enable': True,
-            'authorization': 'management_token',
+            'management_token': 'management_token',
             'host': 'api.contentstack.com',
             'include_edit_tags': True,
             'edit_tags_type': object | str,
@@ -137,8 +137,8 @@ class Stack:
         if 'enable' in self.live_preview_dict and self.live_preview_dict['enable']:
             self.headers.pop('access_token')
             self.headers.pop('environment')
-            if 'authorization' in self.live_preview_dict:
-                self.headers['authorization'] = self.live_preview_dict['authorization']
+            if 'management_token' in self.live_preview_dict:
+                self.headers['management_token'] = self.live_preview_dict['management_token']
 
     @property
     def get_api_key(self):
