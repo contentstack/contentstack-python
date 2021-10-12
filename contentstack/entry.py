@@ -154,22 +154,12 @@ class Entry(EntryQueryable):
 
     def __validate_live_preview(self):
         live_preview = self.http_instance.live_preview
-        headers = self.http_instance.headers
         if 'enable' in live_preview and live_preview['enable'] \
                 and self.content_type_id == live_preview['content_type_uid']:
-            if 'hash' in live_preview:
-                hash_value = live_preview['hash']
-                if hash_value is not None and hash_value is not empty:
-                    headers['hash'] = hash_value
+            if 'live_preview' in live_preview:
+                self.entry_param['live_preview'] = live_preview['live_preview']
             else:
-                headers['hash'] = 'init'
-            if 'authorization' in live_preview:
-                headers['authorization'] = live_preview['authorization']
-                headers.pop('access_token')
-                headers.pop('environment')
-            if 'host' in live_preview:
-                self.base_url = self.__get_base_url(
-                    endpoint='https://{}/v3'.format(self.http_instance.live_preview['host']))
+                self.entry_param['live_preview'] = 'init'
 
     def fetch(self):
         """
@@ -185,12 +175,9 @@ class Entry(EntryQueryable):
             >>> result = entry.fetch()
         -------------------------------
         """
-
+        self.__validate_live_preview()
         if 'environment' in self.http_instance.headers:
             self.entry_param['environment'] = self.http_instance.headers['environment']
-        # Check if live preview enabled
-        if self.http_instance.live_preview is not None and 'enable' in self.http_instance.live_preview:
-            self.__validate_live_preview()
         if len(self.entry_queryable_param) > 0:
             self.entry_param.update(self.entry_queryable_param)
         encoded_string = parse.urlencode(self.entry_param, doseq=True)

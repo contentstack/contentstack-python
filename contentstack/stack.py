@@ -10,8 +10,9 @@ import enum
 import logging
 from urllib import parse
 
-from pyparsing import empty
+from urllib3 import Retry
 
+import contentstack
 from contentstack.asset import Asset
 from contentstack.assetquery import AssetQuery
 from contentstack.contenttype import ContentType
@@ -44,7 +45,7 @@ class Stack:
                  region=ContentstackRegion.US,
                  timeout=30,
                  retry_strategy=Retry(total=5, backoff_factor=0, status_forcelist=[408, 429]),
-                 live_preview={},
+                 live_preview=None
                  ):
         """
         Class that wraps the credentials of the authenticated user. Think of
@@ -62,7 +63,7 @@ class Stack:
 
         :param region: (optional) region support of the stack default is ContentstackRegion.US
 
-        :param live_preview: (optional) sets live_preview option for request,
+        :param live_preview: (optional) accepts type dictionary that enables live_preview option for request,
 
         takes input as dictionary object. containing one/multiple key value pair like below.
 
@@ -79,10 +80,12 @@ class Stack:
         # required parameters like below
         **Example:**
         >>> _strategy = Retry(total=5, backoff_factor=1, status_forcelist=[408, 429])
-        >>> stack = contentstack.Stack("APIKey", "deliveryToken", "environment", 
+        >>> stack = contentstack.Stack("api_key", "delivery_token", "environment",
             live_preview={enable=True, authorization='your auth token'}, retry_strategy= _strategy)
         ```
         """
+        if live_preview is None:
+            live_preview = {'enable': False}
         logging.basicConfig(level=logging.DEBUG)
         self.headers = {}
         self._query_params = {}
@@ -125,6 +128,7 @@ class Stack:
             'environment': self.environment
         }
 
+        self._validate_live_preview()
         self.http_instance = HTTPSConnection(
             endpoint=self.endpoint,
             headers=self.headers, timeout=self.timeout,
@@ -132,12 +136,19 @@ class Stack:
             live_preview=self.live_preview_dict
         )
 
-    def _check_live_preview(self):
-        if 'enable' in self.live_preview_dict and self.live_preview_dict['enable']:
-            self.headers.pop('access_token')
-            self.headers.pop('environment')
-            if 'authorization' in self.live_preview_dict:
+    def _validate_live_preview(self):
+        if isinstance(self.live_preview_dict, dict):
+            if 'enable' in self.live_preview_dict and self.live_preview_dict['enable']:
+                if 'authorization' not in self.live_preview_dict:
+                    raise PermissionError("management token is required")
+                if 'host' not in self.live_preview_dict:
+                    raise PermissionError("host is required")
                 self.headers['authorization'] = self.live_preview_dict['authorization']
+                # remove deliveryToken and environment
+                self.host = self.live_preview_dict['host']
+                self.endpoint = 'https://{}/{}'.format(self.host, self.version)
+                self.headers.pop('access_token')
+                self.headers.pop('environment')
 
     @property
     def get_api_key(self):
@@ -327,5 +338,3 @@ class Stack:
         i.e hash and content_type_uid
         """
         self.live_preview_dict.update(kwargs)
-
-

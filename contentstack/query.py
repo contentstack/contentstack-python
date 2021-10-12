@@ -283,22 +283,12 @@ class Query(BaseQuery, EntryQueryable):
 
     def __validate_live_preview(self):
         live_preview = self.http_instance.live_preview
-        headers = self.http_instance.headers
         if 'enable' in live_preview and live_preview['enable'] \
                 and self.content_type_uid == live_preview['content_type_uid']:
-            if 'hash' in live_preview:
-                hash_value = live_preview['hash']
-                if hash_value is not None and hash_value is not empty:
-                    headers['hash'] = hash_value
+            if 'live_preview' in live_preview:
+                self.query_params['live_preview'] = live_preview['live_preview']
             else:
-                headers['hash'] = 'init'
-            if 'authorization' in live_preview:
-                headers['authorization'] = live_preview['authorization']
-                headers.pop('access_token')
-                headers.pop('environment')
-            if 'host' in live_preview:
-                self.base_url = self.__get_base_url(
-                    endpoint='https://{}/v3'.format(self.http_instance.live_preview['host']))
+                self.query_params['live_preview'] = 'init'
 
     def __execute_network_call(self):
         if len(self.entry_queryable_param) > 0:
@@ -308,8 +298,7 @@ class Query(BaseQuery, EntryQueryable):
         if 'environment' in self.http_instance.headers:
             self.query_params['environment'] = self.http_instance.headers['environment']
         # Check if live preview enabled
-        if self.http_instance.live_preview is not None and 'enable' in self.http_instance.live_preview:
-            self.__validate_live_preview()
+        self.__validate_live_preview()
         encoded_string = parse.urlencode(self.query_params, doseq=True)
         url = '{}?{}'.format(self.base_url, encoded_string)
         return self.http_instance.get(url)
