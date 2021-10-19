@@ -16,6 +16,7 @@ class TestUtils(unittest.TestCase):
         result = Utils.config_logging()
         self.assertEqual(None, result)
 
+
     def test_02_setup_logger(self):
         result = Utils.setup_logger()
         self.assertEqual(0, result.level)
