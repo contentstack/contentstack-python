@@ -1,6 +1,5 @@
 import logging
 import unittest
-
 import config
 import contentstack
 from contentstack.basequery import QueryOperation
@@ -62,7 +61,7 @@ class TestQuery(unittest.TestCase):
         self.query.where_in('brand', query_limit)
         logging.info(self.query.query_params)
         self.assertEqual({'query': {'brand': {'$in_query': {
-                         'title': self.const_value}}}}, self.query.query_params)
+            'title': self.const_value}}}}, self.query.query_params)
 
     def test_08_functional_where_not_in_function_query(self):
         query_limit = self.query3.where(
@@ -70,7 +69,7 @@ class TestQuery(unittest.TestCase):
         self.query.where_not_in('brand', query_limit)
         logging.info(self.query.query_params)
         self.assertEqual({'query': {'brand': {'$nin_query': {
-                         'title': self.const_value}}}}, self.query.query_params)
+            'title': self.const_value}}}}, self.query.query_params)
 
     def test_09_base_query_include_count(self):
         query = self.query3.include_count()
