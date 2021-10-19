@@ -288,7 +288,7 @@ class Query(BaseQuery, EntryQueryable):
             if 'live_preview' in live_preview:
                 self.query_params['live_preview'] = live_preview['live_preview']
             else:
-                self.query_params['live_preview'] = 'init'
+                self.query_params['live_preview'] = 'init' #initialise
 
     def __execute_network_call(self):
         if len(self.entry_queryable_param) > 0:
