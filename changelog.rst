@@ -9,7 +9,7 @@
 
 Live Preview support added.
 - Stack.live_preview_query function added in Stack
-- live preview funtions added in config
+- live preview functions added in config
 
 *v1.5.1*
 ============

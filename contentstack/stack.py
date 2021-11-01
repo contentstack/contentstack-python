@@ -19,6 +19,10 @@ from contentstack.contenttype import ContentType
 from contentstack.https_connection import HTTPSConnection
 from contentstack.image_transform import ImageTransform
 
+__author__ = "ishaileshmishra (ishaileshmishra@gmail.com)"
+__license__ = "MIT"
+__version__ = '1.6.0'
+
 log = logging.getLogger(__name__)
 
 
@@ -45,28 +49,24 @@ class Stack:
                  region=ContentstackRegion.US,
                  timeout=30,
                  retry_strategy=Retry(total=5, backoff_factor=0, status_forcelist=[408, 429]),
-                 live_preview=None
+                 live_preview=None,
+                 branch=None,
                  ):
         """
         Class that wraps the credentials of the authenticated user. Think of
         this as a container that holds authentication related data.
 
         :param api_key: api_key of the stack
-
         :param delivery_token: delivery_token of the stack
-
         :param environment: environment of the stack
-
         :param host: (optional) host of the stack default is cdm.contentstack.io
-
+        :param branch: branch of the stack
         :param version: (optional) apiVersion of the stack default is v3
-
         :param region: (optional) region support of the stack default is ContentstackRegion.US
-
         :param live_preview: (optional) accepts type dictionary that enables live_preview option for request,
-
         takes input as dictionary object. containing one/multiple key value pair like below.
 
+        ```python
         live_preview = {
             'enable': True,
             'authorization': 'your_management_token',
@@ -74,8 +74,8 @@ class Stack:
             'include_edit_tags': True,
             'edit_tags_type': object | str,
         }
-        :param retry_strategy (optional) custom retry_strategy can be set.
         ```
+        :param retry_strategy (optional) custom retry_strategy can be set.
         # Method to create retry_strategy: create object of Retry() and provide the
         # required parameters like below
         **Example:**
@@ -99,15 +99,14 @@ class Stack:
         self.version = version
         self.region = region
         self.timeout = timeout
+        self.branch = branch
         self.retry_strategy = retry_strategy
         self.live_preview_dict = live_preview
-        self._hash_live_review = None
-        self._auth_live_review = None
 
         # validate stack
-        self.__validate_stack()
+        self._validate_stack()
 
-    def __validate_stack(self):
+    def _validate_stack(self):
         if self.api_key is None or self.api_key == '':
             raise PermissionError(
                 'You are not permitted to the stack without valid APIKey')
@@ -128,7 +127,11 @@ class Stack:
             'environment': self.environment
         }
 
-        self._validate_live_preview()
+        if self.branch is not None:
+            self.headers['branch'] = self.branch
+
+        if self.live_preview_dict is not None:
+            self._validate_live_preview()
         self.http_instance = HTTPSConnection(
             endpoint=self.endpoint,
             headers=self.headers, timeout=self.timeout,
@@ -170,6 +173,13 @@ class Stack:
         :return: environment of the stack
         """
         return self.environment
+
+    @property
+    def get_branch(self):
+        """
+        :return: branch of the stack
+        """
+        return self.branch
 
     @property
     def get_headers(self):

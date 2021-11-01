@@ -83,6 +83,20 @@ class AssetQuery(BaseQuery):
         self.asset_query_params["include_dimension"] = "true"
         return self
 
+    def include_branch(self):
+        """Retrieve the published pranch in the response
+        :return: Entry, so we can chain the call
+        ----------------------------
+        Example::
+
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> result = stack.asset_query().include_branch().find()
+        ----------------------------
+        """
+        self.asset_query_params['include_branch'] = 'true'
+        return self
+
     def relative_url(self):
         r"""include the relative URLs of the assets in the response.
 

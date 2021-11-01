@@ -6,7 +6,7 @@ import contentstack
 _preview = {
     'enable': True,
     'authorization': 'management_token@fake@testing',
-    'host': 'fake-live-preview.contentstack.io'
+    'host': 'cdn.contentstack.io'
 }
 
 
@@ -134,25 +134,14 @@ class TestLivePreviewConfig(unittest.TestCase):
         )
         self.stack.live_preview_query(
             content_type_uid='_content_type_live_preview')
-        self.stack.content_type('_content_type_live_preview') \
-            .entry(entry_uid='entry_uid_1234')
+        self.stack.content_type('fake@content_type') \
+            .entry(entry_uid='just@fakeit')
 
         self.assertEqual(2, len(self.stack.headers))
         self.assertEqual(config.api_key, self.stack.headers['api_key'])
 
-    def test_10_live_preview_fail_expected_due_to_invalid_host(self):
-        self.stack = contentstack.Stack(
-            config.api_key,
-            config.delivery_token,
-            config.environment,
-            live_preview=_preview
-        )
-        self.stack.live_preview_query(
-            live_preview='abcd@fake',
-            content_type_uid='_content_type_live_preview')
-        content_type = self.stack.content_type(content_type_uid='_content_type_live_preview')
-        entry = content_type.entry(entry_uid='entry@fake@uid')
-        entry.fetch()
-        self.assertEqual(3, entry.http_instance)
-        self.assertEqual('https://fake-live-preview.contentstack.io/v3', entry.http_instance.endpoint)
-        self.assertEqual(2, len(entry.http_instance.headers))
+    def test_branching(self):
+        stack = contentstack.Stack('apiKey', 'deliveryToken', 'environment', branch='dev_branch')
+        stack.content_type('product')
+        self.assertEqual('dev_branch', stack.get_branch)
+        self.assertTrue('branch' in stack.headers)

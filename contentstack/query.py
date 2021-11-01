@@ -227,6 +227,23 @@ class Query(BaseQuery, EntryQueryable):
         self.query_params['include_fallback'] = "true"
         return self
 
+    def include_branch(self):
+        """Retrieve the published pranch in the response
+        :return: Entry, so we can chain the call
+        ----------------------------
+        Example::
+
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
+            >>> query = query.include_branch()
+            >>> result = query.find()
+        ----------------------------
+        """
+        self.query_params['include_branch'] = 'true'
+        return self
+
     def include_embedded_items(self):
         """include_embedded_items instance of Query
         include_embedded_objects (Entries and Assets) along with entry/entries details.
@@ -288,7 +305,7 @@ class Query(BaseQuery, EntryQueryable):
             if 'live_preview' in live_preview:
                 self.query_params['live_preview'] = live_preview['live_preview']
             else:
-                self.query_params['live_preview'] = 'init' #initialise
+                self.query_params['live_preview'] = 'init'  # initialise
 
     def __execute_network_call(self):
         if len(self.entry_queryable_param) > 0:
