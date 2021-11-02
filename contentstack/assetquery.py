@@ -84,7 +84,7 @@ class AssetQuery(BaseQuery):
         return self
 
     def include_branch(self):
-        """Retrieve the published pranch in the response
+        """Includes branch in the response
         :return: Entry, so we can chain the call
         ----------------------------
         Example::
