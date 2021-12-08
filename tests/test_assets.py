@@ -32,9 +32,10 @@ class TestAsset(unittest.TestCase):
 
     def test_013_setting_retry_strategy_unit(self):
         from urllib3 import Retry
-        self.stack = contentstack.Stack(config.api_key, config.delivery_token,
-                                        config.environment, host=config.host,
-                                        retry_strategy=Retry(total=3, backoff_factor=1, status_forcelist=[408]))
+        self.stack = contentstack \
+            .Stack(config.api_key, config.delivery_token,
+                   config.environment, host=config.host,
+                   retry_strategy=Retry(total=3, backoff_factor=1, status_forcelist=[408]))
         self.assertEqual(1, self.stack.retry_strategy.backoff_factor)
         self.assertEqual(3, self.stack.retry_strategy.total)
         self.assertEqual([408], self.stack.retry_strategy.status_forcelist)
