@@ -23,19 +23,11 @@ class TestLivePreviewConfig(unittest.TestCase):
             config.delivery_token,
             config.environment,
             live_preview=_preview)
-        entry = self.stack.content_type('live_content_type').entry('live_entry_uid')
+        self.stack.content_type(
+            'live_content_type').entry('live_entry_uid')
         self.assertEqual(3, len(self.stack.get_live_preview))
         self.assertTrue(self.stack.get_live_preview['enable'])
         self.assertTrue(self.stack.get_live_preview['authorization'])
-
-    def test_02_live_preview_enabled_(self):
-        self.stack = contentstack.Stack(
-            config.api_key,
-            config.delivery_token,
-            config.environment,
-            live_preview=_preview)
-        self.assertEqual(3, len(self.stack.live_preview_dict))
-        self.assertEqual(True, self.stack.live_preview_dict['enable'])
 
     def test_021_live_preview_enabled_(self):
         self.stack = contentstack.Stack(
@@ -43,10 +35,10 @@ class TestLivePreviewConfig(unittest.TestCase):
             config.delivery_token,
             config.environment,
             live_preview=_preview)
-        self.assertEqual(_preview['authorization'], self.stack.live_preview_dict['authorization'])
+        self.assertEqual(_preview['authorization'],
+                         self.stack.live_preview_dict['authorization'])
 
     def test_03_set_host(self):
-        host = 'abc.contentstack.com'
         self.stack = contentstack.Stack(
             config.api_key,
             config.delivery_token,
@@ -56,32 +48,14 @@ class TestLivePreviewConfig(unittest.TestCase):
         self.assertEqual(True, self.stack.live_preview_dict['enable'])
 
     def test_031_set_host_value(self):
-        host = 'abc.contentstack.com'
         self.stack = contentstack.Stack(
             config.api_key,
             config.delivery_token,
             config.environment,
             live_preview=_preview)
         self.assertEqual(3, len(self.stack.live_preview_dict))
-        self.assertEqual(_preview['host'], self.stack.live_preview_dict['host'])
-
-    def test_04_include_edit_tags(self):
-        self.stack = contentstack.Stack(
-            config.api_key,
-            config.delivery_token,
-            config.environment,
-            live_preview=_preview)
-        self.assertEqual(3, len(self.stack.live_preview_dict))
-        self.assertEqual(True, self.stack.live_preview_dict['enable'])
-
-    def test_05_include_edit_tags_type(self):
-        self.stack = contentstack.Stack(
-            config.api_key,
-            config.delivery_token,
-            config.environment,
-            live_preview=_preview)
-        self.assertEqual(3, len(self.stack.live_preview_dict))
-        self.assertEqual(True, self.stack.live_preview_dict['enable'])
+        self.assertEqual(_preview['host'],
+                         self.stack.live_preview_dict['host'])
 
     def test_06_live_preview_query(self):
         _live_preview = {
@@ -141,7 +115,15 @@ class TestLivePreviewConfig(unittest.TestCase):
         self.assertEqual(config.api_key, self.stack.headers['api_key'])
 
     def test_branching(self):
-        stack = contentstack.Stack('apiKey', 'deliveryToken', 'environment', branch='dev_branch')
+        stack = contentstack.Stack(
+            'api_key', 'delivery_token', 'environment', branch='dev_branch')
         stack.content_type('product')
         self.assertEqual('dev_branch', stack.get_branch)
-        self.assertTrue('branch' in stack.headers)
+
+    def test_branching_header(self):
+        stack = contentstack.Stack(
+            'api_key', 'delivery_token', 'environment', branch='dev_branch')
+        stack.content_type('product')
+        has = 'branch' in stack.headers
+        if has:
+            self.assertTrue(has)

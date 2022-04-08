@@ -68,6 +68,7 @@ class HTTPSConnection:  # R0903: Too few public methods
             session.mount('https://', adapter)
             response = session.get(
                 url, verify=True, headers=self.headers, timeout=self.timeout)
+            session.close()
             if response.encoding is None:
                 response.encoding = 'utf-8'
             if response is not None:

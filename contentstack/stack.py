@@ -32,19 +32,22 @@ class ContentstackRegion(enum.Enum):
     """
     US = 'us'
     EU = 'eu'
+    AZURE_NA = 'azure-na'
 
 
 class Stack:
     from urllib3.util import Retry
+
     """
     A stack can be defined as a pool of data or a container that holds all
     the content/assets related to a site. It is a collaboration space where multiple users can work
     together to create, edit, approve, and publish content.
     (API Reference)[https://www.contentstack.com/docs/developers/apis/content-delivery-api/#stack]:
     """
+    host_name = cdn.contentstack.io
 
     def __init__(self, api_key: str, delivery_token: str, environment: str,
-                 host='cdn.contentstack.io',
+                 host=host_name,
                  version='v3',
                  region=ContentstackRegion.US,
                  timeout=30,
@@ -117,11 +120,19 @@ class Stack:
         if self.environment is None or self.environment == "":
             raise PermissionError(
                 'You are not permitted to the stack without valid Environment')
+
         # prepare endpoint for the url:
-        if self.region.value != 'us' and self.host == 'cdn.contentstack.io':
+        if self.region.value == 'eu':
             self.host = 'eu-cdn.contentstack.com'
+            if self.host == 'cdn.contentstack.io':
+                self.host = 'eu-cdn.contentstack.com'
+        if self.region.value == 'azure-na':
+            self.host = 'azure-na-cdn.contentstack.com'
+            if self.host == 'cdn.contentstack.io':
+                self.host = 'azure-na-cdn.contentstack.com'
         self.endpoint = 'https://{}/{}'.format(self.host, self.version)
         # prepare Headers:`
+
         self.headers = {
             'api_key': self.api_key,
             'access_token': self.delivery_token,
