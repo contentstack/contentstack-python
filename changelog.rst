@@ -2,14 +2,24 @@
 **CHANGELOG**
 ================
 
+*v1.7.0*
+
+============
+
+**Date: 8-APR-2022**
+
+Region support added.
+    - AZURE_NA support added
+    - General code clean up
+
 *v1.6.0*
 ============
 
 **Date: 11-Aug-2021**
 
 Live Preview support added.
-- Stack.live_preview_query function added in Stack
-- live preview functions added in config
+    - Stack.live_preview_query function added in Stack
+    - live preview functions added in config
 
 *v1.5.1*
 ============
@@ -17,7 +27,7 @@ Live Preview support added.
 **Date: 1-Aug-2021**
 
 Issue #17 resolved.
-Stack.sync_init uses wrong parameter names
+    - Stack.sync_init uses wrong parameter names
 
 
 *v1.5.0*
@@ -44,8 +54,8 @@ Query
 
 **Date: 26-Feb-2021**
 
-- Retry policy and timeout support included
-- Set default timeout to 30 sec
+    - Retry policy and timeout support included
+    - Set default timeout to 30 sec
 
 ============
 
