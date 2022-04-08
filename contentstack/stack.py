@@ -21,7 +21,7 @@ from contentstack.image_transform import ImageTransform
 
 __author__ = "ishaileshmishra (ishaileshmishra@gmail.com)"
 __license__ = "MIT"
-__version__ = '1.6.0'
+__version__ = '1.7.0'
 
 log = logging.getLogger(__name__)
 
@@ -44,10 +44,10 @@ class Stack:
     together to create, edit, approve, and publish content.
     (API Reference)[https://www.contentstack.com/docs/developers/apis/content-delivery-api/#stack]:
     """
-    host_name = cdn.contentstack.io
+    default_host = cdn.contentstack.io
 
     def __init__(self, api_key: str, delivery_token: str, environment: str,
-                 host=host_name,
+                 host=default_host,
                  version='v3',
                  region=ContentstackRegion.US,
                  timeout=30,
@@ -122,14 +122,13 @@ class Stack:
                 'You are not permitted to the stack without valid Environment')
 
         # prepare endpoint for the url:
-        if self.region.value == 'eu':
+        if self.region.value == 'eu' and self.host == default_host:
             self.host = 'eu-cdn.contentstack.com'
-            if self.host == 'cdn.contentstack.io':
-                self.host = 'eu-cdn.contentstack.com'
-        if self.region.value == 'azure-na':
+        elif self.region.value == 'azure-na' and self.host == default_host:
             self.host = 'azure-na-cdn.contentstack.com'
-            if self.host == 'cdn.contentstack.io':
-                self.host = 'azure-na-cdn.contentstack.com'
+        elif self.region.value != 'us':
+            self.host = '{}-{}'.format(self.region.value, default_host)
+
         self.endpoint = 'https://{}/{}'.format(self.host, self.version)
         # prepare Headers:`
 
