@@ -125,5 +125,4 @@ class TestLivePreviewConfig(unittest.TestCase):
             'api_key', 'delivery_token', 'environment', branch='dev_branch')
         stack.content_type('product')
         has = 'branch' in stack.headers
-        if has:
-            self.assertTrue(has)
+        self.assertTrue(has)

@@ -7,6 +7,7 @@ from contentstack.basequery import QueryOperation
 
 class TestAsset(unittest.TestCase):
     global asset_uid
+    IMAGE = 'images_(1).jpg'
 
     def setUp(self):
         self.asset_uid = None
@@ -25,8 +26,7 @@ class TestAsset(unittest.TestCase):
             excepted = 0.01  # setting a custom timeout
             self.stack = contentstack.Stack(config.api_key, config.delivery_token, config.environment, host=config.host,
                                             timeout=excepted)
-            # self.assertEqual(1, self.stack.timeout)
-            result = self.stack.asset_query().find()
+            self.stack.asset_query().find()
         except TimeoutError:
             self.assertEqual('Timeout expired.', TimeoutError.__doc__)
 
@@ -134,7 +134,7 @@ class TestAsset(unittest.TestCase):
 
     def test_11_assets_base_query_where_equals_str(self):
         query = self.asset_query.where(
-            'title', QueryOperation.EQUALS, fields='images_(1).jpg')
+            'title', QueryOperation.EQUALS, fields=IMAGE)
         result = query.find()
         self.assertIsNotNone(result)
 
@@ -146,38 +146,38 @@ class TestAsset(unittest.TestCase):
 
     def test_13_assets_base_query_where_includes(self):
         query = self.asset_query.where('title', QueryOperation.INCLUDES,
-                                       fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
+                                       fields=[IMAGE, 'images_(2).jpg', 'images_(3).jpg'])
         self.assertEqual({'title': {'$in': [
-            'images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
+            IMAGE, 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
 
     def test_14_assets_base_query_where_is_less_than(self):
         query = self.asset_query.where('title', QueryOperation.IS_LESS_THAN,
-                                       fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
+                                       fields=[IMAGE, 'images_(2).jpg', 'images_(3).jpg'])
         self.assertEqual({'title': {'$lt': [
-            'images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
+            IMAGE, 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
 
     def test_15_assets_base_query_where_is_less_than_or_equal(self):
         query = self.asset_query.where('title', QueryOperation.IS_LESS_THAN_OR_EQUAL,
-                                       fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
+                                       fields=[IMAGE, 'images_(2).jpg', 'images_(3).jpg'])
         self.assertEqual({'title': {'$lte': [
-            'images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
+            IMAGE, 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
 
     def test_16_assets_base_query_where_is_greater_than(self):
         query = self.asset_query.where('title', QueryOperation.IS_GREATER_THAN,
-                                       fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
+                                       fields=[IMAGE, 'images_(2).jpg', 'images_(3).jpg'])
         self.assertEqual({'title': {'$gt': [
-            'images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
+            IMAGE, 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
 
     def test_17_assets_base_query_where_is_greater_than_or_equal(self):
         query = self.asset_query.where('title', QueryOperation.IS_GREATER_THAN_OR_EQUAL,
-                                       fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
+                                       fields=[IMAGE, 'images_(2).jpg', 'images_(3).jpg'])
         self.assertEqual({'title': {'$gte': [
-            'images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
+            IMAGE, 'images_(2).jpg', 'images_(3).jpg']}}, query.parameters)
 
     def test_18_assets_base_query_where_matches(self):
         query = self.asset_query.where('title', QueryOperation.MATCHES,
-                                       fields=['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg'])
-        self.assertEqual({'title': {'$regex': ['images_(1).jpg', 'images_(2).jpg', 'images_(3).jpg']}},
+                                       fields=[IMAGE, 'images_(2).jpg', 'images_(3).jpg'])
+        self.assertEqual({'title': {'$regex': [IMAGE, 'images_(2).jpg', 'images_(3).jpg']}},
                          query.parameters)
 
     def test_19_environment(self):
