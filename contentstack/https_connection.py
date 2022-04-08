@@ -63,13 +63,16 @@ class HTTPSConnection:  # R0903: Too few public methods
             adapter = HTTPAdapter(max_retries=self.retry_strategy)
             session.mount('https://', adapter)
             # log.info('url: %s', url)
-            response = session.get(url, verify=True, headers=self.headers, timeout=self.timeout)
+            response = session.get(
+                url, verify=True, headers=self.headers, timeout=self.timeout)
+            session.close()
             if response.encoding is None:
                 response.encoding = 'utf-8'
             if response is not None:
                 return response.json()
             else:
                 return {"error": "error details not found", "error_code": 422, "error_message": "unknown error"}
+
         except Timeout:
             raise TimeoutError('The request timed out')
         except ConnectionError:

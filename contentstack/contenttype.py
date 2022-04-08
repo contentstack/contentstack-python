@@ -16,6 +16,7 @@ from contentstack.query import Query
 
 log = logging.getLogger(__name__)
 
+
 class ContentType:
     """
     Content type defines the structure or schema of a page or a
@@ -49,7 +50,8 @@ class ContentType:
             raise PermissionError('Please provide valid content_type_uid')
         if entry_uid is None:
             raise PermissionError('Please provide valid entry uid')
-        entry = Entry(self.http_instance, self.__content_type_uid, entry_uid=entry_uid)
+        entry = Entry(self.http_instance,
+                      self.__content_type_uid, entry_uid=entry_uid)
         return entry
 
     def query(self):
@@ -84,9 +86,11 @@ class ContentType:
         ------------------------------
         """
         if self.__content_type_uid is None:
-            raise KeyError('content_type_uid can not be None to fetch contenttype')
+            raise KeyError(
+                'content_type_uid can not be None to fetch contenttype')
         self.local_param['environment'] = self.http_instance.headers['environment']
-        uri = '{}/content_types/{}'.format(self.http_instance.endpoint, self.__content_type_uid)
+        uri = '{}/content_types/{}'.format(
+            self.http_instance.endpoint, self.__content_type_uid)
         encoded_params = parse.urlencode(self.local_param)
         url = '{}?{}'.format(uri, encoded_params)
         result = self.http_instance.get(url)
@@ -111,6 +115,7 @@ class ContentType:
         if params is not None:
             self.local_param.update(params)
         encoded_params = parse.urlencode(self.local_param)
-        url = '{}?{}'.format('{}/content_types'.format(self.http_instance.endpoint), encoded_params)
+        url = '{}?{}'.format(
+            '{}/content_types'.format(self.http_instance.endpoint), encoded_params)
         result = self.http_instance.get(url)
         return result

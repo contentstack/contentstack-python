@@ -15,6 +15,7 @@ config.py/
 /reports
 /tests/reports
 # Distribution / packaging
+.dccache
 .Python
 build/
 develop-eggs/

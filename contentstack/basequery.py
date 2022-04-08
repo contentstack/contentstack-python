@@ -35,7 +35,8 @@ class QueryOperation(enum.Enum):
 
 
 def _get_operation_value(fields):
-    value = fields[0] if isinstance(fields, list) and len(fields) == 1 else fields
+    value = fields[0] if isinstance(
+        fields, list) and len(fields) == 1 else fields
     return value
 
 
