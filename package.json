@@ -1,7 +1,7 @@
 {
     "name": "contentstack.python",
-    "version": "1.5.1",
-    "developer": "ishaileshmishra",
+    "version": "1.6.0",
+    "developer": "shaileshmishra",
     "license": "MIT",
     "author": { "name": "shaileshmishra", "email": "mshaileshr@gmail.com" },
     "homepage": "www.contentstack.com",

@@ -1,7 +1,4 @@
-"""
-Missing docstring
-Common Query for Entry and Assets
-"""
+
 import enum
 import logging
 

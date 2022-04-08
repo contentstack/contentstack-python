@@ -1,10 +1,21 @@
 # CHANGELOG
 
+## _v1.6.0_
+
+============
+
+### **Date: 11-Aug-2021**
+
+Live Preview support added.
+
+- Stack.live_preview_query function added in Stack
+- live preview funtions added in config
+
 ## _v1.5.1_
 
 ============
 
-### Date: 1-Aug-2021
+### **Date: 1-Aug-2021**
 
 Issue #17 resolved.
 Stack.sync_init uses wrong parameter names
@@ -13,7 +24,7 @@ Stack.sync_init uses wrong parameter names
 
 ============
 
-### Date: 22-Jul-2021
+### **Date: 22-Jul-2021**
 
 contentstack-utils updated to v1.1.0
 
@@ -21,12 +32,14 @@ contentstack-utils updated to v1.1.0
 
 ============
 
-### Date: 05-Apr-2021
+### **Date: 05-Apr-2021**
 
-Entry - include_embedded_objects support added
-Query - include_embedded_objects support added
+Entry
+    - include_embedded_objects support added
+Query
+    - include_embedded_objects support added
 
----
+-----------------------------
 
 ## _v1.3.0_
 
@@ -37,7 +50,7 @@ Date: 26-Feb-2021
 - Retry policy and timeout support included
 - Set default timeout 30 sec
 
----
+-----------------------------
 
 ## _v1.2.0_
 
@@ -57,7 +70,7 @@ Date: 08-Dec-2020
 - Query
   - added support for include_fallback.
 
----
+-----------------------------
 
 ## _v1.1.0_
 
@@ -67,7 +80,7 @@ EntryQueryable
 
 - updated include_reference function.
 
----
+-----------------------------
 
 ## _v1.0.0_
 
@@ -91,7 +104,7 @@ Query
 
 - Changes incorporated in the Query class.
 
----
+-----------------------------
 
 ## _v0.1.0_
 
@@ -99,4 +112,4 @@ November-18, 2019 -beta release
 
 Initial release for the contentstack-python-sdk for Content Delivery API
 
----
+-----------------------------
