@@ -5,9 +5,6 @@ API Reference: https://www.contentstack.com/docs/developers/apis/content-deliver
 
 import logging
 from urllib import parse
-
-from pyparsing import empty
-
 from contentstack.entryqueryable import EntryQueryable
 
 # ************* Module Entry **************
@@ -160,7 +157,7 @@ class Entry(EntryQueryable):
         return self
 
     def __get_base_url(self, endpoint=''):
-        if endpoint is not None and not empty:
+        if endpoint is not None and not endpoint.empty:
             self.http_instance.endpoint = endpoint
         if None in (self.http_instance, self.content_type_id, self.entry_uid):
             raise KeyError(

@@ -120,9 +120,6 @@ class TestLivePreviewConfig(unittest.TestCase):
         stack.content_type('product')
         self.assertEqual('dev_branch', stack.get_branch)
 
-    def test_branching_header(self):
-        stack = contentstack.Stack(
-            'api_key', 'delivery_token', 'environment', branch='dev_branch')
-        stack.content_type('product')
-        has = 'branch' in stack.headers
-        self.assertTrue(has)
+
+# if __name__ == '__main__':
+#     unittest.main()

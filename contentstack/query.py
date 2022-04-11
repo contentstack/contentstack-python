@@ -6,7 +6,6 @@ import json
 import logging
 from urllib import parse
 
-from pyparsing import empty
 
 from contentstack.basequery import BaseQuery
 from contentstack.entryqueryable import EntryQueryable

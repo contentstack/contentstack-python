@@ -21,10 +21,10 @@ def all_tests():
     test_module_asset = TestLoader().loadTestsFromTestCase(TestAsset)
     test_module_entry = TestLoader().loadTestsFromTestCase(TestEntry)
     test_module_query = TestLoader().loadTestsFromTestCase(TestQuery)
-    suite = TestSuite([
+    TestSuite([
         test_module_stack,
         test_module_asset,
         test_module_entry,
-        test_module_query,
+        test_module_query
     ])
 

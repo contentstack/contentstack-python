@@ -5,13 +5,6 @@ from contentstack import Utils
 
 class TestUtils(unittest.TestCase):
 
-    # def setUp(self):
-    #     self.api_key = credentials.keys['api_key']
-    #     self.delivery_token = credentials.keys['delivery_token']
-    #     self.environment = credentials.keys['environment']
-    #     self.host = credentials.keys['host']
-    #     self.stack = contentstack.Stack(self.api_key, self.delivery_token, self.environment, host=self.host)
-
     def test_01_config_logging(self):
         result = Utils.config_logging()
         self.assertEqual(None, result)

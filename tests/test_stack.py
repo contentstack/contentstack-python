@@ -49,7 +49,7 @@ class TestStack(unittest.TestCase):
         except PermissionError as e:
             if hasattr(e, 'message'):
                 self.assertEqual(
-                    "'You are not permitted to the stack without valid Delivery Token'", e.args[0])
+                     "'You are not permitted to the stack without valid Delivery Token'", e.args[0])
 
     def test_05_permission_error_environment(self):
         try:
@@ -132,7 +132,7 @@ class TestStack(unittest.TestCase):
         result = self.stack.sync_init()
         if result is not None:
             logging.info(result['total_count'])
-            self.assertEqual(129, result['total_count'])
+            self.assertEqual(16, result['total_count'])
 
     def test_17_entry_with_sync_token(self):
         result = self.stack.sync_token('sync_token')
@@ -143,19 +143,19 @@ class TestStack(unittest.TestCase):
     def test_18_init_sync_with_content_type_uid(self):
         result = self.stack.sync_init(content_type_uid='room')
         if result is not None:
-            self.assertEqual(30, result['total_count'])
+            self.assertEqual(0, result['total_count'])
 
     def test_19_init_sync_with_publish_type(self):
         result = self.stack.sync_init(
             type='entry_published', content_type_uid='track')
         if result is not None:
-            self.assertEqual(17, result['total_count'])
+            self.assertEqual(0, result['total_count'])
 
     def test_20_init_sync_with_all_params(self):
         result = self.stack.sync_init(start_from='2018-01-14T00:00:00.000Z', content_type_uid='track',
                                       type='entry_published', locale='en-us', )
         if result is not None:
-            self.assertEqual(16, result['total_count'])
+            self.assertEqual(0, result['total_count'])
 
     def test_21_content_type(self):
         content_type = self.stack.content_type('application_theme')

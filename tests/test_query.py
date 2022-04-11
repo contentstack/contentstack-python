@@ -127,13 +127,14 @@ class TestQuery(unittest.TestCase):
         self.assertEqual({'include_fallback': 'true'}, query.query_params)
 
     def test_19_default_find_without_fallback(self):
-        _in = ['en-gb', 'en-us']
         entry = self.query.locale('en-gb').find()
-        uid = entry['entries'][0]['uid']
         self.assertEqual(1, len(entry))
 
     def test_20_default_find_with_fallback(self):
-        _in = ['en-gb', 'en-us']
         entry = self.query.locale('en-gb').include_fallback().find()
         entries = entry['entries']
         self.assertEqual(29, len(entries))
+
+
+# if __name__ == '__main__':
+#     unittest.main()

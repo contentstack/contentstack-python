@@ -4,10 +4,11 @@ import config
 import contentstack
 from contentstack.basequery import QueryOperation
 
+IMAGE = 'images_(1).jpg'
+
 
 class TestAsset(unittest.TestCase):
     global asset_uid
-    IMAGE = 'images_(1).jpg'
 
     def setUp(self):
         self.asset_uid = None
@@ -205,3 +206,6 @@ class TestAsset(unittest.TestCase):
     def test_24_default_find_no_fallback(self):
         entry = self.asset_query.locale('ja-jp').find()
         self.assertIsNotNone(entry)
+
+# if __name__ == '__main__':
+#     unittest.main()

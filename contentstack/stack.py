@@ -24,6 +24,7 @@ __license__ = "MIT"
 __version__ = '1.7.0'
 
 log = logging.getLogger(__name__)
+default_host = 'cdn.contentstack.io'
 
 
 class ContentstackRegion(enum.Enum):
@@ -44,7 +45,6 @@ class Stack:
     together to create, edit, approve, and publish content.
     (API Reference)[https://www.contentstack.com/docs/developers/apis/content-delivery-api/#stack]:
     """
-    default_host = cdn.contentstack.io
 
     def __init__(self, api_key: str, delivery_token: str, environment: str,
                  host=default_host,
@@ -82,7 +82,9 @@ class Stack:
         :param retry_strategy (optional) custom retry_strategy can be set.
         # Method to create retry_strategy: create object of Retry() and provide the
         # required parameters like below
+        
         **Example:**
+
         >>> _strategy = Retry(total=5, backoff_factor=1, status_forcelist=[408, 429])
         >>> stack = contentstack.Stack("api_key", "delivery_token", "environment",
             live_preview={enable=True, authorization='your auth token'}, retry_strategy= _strategy)
@@ -107,7 +109,6 @@ class Stack:
         self.retry_strategy = retry_strategy
         self.live_preview_dict = live_preview
 
-        # validate stack
         self._validate_stack()
 
     def _validate_stack(self):
@@ -121,7 +122,7 @@ class Stack:
             raise PermissionError(
                 'You are not permitted to the stack without valid Environment')
 
-        # prepare endpoint for the url:
+
         if self.region.value == 'eu' and self.host == default_host:
             self.host = 'eu-cdn.contentstack.com'
         elif self.region.value == 'azure-na' and self.host == default_host:
@@ -130,12 +131,14 @@ class Stack:
             self.host = '{}-{}'.format(self.region.value, default_host)
 
         self.endpoint = 'https://{}/{}'.format(self.host, self.version)
-        # prepare Headers:`
 
         self.headers = {
-            'api_key': self.api_key,
-            'access_token': self.delivery_token,
-            'environment': self.environment
+            'api_key': 
+                self.api_key,
+            'access_token': 
+                self.delivery_token,
+            'environment': 
+                self.environment
         }
 
         if self.branch is not None:
