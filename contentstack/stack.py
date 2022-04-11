@@ -9,22 +9,20 @@ this as a container that holds authentication related data.
 import enum
 import logging
 from urllib import parse
-
-from urllib3 import Retry
-
-import contentstack
+from urllib3.util import Retry
 from contentstack.asset import Asset
 from contentstack.assetquery import AssetQuery
 from contentstack.contenttype import ContentType
 from contentstack.https_connection import HTTPSConnection
 from contentstack.image_transform import ImageTransform
 
+
 __author__ = "ishaileshmishra (ishaileshmishra@gmail.com)"
 __license__ = "MIT"
 __version__ = '1.7.0'
 
 log = logging.getLogger(__name__)
-default_host = 'cdn.contentstack.io'
+DEFAULT_HOST = 'cdn.contentstack.io'
 
 
 class ContentstackRegion(enum.Enum):
@@ -37,7 +35,6 @@ class ContentstackRegion(enum.Enum):
 
 
 class Stack:
-    from urllib3.util import Retry
 
     """
     A stack can be defined as a pool of data or a container that holds all
@@ -45,9 +42,10 @@ class Stack:
     together to create, edit, approve, and publish content.
     (API Reference)[https://www.contentstack.com/docs/developers/apis/content-delivery-api/#stack]:
     """
+    #from urllib3.util import Retry
 
     def __init__(self, api_key: str, delivery_token: str, environment: str,
-                 host=default_host,
+                 host=DEFAULT_HOST,
                  version='v3',
                  region=ContentstackRegion.US,
                  timeout=30,
@@ -67,7 +65,8 @@ class Stack:
         :param branch: branch of the stack
         :param version: (optional) apiVersion of the stack default is v3
         :param region: (optional) region support of the stack default is ContentstackRegion.US
-        :param live_preview: (optional) accepts type dictionary that enables live_preview option for request,
+        :param live_preview: (optional) accepts type dictionary that enables
+        live_preview option for request,
         takes input as dictionary object. containing one/multiple key value pair like below.
 
         ```python
@@ -82,7 +81,6 @@ class Stack:
         :param retry_strategy (optional) custom retry_strategy can be set.
         # Method to create retry_strategy: create object of Retry() and provide the
         # required parameters like below
-        
         **Example:**
 
         >>> _strategy = Retry(total=5, backoff_factor=1, status_forcelist=[408, 429])
@@ -123,22 +121,19 @@ class Stack:
                 'You are not permitted to the stack without valid Environment')
 
 
-        if self.region.value == 'eu' and self.host == default_host:
+        if self.region.value == 'eu' and self.host == DEFAULT_HOST:
             self.host = 'eu-cdn.contentstack.com'
-        elif self.region.value == 'azure-na' and self.host == default_host:
+        elif self.region.value == 'azure-na' and self.host == DEFAULT_HOST:
             self.host = 'azure-na-cdn.contentstack.com'
         elif self.region.value != 'us':
-            self.host = '{}-{}'.format(self.region.value, default_host)
-
-        self.endpoint = 'https://{}/{}'.format(self.host, self.version)
+            #self.host = '{}-{}'.format(self.region.value, DEFAULT_HOST)
+            self.host = f'{self.region.value}-{DEFAULT_HOST}'
+        self.endpoint = f'https://{self.host}/{self.version}'
 
         self.headers = {
-            'api_key': 
-                self.api_key,
-            'access_token': 
-                self.delivery_token,
-            'environment': 
-                self.environment
+            'api_key': self.api_key,
+            'access_token':self.delivery_token,
+            'environment': self.environment
         }
 
         if self.branch is not None:
@@ -163,7 +158,7 @@ class Stack:
                 self.headers['authorization'] = self.live_preview_dict['authorization']
                 # remove deliveryToken and environment
                 self.host = self.live_preview_dict['host']
-                self.endpoint = 'https://{}/{}'.format(self.host, self.version)
+                self.endpoint = f'https://{self.host}/{self.version}'
                 self.headers.pop('access_token')
                 self.headers.pop('environment')
 
@@ -252,18 +247,22 @@ class Stack:
         """
         return AssetQuery(self.http_instance)
 
-    def sync_init(self, content_type_uid=None, start_from=None, locale=None, type=None):
+    def sync_init(self, content_type_uid=None, start_from=None, locale=None, publish_type=None):
         """
-        Set init to ‘true’ if you want to sync all the published entries and assets. This is usually used when the
-        app does not have any content and you want to get all the content for the first time.\n
+        Set init to ‘true’ if you want to sync all the published entries and assets.
+        This is usually used when the app does not have any content and you want to
+        get all the content for the first time.\n
 
         :param content_type_uid: (optional) content type UID. e.g., products
                     This retrieves published entries of specified content type
         :param start_from: (optional) The start date. e.g., 2018-08-14T00:00:00.000Z
                     This retrieves published entries starting from a specific date
-        :param locale: (optional) locale code. e.g., en-us, This retrieves published entries of specific locale.
-        :param type: (optional) If you do not specify any value, it will bring all published 
-                    entries and published assets. You can pass multiple types as comma-separated values,
+        :param locale: (optional) locale code. e.g., en-us, This retrieves published
+        entries of specific locale.
+        :param publish_type: (optional) If you do not specify any value,
+                    it will bring all published
+                    entries and published assets. You can pass multiple types
+                    as comma-separated values,
                     for example, entry_published,entry_unpublished,asset_published
         :return: list of sync items
         -------------------------------
@@ -273,7 +272,7 @@ class Stack:
             >>> import contentstack
             >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> result = stack.sync_init(content_type_uid='content_type_uid',
-                         start_from='date', locale='en-us', type='asset_published')
+                         start_from='date', locale='en-us', publish_type='asset_published')
         -------------------------------
         """
         self.sync_param['init'] = 'true'
@@ -283,8 +282,8 @@ class Stack:
             self.sync_param['start_from'] = start_from
         if locale is not None and isinstance(locale, str):
             self.sync_param['locale'] = locale
-        if type is not None and isinstance(type, str):
-            self.sync_param['type'] = type
+        if publish_type is not None and isinstance(publish_type, str):
+            self.sync_param['type'] = publish_type
         return self.__sync_request()
 
     def pagination(self, pagination_token: str):
@@ -333,10 +332,10 @@ class Stack:
         :return: :class:`Response <Response>` object
         :rtype: requests.Response
         """
-        base_url = '{}/stacks/sync'.format(self.http_instance.endpoint)
+        base_url = f'{self.http_instance.endpoint}/stacks/sync'
         self.sync_param['environment'] = self.http_instance.headers['environment']
         encoded_query = parse.urlencode(self.sync_param)
-        url = '{}?{}'.format(base_url, encoded_query)
+        url = f'{base_url}?{encoded_query}'
         result = self.http_instance.get(url)
         return result
 
@@ -344,7 +343,7 @@ class Stack:
         """
         This document is a detailed reference to Contentstack’s Image Delivery
         API and covers the parameters that you can add to the URL to retrieve,
-        manipulate (or convert) image files and display it to your web or 
+        manipulate (or convert) image files and display it to your web or
         mobile properties.\n
 
         :param image_url: base url on which queries to apply

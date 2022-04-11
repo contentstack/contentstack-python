@@ -1,6 +1,4 @@
-import logging
 import unittest
-
 import config
 import contentstack
 from contentstack.stack import ContentstackRegion
@@ -8,7 +6,7 @@ from contentstack.stack import ContentstackRegion
 stack_instance = contentstack.Stack(
     config.api_key, config.delivery_token, config.environment, host=config.host)
 
-
+# pylint(missing-function-docstring)
 class TestStack(unittest.TestCase):
 
     def setUp(self):
@@ -27,9 +25,7 @@ class TestStack(unittest.TestCase):
         self.assertEqual('eu-cdn.contentstack.com', stack_region.host)
 
     def test_03_stack_endpoint(self):
-        logging.info('endpoint for the stack is {}'.format(
-            self.stack.endpoint))
-        self.assertEqual("https://{}/v3".format(config.host),
+        self.assertEqual(f"https://{config.host}/v3",
                          self.stack.endpoint)
 
     def test_04_permission_error_api_key(self):
@@ -92,7 +88,6 @@ class TestStack(unittest.TestCase):
         image_transform = self.stack.image_transform("cdn.contentstack.io/v3/endpoint",
                                                      width=230, height=300, other="filter")
         result_url = image_transform.get_url()
-        logging.info('result url is: {}'.format(result_url))
         self.assertEqual(
             'cdn.contentstack.io/v3/endpoint?width=230&height=300&other=filter', result_url)
 
@@ -131,7 +126,6 @@ class TestStack(unittest.TestCase):
     def test_16_initialise_sync(self):
         result = self.stack.sync_init()
         if result is not None:
-            logging.info(result['total_count'])
             self.assertEqual(16, result['total_count'])
 
     def test_17_entry_with_sync_token(self):
@@ -147,13 +141,15 @@ class TestStack(unittest.TestCase):
 
     def test_19_init_sync_with_publish_type(self):
         result = self.stack.sync_init(
-            type='entry_published', content_type_uid='track')
+            publish_type='entry_published', content_type_uid='track')
         if result is not None:
             self.assertEqual(0, result['total_count'])
 
     def test_20_init_sync_with_all_params(self):
-        result = self.stack.sync_init(start_from='2018-01-14T00:00:00.000Z', content_type_uid='track',
-                                      type='entry_published', locale='en-us', )
+        result = self.stack.sync_init(start_from='2018-01-14T00:00:00.000Z',
+                                      content_type_uid='track',
+                                      publish_type='entry_published',
+                                      locale='en-us', )
         if result is not None:
             self.assertEqual(0, result['total_count'])
 
@@ -164,10 +160,10 @@ class TestStack(unittest.TestCase):
             self.assertEqual('application_theme',
                              result['content_type']['uid'])
 
-    def test_22_content_types_with_query_param(self):
-        query = {'include_count': 'true'}
-        content_type = self.stack.content_type('application_theme')
-        result = content_type.find(params=query)
-        if result is not None:
-            if 'count' in result['content_types']:
-                self.assertEqual(11, result['content_types']['count'])
+    def test_check_region(self):
+        """_summary_
+        """
+        _stack = contentstack.Stack(config.api_key, config.delivery_token, config.environment,
+                                    host=config.host, region=ContentstackRegion.AZURE_NA)
+        var = _stack.region.value
+        self.assertEqual('azure-na', var)
