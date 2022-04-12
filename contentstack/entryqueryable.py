@@ -20,11 +20,11 @@ class EntryQueryable:
 
     def locale(self, locale: str):
         """
-        Language code of which the entries needs to be included.
+        Language code of which the entries need to be included.
         Only the entries published in this locale will be displayed
 
         Arguments:
-            locale {str} -- locale_code of the language of which the entries needs to be included.
+            locale {str} -- locale_code of the language of which the entries need to be included.
             Only the entries published in this locale will be displayed
 
         :return: self: so you can chain this call.

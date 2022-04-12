@@ -27,4 +27,3 @@ def all_tests():
         test_module_entry,
         test_module_query
     ])
-

@@ -3,19 +3,17 @@ Class that wraps the credentials of the authenticated user. Think of
 this as a container that holds authentication related data.
 """
 
-# ************* Module stack **************
-# Your code has been rated at 10.00/10
-
 import enum
 import logging
 from urllib import parse
 from urllib3.util import Retry
+
+import contentstack
 from contentstack.asset import Asset
 from contentstack.assetquery import AssetQuery
 from contentstack.contenttype import ContentType
 from contentstack.https_connection import HTTPSConnection
 from contentstack.image_transform import ImageTransform
-
 
 __author__ = "ishaileshmishra (ishaileshmishra@gmail.com)"
 __license__ = "MIT"
@@ -35,14 +33,12 @@ class ContentstackRegion(enum.Enum):
 
 
 class Stack:
-
     """
     A stack can be defined as a pool of data or a container that holds all
     the content/assets related to a site. It is a collaboration space where multiple users can work
     together to create, edit, approve, and publish content.
     (API Reference)[https://www.contentstack.com/docs/developers/apis/content-delivery-api/#stack]:
     """
-    #from urllib3.util import Retry
 
     def __init__(self, api_key: str, delivery_token: str, environment: str,
                  host=DEFAULT_HOST,
@@ -58,7 +54,7 @@ class Stack:
         Class that wraps the credentials of the authenticated user. Think of
         this as a container that holds authentication related data.
 
-        :param api_key: api_key of the stack
+        param api_key: api_key of the stack
         :param delivery_token: delivery_token of the stack
         :param environment: environment of the stack
         :param host: (optional) host of the stack default is cdm.contentstack.io
@@ -78,14 +74,14 @@ class Stack:
             'edit_tags_type': object | str,
         }
         ```
-        :param retry_strategy (optional) custom retry_strategy can be set.
-        # Method to create retry_strategy: create object of Retry() and provide the
-        # required parameters like below
+        :param retry_strategy: (optional) custom retry_strategy can be set.
+        Method to create retry_strategy: create object of Retry() and provide the
+        required parameters like below
         **Example:**
 
         >>> _strategy = Retry(total=5, backoff_factor=1, status_forcelist=[408, 429])
         >>> stack = contentstack.Stack("api_key", "delivery_token", "environment",
-            live_preview={enable=True, authorization='your auth token'}, retry_strategy= _strategy)
+        live_preview={enable=True, authorization='your auth token'}, retry_strategy= _strategy)
         ```
         """
         if live_preview is None:
@@ -120,19 +116,17 @@ class Stack:
             raise PermissionError(
                 'You are not permitted to the stack without valid Environment')
 
-
         if self.region.value == 'eu' and self.host == DEFAULT_HOST:
             self.host = 'eu-cdn.contentstack.com'
         elif self.region.value == 'azure-na' and self.host == DEFAULT_HOST:
             self.host = 'azure-na-cdn.contentstack.com'
         elif self.region.value != 'us':
-            #self.host = '{}-{}'.format(self.region.value, DEFAULT_HOST)
             self.host = f'{self.region.value}-{DEFAULT_HOST}'
         self.endpoint = f'https://{self.host}/{self.version}'
 
         self.headers = {
             'api_key': self.api_key,
-            'access_token':self.delivery_token,
+            'access_token': self.delivery_token,
             'environment': self.environment
         }
 
@@ -156,7 +150,6 @@ class Stack:
                 if 'host' not in self.live_preview_dict:
                     raise PermissionError("host is required")
                 self.headers['authorization'] = self.live_preview_dict['authorization']
-                # remove deliveryToken and environment
                 self.host = self.live_preview_dict['host']
                 self.endpoint = f'https://{self.host}/{self.version}'
                 self.headers.pop('access_token')

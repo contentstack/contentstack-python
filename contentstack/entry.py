@@ -5,6 +5,9 @@ API Reference: https://www.contentstack.com/docs/developers/apis/content-deliver
 
 import logging
 from urllib import parse
+
+import empty as empty
+
 from contentstack.entryqueryable import EntryQueryable
 
 # ************* Module Entry **************
@@ -157,13 +160,12 @@ class Entry(EntryQueryable):
         return self
 
     def __get_base_url(self, endpoint=''):
-        if endpoint is not None and not endpoint.empty:
+        if endpoint is not None and not empty:
             self.http_instance.endpoint = endpoint
         if None in (self.http_instance, self.content_type_id, self.entry_uid):
             raise KeyError(
                 'Provide valid http_instance, content_type_uid or entry_uid')
-        url = '{}/content_types/{}/entries/{}' \
-            .format(self.http_instance.endpoint, self.content_type_id, self.entry_uid)
+        url = f'{self.http_instance.endpoint}/content_types/{self.content_type_id}/entries/{self.entry_uid}'
         return url
 
     def __validate_live_preview(self):
@@ -195,5 +197,5 @@ class Entry(EntryQueryable):
         if len(self.entry_queryable_param) > 0:
             self.entry_param.update(self.entry_queryable_param)
         encoded_string = parse.urlencode(self.entry_param, doseq=True)
-        url = '{}?{}'.format(self.base_url, encoded_string)
+        url = f'{self.base_url}?{encoded_string}'
         return self.http_instance.get(url)

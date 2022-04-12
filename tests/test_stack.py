@@ -6,6 +6,7 @@ from contentstack.stack import ContentstackRegion
 stack_instance = contentstack.Stack(
     config.api_key, config.delivery_token, config.environment, host=config.host)
 
+
 # pylint(missing-function-docstring)
 class TestStack(unittest.TestCase):
 
@@ -45,7 +46,7 @@ class TestStack(unittest.TestCase):
         except PermissionError as e:
             if hasattr(e, 'message'):
                 self.assertEqual(
-                     "'You are not permitted to the stack without valid Delivery Token'", e.args[0])
+                    "'You are not permitted to the stack without valid Delivery Token'", e.args[0])
 
     def test_05_permission_error_environment(self):
         try:

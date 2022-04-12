@@ -6,6 +6,7 @@ import json
 import logging
 from urllib import parse
 
+import empty as empty
 
 from contentstack.basequery import BaseQuery
 from contentstack.entryqueryable import EntryQueryable
@@ -43,15 +44,13 @@ class Query(BaseQuery, EntryQueryable):
 
     def __init__(self, http_instance, content_type_uid):
         super().__init__()
-        # BaseQuery.__init__(self)
         EntryQueryable.__init__(self)
         self.content_type_uid = content_type_uid
         self.http_instance = http_instance
         if self.content_type_uid is None:
             raise PermissionError(
                 'You are not allowed here without content_type_uid')
-        # self.base_url = '{}/content_types/{}/entries' \
-        #     .format(self.http_instance.endpoint, self.content_type_uid)
+        self.base_url = f'{self.http_instance.endpoint}/content_types/{self.content_type_uid}/entries'
         self.base_url = self.__get_base_url()
 
     def __get_base_url(self, endpoint=''):
@@ -60,8 +59,7 @@ class Query(BaseQuery, EntryQueryable):
         if None in (self.http_instance, self.content_type_uid):
             raise KeyError(
                 'Provide valid http_instance, content_type_uid or entry_uid')
-        url = '{}/content_types/{}/entries' \
-            .format(self.http_instance.endpoint, self.content_type_uid)
+        url = f'{self.http_instance.endpoint}/content_types/{self.content_type_uid}/entries'
 
         return url
 
@@ -313,8 +311,8 @@ class Query(BaseQuery, EntryQueryable):
             self.query_params["query"] = json.dumps(self.parameters)
         if 'environment' in self.http_instance.headers:
             self.query_params['environment'] = self.http_instance.headers['environment']
-        # Check if live preview enabled
         self.__validate_live_preview()
         encoded_string = parse.urlencode(self.query_params, doseq=True)
-        url = '{}?{}'.format(self.base_url, encoded_string)
+        url = f'{self.base_url}?{encoded_string}'
+        # url = '{}?{}'.format(self.base_url, encoded_string)
         return self.http_instance.get(url)

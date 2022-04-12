@@ -73,4 +73,4 @@ class Utils:
         if 'query' in params:
             params["query"] = json.dumps(params["query"])
         query = parse.urlencode(params)
-        return '{}&{}'.format(base_url, query)
+        return f'{base_url}&{query}'

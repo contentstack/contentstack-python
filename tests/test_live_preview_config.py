@@ -120,6 +120,5 @@ class TestLivePreviewConfig(unittest.TestCase):
         stack.content_type('product')
         self.assertEqual('dev_branch', stack.get_branch)
 
-
 # if __name__ == '__main__':
 #     unittest.main()

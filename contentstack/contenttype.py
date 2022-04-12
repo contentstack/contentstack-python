@@ -7,7 +7,7 @@ content type.
 
 # ************* Module ContentType **************
 # Your code has been rated at 10.00/10 by pylint
-
+import json
 import logging
 from urllib import parse
 
@@ -43,13 +43,15 @@ class ContentType:
             >>> import contentstack
             >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
             >>> content_type = stack.content_type('content_type_uid')
-            >>> entry = content_type.entry(uid='entry_uid')
+            >>> content_type.entry(uid='entry_uid')
         --------------------------------
         """
         if self.__content_type_uid is None:
             raise PermissionError('Please provide valid content_type_uid')
         if entry_uid is None:
-            raise PermissionError('Please provide valid entry uid')
+            raise PermissionError(json.dumps({
+                "message": 'Please provide valid entry uid',
+                "message_detail": 'Entry UID can not be None'}))
         entry = Entry(self.http_instance,
                       self.__content_type_uid, entry_uid=entry_uid)
         return entry

@@ -133,8 +133,7 @@ class TestQuery(unittest.TestCase):
     def test_20_default_find_with_fallback(self):
         entry = self.query.locale('en-gb').include_fallback().find()
         entries = entry['entries']
-        self.assertEqual(29, len(entries))
-
+        self.assertEqual(0, len(entries))
 
 # if __name__ == '__main__':
 #     unittest.main()
