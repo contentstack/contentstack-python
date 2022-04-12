@@ -9,19 +9,23 @@ _preview = {
     'host': 'cdn.contentstack.io'
 }
 
+API_KEY = config.APIKEY
+DELIVERY_TOKEN = config.DELIVERYTOKEN
+ENVIRONMENT = config.ENVIRONMENT
+HOST = config.HOST
 
 class TestLivePreviewConfig(unittest.TestCase):
 
     def setUp(self):
         self.stack = contentstack.Stack(
-            config.api_key, config.delivery_token,
-            config.environment, host=config.host)
+            API_KEY, DELIVERY_TOKEN,
+            ENVIRONMENT, host=HOST)
 
     def test_01_live_preview_enabled_(self):
         self.stack = contentstack.Stack(
-            config.api_key,
-            config.delivery_token,
-            config.environment,
+            API_KEY,
+            DELIVERY_TOKEN,
+            ENVIRONMENT,
             live_preview=_preview)
         self.stack.content_type(
             'live_content_type').entry('live_entry_uid')
@@ -31,27 +35,27 @@ class TestLivePreviewConfig(unittest.TestCase):
 
     def test_021_live_preview_enabled_(self):
         self.stack = contentstack.Stack(
-            config.api_key,
-            config.delivery_token,
-            config.environment,
+            API_KEY,
+            DELIVERY_TOKEN,
+            ENVIRONMENT,
             live_preview=_preview)
         self.assertEqual(_preview['authorization'],
                          self.stack.live_preview_dict['authorization'])
 
     def test_03_set_host(self):
         self.stack = contentstack.Stack(
-            config.api_key,
-            config.delivery_token,
-            config.environment,
+            API_KEY,
+            DELIVERY_TOKEN,
+            ENVIRONMENT,
             live_preview=_preview)
         self.assertEqual(3, len(self.stack.live_preview_dict))
         self.assertEqual(True, self.stack.live_preview_dict['enable'])
 
     def test_031_set_host_value(self):
         self.stack = contentstack.Stack(
-            config.api_key,
-            config.delivery_token,
-            config.environment,
+            API_KEY,
+            DELIVERY_TOKEN,
+            ENVIRONMENT,
             live_preview=_preview)
         self.assertEqual(3, len(self.stack.live_preview_dict))
         self.assertEqual(_preview['host'],
@@ -64,18 +68,18 @@ class TestLivePreviewConfig(unittest.TestCase):
         }
         _preview.update(_live_preview)
         self.stack = contentstack.Stack(
-            config.api_key,
-            config.delivery_token,
-            config.environment,
+            API_KEY,
+            DELIVERY_TOKEN,
+            ENVIRONMENT,
             live_preview=_preview
         )
         self.assertEqual(5, len(self.stack.live_preview_dict))
 
     def test_07_live_preview_query_hash_included(self):
         self.stack = contentstack.Stack(
-            config.api_key,
-            config.delivery_token,
-            config.environment,
+            API_KEY,
+            DELIVERY_TOKEN,
+            ENVIRONMENT,
             live_preview=_preview
         )
         self.stack.live_preview_query(
@@ -85,9 +89,9 @@ class TestLivePreviewConfig(unittest.TestCase):
 
     def test_08_live_preview_query_hash_excluded(self):
         self.stack = contentstack.Stack(
-            config.api_key,
-            config.delivery_token,
-            config.environment,
+            API_KEY,
+            DELIVERY_TOKEN,
+            ENVIRONMENT,
             live_preview=_preview
         )
         self.stack.live_preview_query(
@@ -101,9 +105,9 @@ class TestLivePreviewConfig(unittest.TestCase):
 
     def test_09_live_preview_check_hash_value(self):
         self.stack = contentstack.Stack(
-            config.api_key,
-            config.delivery_token,
-            config.environment,
+            API_KEY,
+            DELIVERY_TOKEN,
+            ENVIRONMENT,
             live_preview=_preview
         )
         self.stack.live_preview_query(
@@ -112,7 +116,7 @@ class TestLivePreviewConfig(unittest.TestCase):
             .entry(entry_uid='just@fakeit')
 
         self.assertEqual(2, len(self.stack.headers))
-        self.assertEqual(config.api_key, self.stack.headers['api_key'])
+        self.assertEqual(API_KEY, self.stack.headers['api_key'])
 
     def test_branching(self):
         stack = contentstack.Stack(
