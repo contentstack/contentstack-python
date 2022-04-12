@@ -5,8 +5,8 @@ contentstack-utils
 python-dateutil==2.8.2
 requests==2.27.1
 coverage==6.3.2
-tox==3.24.5
-virtualenv==20.14.0
+tox==3.25.0
+virtualenv==20.14.1
 Sphinx==4.5.0
 sphinxcontrib-websupport==1.2.4
 pip~=22.0.4
