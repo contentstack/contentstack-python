@@ -134,6 +134,3 @@ class TestQuery(unittest.TestCase):
         entry = self.query.locale('en-gb').include_fallback().find()
         entries = entry['entries']
         self.assertEqual(0, len(entries))
-
-# if __name__ == '__main__':
-#     unittest.main()

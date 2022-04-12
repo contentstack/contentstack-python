@@ -5,8 +5,7 @@ import enum
 import json
 import logging
 from urllib import parse
-
-import empty as empty
+import empty
 
 from contentstack.basequery import BaseQuery
 from contentstack.entryqueryable import EntryQueryable

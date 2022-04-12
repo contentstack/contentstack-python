@@ -6,7 +6,7 @@ API Reference: https://www.contentstack.com/docs/developers/apis/content-deliver
 import logging
 from urllib import parse
 
-import empty as empty
+import empty
 
 from contentstack.entryqueryable import EntryQueryable
 

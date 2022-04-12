@@ -8,7 +8,6 @@ import logging
 from urllib import parse
 from urllib3.util import Retry
 
-import contentstack
 from contentstack.asset import Asset
 from contentstack.assetquery import AssetQuery
 from contentstack.contenttype import ContentType
