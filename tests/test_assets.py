@@ -5,7 +5,7 @@ import config
 import contentstack
 from contentstack.basequery import QueryOperation
 
-global ASSET_UID
+ASSET_UID = ''
 IMAGE = 'images_(1).jpg'
 API_KEY = config.APIKEY
 DELIVERY_TOKEN = config.DELIVERYTOKEN
