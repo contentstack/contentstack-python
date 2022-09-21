@@ -14,9 +14,9 @@ from contentstack.contenttype import ContentType
 from contentstack.https_connection import HTTPSConnection
 from contentstack.image_transform import ImageTransform
 
-__author__ = "ishaileshmishra (ishaileshmishra@gmail.com)"
+__author__ = "ishaileshmishra (shailesh.mishra@contentstack.com)"
 __license__ = "MIT"
-__version__ = '1.7.0'
+__version__ = '1.8.0'
 
 log = logging.getLogger(__name__)
 DEFAULT_HOST = 'cdn.contentstack.io'
@@ -79,13 +79,14 @@ class Stack:
         **Example:**
 
         >>> _strategy = Retry(total=5, backoff_factor=1, status_forcelist=[408, 429])
+        >>> import contentstack
         >>> stack = contentstack.Stack("api_key", "delivery_token", "environment",
         live_preview={enable=True, authorization='your auth token'}, retry_strategy= _strategy)
         ```
         """
+        logging.basicConfig(level=logging.DEBUG)
         if live_preview is None:
             live_preview = {'enable': False}
-        logging.basicConfig(level=logging.DEBUG)
         self.headers = {}
         self._query_params = {}
         self.sync_param = {}
@@ -144,10 +145,6 @@ class Stack:
     def _validate_live_preview(self):
         if isinstance(self.live_preview_dict, dict):
             if 'enable' in self.live_preview_dict and self.live_preview_dict['enable']:
-                if 'authorization' not in self.live_preview_dict:
-                    raise PermissionError("management token is required")
-                if 'host' not in self.live_preview_dict:
-                    raise PermissionError("host is required")
                 self.headers['authorization'] = self.live_preview_dict['authorization']
                 self.host = self.live_preview_dict['host']
                 self.endpoint = f'https://{self.host}/{self.version}'
@@ -200,7 +197,7 @@ class Stack:
         """
         Content type defines the structure or schema of a page or a section
         of your web or mobile property.
-        :param content_type_uid:
+        param content_type_uid:
         :return: ContentType
         """
         return ContentType(self.http_instance, content_type_uid)
@@ -209,7 +206,7 @@ class Stack:
         """
         Assets refer to all the media files (images, videos, PDFs, audio files, and so on)
         uploaded in your Contentstack repository for future use.
-        :param uid: asset_uid of the Asset
+        param uid: asset_uid of the Asset
         :return: Asset
 
         -----------------------------
@@ -242,7 +239,7 @@ class Stack:
     def sync_init(self, content_type_uid=None, start_from=None, locale=None, publish_type=None):
         """
         Set init to ‘true’ if you want to sync all the published entries and assets.
-        This is usually used when the app does not have any content and you want to
+        This is usually used when the app does not have any content, and you want to
         get all the content for the first time.\n
 
         :param content_type_uid: (optional) content type UID. e.g., products
@@ -285,7 +282,7 @@ class Stack:
         paginated. It provides pagination token in the response.
         However, you do not have to use the pagination token
         manually to get the next batch.
-        :param pagination_token:
+        param pagination_token:
         :return: list of sync items
         ------------------------------
         Example:
@@ -303,7 +300,7 @@ class Stack:
         to get the updated content next time. The sync token fetches
         only the content that was added
         after your last sync, and the details of the content that was deleted or updated.
-        :param sync_token: sync_token
+        param sync_token: sync_token
         :return: list of Sync Result
         ------------------------------
         [Example]:
@@ -318,7 +315,7 @@ class Stack:
 
     def __sync_request(self):
         r"""Sends a GET request.
-        :param url URL for :class:`Request` object.
+        param url is URL for :class:`Request` object.
         in the query string for the :class:`Request`.
         :param \*\*kwargs: Optional arguments that ``request`` takes.
         :return: :class:`Response <Response>` object
@@ -350,6 +347,27 @@ class Stack:
     def live_preview_query(self, **kwargs):
         """
         live_preview_query accepts key value pair objects to the query
-        i.e hash and content_type_uid
+        hash, content_type_uid and entry_uid
+        Example:
+            # def live_preview_query(**kwargs):
+            # kwargs is a dict of the keyword args passed to the function
+            for key, value in kwargs.iteritems():
+                print "%s = %s" % (key, value)
+            Uses:=>
+            live_preview_query(
+                host='api.contentstack.io',
+                entry_uid='your_entry_uid',
+                hash='hashcode'
+                )
         """
         self.live_preview_dict.update(kwargs)
+        self._execute_management_api()
+        return self
+
+    def _execute_management_api(self):
+        _ct_uid = self.live_preview_dict.get("content_type_uid")
+        _entry_uid = self.live_preview_dict.get("entry_uid")
+        _url = f'{self.http_instance.endpoint}/content_types/{_ct_uid}/entries/{_entry_uid}'
+        _resp = self.http_instance.get(_url)
+        self.live_preview_dict['resp'] = _resp['entry']
+        return self

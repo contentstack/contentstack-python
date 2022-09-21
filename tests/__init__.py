@@ -1,4 +1,4 @@
-# pytest --html=tests/report/test-report.html 
+# pytest --html=tests/report/test-report.html
 # above command runs tests and test reports generates in tests/report location.
 # nosetests --with-coverage --cover-html
 # clean all the .pyc files
@@ -7,9 +7,7 @@
 # pytest --cov=contentstack
 # pytest -v --cov=contentstack --cov-report=html
 # pytest --html=tests/report/test-report.html
-import unittest
 from unittest import TestLoader, TestSuite
-
 from .test_assets import TestAsset
 from .test_entry import TestEntry
 from .test_query import TestQuery
@@ -25,5 +23,5 @@ def all_tests():
         test_module_stack,
         test_module_asset,
         test_module_entry,
-        test_module_query
+        test_module_query,
     ])

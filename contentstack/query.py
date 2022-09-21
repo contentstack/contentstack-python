@@ -1,10 +1,13 @@
 """
 Contentstack provides certain queries that you can use to fetch filtered results
 """
+
 import enum
 import json
 import logging
 from urllib import parse
+
+import deprecation
 import empty
 
 from contentstack.basequery import BaseQuery
@@ -118,10 +121,15 @@ class Query(BaseQuery, EntryQueryable):
             self.query_params["tags"] = ",".join(tags)
         return self
 
+    @deprecation.deprecated(
+        deprecated_in="1.7.0",
+        current_version='1.8.0',
+        details="Use regex function instead")
     def search(self, value: str):
         """
         This method provides only the entries matching
         the specified value.
+        @Deprecated deprecated in 1.7.0, Use #regex instaead
         Arguments:
             value {str} -- value used to match or compare
         Raises:
@@ -314,4 +322,61 @@ class Query(BaseQuery, EntryQueryable):
         encoded_string = parse.urlencode(self.query_params, doseq=True)
         url = f'{self.base_url}?{encoded_string}'
         # url = '{}?{}'.format(self.base_url, encoded_string)
+        if 'content_type_uid' in self.http_instance.live_preview and 'live_preview' in url:
+            query_response = self.http_instance.get(url)
+            return self._map_live_preview(query_response)
         return self.http_instance.get(url)
+
+    def _map_live_preview(self, query_response):
+        _preview = self.http_instance.live_preview['resp']  # Gets Live Preview Stored Data From Dict
+        if 'entries' in query_response:
+            query_response = query_response['entries']
+            for index, it in enumerate(query_response):  # it in query_response:
+                if isinstance(it, dict):
+                    if it['uid'] == _preview['uid']:
+                        # return self.merge_it(self.resp, _preview)
+                        merged = {**query_response[index], **_preview}
+                        return query_response
+                #   self._map_live_preview(query_response)
+                # elif isinstance(query_response, list):
+                #     for obj in query_response:
+                #         self.iter_dict(obj,_preview['uid'])
+                #     pass
+        else:
+            return None
+
+    # def iter_dict(self, item, uid):
+    #     if isinstance(item, dict):
+    #         if item['uid'] == uid:
+    #             # return self.merge_it(self.resp, preview_response)
+    #             merged = {**query_response[index], **preview_response}
+    #             return merged
+    #         self._map_live_preview(query_response)
+
+    def merge_it(self, resp, lp_resp):
+        resp.update(lp_resp)
+        # merged
+        merged = {**resp, **lp_resp}
+        print(f"merged: {merged}")
+        return resp
+
+    def deep_merge(self, resp, lp_resp):
+        query_set = set(resp)
+        live_set = set(lp_resp)
+        store_keys = []
+        for key in live_set.intersection(query_set):  # Iterates for common keys between query & livePreview
+            store_keys.append(key)
+            if isinstance(resp[key], dict):
+                # match keys and update value
+                self.merge_it(resp[key], lp_resp[key])
+            elif isinstance(resp[key], list):
+                # match keys and update value
+                for i in lp_resp[key]:
+                    if isinstance(resp[i], dict):
+                        self.merge_it(resp[key], lp_resp[key])
+                    resp.update({key: f"New Fake:{lp_resp[key]}"})
+            resp.update({key: f"New Fake:{lp_resp[key]}"})
+
+            # name, myNames[name]
+        print(f"new query resp: {resp}")
+        print(f"store_keys {store_keys}")

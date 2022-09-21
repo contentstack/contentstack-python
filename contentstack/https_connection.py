@@ -58,7 +58,7 @@ class HTTPSConnection:  # R0903: Too few public methods
 
         """
         Here we create a response object, `response` which will store the request-response.
-        We use requests.get method since we are sending a GET request.
+        We use requests. Get method since we are sending a GET request.
         The four arguments we pass are url, verify(ssl), timeout, headers
         """
         try:
