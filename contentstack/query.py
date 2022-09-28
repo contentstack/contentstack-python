@@ -330,10 +330,10 @@ class Query(BaseQuery, EntryQueryable):
     def _merge_preview(self, qresp, _preview):
         if isinstance(qresp, dict):
             if 'uid' in qresp and qresp['uid'] == _preview['uid']:
-                merged = {**qresp, **_preview}  # TODO: Check merging
+                merged = {**qresp, **_preview}  # TODO: Check merging is properly written or not
             else:
                 for key in dict.keys():
-                    qresp[key] = self._merge(qresp[key])
+                    qresp[key] = self._merge_preview(qresp[key])
         elif isinstance(qresp, list):
             for index, it in enumerate(qresp):
                 qresp[index] = self._merge_preview(it, _preview)
