@@ -41,7 +41,7 @@ class TestLivePreviewConfig(unittest.TestCase):
             ENVIRONMENT,
             live_preview=_preview)
         self.assertEqual(_preview['authorization'],
-                         self.stack.live_preview_dict['authorization'])
+                         self.stack.live_preview['authorization'])
 
     def test_03_set_host(self):
         self.stack = contentstack.Stack(
@@ -49,8 +49,8 @@ class TestLivePreviewConfig(unittest.TestCase):
             DELIVERY_TOKEN,
             ENVIRONMENT,
             live_preview=_preview)
-        self.assertEqual(3, len(self.stack.live_preview_dict))
-        self.assertEqual(True, self.stack.live_preview_dict['enable'])
+        self.assertEqual(3, len(self.stack.live_preview))
+        self.assertEqual(True, self.stack.live_preview['enable'])
 
     def test_031_set_host_value(self):
         self.stack = contentstack.Stack(
@@ -58,9 +58,9 @@ class TestLivePreviewConfig(unittest.TestCase):
             DELIVERY_TOKEN,
             ENVIRONMENT,
             live_preview=_preview)
-        self.assertEqual(3, len(self.stack.live_preview_dict))
+        self.assertEqual(3, len(self.stack.live_preview))
         self.assertEqual(_preview['host'],
-                         self.stack.live_preview_dict['host'])
+                         self.stack.live_preview['host'])
 
     def test_06_live_preview_query(self):
         _live_preview = {
@@ -74,7 +74,7 @@ class TestLivePreviewConfig(unittest.TestCase):
             ENVIRONMENT,
             live_preview=_preview
         )
-        self.assertEqual(5, len(self.stack.live_preview_dict))
+        self.assertEqual(5, len(self.stack.live_preview))
 
     def test_07_live_preview_query_hash_included(self):
         self.stack = contentstack.Stack(
@@ -86,7 +86,7 @@ class TestLivePreviewConfig(unittest.TestCase):
         self.stack.live_preview_query(
             hash='live_preview',
             content_type_uid='fake@content_type')
-        self.assertEqual(7, len(self.stack.live_preview_dict))
+        self.assertEqual(7, len(self.stack.live_preview))
 
     def test_08_live_preview_query_hash_excluded(self):
         self.stack = contentstack.Stack(
@@ -124,6 +124,24 @@ class TestLivePreviewConfig(unittest.TestCase):
             'api_key', 'delivery_token', 'environment', branch='dev_branch')
         stack.content_type('product')
         self.assertEqual('dev_branch', stack.get_branch)
+
+    def test_live_preview(self):
+        __preview = {
+            'enable': True,
+            'authorization': 'management_token',
+            'host': 'api.contentstack.io'
+        }
+        stack = contentstack.Stack(
+            'api_key',
+            'delivery_token',
+            'development',
+            live_preview=__preview).live_preview_query(
+            entry_uid='entry_uid',
+            content_type_uid='bugfixes',
+            hash='#Just_fake_it'
+        )
+        result = stack.content_type(content_type_uid='bugfixes').query().find()
+        print(result)
 
 
 if __name__ == '__main__':

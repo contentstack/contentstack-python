@@ -156,5 +156,6 @@ class TestEntry(unittest.TestCase):
         self.assertEqual({'environment': 'development',
                           'include_embedded_items[]': 'BASE'}, entry.entry_param)
 
-# if __name__ == '__main__':
-#     unittest.main()
+
+if __name__ == '__main__':
+    unittest.main()

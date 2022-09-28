@@ -50,7 +50,7 @@ class Stack:
                  branch=None,
                  ):
         """
-        Class that wraps the credentials of the authenticated user. Think of
+        # Class that wraps the credentials of the authenticated user. Think of
         this as a container that holds authentication related data.
 
         param api_key: api_key of the stack
@@ -65,13 +65,13 @@ class Stack:
         takes input as dictionary object. containing one/multiple key value pair like below.
 
         ```python
-        live_preview = {
-            'enable': True,
+    live_preview = {
+              'enable': True,
             'authorization': 'your_management_token',
             'host': 'api.contentstack.com',
             'include_edit_tags': True,
             'edit_tags_type': object | str,
-        }
+    }
         ```
         :param retry_strategy: (optional) custom retry_strategy can be set.
         Method to create retry_strategy: create object of Retry() and provide the
@@ -101,20 +101,23 @@ class Stack:
         self.timeout = timeout
         self.branch = branch
         self.retry_strategy = retry_strategy
-        self.live_preview_dict = live_preview
+        self.live_preview = live_preview
 
         self._validate_stack()
 
     def _validate_stack(self):
         if self.api_key is None or self.api_key == '':
             raise PermissionError(
-                'You are not permitted to the stack without valid APIKey')
+                'You are not permitted to the stack without valid APIKey'
+            )
         if self.delivery_token is None or self.delivery_token == "":
             raise PermissionError(
-                'You are not permitted to the stack without valid Delivery Token')
+                'You are not permitted to the stack without valid Delivery Token'
+            )
         if self.environment is None or self.environment == "":
             raise PermissionError(
-                'You are not permitted to the stack without valid Environment')
+                'You are not permitted to the stack without valid Environment'
+            )
 
         if self.region.value == 'eu' and self.host == DEFAULT_HOST:
             self.host = 'eu-cdn.contentstack.com'
@@ -133,23 +136,13 @@ class Stack:
         if self.branch is not None:
             self.headers['branch'] = self.branch
 
-        if self.live_preview_dict is not None:
-            self._validate_live_preview()
         self.http_instance = HTTPSConnection(
             endpoint=self.endpoint,
-            headers=self.headers, timeout=self.timeout,
+            headers=self.headers,
+            timeout=self.timeout,
             retry_strategy=self.retry_strategy,
-            live_preview=self.live_preview_dict
+            live_preview=self.live_preview
         )
-
-    def _validate_live_preview(self):
-        if isinstance(self.live_preview_dict, dict):
-            if 'enable' in self.live_preview_dict and self.live_preview_dict['enable']:
-                self.headers['authorization'] = self.live_preview_dict['authorization']
-                self.host = self.live_preview_dict['host']
-                self.endpoint = f'https://{self.host}/{self.version}'
-                self.headers.pop('access_token')
-                self.headers.pop('environment')
 
     @property
     def get_api_key(self):
@@ -191,7 +184,7 @@ class Stack:
         """
         :return: live preview dictionary
         """
-        return self.live_preview_dict
+        return self.live_preview
 
     def content_type(self, content_type_uid=None):
         """
@@ -360,14 +353,28 @@ class Stack:
                 hash='hashcode'
                 )
         """
-        self.live_preview_dict.update(kwargs)
+        self.live_preview.update(kwargs)
         self._execute_management_api()
         return self
 
     def _execute_management_api(self):
-        _ct_uid = self.live_preview_dict.get("content_type_uid")
-        _entry_uid = self.live_preview_dict.get("entry_uid")
-        _url = f'{self.http_instance.endpoint}/content_types/{_ct_uid}/entries/{_entry_uid}'
-        _resp = self.http_instance.get(_url)
-        self.live_preview_dict['resp'] = _resp['entry']
+        _headers, _endpoint = self._enable_live_preview()
+        _ct_uid = self.live_preview.get("content_type_uid")
+        _entry_uid = self.live_preview.get("entry_uid")
+        _url = f'{_endpoint}/content_types/{_ct_uid}/entries/{_entry_uid}'
+        import requests
+        r = requests.get(url=_url, verify=True, headers=_headers)
+        # _resp = self.http_instance.get(_url, headers=_headers)
+        self.live_preview['resp'] = r.json()['entry']
         return self
+
+    def _enable_live_preview(self):
+        if isinstance(self.live_preview, dict) and not None:
+            _endpoint = None
+            _local_headers = {}
+            if 'enable' in self.live_preview and self.live_preview['enable']:
+                _local_headers['authorization'] = self.live_preview['authorization']
+                _host = self.live_preview['host']
+                _endpoint = f'https://{_host}/{self.version}'
+                _local_headers['api_key'] = self.headers['api_key']
+            return _local_headers, _endpoint
