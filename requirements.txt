@@ -11,7 +11,7 @@ Sphinx==4.5.0
 sphinxcontrib-websupport==1.2.4
 pip~=22.0.4
 build~=0.7.0
-wheel~=0.37.1
+wheel~=0.38.0
 py~=1.11.0
 lxml~=4.8.0
 utils~=1.0.1
