@@ -13,7 +13,7 @@ pip~=22.0.4
 build~=0.7.0
 wheel~=0.37.1
 py~=1.11.0
-lxml~=4.8.0
+lxml~=4.9.1
 utils~=1.0.1
 keyring~=23.5.0
 docutils==0.16
