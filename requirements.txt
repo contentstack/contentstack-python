@@ -1,5 +1,5 @@
 twython~=3.9.1
-setuptools~=62.1.0
+setuptools~=65.5.1
 urllib3~=1.26.2
 contentstack-utils
 python-dateutil==2.8.2
@@ -11,7 +11,7 @@ Sphinx==4.5.0
 sphinxcontrib-websupport==1.2.4
 pip~=22.0.4
 build~=0.7.0
-wheel~=0.37.1
+wheel~=0.38.0
 py~=1.11.0
 lxml~=4.8.0
 utils~=1.0.1
