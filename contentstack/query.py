@@ -7,8 +7,8 @@ import json
 import logging
 from urllib import parse
 
-import deprecation
 import empty
+from sphinx import deprecation
 
 from contentstack.basequery import BaseQuery
 from contentstack.entryqueryable import EntryQueryable
@@ -265,6 +265,13 @@ class Query(BaseQuery, EntryQueryable):
         ----------------------------
         """
         self.query_params['include_embedded_items[]'] = "BASE"
+        return self
+
+    def include_metadata(self):
+        """
+        include_metadata includes metadata in the response
+        """
+        self.query_params['include_metadata'] = 'true'
         return self
 
     def find(self):

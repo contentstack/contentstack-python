@@ -82,9 +82,9 @@ class HTTPSConnection:  # R0903: Too few public methods
                             "message": f'Timeout error ${timeout_err.strerror}'})) from timeout_err
         except ConnectionError as connect_err:
             raise ConnectionError(json.dumps({"httpStatus": 503,
-                                              "message": f'Service error ${connect_err.strerror}'})) from connect_err
+                "message": f'Service error ${connect_err.strerror}'})) from connect_err
         except JSONDecodeError as connection_err:
             raise TypeError(json.dumps({"httpStatus": 503,
-                                        "message": 'Decoding JSON has failed.'})) from connection_err
+                "message": 'Decoding JSON has failed.'})) from connection_err
         except HTTPError as http_err:
             raise HTTPError('Http error occurred') from http_err

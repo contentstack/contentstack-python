@@ -30,7 +30,7 @@ class TestAsset(unittest.TestCase):
         try:
             excepted = 0.01  # setting a custom timeout
             self.stack = contentstack.Stack(
-                API_KEY, DELIVERY_TOKEN, ENVIRONMENT, host=config.host,timeout=excepted)
+                API_KEY, DELIVERY_TOKEN, ENVIRONMENT, host=config.host, timeout=excepted)
             self.stack.asset_query().find()
         except TimeoutError:
             self.assertEqual('Timeout expired.', TimeoutError.__doc__)
@@ -206,6 +206,11 @@ class TestAsset(unittest.TestCase):
     def test_24_default_find_no_fallback(self):
         entry = self.asset_query.locale('ja-jp').find()
         self.assertIsNotNone(entry)
+
+    def test_25_include_metadata(self):
+        entry = self.asset_query.include_metadata().find()
+        self.assertEqual({'include_metadata': 'true'},
+                         entry.asset_query_params)
 
 # if __name__ == '__main__':
 #     unittest.main()

@@ -138,3 +138,8 @@ class TestQuery(unittest.TestCase):
         entry = self.query.locale('en-gb').include_fallback().find()
         entries = entry['entries']
         self.assertEqual(0, len(entries))
+
+    def test_21_include_metadata(self):
+        entry = self.query.locale('en-gb').include_metadata().find()
+        entries = entry['entries']
+        self.assertEqual(0, len(entries))

@@ -4,7 +4,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-# ************* Module basequery.py **************
+# ************* Module base_query.py **************
 # Your code has been rated at 10.00/10
 
 class QueryOperation(enum.Enum):
@@ -160,7 +160,7 @@ class BaseQuery:
 
     def query(self, key: str, value):
         """
-        Adds key value pairs to the to the query parameters
+        Adds key value pairs to the query parameters
         Arguments:
             key {str} -- key of the query param
             value {any} -- value of query param

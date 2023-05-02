@@ -156,6 +156,15 @@ class TestEntry(unittest.TestCase):
         self.assertEqual({'environment': 'development',
                           'include_embedded_items[]': 'BASE'}, entry.entry_param)
 
+    def test_22_entry_include_metadata(self):
+        content_type = self.stack.content_type('faq')
+        entry = content_type.entry("878783238783").include_metadata()
+        result = entry.fetch()
+        print(result)
+        self.assertEqual({'environment': 'development',
+                          'include_embedded_items[]': 'BASE'}, entry.entry_param)
+
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -22,8 +22,7 @@ class Asset:
         self.__uid = uid
         if self.__uid is None or self.__uid.strip() == 0:
             raise KeyError('Please provide valid uid')
-        self.base_url = '{}/assets/{}'.format(
-            self.http_instance.endpoint, self.__uid)
+        self.base_url = f'{self.http_instance.endpoint}/assets/{self.__uid}'
         if 'environment' in self.http_instance.headers:
             self.asset_params['environment'] = self.http_instance.headers['environment']
 
@@ -133,5 +132,5 @@ class Asset:
             >>> result = asset.fetch()
         ------------------------------
         """
-        url = '{}?{}'.format(self.base_url, parse.urlencode(self.asset_params))
+        url = f'{self.base_url}?{parse.urlencode(self.asset_params)}'
         return self.http_instance.get(url)

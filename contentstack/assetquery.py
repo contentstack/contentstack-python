@@ -3,7 +3,7 @@ It also returns the content of each asset in JSON format.
 You can also specify the environment of which you wish to get the assets.
 """
 
-# ************* Module assetquery **************
+# ************* Module asset_query **************
 # Your code has been rated at 10/10 by pylint
 
 import json
@@ -127,6 +127,22 @@ class AssetQuery(BaseQuery):
         ----------------------------
         """
         self.asset_query_params['include_fallback'] = 'true'
+        return self
+
+    def include_metadata(self):
+        """Retrieve the metadata in the response.
+
+        :return: AssetQuery, so we can chain the call
+
+        ----------------------------
+        Example::
+
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> result = stack.asset_query().include_metadata().find()
+        ----------------------------
+        """
+        self.asset_query_params['include_metadata'] = 'true'
         return self
 
     def locale(self, locale: str):

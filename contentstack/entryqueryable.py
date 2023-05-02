@@ -157,6 +157,20 @@ class EntryQueryable:
         self.entry_queryable_param['include_reference_content_type_uid'] = 'true'
         return self
 
+    def include_metadata(self):
+        """
+        This method also includes the metadata in the response
+        [Example for Query]
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
+            >>> query = query.include_metadata()
+            >>> result = query.find()
+        """
+        self.entry_queryable_param['include_metadata'] = 'true'
+        return self
+
     def add_param(self, key: str, value: str):
         """
         This method adds key and value to an Entry.

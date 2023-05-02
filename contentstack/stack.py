@@ -29,6 +29,7 @@ class ContentstackRegion(enum.Enum):
     US = 'us'
     EU = 'eu'
     AZURE_NA = 'azure-na'
+    AZURE_EU = 'azure-eu'
 
 
 class Stack:
@@ -123,6 +124,8 @@ class Stack:
             self.host = 'eu-cdn.contentstack.com'
         elif self.region.value == 'azure-na' and self.host == DEFAULT_HOST:
             self.host = 'azure-na-cdn.contentstack.com'
+        elif self.region.value == 'azure-eu' and self.host == DEFAULT_HOST:
+            self.host = 'azure-eu-cdn.contentstack.com'
         elif self.region.value != 'us':
             self.host = f'{self.region.value}-{DEFAULT_HOST}'
         self.endpoint = f'https://{self.host}/{self.version}'
@@ -329,7 +332,7 @@ class Stack:
         mobile properties.\n
 
         :param image_url: base url on which queries to apply
-        :param kwargs: append queries to the asset URL.
+        :param kwargs: to append queries to the asset URL.
         :return: instance of ImageTransform
         """
         if image_url is None or image_url == '':
@@ -364,7 +367,6 @@ class Stack:
         _url = f'{_endpoint}/content_types/{_ct_uid}/entries/{_entry_uid}'
         import requests
         r = requests.get(url=_url, verify=True, headers=_headers)
-        # _resp = self.http_instance.get(_url, headers=_headers)
         self.live_preview['resp'] = r.json()['entry']
         return self
 
