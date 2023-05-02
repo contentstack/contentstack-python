@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## _v1.8.0_
+
+### **Date: 8-MAY-2023**
+
+- AZURE_EU, region support added
+- include_metadata support added to asset, entry and query
+- General code improvement clean up
+
 ---
 
 ## _v1.7.0_
@@ -67,13 +75,13 @@ Date: 08-Dec-2020
 - Timeout support included
 
 - Entry
-  - added support for include_fallback.
+    - added support for include_fallback.
 - Asset
-  - added support for include_fallback.
+    - added support for include_fallback.
 - AssetQueryable
-  - added support for include_fallback.
+    - added support for include_fallback.
 - Query
-  - added support for include_fallback.
+    - added support for include_fallback.
 
 ---
 

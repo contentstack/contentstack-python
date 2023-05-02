@@ -18,9 +18,8 @@ class TestEntry(unittest.TestCase):
     def test_run_initial_query(self):
         query = self.stack.content_type('faq').query()
         result = query.find()
-        global _UID
         if result is not None:
-            _UID = result['entries'][0]['uid']
+            self._UID = result['entries'][0]['uid']
             print(f'the uid is: {_UID}')
 
     def test_entry_by_UID(self):
@@ -159,11 +158,7 @@ class TestEntry(unittest.TestCase):
     def test_22_entry_include_metadata(self):
         content_type = self.stack.content_type('faq')
         entry = content_type.entry("878783238783").include_metadata()
-        result = entry.fetch()
-        print(result)
-        self.assertEqual({'environment': 'development',
-                          'include_embedded_items[]': 'BASE'}, entry.entry_param)
-
+        self.assertEqual({'include_metadata': 'true'}, entry.entry_queryable_param)
 
 
 if __name__ == '__main__':

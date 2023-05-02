@@ -319,10 +319,9 @@ class Stack:
         """
         base_url = f'{self.http_instance.endpoint}/stacks/sync'
         self.sync_param['environment'] = self.http_instance.headers['environment']
-        encoded_query = parse.urlencode(self.sync_param)
-        url = f'{base_url}?{encoded_query}'
-        result = self.http_instance.get(url)
-        return result
+        query = parse.urlencode(self.sync_param)
+        url = f'{base_url}?{query}'
+        return self.http_instance.get(url)
 
     def image_transform(self, image_url, **kwargs):
         """
@@ -362,12 +361,15 @@ class Stack:
 
     def _execute_management_api(self):
         _headers, _endpoint = self._enable_live_preview()
-        _ct_uid = self.live_preview.get("content_type_uid")
+        content_type_uid = self.live_preview.get("content_type_uid")
         _entry_uid = self.live_preview.get("entry_uid")
-        _url = f'{_endpoint}/content_types/{_ct_uid}/entries/{_entry_uid}'
+        _url = f'{_endpoint}/content_types/{content_type_uid}/entries/{_entry_uid}'
         import requests
         r = requests.get(url=_url, verify=True, headers=_headers)
-        self.live_preview['resp'] = r.json()['entry']
+        if r.ok:
+            self.live_preview['resp'] = r.json()['entry']
+        else:
+            print(r.status_code)
         return self
 
     def _enable_live_preview(self):

@@ -2,11 +2,20 @@
 **CHANGELOG**
 ================
 
-*v1.7.0*
-
+*v1.8.0*
 ============
 
-**Date: 8-APR-2022**
+**Date: 02-MAY-2023**
+
+- AZURE_EU, region support added
+- include_metadata support added to asset, entry and query
+- General code improvement clean up
+
+
+*v1.7.0*
+============
+
+**Date: 08-APR-2022**
 
 Region support added.
     - AZURE_NA support added

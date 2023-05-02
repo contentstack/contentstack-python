@@ -7,11 +7,8 @@ This module implements the Requests API.
 
 import logging
 import platform
-import json
-from json import JSONDecodeError
 import requests
 from requests.adapters import HTTPAdapter
-from requests.exceptions import HTTPError, Timeout
 import contentstack
 
 log = logging.getLogger(__name__)
@@ -42,6 +39,16 @@ def user_agents():
     return {'User-Agent': str(header), "X-User-Agent": package}
 
 
+def get_api_data(response):
+    try:
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as error:
+        print(f"Error: {error}")
+        return None
+    else:
+        return response.json()
+
+
 class HTTPSConnection:  # R0903: Too few public methods
     """Make Https Request to fetch the result as per requested url"""
 
@@ -66,25 +73,26 @@ class HTTPSConnection:  # R0903: Too few public methods
             session = requests.Session()
             adapter = HTTPAdapter(max_retries=self.retry_strategy)
             session.mount('https://', adapter)
-            response = session.get(
-                url, verify=True, headers=self.headers, timeout=self.timeout)
+            response = session.get(url, verify=True, headers=self.headers, timeout=self.timeout)
+            response.encoding = "utf-8"
+            # response.raise_for_status()
             session.close()
-            if response.encoding is None:
-                response.encoding = 'utf-8'
-            elif response is not None:
-                return response.json()
-            else:
-                return {"error": "error details not found", "error_code": 422,
-                        "error_message": "unknown error"}
-        except Timeout as timeout_err:
-            raise TimeoutError(
-                json.dumps({"httpStatus": 408,
-                            "message": f'Timeout error ${timeout_err.strerror}'})) from timeout_err
-        except ConnectionError as connect_err:
-            raise ConnectionError(json.dumps({"httpStatus": 503,
-                "message": f'Service error ${connect_err.strerror}'})) from connect_err
-        except JSONDecodeError as connection_err:
-            raise TypeError(json.dumps({"httpStatus": 503,
-                "message": 'Decoding JSON has failed.'})) from connection_err
-        except HTTPError as http_err:
-            raise HTTPError('Http error occurred') from http_err
+        except requests.exceptions.HTTPError as http_error:
+            print(f"HTTP error occurred: {http_error}")
+        except requests.exceptions.Timeout as timeout_error:
+            print(f"Timeout error occurred: {timeout_error}")
+        except requests.exceptions.ConnectionError as connection_error:
+            print(f"Connection error occurred: {connection_error}")
+        except requests.exceptions.RequestException as request_exception:
+            print(f"An error occurred: {request_exception}")
+        else:
+            print("API request successful")
+            return response.json()
+        finally:
+            print("API request complete")
+
+        # if response.status_code == 200 and response.encoding is None:
+        #     response.encoding = 'utf-8'
+        #     return response.json()
+        # else:
+        #     return get_api_data(response)

@@ -5,6 +5,7 @@ Contentstack provides certain queries that you can use to fetch filtered results
 import enum
 import json
 import logging
+import warnings
 from urllib import parse
 
 import empty
@@ -121,10 +122,6 @@ class Query(BaseQuery, EntryQueryable):
             self.query_params["tags"] = ",".join(tags)
         return self
 
-    @deprecation.deprecated(
-        deprecated_in="1.7.0",
-        current_version='1.8.0',
-        details="Use regex function instead")
     def search(self, value: str):
         """
         This method provides only the entries matching
@@ -147,6 +144,7 @@ class Query(BaseQuery, EntryQueryable):
             >>> result = query.find()
         -------------------------------------
         """
+        warnings.warn('deprecated in 1.7.0, Use regex function instead')
         if value is not None:
             self.query_params["typeahead"] = value
         return self
@@ -328,10 +326,11 @@ class Query(BaseQuery, EntryQueryable):
         self.__validate_live_preview()
         encoded_string = parse.urlencode(self.query_params, doseq=True)
         url = f'{self.base_url}?{encoded_string}'
-        if self.http_instance.live_preview['content_type_uid'] == self.content_type_uid:
-            _rq = self.http_instance.get(url)['entries']
-            _preview = self.http_instance.live_preview['resp']
-            return self._merge_preview(_rq, _preview)
+        if self.http_instance.live_preview['enable']:
+            if self.http_instance.live_preview['content_type_uid'] == self.content_type_uid:
+                _rq = self.http_instance.get(url)['entries']
+                _preview = self.http_instance.live_preview['resp']
+                return self._merge_preview(_rq, _preview)
         return self.http_instance.get(url)
 
     def _merge_preview(self, qresp, _preview):

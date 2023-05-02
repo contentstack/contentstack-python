@@ -16,7 +16,7 @@ from contentstack.stack import Stack
 from .utility import Utils
 
 __title__ = 'contentstack-python'
-__author__ = 'Contentstack'
+__author__ = 'contentstack'
 __status__ = 'debug'
 __version__ = '1.8.0'
 __endpoint__ = 'cdn.contentstack.io'

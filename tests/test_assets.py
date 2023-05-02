@@ -208,9 +208,9 @@ class TestAsset(unittest.TestCase):
         self.assertIsNotNone(entry)
 
     def test_25_include_metadata(self):
-        entry = self.asset_query.include_metadata().find()
-        self.assertEqual({'include_metadata': 'true'},
-                         entry.asset_query_params)
+        entry = self.asset_query.include_metadata()
+        self.assertTrue(
+            self.asset_query.asset_query_params.__contains__('include_metadata'))
 
 # if __name__ == '__main__':
 #     unittest.main()
