@@ -8,9 +8,6 @@ different transform_params in second parameter in array form
 
 import logging
 
-# ************* Module image_transform **************
-# Your code has been rated at 10.00/10  by pylint
-
 log = logging.getLogger(__name__)
 
 

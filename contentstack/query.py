@@ -9,13 +9,9 @@ import warnings
 from urllib import parse
 
 import empty
-from sphinx import deprecation
 
 from contentstack.basequery import BaseQuery
 from contentstack.entryqueryable import EntryQueryable
-
-# ************* Module query.py **************
-# Your code has been rated at 10.00/10  by pylint
 
 log = logging.getLogger(__name__)
 

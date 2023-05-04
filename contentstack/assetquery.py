@@ -3,9 +3,6 @@ It also returns the content of each asset in JSON format.
 You can also specify the environment of which you wish to get the assets.
 """
 
-# ************* Module asset_query **************
-# Your code has been rated at 10/10 by pylint
-
 import json
 import logging
 

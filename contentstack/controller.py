@@ -14,7 +14,6 @@ class RequestError(Exception):
 def get_request(session, url, headers, timeout):
     try:
         response = session.get(url, verify=True, headers=headers, timeout=timeout)
-        # encoding = guess_json_utf(response)
         if response.encoding is None:
             response.encoding = 'utf-8'
     except requests.exceptions.RequestException as e:
@@ -33,10 +32,3 @@ def get_request(session, url, headers, timeout):
         raise RequestError(error)
     else:
         return response.json()
-
-# Example usage
-# try:
-#     api_data = get_request("https://jsonplaceholder.typicode.com/posts")
-#     print(api_data)
-# except Exception as e:
-#     print("Caught exception:", e)

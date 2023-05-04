@@ -10,10 +10,6 @@ import empty
 
 from contentstack.entryqueryable import EntryQueryable
 
-# ************* Module Entry **************
-# Your code has been rated at 10/10 by pylint
-
-
 log = logging.getLogger(__name__)
 
 

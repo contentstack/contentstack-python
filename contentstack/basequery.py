@@ -4,9 +4,6 @@ import logging
 log = logging.getLogger(__name__)
 
 
-# ************* Module base_query.py **************
-# Your code has been rated at 10.00/10
-
 class QueryOperation(enum.Enum):
     """
     QueryOperation is enum that Provides Options to perform operation to query the result.

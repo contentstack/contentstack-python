@@ -4,9 +4,6 @@ and so on) uploaded in your Contentstack repository for future use.
 These files can be attached and used in multiple entries.
 """
 
-# ************* Module asset **************
-# Your code has been rated at 10/10 by pylint
-
 import logging
 from urllib import parse
 

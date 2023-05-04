@@ -50,15 +50,13 @@ def get_api_data(response):
 
 
 class HTTPSConnection:  # R0903: Too few public methods
-    """Make Https Request to fetch the result as per requested url"""
-
     def __init__(self, endpoint, headers, timeout, retry_strategy, live_preview):
         if None not in (endpoint, headers):
             self.session = requests.Session()
             self.payload = None
             self.endpoint = endpoint
             self.headers = headers
-            self.timeout = timeout  # default timeout (period=30) seconds
+            self.timeout = timeout
             self.retry_strategy = retry_strategy
             self.live_preview = live_preview
 

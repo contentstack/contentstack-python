@@ -1,8 +1,3 @@
-"""
-Class that wraps the credentials of the authenticated user. Think of
-this as a container that holds authentication related data.
-"""
-
 import enum
 import logging
 from urllib import parse
