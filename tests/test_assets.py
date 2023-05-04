@@ -97,7 +97,6 @@ class TestAsset(unittest.TestCase):
     def test_07_add_param(self):
         self.asset = self.stack.asset(uid=ASSET_UID)
         self.asset.params("paramKey", 'paramValue')
-        print(self.asset.base_url)
 
     def test_071_check_none_coverage(self):
         try:

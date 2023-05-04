@@ -141,7 +141,6 @@ class TestLivePreviewConfig(unittest.TestCase):
             hash='#Just_fake_it'
         )
         result = stack.content_type(content_type_uid='bugfixes').query().find()
-        print(result)
 
 
 if __name__ == '__main__':

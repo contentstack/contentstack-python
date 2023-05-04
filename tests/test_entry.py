@@ -93,9 +93,6 @@ class TestEntry(unittest.TestCase):
             ["categories",
              "brand"])
         response = _entry.fetch()
-        print(response)
-        # categories = response['entry']['categories']
-        # self.assertEqual(2, len(categories))
 
     def test_13_entry_support_include_fallback_unit_test(self):
         global _UID
@@ -143,7 +140,6 @@ class TestEntry(unittest.TestCase):
         content_type = self.stack.content_type('faq')
         entry = content_type.entry("878783238783").include_fallback()
         result = entry.fetch()
-        print(result)
         self.assertEqual({'environment': 'development',
                           'include_fallback': 'true'}, entry.entry_param)
 
@@ -151,7 +147,6 @@ class TestEntry(unittest.TestCase):
         content_type = self.stack.content_type('faq')
         entry = content_type.entry("878783238783").include_embedded_items()
         result = entry.fetch()
-        print(result)
         self.assertEqual({'environment': 'development',
                           'include_embedded_items[]': 'BASE'}, entry.entry_param)
 

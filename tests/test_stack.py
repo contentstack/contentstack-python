@@ -125,7 +125,6 @@ class TestStack(unittest.TestCase):
     @unittest.skip('Work in progress')
     def test_16_initialise_sync(self):
         result = self.stack.sync_init()
-        print(result)
         if result is not None:
             self.assertEqual(16, result['total_count'])
 
