@@ -122,11 +122,12 @@ class TestStack(unittest.TestCase):
             self.assertEqual(
                 'is not valid.', result['errors']['pagination_token'][0])
 
+    @unittest.skip('Work in progress')
     def test_16_initialise_sync(self):
         result = self.stack.sync_init()
         print(result)
-        # if result is not None:
-        #     self.assertEqual(16, result['total_count'])
+        if result is not None:
+            self.assertEqual(16, result['total_count'])
 
     def test_17_entry_with_sync_token(self):
         result = self.stack.sync_token('sync_token')

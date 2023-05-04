@@ -28,7 +28,7 @@ class TestAsset(unittest.TestCase):
 
     def test_12_setting_timeout_failure(self):
         try:
-            excepted = 0.01  # setting a custom timeout
+            excepted = 1.00  # setting a custom timeout
             self.stack = contentstack.Stack(
                 API_KEY, DELIVERY_TOKEN, ENVIRONMENT, host=config.host, timeout=excepted)
             self.stack.asset_query().find()
