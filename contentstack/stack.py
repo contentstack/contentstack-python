@@ -62,12 +62,12 @@ class Stack:
 
         ```python
     live_preview = {
-              'enable': True,
+            'enable': True,
+            'host': 'api.contentstack.io',
             'authorization': 'your_management_token',
-            'host': 'api.contentstack.com',
             'include_edit_tags': True,
             'edit_tags_type': object | str,
-    }
+            }
         ```
         :param retry_strategy: (optional) custom retry_strategy can be set.
         Method to create retry_strategy: create object of Retry() and provide the
@@ -77,12 +77,10 @@ class Stack:
         >>> _strategy = Retry(total=5, backoff_factor=1, status_forcelist=[408, 429])
         >>> import contentstack
         >>> stack = contentstack.Stack("api_key", "delivery_token", "environment",
-        live_preview={enable=True, authorization='your auth token'}, retry_strategy= _strategy)
+                live_preview={enable=True, authorization='your auth token'}, retry_strategy= _strategy)
         ```
         """
         logging.basicConfig(level=logging.DEBUG)
-        if live_preview is None:
-            live_preview = {'enable': False}
         self.headers = {}
         self._query_params = {}
         self.sync_param = {}
@@ -98,7 +96,6 @@ class Stack:
         self.branch = branch
         self.retry_strategy = retry_strategy
         self.live_preview = live_preview
-
         self._validate_stack()
 
     def _validate_stack(self):
@@ -344,36 +341,24 @@ class Stack:
             for key, value in kwargs.iteritems():
                 print "%s = %s" % (key, value)
             Uses:=>
-            live_preview_query(
-                host='api.contentstack.io',
-                entry_uid='your_entry_uid',
-                hash='hashcode'
+        live_preview_query (
+                'enable': True,
+                'live_preview': '#*#*#*#*#',
+                'host': 'your_host',
+                'content_type_uid': 'product',
+                'entry_uid': 'your_entry_uid',
+                'authorization': 'management_token'
                 )
         """
-        self.live_preview.update(kwargs)
-        self._execute_management_api()
-        return self
+        if self.live_preview is not None and self.live_preview['enable']:
+            query = kwargs['live_preview']
+            if query is not None:
+                self.live_preview['live_preview'] = query['live_preview']
+            else:
+                self.live_preview['live_preview'] = 'init'
 
-    def _execute_management_api(self):
-        _headers, _endpoint = self._enable_live_preview()
-        content_type_uid = self.live_preview.get("content_type_uid")
-        _entry_uid = self.live_preview.get("entry_uid")
-        _url = f'{_endpoint}/content_types/{content_type_uid}/entries/{_entry_uid}'
-        import requests
-        r = requests.get(url=_url, verify=True, headers=_headers)
-        if r.ok:
-            self.live_preview['resp'] = r.json()['entry']
-        else:
-            print(r.status_code)
+            if 'content_type_uid' in self.live_preview and self.live_preview['content_type_uid'] is not None:
+                self.live_preview['content_type_uid'] = query['content_type_uid']
+            if 'entry_uid' in self.live_preview and self.live_preview['entry_uid'] is not None:
+                self.live_preview['entry_uid'] = query['entry_uid']
         return self
-
-    def _enable_live_preview(self):
-        if isinstance(self.live_preview, dict) and not None:
-            _endpoint = None
-            _local_headers = {}
-            if 'enable' in self.live_preview and self.live_preview['enable']:
-                _local_headers['authorization'] = self.live_preview['authorization']
-                _host = self.live_preview['host']
-                _endpoint = f'https://{_host}/{self.version}'
-                _local_headers['api_key'] = self.headers['api_key']
-            return _local_headers, _endpoint

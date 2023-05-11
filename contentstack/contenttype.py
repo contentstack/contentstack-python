@@ -118,7 +118,5 @@ class ContentType:
         encoded_params = parse.urlencode(self.local_param)
         endpoint = self.http_instance.endpoint
         url = f'{endpoint}/content_types?{encoded_params}'
-        # url = '{}?{}'.format(
-        #     '{}/content_types'.format(self.http_instance.endpoint), encoded_params)
         result = self.http_instance.get(url)
         return result

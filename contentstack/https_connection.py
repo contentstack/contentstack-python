@@ -60,8 +60,16 @@ class HTTPSConnection:  # R0903: Too few public methods
             self.retry_strategy = retry_strategy
             self.live_preview = live_preview
 
+    def impl_live_preview(self):
+        if self.live_preview['enable']:
+            print(self.live_preview)
+            # Get all the params from live preview and make a request,
+            # get the data and merger it to the base response
+        pass
+
     def get(self, url):
         self.headers.update(user_agents())
         adapter = HTTPAdapter(max_retries=self.retry_strategy)
         self.session.mount('https://', adapter)
+        self.impl_live_preview()
         return get_request(self.session, url, headers=self.headers, timeout=self.timeout)

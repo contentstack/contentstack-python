@@ -319,7 +319,6 @@ class Query(BaseQuery, EntryQueryable):
             self.query_params["query"] = json.dumps(self.parameters)
         if 'environment' in self.http_instance.headers:
             self.query_params['environment'] = self.http_instance.headers['environment']
-        self.__validate_live_preview()
         encoded_string = parse.urlencode(self.query_params, doseq=True)
         url = f'{self.base_url}?{encoded_string}'
         if self.http_instance.live_preview['enable']:
@@ -327,16 +326,24 @@ class Query(BaseQuery, EntryQueryable):
                 _rq = self.http_instance.get(url)['entries']
                 _preview = self.http_instance.live_preview['resp']
                 return self._merge_preview(_rq, _preview)
+        self._validate_live_preview()
         return self.http_instance.get(url)
 
-    def _merge_preview(self, qresp, _preview):
-        if isinstance(qresp, dict):
-            if 'uid' in qresp and qresp['uid'] == _preview['uid']:
-                merged = {**qresp, **_preview}  # TODO: Check merging is properly written or not
-            else:
-                for key in dict.keys():
-                    qresp[key] = self._merge_preview(qresp[key])
-        elif isinstance(qresp, list):
-            for index, it in enumerate(qresp):
-                qresp[index] = self._merge_preview(it, _preview)
-        return qresp
+    def _validate_live_preview(self):
+        lp = self.http_instance.live_preview
+        if 'content_type_uid' in lp and lp['content_type_uid'] is not None:
+            if lp['content_type_uid'] != str(self.content_type_uid):
+                self.http_instance.live_preview['enable'] = False
+        pass
+
+    # def _merge_preview(self, qresp, _preview):
+    #     if isinstance(qresp, dict):
+    #         if 'uid' in qresp and qresp['uid'] == _preview['uid']:
+    #             merged = {**qresp, **_preview}  # TODO: Check merging is properly written or not
+    #         else:
+    #             for key in dict.keys():
+    #                 qresp[key] = self._merge_preview(qresp[key])
+    #     elif isinstance(qresp, list):
+    #         for index, it in enumerate(qresp):
+    #             qresp[index] = self._merge_preview(it, _preview)
+    #     return qresp

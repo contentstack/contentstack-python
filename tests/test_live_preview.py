@@ -5,14 +5,18 @@ import contentstack
 
 _preview = {
     'enable': True,
-    'authorization': 'management_token@fake@testing',
-    'host': 'cdn.contentstack.io'
+    'live_preview': '#*#*#*#*#',
+    'host': 'cdn.contentstack.io',
+    'content_type_uid': 'product',
+    'entry_uid': 'blt909u787843',
+    'authorization': 'management_token@fake@testing'
 }
 
 API_KEY = config.APIKEY
 DELIVERY_TOKEN = config.DELIVERYTOKEN
 ENVIRONMENT = config.ENVIRONMENT
 HOST = config.HOST
+ENTRY_UID = config.APIKEY
 
 
 class TestLivePreviewConfig(unittest.TestCase):
@@ -76,7 +80,13 @@ class TestLivePreviewConfig(unittest.TestCase):
         )
         self.assertEqual(5, len(self.stack.live_preview))
 
-    def test_07_live_preview_query_hash_included(self):
+    def test_07_branching(self):
+        stack = contentstack.Stack(
+            'api_key', 'delivery_token', 'environment', branch='dev_branch')
+        stack.content_type('product')
+        self.assertEqual('dev_branch', stack.get_branch)
+
+    def test_08_live_preview_query_hash_included(self):
         self.stack = contentstack.Stack(
             API_KEY,
             DELIVERY_TOKEN,
@@ -88,54 +98,45 @@ class TestLivePreviewConfig(unittest.TestCase):
             content_type_uid='fake@content_type')
         self.assertEqual(7, len(self.stack.live_preview))
 
-    def test_08_live_preview_query_hash_excluded(self):
+    def test_09_live_preview_query_hash_excluded(self):
         self.stack = contentstack.Stack(
             API_KEY,
             DELIVERY_TOKEN,
             ENVIRONMENT,
             live_preview=_preview
         )
-        self.stack.live_preview_query(
-            content_type_uid='_content_type_live_preview')
-        self.stack.content_type('_content_type_live_preview') \
-            .entry(entry_uid='entry_uid_1234')
-
-        self.assertEqual(2, len(self.stack.headers))
-        self.assertEqual(False, 'live_preview' in self.stack.headers)
+        self.stack.live_preview_query(live_preview=_preview)
+        self.stack.content_type('product').entry(entry_uid='blt43434433432')
+        self.assertEqual(3, len(self.stack.headers))
+        self.assertEqual(True, 'access_token' in self.stack.headers)
         self.assertEqual(True, 'api_key' in self.stack.headers)
 
-    def test_09_live_preview_check_hash_value(self):
+    def test_10_live_preview_check_hash_value(self):
         self.stack = contentstack.Stack(
             API_KEY,
             DELIVERY_TOKEN,
             ENVIRONMENT,
             live_preview=_preview
         )
-        self.stack.live_preview_query(
-            content_type_uid='_content_type_live_preview')
-        self.stack.content_type('fake@content_type') \
-            .entry(entry_uid='just@fakeit')
-
+        self.stack.live_preview_query(live_preview={
+            'enable': True,
+            'live_preview': 'B0B)B)B)BB)B',
+            'host': 'cdn.contentstack.io',
+            'content_type_uid': 'producto',
+            'entry_uid': 'blt909u787843',
+            'authorization': 'management_token@fake@testing'
+        })
+        entry = self.stack.content_type('product').entry(entry_uid=ENTRY_UID)
+        response = entry.fetch()
         self.assertEqual(2, len(self.stack.headers))
         self.assertEqual(API_KEY, self.stack.headers['api_key'])
 
-    def test_branching(self):
-        stack = contentstack.Stack(
-            'api_key', 'delivery_token', 'environment', branch='dev_branch')
-        stack.content_type('product')
-        self.assertEqual('dev_branch', stack.get_branch)
-
-    def test_live_preview(self):
-        __preview = {
-            'enable': True,
-            'authorization': 'management_token',
-            'host': 'api.contentstack.io'
-        }
+    def test_11_live_preview(self):
         stack = contentstack.Stack(
             'api_key',
             'delivery_token',
             'development',
-            live_preview=__preview).live_preview_query(
+            live_preview=_preview).live_preview_query(
             entry_uid='entry_uid',
             content_type_uid='bugfixes',
             hash='#Just_fake_it'

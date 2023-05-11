@@ -194,4 +194,12 @@ class Entry(EntryQueryable):
             self.entry_param.update(self.entry_queryable_param)
         encoded_string = parse.urlencode(self.entry_param, doseq=True)
         url = f'{self.base_url}?{encoded_string}'
+        self._validate_live_preview()
         return self.http_instance.get(url)
+
+    def _validate_live_preview(self):
+        lp = self.http_instance.live_preview
+        if 'content_type_uid' in lp and lp['content_type_uid'] is not None:
+            if lp['content_type_uid'] != str(self.content_type_id):
+                self.http_instance.live_preview['enable'] = False
+        pass
