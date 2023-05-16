@@ -341,7 +341,7 @@ class Stack:
             for key, value in kwargs.iteritems():
                 print "%s = %s" % (key, value)
             Uses:=>
-        live_preview_query (
+        live_preview_query = (
                 'enable': True,
                 'live_preview': '#*#*#*#*#',
                 'host': 'your_host',
@@ -350,15 +350,28 @@ class Stack:
                 'authorization': 'management_token'
                 )
         """
-        if self.live_preview is not None and self.live_preview['enable']:
-            query = kwargs['live_preview']
+
+        if self.live_preview is not None and self.live_preview['enable'] and 'live_preview_query' in kwargs:
+            self.live_preview.update(**kwargs['live_preview_query'])
+            query = kwargs['live_preview_query']
             if query is not None:
                 self.live_preview['live_preview'] = query['live_preview']
             else:
                 self.live_preview['live_preview'] = 'init'
-
             if 'content_type_uid' in self.live_preview and self.live_preview['content_type_uid'] is not None:
                 self.live_preview['content_type_uid'] = query['content_type_uid']
             if 'entry_uid' in self.live_preview and self.live_preview['entry_uid'] is not None:
                 self.live_preview['entry_uid'] = query['entry_uid']
+            self._cal_url()
         return self
+
+    def _cal_url(self):
+        host = self.live_preview['host']
+        ct = self.live_preview['content_type_uid']
+        url = f'https://{host}/v3/content_types/{ct}/entries'
+        if 'entry_uid' in self.live_preview:
+            uid = self.live_preview['entry_uid']
+            lv = self.live_preview['live_preview']
+            url = f'{url}/{uid}?live_preview={lv}'
+        self.live_preview['url'] = url
+        pass

@@ -2,9 +2,6 @@
 This module implements the Requests API.
 """
 
-# ************* Module https_connection.py **************
-# Your code has been rated at 10.00/10  by pylint
-
 import logging
 import platform
 import requests
@@ -28,13 +25,9 @@ def __get_os_platform():
 
 
 def user_agents():
-    """Default User Agents for the Https"""
-    header = {'sdk': dict(
-        name=contentstack.__package__,
-        version=contentstack.__version__
-    ),
-        'os': __get_os_platform,
-        'Content-Type': 'application/json'}
+    header = {'sdk': dict(name=contentstack.__package__,
+                          version=contentstack.__version__
+                          ), 'os': __get_os_platform, 'Content-Type': 'application/json'}
     package = f"{contentstack.__title__}/{contentstack.__version__}"
     return {'User-Agent': str(header), "X-User-Agent": package}
 
@@ -62,14 +55,22 @@ class HTTPSConnection:  # R0903: Too few public methods
 
     def impl_live_preview(self):
         if self.live_preview['enable']:
-            print(self.live_preview)
-            # Get all the params from live preview and make a request,
-            # get the data and merger it to the base response
-        pass
+            host = self.live_preview['host']
+            authorization = self.live_preview['authorization']
+            ct = self.live_preview['content_type_uid']
+            entry_uid = self.live_preview['entry_uid']
+            url = f'https://{host}/v3/content_types/{ct}/entries'
+            if entry_uid is not None:
+                url = f'{url}/{entry_uid}'
+            self.headers['authorization'] = authorization
+            lp_resp = get_request(self.session, url, headers=self.headers, timeout=self.timeout)
+            if lp_resp is not None and not 'error_code' in lp_resp:
+                return lp_resp
+            return None
+        return None
 
     def get(self, url):
         self.headers.update(user_agents())
         adapter = HTTPAdapter(max_retries=self.retry_strategy)
         self.session.mount('https://', adapter)
-        self.impl_live_preview()
         return get_request(self.session, url, headers=self.headers, timeout=self.timeout)
