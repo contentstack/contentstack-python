@@ -91,10 +91,9 @@ class ContentType:
             raise KeyError(
                 'content_type_uid can not be None to fetch contenttype')
         self.local_param['environment'] = self.http_instance.headers['environment']
-        uri = '{}/content_types/{}'.format(
-            self.http_instance.endpoint, self.__content_type_uid)
+        uri = f'{self.http_instance.endpoint}/content_types/{self.__content_type_uid}'
         encoded_params = parse.urlencode(self.local_param)
-        url = '{}?{}'.format(uri, encoded_params)
+        url = f'{uri}?{encoded_params}'
         result = self.http_instance.get(url)
         return result
 
@@ -117,7 +116,7 @@ class ContentType:
         if params is not None:
             self.local_param.update(params)
         encoded_params = parse.urlencode(self.local_param)
-        url = '{}?{}'.format(
-            '{}/content_types'.format(self.http_instance.endpoint), encoded_params)
+        endpoint = self.http_instance.endpoint
+        url = f'{endpoint}/content_types?{encoded_params}'
         result = self.http_instance.get(url)
         return result

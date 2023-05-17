@@ -1,18 +1,18 @@
 """
 Contentstack provides certain queries that you can use to fetch filtered results
 """
+
 import enum
 import json
 import logging
+import warnings
 from urllib import parse
 
-import empty as empty
+import empty
 
 from contentstack.basequery import BaseQuery
+from contentstack.deep_merge_lp import DeepMergeMixin
 from contentstack.entryqueryable import EntryQueryable
-
-# ************* Module query.py **************
-# Your code has been rated at 10.00/10  by pylint
 
 log = logging.getLogger(__name__)
 
@@ -123,6 +123,7 @@ class Query(BaseQuery, EntryQueryable):
         """
         This method provides only the entries matching
         the specified value.
+        @Deprecated deprecated in 1.7.0, Use #regex instaead
         Arguments:
             value {str} -- value used to match or compare
         Raises:
@@ -140,6 +141,7 @@ class Query(BaseQuery, EntryQueryable):
             >>> result = query.find()
         -------------------------------------
         """
+        warnings.warn('deprecated in 1.7.0, Use regex function instead')
         if value is not None:
             self.query_params["typeahead"] = value
         return self
@@ -260,6 +262,25 @@ class Query(BaseQuery, EntryQueryable):
         self.query_params['include_embedded_items[]'] = "BASE"
         return self
 
+    def include_metadata(self):
+        """include_metadata instance of Query
+                includes metadata in the response (Entries and Assets) along with entry/entries details.
+                :return: Query, so we can chain the call
+
+                ----------------------------
+                Example:
+
+                    >>> import contentstack
+                    >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+                    >>> content_type = stack.content_type('content_type_uid')
+                    >>> query = content_type.query()
+                    >>> query = query.include_metadata()
+                    >>> result = query.find()
+                ----------------------------
+                """
+        self.query_params['include_metadata'] = 'true'
+        return self
+
     def find(self):
         """It fetches the query result.
         List of :class:`Entry <contentstack.entry.Entry>` objects.
@@ -295,15 +316,6 @@ class Query(BaseQuery, EntryQueryable):
         self.query_params["limit"] = 1
         return self.__execute_network_call()
 
-    def __validate_live_preview(self):
-        live_preview = self.http_instance.live_preview
-        if 'enable' in live_preview and live_preview['enable'] \
-                and self.content_type_uid == live_preview['content_type_uid']:
-            if 'live_preview' in live_preview:
-                self.query_params['live_preview'] = live_preview['live_preview']
-            else:
-                self.query_params['live_preview'] = 'init'  # initialise
-
     def __execute_network_call(self):
         if len(self.entry_queryable_param) > 0:
             self.query_params.update(self.entry_queryable_param)
@@ -311,8 +323,31 @@ class Query(BaseQuery, EntryQueryable):
             self.query_params["query"] = json.dumps(self.parameters)
         if 'environment' in self.http_instance.headers:
             self.query_params['environment'] = self.http_instance.headers['environment']
-        self.__validate_live_preview()
         encoded_string = parse.urlencode(self.query_params, doseq=True)
         url = f'{self.base_url}?{encoded_string}'
-        # url = '{}?{}'.format(self.base_url, encoded_string)
-        return self.http_instance.get(url)
+        self._impl_live_preview()
+        response = self.http_instance.get(url)
+        if self.http_instance.live_preview is not None and not 'errors' in response:
+            self.http_instance.live_preview['entry_response'] = response['entries']
+            return self._merged_response()
+        return response
+
+    def _impl_live_preview(self):
+        lv = self.http_instance.live_preview
+        if lv is not None and lv['enable'] and 'content_type_uid' in lv and lv[
+            'content_type_uid'] == self.content_type_uid:
+            url = lv['url']
+            self.http_instance.headers['authorization'] = lv['management_token']
+            lp_resp = self.http_instance.get(url)
+            if lp_resp is not None and not 'error_code' in lp_resp:
+                self.http_instance.live_preview['lp_response'] = lp_resp
+            return None
+        return None
+
+    def _merged_response(self):
+        if 'entry_response' in self.http_instance.live_preview and 'lp_response' in self.http_instance.live_preview:
+            entry_response = self.http_instance.live_preview['entry_response']['entries']
+            lp_response = self.http_instance.live_preview['lp_response']
+            merged_response = DeepMergeMixin(entry_response, lp_response)
+            return merged_response.entry_response
+        pass

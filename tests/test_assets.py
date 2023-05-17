@@ -1,51 +1,53 @@
 import unittest
 
+from urllib3 import Retry
 import config
 import contentstack
 from contentstack.basequery import QueryOperation
 
+ASSET_UID = ''
 IMAGE = 'images_(1).jpg'
+API_KEY = config.APIKEY
+DELIVERY_TOKEN = config.DELIVERYTOKEN
+ENVIRONMENT = config.ENVIRONMENT
+HOST = config.HOST
 
 
 class TestAsset(unittest.TestCase):
-    global asset_uid
 
     def setUp(self):
-        self.asset_uid = None
         self.stack = contentstack.Stack(
-            config.api_key, config.delivery_token, config.environment, host=config.host)
+            API_KEY, DELIVERY_TOKEN, ENVIRONMENT, host=HOST)
         self.asset_query = self.stack.asset_query()
 
     def test_011_setting_timeout(self):
         excepted = 13  # setting a custom timeout
-        self.stack = contentstack.Stack(config.api_key, config.delivery_token, config.environment, host=config.host,
-                                        timeout=excepted)
+        self.stack = contentstack.Stack(
+            API_KEY, DELIVERY_TOKEN, ENVIRONMENT, host=config.host, timeout=excepted)
         self.assertEqual(excepted, self.stack.timeout)
 
     def test_12_setting_timeout_failure(self):
         try:
-            excepted = 0.01  # setting a custom timeout
-            self.stack = contentstack.Stack(config.api_key, config.delivery_token, config.environment, host=config.host,
-                                            timeout=excepted)
+            excepted = 1.00  # setting a custom timeout
+            self.stack = contentstack.Stack(
+                API_KEY, DELIVERY_TOKEN, ENVIRONMENT, host=config.host, timeout=excepted)
             self.stack.asset_query().find()
         except TimeoutError:
             self.assertEqual('Timeout expired.', TimeoutError.__doc__)
 
     def test_013_setting_retry_strategy_unit(self):
-        from urllib3 import Retry
         self.stack = contentstack \
-            .Stack(config.api_key, config.delivery_token,
-                   config.environment, host=config.host,
+            .Stack(API_KEY, DELIVERY_TOKEN, ENVIRONMENT, host=HOST,
                    retry_strategy=Retry(total=3, backoff_factor=1, status_forcelist=[408]))
         self.assertEqual(1, self.stack.retry_strategy.backoff_factor)
         self.assertEqual(3, self.stack.retry_strategy.total)
         self.assertEqual([408], self.stack.retry_strategy.status_forcelist)
 
     def test_014_setting_retry_strategy_api(self):
-        from urllib3 import Retry
-        self.stack = contentstack.Stack(config.api_key, config.delivery_token,
-                                        config.environment, host=config.host,
-                                        retry_strategy=Retry(total=5, backoff_factor=0, status_forcelist=[408, 429]))
+        self.stack = contentstack.Stack(
+            API_KEY, DELIVERY_TOKEN, ENVIRONMENT,
+            host=HOST,
+            retry_strategy=Retry(total=5, backoff_factor=0, status_forcelist=[408, 429]))
         self.assertEqual(0, self.stack.retry_strategy.backoff_factor)
         self.assertEqual(5, self.stack.retry_strategy.total)
         self.assertEqual(
@@ -57,47 +59,44 @@ class TestAsset(unittest.TestCase):
             assets = result['assets']
             for item in assets:
                 if item['title'] == 'if_icon-72-lightning_316154_(1).png':
-                    self.asset_uid = item['uid']
-                    global asset_uid
-                    asset_uid = item['uid']
+                    global ASSET_UID
+                    ASSET_UID = item['uid']
         self.assertEqual(8, len(assets))
 
     def test_02_asset_method(self):
-        self.asset = self.stack.asset(uid=asset_uid)
+        self.asset = self.stack.asset(uid=ASSET_UID)
         result = self.asset.relative_urls().include_dimension().fetch()
         if result is not None:
             result = result['asset']['dimension']
             self.assertEqual({'height': 50, 'width': 50}, result)
 
-    def test_03_asset_uid(self):
-
-        self.asset = self.stack.asset(uid=asset_uid)
+    def test_03_ASSET_UID(self):
+        self.asset = self.stack.asset(uid=ASSET_UID)
         result = self.asset.fetch()
         if result is not None:
-            self.assertEqual(asset_uid, result['asset']['uid'])
+            self.assertEqual(ASSET_UID, result['asset']['uid'])
 
     def test_04_asset_filetype(self):
-        self.asset = self.stack.asset(uid=asset_uid)
+        self.asset = self.stack.asset(uid=ASSET_UID)
         result = self.asset.fetch()
         if result is not None:
             self.assertEqual('image/png', result['asset']['content_type'])
 
     def test_05_remove_environment(self):
-        self.asset = self.stack.asset(uid=asset_uid)
+        self.asset = self.stack.asset(uid=ASSET_UID)
         self.asset.remove_environment()
         self.assertEqual(
             False, 'environment' in self.asset.http_instance.headers)
 
     def test_06_add_environment(self):
-        self.asset = self.stack.asset(uid=asset_uid)
+        self.asset = self.stack.asset(uid=ASSET_UID)
         self.asset.environment("dev")
         self.assertEqual(
             'dev', self.asset.http_instance.headers['environment'])
 
     def test_07_add_param(self):
-        self.asset = self.stack.asset(uid=asset_uid)
+        self.asset = self.stack.asset(uid=ASSET_UID)
         self.asset.params("paramKey", 'paramValue')
-        print(self.asset.base_url)
 
     def test_071_check_none_coverage(self):
         try:
@@ -107,13 +106,13 @@ class TestAsset(unittest.TestCase):
 
     def test_072_check_none_coverage_test(self):
         try:
-            self.asset = self.stack.asset(uid=asset_uid)
+            self.asset = self.stack.asset(uid=ASSET_UID)
             self.asset.params(2, 'value')
         except Exception as inst:
             self.assertEqual('Kindly provide valid params', inst.args[0])
 
     def test_08_support_include_fallback(self):
-        self.asset = self.stack.asset(uid=asset_uid)
+        self.asset = self.stack.asset(uid=ASSET_UID)
         asset_params = self.asset.include_fallback().asset_params
         self.assertEqual({'environment': 'development',
                           'include_fallback': 'true'}, asset_params)
@@ -206,6 +205,11 @@ class TestAsset(unittest.TestCase):
     def test_24_default_find_no_fallback(self):
         entry = self.asset_query.locale('ja-jp').find()
         self.assertIsNotNone(entry)
+
+    def test_25_include_metadata(self):
+        entry = self.asset_query.include_metadata()
+        self.assertTrue(
+            self.asset_query.asset_query_params.__contains__('include_metadata'))
 
 # if __name__ == '__main__':
 #     unittest.main()

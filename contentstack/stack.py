@@ -1,23 +1,17 @@
-"""
-Class that wraps the credentials of the authenticated user. Think of
-this as a container that holds authentication related data.
-"""
-
 import enum
 import logging
 from urllib import parse
 from urllib3.util import Retry
 
-import contentstack
 from contentstack.asset import Asset
 from contentstack.assetquery import AssetQuery
 from contentstack.contenttype import ContentType
 from contentstack.https_connection import HTTPSConnection
 from contentstack.image_transform import ImageTransform
 
-__author__ = "ishaileshmishra (ishaileshmishra@gmail.com)"
+__author__ = "ishaileshmishra (shailesh.mishra@contentstack.com)"
 __license__ = "MIT"
-__version__ = '1.7.0'
+__version__ = '1.8.0'
 
 log = logging.getLogger(__name__)
 DEFAULT_HOST = 'cdn.contentstack.io'
@@ -30,6 +24,7 @@ class ContentstackRegion(enum.Enum):
     US = 'us'
     EU = 'eu'
     AZURE_NA = 'azure-na'
+    AZURE_EU = 'azure-eu'
 
 
 class Stack:
@@ -51,7 +46,7 @@ class Stack:
                  branch=None,
                  ):
         """
-        Class that wraps the credentials of the authenticated user. Think of
+        # Class that wraps the credentials of the authenticated user. Think of
         this as a container that holds authentication related data.
 
         param api_key: api_key of the stack
@@ -66,13 +61,13 @@ class Stack:
         takes input as dictionary object. containing one/multiple key value pair like below.
 
         ```python
-        live_preview = {
+    live_preview = {
             'enable': True,
+            'host': 'api.contentstack.io',
             'authorization': 'your_management_token',
-            'host': 'api.contentstack.com',
             'include_edit_tags': True,
             'edit_tags_type': object | str,
-        }
+            }
         ```
         :param retry_strategy: (optional) custom retry_strategy can be set.
         Method to create retry_strategy: create object of Retry() and provide the
@@ -80,12 +75,11 @@ class Stack:
         **Example:**
 
         >>> _strategy = Retry(total=5, backoff_factor=1, status_forcelist=[408, 429])
+        >>> import contentstack
         >>> stack = contentstack.Stack("api_key", "delivery_token", "environment",
-        live_preview={enable=True, authorization='your auth token'}, retry_strategy= _strategy)
+                live_preview={enable=True, authorization='your auth token'}, retry_strategy= _strategy)
         ```
         """
-        if live_preview is None:
-            live_preview = {'enable': False}
         logging.basicConfig(level=logging.DEBUG)
         self.headers = {}
         self._query_params = {}
@@ -101,25 +95,29 @@ class Stack:
         self.timeout = timeout
         self.branch = branch
         self.retry_strategy = retry_strategy
-        self.live_preview_dict = live_preview
-
+        self.live_preview = live_preview
         self._validate_stack()
 
     def _validate_stack(self):
         if self.api_key is None or self.api_key == '':
             raise PermissionError(
-                'You are not permitted to the stack without valid APIKey')
+                'You are not permitted to the stack without valid APIKey'
+            )
         if self.delivery_token is None or self.delivery_token == "":
             raise PermissionError(
-                'You are not permitted to the stack without valid Delivery Token')
+                'You are not permitted to the stack without valid Delivery Token'
+            )
         if self.environment is None or self.environment == "":
             raise PermissionError(
-                'You are not permitted to the stack without valid Environment')
+                'You are not permitted to the stack without valid Environment'
+            )
 
         if self.region.value == 'eu' and self.host == DEFAULT_HOST:
             self.host = 'eu-cdn.contentstack.com'
         elif self.region.value == 'azure-na' and self.host == DEFAULT_HOST:
             self.host = 'azure-na-cdn.contentstack.com'
+        elif self.region.value == 'azure-eu' and self.host == DEFAULT_HOST:
+            self.host = 'azure-eu-cdn.contentstack.com'
         elif self.region.value != 'us':
             self.host = f'{self.region.value}-{DEFAULT_HOST}'
         self.endpoint = f'https://{self.host}/{self.version}'
@@ -133,27 +131,13 @@ class Stack:
         if self.branch is not None:
             self.headers['branch'] = self.branch
 
-        if self.live_preview_dict is not None:
-            self._validate_live_preview()
         self.http_instance = HTTPSConnection(
             endpoint=self.endpoint,
-            headers=self.headers, timeout=self.timeout,
+            headers=self.headers,
+            timeout=self.timeout,
             retry_strategy=self.retry_strategy,
-            live_preview=self.live_preview_dict
+            live_preview=self.live_preview
         )
-
-    def _validate_live_preview(self):
-        if isinstance(self.live_preview_dict, dict):
-            if 'enable' in self.live_preview_dict and self.live_preview_dict['enable']:
-                if 'authorization' not in self.live_preview_dict:
-                    raise PermissionError("management token is required")
-                if 'host' not in self.live_preview_dict:
-                    raise PermissionError("host is required")
-                self.headers['authorization'] = self.live_preview_dict['authorization']
-                self.host = self.live_preview_dict['host']
-                self.endpoint = f'https://{self.host}/{self.version}'
-                self.headers.pop('access_token')
-                self.headers.pop('environment')
 
     @property
     def get_api_key(self):
@@ -195,13 +179,13 @@ class Stack:
         """
         :return: live preview dictionary
         """
-        return self.live_preview_dict
+        return self.live_preview
 
     def content_type(self, content_type_uid=None):
         """
         Content type defines the structure or schema of a page or a section
         of your web or mobile property.
-        :param content_type_uid:
+        param content_type_uid:
         :return: ContentType
         """
         return ContentType(self.http_instance, content_type_uid)
@@ -210,7 +194,7 @@ class Stack:
         """
         Assets refer to all the media files (images, videos, PDFs, audio files, and so on)
         uploaded in your Contentstack repository for future use.
-        :param uid: asset_uid of the Asset
+        param uid: asset_uid of the Asset
         :return: Asset
 
         -----------------------------
@@ -243,7 +227,7 @@ class Stack:
     def sync_init(self, content_type_uid=None, start_from=None, locale=None, publish_type=None):
         """
         Set init to ‘true’ if you want to sync all the published entries and assets.
-        This is usually used when the app does not have any content and you want to
+        This is usually used when the app does not have any content, and you want to
         get all the content for the first time.\n
 
         :param content_type_uid: (optional) content type UID. e.g., products
@@ -286,7 +270,7 @@ class Stack:
         paginated. It provides pagination token in the response.
         However, you do not have to use the pagination token
         manually to get the next batch.
-        :param pagination_token:
+        param pagination_token:
         :return: list of sync items
         ------------------------------
         Example:
@@ -304,7 +288,7 @@ class Stack:
         to get the updated content next time. The sync token fetches
         only the content that was added
         after your last sync, and the details of the content that was deleted or updated.
-        :param sync_token: sync_token
+        param sync_token: sync_token
         :return: list of Sync Result
         ------------------------------
         [Example]:
@@ -319,7 +303,7 @@ class Stack:
 
     def __sync_request(self):
         r"""Sends a GET request.
-        :param url URL for :class:`Request` object.
+        param url is URL for :class:`Request` object.
         in the query string for the :class:`Request`.
         :param \*\*kwargs: Optional arguments that ``request`` takes.
         :return: :class:`Response <Response>` object
@@ -327,10 +311,9 @@ class Stack:
         """
         base_url = f'{self.http_instance.endpoint}/stacks/sync'
         self.sync_param['environment'] = self.http_instance.headers['environment']
-        encoded_query = parse.urlencode(self.sync_param)
-        url = f'{base_url}?{encoded_query}'
-        result = self.http_instance.get(url)
-        return result
+        query = parse.urlencode(self.sync_param)
+        url = f'{base_url}?{query}'
+        return self.http_instance.get(url)
 
     def image_transform(self, image_url, **kwargs):
         """
@@ -340,7 +323,7 @@ class Stack:
         mobile properties.\n
 
         :param image_url: base url on which queries to apply
-        :param kwargs: append queries to the asset URL.
+        :param kwargs: to append queries to the asset URL.
         :return: instance of ImageTransform
         """
         if image_url is None or image_url == '':
@@ -351,6 +334,44 @@ class Stack:
     def live_preview_query(self, **kwargs):
         """
         live_preview_query accepts key value pair objects to the query
-        i.e hash and content_type_uid
+        hash, content_type_uid and entry_uid
+        Example:
+            # def live_preview_query(**kwargs):
+            # kwargs is a dict of the keyword args passed to the function
+            for key, value in kwargs.iteritems():
+                print "%s = %s" % (key, value)
+            Uses:=>
+        live_preview_query = (
+                'enable': True,
+                'live_preview': '#*#*#*#*#',
+                'host': 'your_host',
+                'content_type_uid': 'product',
+                'entry_uid': 'your_entry_uid',
+                'authorization': 'management_token'
+                )
         """
-        self.live_preview_dict.update(kwargs)
+
+        if self.live_preview is not None and self.live_preview['enable'] and 'live_preview_query' in kwargs:
+            self.live_preview.update(**kwargs['live_preview_query'])
+            query = kwargs['live_preview_query']
+            if query is not None:
+                self.live_preview['live_preview'] = query['live_preview']
+            else:
+                self.live_preview['live_preview'] = 'init'
+            if 'content_type_uid' in self.live_preview and self.live_preview['content_type_uid'] is not None:
+                self.live_preview['content_type_uid'] = query['content_type_uid']
+            if 'entry_uid' in self.live_preview and self.live_preview['entry_uid'] is not None:
+                self.live_preview['entry_uid'] = query['entry_uid']
+            self._cal_url()
+        return self
+
+    def _cal_url(self):
+        host = self.live_preview['host']
+        ct = self.live_preview['content_type_uid']
+        url = f'https://{host}/v3/content_types/{ct}/entries'
+        if 'entry_uid' in self.live_preview:
+            uid = self.live_preview['entry_uid']
+            lv = self.live_preview['live_preview']
+            url = f'{url}/{uid}?live_preview={lv}'
+        self.live_preview['url'] = url
+        pass

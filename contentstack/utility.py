@@ -1,12 +1,7 @@
 """
-Utils
-contentstack
-Last modified by Shailesh Mishra on 06/08/20.
+Last modified by ishaileshmishra on 06/08/20.
 Copyright 2019 Contentstack. All rights reserved.
 """
-
-# ************* Module utility checked using pylint **************
-# Your code has been rated at 10.00/10
 
 import json
 import logging
