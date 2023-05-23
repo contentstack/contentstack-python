@@ -2,7 +2,7 @@
 The Get a single entry request fetches a particular entry of a content type.
 API Reference: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#single-entry
 """
-
+#min-similarity-lines=10
 import logging
 from urllib import parse
 
