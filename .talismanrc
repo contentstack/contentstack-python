@@ -1,9 +1,5 @@
 threshold: medium
 
 fileignoreconfig:
-
 - filename: README.md
-  checksum: d9d20b2badbf1aa62649bb174db47a9e491d8687e33ac69fee62568efa23fc56
-fileignoreconfig:
-- filename: .github/workflows/publish.yml
-  checksum: 4f2e1a9283c5aadaaec639f5efa0111dc35f385ead74e9a6a585f839d27aa0c8
+  checksum: b9cad0b376230ea7079fef3459f233b2c61f3d5e48d6d5d03a6bf3e2d39117a8
