@@ -2,7 +2,7 @@
 
 ## _v1.8.0_
 
-### **Date: 23-MAY-2023**
+### **Date: 26-MAY-2023**
 
 - AZURE_EU, Region support added
 - Include Metadata support added to asset, entry and query
