@@ -27,19 +27,9 @@ def __get_os_platform():
 def user_agents():
     header = {'sdk': dict(name=contentstack.__package__,
                           version=contentstack.__version__
-                          ), 'os': __get_os_platform, 'Content-Type': 'application/json'}
+                          ), 'os': __get_os_platform(), 'Content-Type': 'application/json'}
     package = f"{contentstack.__title__}/{contentstack.__version__}"
     return {'User-Agent': str(header), "X-User-Agent": package}
-
-
-def get_api_data(response):
-    try:
-        response.raise_for_status()
-    except requests.exceptions.HTTPError as error:
-        print(f"Error: {error}")
-        return None
-    else:
-        return response.json()
 
 
 class HTTPSConnection:  # R0903: Too few public methods
@@ -52,22 +42,6 @@ class HTTPSConnection:  # R0903: Too few public methods
             self.timeout = timeout
             self.retry_strategy = retry_strategy
             self.live_preview = live_preview
-
-    def impl_live_preview(self):
-        if self.live_preview['enable']:
-            host = self.live_preview['host']
-            authorization = self.live_preview['authorization']
-            ct = self.live_preview['content_type_uid']
-            entry_uid = self.live_preview['entry_uid']
-            url = f'https://{host}/v3/content_types/{ct}/entries'
-            if entry_uid is not None:
-                url = f'{url}/{entry_uid}'
-            self.headers['authorization'] = authorization
-            lp_resp = get_request(self.session, url, headers=self.headers, timeout=self.timeout)
-            if lp_resp is not None and not 'error_code' in lp_resp:
-                return lp_resp
-            return None
-        return None
 
     def get(self, url):
         self.headers.update(user_agents())
