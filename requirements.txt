@@ -3,7 +3,7 @@ setuptools~=62.1.0
 urllib3~=1.26.2
 contentstack-utils
 python-dateutil==2.8.2
-requests==2.27.1
+requests==2.31.0
 coverage==6.3.2
 tox==3.25.0
 virtualenv==20.14.1
