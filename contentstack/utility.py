@@ -25,9 +25,6 @@ def config_logging(logging_type: logging.WARNING):
 
 
 class Utils:
-    """
-    Utility for the contentstack
-    """
 
     @staticmethod
     def config_logging():

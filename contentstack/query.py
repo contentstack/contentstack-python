@@ -1,7 +1,7 @@
 """
 Contentstack provides certain queries that you can use to fetch filtered results
 """
-
+#min-similarity-lines=10
 import enum
 import json
 import logging
