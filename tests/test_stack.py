@@ -3,26 +3,28 @@ import config
 import contentstack
 from contentstack.stack import ContentstackRegion
 
-stack_instance = contentstack.Stack(
-    config.api_key, config.delivery_token, config.environment, host=config.host)
+API_KEY = config.APIKEY
+DELIVERY_TOKEN = config.DELIVERYTOKEN
+ENVIRONMENT = config.ENVIRONMENT
+HOST = config.HOST
+
+stack_instance = contentstack.Stack(API_KEY, DELIVERY_TOKEN, ENVIRONMENT, host=HOST)
 
 
-# pylint(missing-function-docstring)
 class TestStack(unittest.TestCase):
 
     def setUp(self):
-        self.stack = contentstack.Stack(
-            config.api_key, config.delivery_token, config.environment, host=config.host)
+        self.stack = contentstack.Stack(API_KEY, DELIVERY_TOKEN, ENVIRONMENT, host=HOST)
 
     def test_01_stack_credentials(self):
-        self.assertEqual(config.environment, stack_instance.environment)
-        self.assertEqual(config.delivery_token, stack_instance.delivery_token)
-        self.assertEqual(config.api_key, stack_instance.api_key)
-        self.assertEqual(config.host, stack_instance.host)
+        self.assertEqual(ENVIRONMENT, stack_instance.environment)
+        self.assertEqual(DELIVERY_TOKEN, stack_instance.delivery_token)
+        self.assertEqual(API_KEY, stack_instance.api_key)
+        self.assertEqual(HOST, stack_instance.host)
 
     def test_02_stack_region(self):
-        stack_region = contentstack.Stack(config.api_key, config.delivery_token, config.environment,
-                                          region=ContentstackRegion.EU)
+        stack_region = contentstack.Stack(
+            API_KEY, DELIVERY_TOKEN, ENVIRONMENT, region=ContentstackRegion.EU)
         self.assertEqual('eu-cdn.contentstack.com', stack_region.host)
 
     def test_03_stack_endpoint(self):
@@ -57,10 +59,6 @@ class TestStack(unittest.TestCase):
             if hasattr(e, 'message'):
                 self.assertEqual(
                     "You are not permitted to the stack without valid Environment", e.args[0])
-
-    @unittest.skip("demonstrating skipping")
-    def test_06_skip_for_nothing(self):
-        self.fail("shouldn't happen")
 
     def test_07_get_api_key(self):
         stack = contentstack.Stack(
@@ -124,6 +122,7 @@ class TestStack(unittest.TestCase):
             self.assertEqual(
                 'is not valid.', result['errors']['pagination_token'][0])
 
+    @unittest.skip('Work in progress')
     def test_16_initialise_sync(self):
         result = self.stack.sync_init()
         if result is not None:

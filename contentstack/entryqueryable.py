@@ -4,9 +4,6 @@ that is used as parents class for the query and entry classes
 """
 import logging
 
-# ************* Module EntryQueryable **************
-# Your code has been rated at 10/10 by pylint
-
 log = logging.getLogger(__name__)
 
 
@@ -155,6 +152,20 @@ class EntryQueryable:
             >>> result = entry.fetch()
         """
         self.entry_queryable_param['include_reference_content_type_uid'] = 'true'
+        return self
+
+    def include_metadata(self):
+        """
+        This method also includes the metadata in the response
+        [Example for Query]
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
+            >>> query = query.include_metadata()
+            >>> result = query.find()
+        """
+        self.entry_queryable_param['include_metadata'] = 'true'
         return self
 
     def add_param(self, key: str, value: str):

@@ -2,17 +2,14 @@
 The Get a single entry request fetches a particular entry of a content type.
 API Reference: https://www.contentstack.com/docs/developers/apis/content-delivery-api/#single-entry
 """
-
+#min-similarity-lines=10
 import logging
 from urllib import parse
 
-import empty as empty
+import empty
 
+from contentstack.deep_merge_lp import DeepMergeMixin
 from contentstack.entryqueryable import EntryQueryable
-
-# ************* Module Entry **************
-# Your code has been rated at 10/10 by pylint
-
 
 log = logging.getLogger(__name__)
 
@@ -39,9 +36,9 @@ class Entry(EntryQueryable):
 
     def environment(self, environment):
         """
-        Enter the name of the environment of which the entries needs to be included
+        Enter the name of the environment of which the entries need to be included
         Example: production
-        :param environment: {str} name of the environment of which the entries needs to be included.
+        :param environment: {str} name of the environment of which the entries need to be included.
         :return: Entry, so you can chain this call.
         ------------------------------
         Example::
@@ -87,7 +84,7 @@ class Entry(EntryQueryable):
         This method is useful to add additional Query parameters to the entry
         :param key: {str} -- key The key as string which needs to be added to an Entry
         :param value: {object} -- value The value as string which needs to be added to an Entry
-        :return: Entry, so you can chain this call.
+        :return: @Entry, so you can chain this call.
         -----------------------------
         Example::
 
@@ -168,15 +165,6 @@ class Entry(EntryQueryable):
         url = f'{self.http_instance.endpoint}/content_types/{self.content_type_id}/entries/{self.entry_uid}'
         return url
 
-    def __validate_live_preview(self):
-        live_preview = self.http_instance.live_preview
-        if 'enable' in live_preview and live_preview['enable'] \
-                and self.content_type_id == live_preview['content_type_uid']:
-            if 'live_preview' in live_preview:
-                self.entry_param['live_preview'] = live_preview['live_preview']
-            else:
-                self.entry_param['live_preview'] = 'init'
-
     def fetch(self):
         """
         Fetches the latest version of the entries from stack
@@ -191,11 +179,35 @@ class Entry(EntryQueryable):
             >>> result = entry.fetch()
         -------------------------------
         """
-        self.__validate_live_preview()
         if 'environment' in self.http_instance.headers:
             self.entry_param['environment'] = self.http_instance.headers['environment']
         if len(self.entry_queryable_param) > 0:
             self.entry_param.update(self.entry_queryable_param)
-        encoded_string = parse.urlencode(self.entry_param, doseq=True)
-        url = f'{self.base_url}?{encoded_string}'
-        return self.http_instance.get(url)
+        encoded_str = parse.urlencode(self.entry_param, doseq=True)
+        url = f'{self.base_url}?{encoded_str}'
+        self._impl_live_preview()
+        response = self.http_instance.get(url)
+        if self.http_instance.live_preview is not None and not 'errors' in response:
+            self.http_instance.live_preview['entry_response'] = response['entry']
+            return self._merged_response()
+        return response
+
+    def _impl_live_preview(self):
+        lv = self.http_instance.live_preview
+        if lv is not None and lv['enable'] and 'content_type_uid' in lv and lv[
+            'content_type_uid'] == self.content_type_id:
+            url = lv['url']
+            self.http_instance.headers['authorization'] = lv['management_token']
+            lp_resp = self.http_instance.get(url)
+            if lp_resp is not None and not 'error_code' in lp_resp:
+                self.http_instance.live_preview['lp_response'] = lp_resp
+            return None
+        return None
+
+    def _merged_response(self):
+        if 'entry_response' in self.http_instance.live_preview and 'lp_response' in self.http_instance.live_preview:
+            entry_response = self.http_instance.live_preview['entry_response']['entry']
+            lp_response = self.http_instance.live_preview['lp_response']
+            merged_response = DeepMergeMixin(entry_response, lp_response)
+            return merged_response.entry_response
+        pass
