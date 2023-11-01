@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## _v1.9.0_
+## _v1.8.1_
 
 ### **Date: 06-NOVEMBER-2023**
 
