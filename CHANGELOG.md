@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## _v1.9.0_
+
+### **Date: 06-NOVEMBER-2023**
+
+- SNYK issues fixed 
+- General code improvement clean up
+
+---
+
 ## _v1.8.0_
 
 ### **Date: 26-MAY-2023**

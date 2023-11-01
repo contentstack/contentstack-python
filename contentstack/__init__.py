@@ -13,7 +13,7 @@ from .utility import Utils
 __title__ = 'contentstack-python'
 __author__ = 'contentstack'
 __status__ = 'debug'
-__version__ = 'v1.8.0'
+__version__ = 'v1.9.0'
 __endpoint__ = 'cdn.contentstack.io'
 __email__ = 'mobile@contentstack.com'
 __developer_email__ = 'shailesh.mishra@contentstack.com'
