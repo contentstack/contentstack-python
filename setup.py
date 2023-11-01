@@ -27,7 +27,7 @@ setup(
     keywords="contentstack-python",
     version="1.8.1",
     author="Contentstack",
-    author_email="shailesh.mishra@contentstack.com",
+    author_email="shailesh.mishra@contentstack.com, sunil.lakshman@contentstack.com" ,
     description="Contentstack is a headless CMS with an API-first approach.",
     long_description=long_description,
     long_description_content_type="text/markdown",
