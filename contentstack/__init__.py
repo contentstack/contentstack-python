@@ -10,7 +10,7 @@ from .https_connection import HTTPSConnection
 from contentstack.stack import Stack
 from .utility import Utils
 
-__title__ = 'contentstack-python'
+__title__ = 'contentstack-delivery-python'
 __author__ = 'contentstack'
 __status__ = 'debug'
 __version__ = 'v1.8.1'
