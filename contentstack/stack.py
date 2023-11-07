@@ -8,11 +8,6 @@ from contentstack.assetquery import AssetQuery
 from contentstack.contenttype import ContentType
 from contentstack.https_connection import HTTPSConnection
 from contentstack.image_transform import ImageTransform
-from contentstack import __author__
-from contentstack import __developer_email__
-from contentstack import __license__
-from contentstack import __version__
-
 
 log = logging.getLogger(__name__)
 DEFAULT_HOST = 'cdn.contentstack.io'
