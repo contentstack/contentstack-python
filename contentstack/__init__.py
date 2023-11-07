@@ -17,3 +17,4 @@ __version__ = 'v1.8.1'
 __endpoint__ = 'cdn.contentstack.io'
 __email__ = 'mobile@contentstack.com'
 __developer_email__ = 'shailesh.mishra@contentstack.com'
+__license__ = "MIT"
