@@ -9,10 +9,6 @@ from contentstack.contenttype import ContentType
 from contentstack.https_connection import HTTPSConnection
 from contentstack.image_transform import ImageTransform
 
-__author__ = "ishaileshmishra (shailesh.mishra@contentstack.com)"
-__license__ = "MIT"
-__version__ = '1.8.0'
-
 log = logging.getLogger(__name__)
 DEFAULT_HOST = 'cdn.contentstack.io'
 

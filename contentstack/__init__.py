@@ -10,10 +10,20 @@ from .https_connection import HTTPSConnection
 from contentstack.stack import Stack
 from .utility import Utils
 
-__title__ = 'contentstack-python'
+__all__ = (
+"Entry",
+"Asset",
+"ContentType",
+"HTTPSConnection",
+"Stack",
+"Utils"
+)
+
+__title__ = 'contentstack-delivery-python'
 __author__ = 'contentstack'
 __status__ = 'debug'
-__version__ = 'v1.8.0'
+__version__ = 'v1.8.1'
 __endpoint__ = 'cdn.contentstack.io'
 __email__ = 'mobile@contentstack.com'
 __developer_email__ = 'shailesh.mishra@contentstack.com'
+__license__ = "MIT"
