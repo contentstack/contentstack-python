@@ -15,6 +15,7 @@ class TestStack(unittest.TestCase):
 
     def setUp(self):
         self.stack = contentstack.Stack(API_KEY, DELIVERY_TOKEN, ENVIRONMENT, host=HOST)
+        self.early_access = ['taxonomy', 'teams']
 
     def test_01_stack_credentials(self):
         self.assertEqual(ENVIRONMENT, stack_instance.environment)
@@ -167,3 +168,13 @@ class TestStack(unittest.TestCase):
                                     host=config.HOST, region=ContentstackRegion.AZURE_NA)
         var = _stack.region.value
         self.assertEqual('azure-na', var)
+    
+    def test_22_check_early_access_headers(self):
+        stack = contentstack.Stack(
+            config.APIKEY, config.DELIVERYTOKEN, config.ENVIRONMENT, early_access=[])
+        self.assertEqual(True, 'x-header-ea' in stack.get_headers)
+
+    def test_23_get_early_access(self):
+        stack = contentstack.Stack(
+            config.APIKEY, config.DELIVERYTOKEN, config.ENVIRONMENT, early_access=["taxonomy", "teams"])
+        self.assertEqual(self.early_access, stack.get_early_access)
