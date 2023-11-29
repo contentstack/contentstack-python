@@ -9,10 +9,6 @@ from contentstack.contenttype import ContentType
 from contentstack.https_connection import HTTPSConnection
 from contentstack.image_transform import ImageTransform
 
-__author__ = "ishaileshmishra (shailesh.mishra@contentstack.com)"
-__license__ = "MIT"
-__version__ = '1.8.0'
-
 log = logging.getLogger(__name__)
 DEFAULT_HOST = 'cdn.contentstack.io'
 
@@ -44,6 +40,7 @@ class Stack:
                      total=5, backoff_factor=0, status_forcelist=[408, 429]),
                  live_preview=None,
                  branch=None,
+                 early_access =  None,
                  ):
         """
         # Class that wraps the credentials of the authenticated user. Think of
@@ -96,6 +93,7 @@ class Stack:
         self.branch = branch
         self.retry_strategy = retry_strategy
         self.live_preview = live_preview
+        self.early_access = early_access
         self._validate_stack()
 
     def _validate_stack(self):
@@ -127,6 +125,9 @@ class Stack:
             'access_token': self.delivery_token,
             'environment': self.environment
         }
+        if self.early_access is not None:
+            early_access_str = ', '.join(self.early_access)
+            self.headers['x-header-ea'] = early_access_str
 
         if self.branch is not None:
             self.headers['branch'] = self.branch
@@ -145,6 +146,13 @@ class Stack:
         :return: api_key of the stack
         """
         return self.api_key
+    
+    @property
+    def get_early_access(self):
+        """
+        :return: early access
+        """
+        return self.early_access
 
     @property
     def get_delivery_token(self):

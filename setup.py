@@ -4,11 +4,24 @@
 # as the name and version) as well as which code files to include
 
 import os
+import re
+import sys
 
 try:
-    from setuptools import setup
+    from setuptools import setup, find_packages
 except ImportError:
     from distutils.core import setup
+
+package = "contentstack"
+
+def get_version(package):
+    """
+    Return package version as listed in `__version__` in `init.py`.
+    """
+    init_py = open(os.path.join(package, '__init__.py')).read()
+    return re.search("^__version__ = ['\"]([^'\"]+)['\"]",
+                     init_py, re.MULTILINE).group(1)
+
 
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
     long_description = readme.read()
@@ -25,9 +38,9 @@ setup(
     type="process",
     created="09 Jun 2020",
     keywords="contentstack-python",
-    version="1.8.0",
+    version=get_version(package),
     author="Contentstack",
-    author_email="shailesh.mishra@contentstack.com",
+    author_email="shailesh.mishra@contentstack.com, sunil.lakshman@contentstack.com" ,
     description="Contentstack is a headless CMS with an API-first approach.",
     long_description=long_description,
     long_description_content_type="text/markdown",

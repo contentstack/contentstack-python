@@ -2,6 +2,15 @@
 **CHANGELOG**
 ================
 
+*v1.8.1*
+============
+
+**Date: 06-NOVEMBER-2023**
+
+- SNYK issues fixed 
+- General code improvement clean up
+
+
 *v1.8.0*
 ============
 
