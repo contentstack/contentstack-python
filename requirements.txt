@@ -56,7 +56,6 @@ chardet~=5.1.0
 alabaster==0.7.13
 zipp==3.15.0
 distlib~=0.3.6
-Empty~=0.4.4
 cachetools~=5.3.0
 tomlkit~=0.11.8
 urllib3==2.0.7

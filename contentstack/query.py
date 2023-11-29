@@ -8,8 +8,6 @@ import logging
 import warnings
 from urllib import parse
 
-import empty
-
 from contentstack.basequery import BaseQuery
 from contentstack.deep_merge_lp import DeepMergeMixin
 from contentstack.entryqueryable import EntryQueryable
@@ -54,7 +52,7 @@ class Query(BaseQuery, EntryQueryable):
         self.base_url = self.__get_base_url()
 
     def __get_base_url(self, endpoint=''):
-        if endpoint is not None and not empty:
+        if endpoint is not None and endpoint.strip(): # .strip() removes leading/trailing whitespace
             self.http_instance.endpoint = endpoint
         if None in (self.http_instance, self.content_type_uid):
             raise KeyError(
