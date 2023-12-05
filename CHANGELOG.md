@@ -1,8 +1,16 @@
 # CHANGELOG
 
+## _v1.8.2_
+
+### **Date: 05-DECEMBER-2023**
+
+- Empty package removed and added python 3.11 support
+
+---
+
 ## _v1.8.1_
 
-### **Date: 06-NOVEMBER-2023**
+### **Date: 29-NOVEMBER-2023**
 
 - SNYK issues fixed 
 - General code improvement clean up
