@@ -28,6 +28,11 @@ class TestStack(unittest.TestCase):
             API_KEY, DELIVERY_TOKEN, ENVIRONMENT, region=ContentstackRegion.EU)
         self.assertEqual('eu-cdn.contentstack.com', stack_region.host)
 
+    def test_02_stack_gcp_na_region(self):
+        stack_region = contentstack.Stack(
+            API_KEY, DELIVERY_TOKEN, ENVIRONMENT, region=ContentstackRegion.GCP_NA)
+        self.assertEqual('gcp-na-cdn.contentstack.com', stack_region.host)
+
     def test_03_stack_endpoint(self):
         self.assertEqual(f"https://{config.HOST}/v3",
                          self.stack.endpoint)

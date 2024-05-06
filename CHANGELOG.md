@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## _v1.9.0_
+
+### **Date: 14-MAY-2024**
+
+- Added GCP NA Support
+
+---
 ## _v1.8.2_
 
 ### **Date: 05-DECEMBER-2023**
