@@ -21,6 +21,7 @@ class ContentstackRegion(enum.Enum):
     EU = 'eu'
     AZURE_NA = 'azure-na'
     AZURE_EU = 'azure-eu'
+    GCP_NA = 'gcp-na'
 
 
 class Stack:
@@ -116,6 +117,8 @@ class Stack:
             self.host = 'azure-na-cdn.contentstack.com'
         elif self.region.value == 'azure-eu' and self.host == DEFAULT_HOST:
             self.host = 'azure-eu-cdn.contentstack.com'
+        elif self.region.value == 'gcp-na' and self.host == DEFAULT_HOST:
+            self.host = 'gcp-na-cdn.contentstack.com'
         elif self.region.value != 'us':
             self.host = f'{self.region.value}-{DEFAULT_HOST}'
         self.endpoint = f'https://{self.host}/{self.version}'
