@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## _v1.10.0_
+
+### **Date: 03-SEPTEMBER-2024**
+
+- Fetch asset by any other field than UID
+
 ## _v1.9.0_
 
 ### **Date: 14-MAY-2024**
