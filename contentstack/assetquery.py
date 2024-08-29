@@ -176,6 +176,6 @@ class AssetQuery(BaseQuery):
 
         """
         if self.parameters is not None and len(self.parameters) > 0:
-            self.asset_query_params["query"] = json.dumps(self.parameters)
+            self.asset_query_params["query"] = self.parameters
         url = Utils.get_complete_url(self.base_url, self.asset_query_params)
         return self.http_instance.get(url)

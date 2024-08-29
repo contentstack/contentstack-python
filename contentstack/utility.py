@@ -5,7 +5,7 @@ Copyright 2019 Contentstack. All rights reserved.
 
 import json
 import logging
-from urllib import parse
+from urllib.parse import urlencode, urljoin
 
 log = logging.getLogger(__name__)
 
@@ -55,14 +55,22 @@ class Utils:
         return parse.urlencode(params)
 
     @staticmethod
-    def get_complete_url(base_url: str, params: dict):
+    def get_complete_url(base_url: str, params: dict) -> str:
         """
-        creates complete url using base_url and their respective parameters
-        :param base_url:
-        :param params:
-        :return:
+        Creates a complete URL using base_url and their respective parameters.
+        :param base_url: The base URL to which parameters are appended.
+        :param params: A dictionary of parameters to be included in the URL.
+        :return: A complete URL with encoded parameters.
         """
+        # Ensure 'query' is properly serialized as a JSON string without extra quotes
         if 'query' in params:
-            params["query"] = json.dumps(params["query"])
-        query = parse.urlencode(params)
-        return f'{base_url}&{query}'
+            params["query"] = json.dumps(params["query"], separators=(',', ':'))
+
+        # Encode parameters
+        query_string = urlencode(params, doseq=True)
+        
+        # Join base_url and query_string
+        if '?' in base_url:
+            return f'{base_url}&{query_string}'
+        else:
+            return f'{base_url}?{query_string}'
