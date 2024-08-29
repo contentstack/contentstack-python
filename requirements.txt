@@ -5,7 +5,7 @@ python-dateutil==2.8.2
 requests==2.32.2
 coverage==7.2.6
 tox==4.5.1
-virtualenv==20.23.0
+virtualenv==20.26.3
 Sphinx==7.0.1
 sphinxcontrib-websupport==1.2.4
 pip==23.3.1
@@ -44,7 +44,7 @@ pkginfo==1.9.6
 pylint==3.1.0
 astroid==3.1.0
 mccabe==0.7.0
-platformdirs==3.5.1
+platformdirs==3.9.1
 imagesize==1.4.1
 snowballstemmer~=2.2.0
 Pygments~=2.15.1
