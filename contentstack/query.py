@@ -321,31 +321,52 @@ class Query(BaseQuery, EntryQueryable):
             self.query_params["query"] = json.dumps(self.parameters)
         if 'environment' in self.http_instance.headers:
             self.query_params['environment'] = self.http_instance.headers['environment']
+
         encoded_string = parse.urlencode(self.query_params, doseq=True)
         url = f'{self.base_url}?{encoded_string}'
         self._impl_live_preview()
         response = self.http_instance.get(url)
-        if self.http_instance.live_preview is not None and not 'errors' in response:
-            self.http_instance.live_preview['entry_response'] = response['entries']
+        # Ensure response is converted to dictionary
+        if isinstance(response, str):
+            try:
+                response = json.loads(response)  # Convert JSON string to dictionary
+            except json.JSONDecodeError as e:
+                print(f"JSON decode error: {e}")
+                return {"error": "Invalid JSON response"}  # Return an error dictionary
+
+        if self.http_instance.live_preview is not None and 'errors' not in response:
+            if 'entries' in response:
+                self.http_instance.live_preview['entry_response'] = response['entries'][0]  # Get first entry
+            else:
+                print(f"Error: 'entries' key missing in response: {response}")
+                return {"error": "'entries' key missing in response"}
             return self._merged_response()
         return response
 
     def _impl_live_preview(self):
         lv = self.http_instance.live_preview
-        if lv is not None and lv['enable'] and 'content_type_uid' in lv and lv[
-            'content_type_uid'] == self.content_type_uid:
+        if lv is not None and lv.get('enable') and lv.get('content_type_uid') == self.content_type_uid:
             url = lv['url']
-            self.http_instance.headers['authorization'] = lv['management_token']
+            if lv.get('management_token'):
+                self.http_instance.headers['authorization'] = lv['management_token']
+            else:
+                self.http_instance.headers['preview_token'] = lv['preview_token']
             lp_resp = self.http_instance.get(url)
-            if lp_resp is not None and not 'error_code' in lp_resp:
-                self.http_instance.live_preview['lp_response'] = lp_resp
+
+            if lp_resp and 'error_code' not in lp_resp:
+                if 'entry' in lp_resp:
+                    self.http_instance.live_preview['lp_response'] = lp_resp['entry']  # Extract entry
+                else:
+                    print(f"Warning: Missing 'entry' key in lp_response: {lp_resp}")
             return None
         return None
 
     def _merged_response(self):
-        if 'entry_response' in self.http_instance.live_preview and 'lp_response' in self.http_instance.live_preview:
-            entry_response = self.http_instance.live_preview['entry_response']['entries']
-            lp_response = self.http_instance.live_preview['lp_response']
+        live_preview = self.http_instance.live_preview
+        if 'entry_response' in live_preview and 'lp_response' in live_preview:
+            entry_response = live_preview['entry_response']
+            lp_response = live_preview['lp_response']
             merged_response = DeepMergeMixin(entry_response, lp_response)
-            return merged_response.entry_response
-        pass
+            return merged_response  # Return the merged dictionary
+
+        raise ValueError("Missing required keys in live_preview data")

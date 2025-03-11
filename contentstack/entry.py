@@ -195,7 +195,10 @@ class Entry(EntryQueryable):
         if lv is not None and lv['enable'] and 'content_type_uid' in lv and lv[
             'content_type_uid'] == self.content_type_id:
             url = lv['url']
-            self.http_instance.headers['authorization'] = lv['management_token']
+            if lv.get('management_token'):
+                self.http_instance.headers['authorization'] = lv['management_token']
+            else:
+                self.http_instance.headers['preview_token'] = lv['preview_token']
             lp_resp = self.http_instance.get(url)
             if lp_resp is not None and not 'error_code' in lp_resp:
                 self.http_instance.live_preview['lp_response'] = lp_resp
@@ -204,8 +207,27 @@ class Entry(EntryQueryable):
 
     def _merged_response(self):
         if 'entry_response' in self.http_instance.live_preview and 'lp_response' in self.http_instance.live_preview:
-            entry_response = self.http_instance.live_preview['entry_response']['entry']
+            entry_response = self.http_instance.live_preview['entry_response']
             lp_response = self.http_instance.live_preview['lp_response']
-            merged_response = DeepMergeMixin(entry_response, lp_response)
-            return merged_response.entry_response
-        pass
+            
+            # Ensure lp_entry exists
+            if 'entry' in lp_response:
+                lp_entry = lp_response['entry']
+            else:
+                raise KeyError(f"'entry' key not found in lp_response: {lp_response}")
+            # 🛠️ Fix: Ensure both are lists of dictionaries
+            if not isinstance(entry_response, list):
+                entry_response = [entry_response]  # Wrap in a list if it's a dict
+            if not isinstance(lp_entry, list):
+                lp_entry = [lp_entry]  # Wrap in a list if it's a dict
+            if not all(isinstance(item, dict) for item in entry_response):
+                raise TypeError(f"entry_response must be a list of dictionaries. Got: {entry_response}")
+            if not all(isinstance(item, dict) for item in lp_entry):
+                raise TypeError(f"lp_entry must be a list of dictionaries. Got: {lp_entry}")
+            merged_response = DeepMergeMixin(entry_response, lp_entry).to_dict()  # Convert to dictionary
+            return merged_response  # Now correctly returns a dictionary
+        raise ValueError("Missing required keys in live_preview data")
+
+
+
+
