@@ -10,7 +10,7 @@ Sphinx==7.0.1
 sphinxcontrib-websupport==1.2.4
 pip==23.3.1
 build==0.10.0
-wheel==0.40.0
+wheel==0.45.1
 lxml==4.9.2
 utils~=1.0.1
 keyring==23.13.1
