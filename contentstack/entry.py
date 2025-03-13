@@ -208,16 +208,13 @@ class Entry(EntryQueryable):
     def _merged_response(self):
         if 'entry_response' in self.http_instance.live_preview and 'lp_response' in self.http_instance.live_preview:
             entry_response = self.http_instance.live_preview['entry_response']
-            lp_response = self.http_instance.live_preview['lp_response']
-            
             # Ensure lp_entry exists
-            if 'entry' in lp_response:
-                lp_entry = lp_response['entry']
+            if 'entry' in self.http_instance.live_preview.get('lp_response', {}):
+                lp_entry = self.http_instance.live_preview['lp_response']['entry']
             else:
-                raise KeyError(f"'entry' key not found in lp_response: {lp_response}")
-            # 🛠️ Fix: Ensure both are lists of dictionaries
+                lp_entry = {} 
             if not isinstance(entry_response, list):
-                entry_response = [entry_response]  # Wrap in a list if it's a dict
+                entry_response = [entry_response]
             if not isinstance(lp_entry, list):
                 lp_entry = [lp_entry]  # Wrap in a list if it's a dict
             if not all(isinstance(item, dict) for item in entry_response):

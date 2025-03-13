@@ -355,7 +355,7 @@ class Query(BaseQuery, EntryQueryable):
 
             if lp_resp and 'error_code' not in lp_resp:
                 if 'entry' in lp_resp:
-                    self.http_instance.live_preview['lp_response'] = lp_resp['entry']  # Extract entry
+                    self.http_instance.live_preview['lp_response'] = {'entry': lp_resp['entry']} # Extract entry
                 else:
                     print(f"Warning: Missing 'entry' key in lp_response: {lp_resp}")
             return None
