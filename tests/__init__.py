@@ -12,6 +12,7 @@ from .test_assets import TestAsset
 from .test_entry import TestEntry
 from .test_query import TestQuery
 from .test_stack import TestStack
+from .test_live_preview import TestLivePreviewConfig
 
 
 def all_tests():
@@ -19,9 +20,11 @@ def all_tests():
     test_module_asset = TestLoader().loadTestsFromTestCase(TestAsset)
     test_module_entry = TestLoader().loadTestsFromTestCase(TestEntry)
     test_module_query = TestLoader().loadTestsFromTestCase(TestQuery)
+    test_module_live_preview = TestLoader().loadTestsFromTestCase(TestLivePreviewConfig)
     TestSuite([
         test_module_stack,
         test_module_asset,
         test_module_entry,
         test_module_query,
+        test_module_live_preview
     ])

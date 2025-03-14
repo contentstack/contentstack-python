@@ -6,11 +6,19 @@ from contentstack.deep_merge_lp import DeepMergeMixin
 
 management_token = 'cs8743874323343u9'
 entry_uid = 'blt8743874323343u9'
+preview_token = 'abcdefgh1234567890'
 
 _lp_query = {
     'live_preview': '#0#0#0#0#0#0#0#0#0#',
     'content_type_uid': 'product',
     'entry_uid': entry_uid
+}
+_lp_preview_timestamp_query = {
+    'live_preview': '#0#0#0#0#0#0#0#0#0#',
+    'content_type_uid': 'product',
+    'entry_uid': entry_uid,
+    'preview_timestamp': '2025-03-07T12:00:00Z',
+    'release_id': '123456789'
 }
 _lp = {
     'enable': True,
@@ -18,12 +26,17 @@ _lp = {
     'management_token': management_token
 }
 
+_lp_2_0 = {
+    'enable': True,
+    'preview_token': preview_token,
+    'host': 'rest-preview.contentstack.com'
+}
+
 API_KEY = config.APIKEY
 DELIVERY_TOKEN = config.DELIVERYTOKEN
 ENVIRONMENT = config.ENVIRONMENT
 HOST = config.HOST
 ENTRY_UID = config.APIKEY
-
 
 class TestLivePreviewConfig(unittest.TestCase):
 
@@ -56,6 +69,30 @@ class TestLivePreviewConfig(unittest.TestCase):
         self.stack.live_preview_query(live_preview_query=_lp_query)
         self.assertIsNotNone(self.stack.live_preview['management_token'])
         self.assertEqual(7, len(self.stack.live_preview))
+        self.assertEqual('product', self.stack.live_preview['content_type_uid'])
+
+    def test_022_preview_timestamp_with_livepreview_2_0_enabled(self):
+        self.stack = contentstack.Stack(
+            API_KEY,
+            DELIVERY_TOKEN,
+            ENVIRONMENT,
+            live_preview=_lp_2_0)
+        self.stack.live_preview_query(live_preview_query=_lp_preview_timestamp_query)
+        self.assertIsNotNone(self.stack.live_preview['preview_token'])
+        self.assertEqual(9, len(self.stack.live_preview))
+        self.assertEqual('product', self.stack.live_preview['content_type_uid'])
+        self.assertEqual('123456789', self.stack.live_preview['release_id'])
+        self.assertEqual('2025-03-07T12:00:00Z', self.stack.live_preview['preview_timestamp'])
+
+    def test_023_livepreview_2_0_enabled(self):
+        self.stack = contentstack.Stack(
+            API_KEY,
+            DELIVERY_TOKEN,
+            ENVIRONMENT,
+            live_preview=_lp_2_0)
+        self.stack.live_preview_query(live_preview_query=_lp_query)
+        self.assertIsNotNone(self.stack.live_preview['preview_token'])
+        self.assertEqual(9, len(self.stack.live_preview))
         self.assertEqual('product', self.stack.live_preview['content_type_uid'])
 
     def test_03_set_host(self):
@@ -205,10 +242,9 @@ class TestLivePreviewObject(unittest.TestCase):
         self.assertTrue(self.stack.get_live_preview['management_token'])
 
     def test_deep_merge_object(self):
-        merged_response = DeepMergeMixin(entry_response, lp_response)
-        self.assertTrue(isinstance(merged_response.entry_response, list))
-        self.assertEqual(3, len(merged_response.entry_response))
-        print(merged_response.entry_response)
+        merged_response = DeepMergeMixin(entry_response, lp_response).to_dict()
+        self.assertTrue(isinstance(merged_response, list), "Merged response should be a list")
+        self.assertTrue(all(isinstance(entry, dict) for entry in merged_response), "Each item in merged_response should be a dictionary")
 
 
 if __name__ == '__main__':

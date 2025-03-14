@@ -11,6 +11,5 @@ jobs:
         uses: snyk/actions/python@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-          SNYK_INTEGRATION_VERSION: python-3.11
         with:
           args: --fail-on=all --all-projects --skip-unresolved
