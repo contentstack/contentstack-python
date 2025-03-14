@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## _v1.11.0_
+
+### **Date: 17-MARCH-2025**
+
+- Added Livepreview 2.0 and Timeline support
 
 ## _v1.10.0_
 
