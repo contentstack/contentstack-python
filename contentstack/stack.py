@@ -41,7 +41,7 @@ class Stack:
                      total=5, backoff_factor=0, status_forcelist=[408, 429]),
                  live_preview=None,
                  branch=None,
-                 early_access =  None,
+                 early_access = None,
                  ):
         """
         # Class that wraps the credentials of the authenticated user. Think of
@@ -96,6 +96,15 @@ class Stack:
         self.live_preview = live_preview
         self.early_access = early_access
         self._validate_stack()
+        self._setup_headers()
+        self._setup_live_preview()
+        self.http_instance = HTTPSConnection(
+            endpoint=self.endpoint,
+            headers=self.headers,
+            timeout=self.timeout,
+            retry_strategy=self.retry_strategy,
+            live_preview=self.live_preview
+        )
 
     def _validate_stack(self):
         if self.api_key is None or self.api_key == '':
@@ -123,6 +132,7 @@ class Stack:
             self.host = f'{self.region.value}-{DEFAULT_HOST}'
         self.endpoint = f'https://{self.host}/{self.version}'
 
+    def _setup_headers(self):
         self.headers = {
             'api_key': self.api_key,
             'access_token': self.delivery_token,
@@ -131,18 +141,10 @@ class Stack:
         if self.early_access is not None:
             early_access_str = ', '.join(self.early_access)
             self.headers['x-header-ea'] = early_access_str
-
+ 
         if self.branch is not None:
             self.headers['branch'] = self.branch
-
-        self.http_instance = HTTPSConnection(
-            endpoint=self.endpoint,
-            headers=self.headers,
-            timeout=self.timeout,
-            retry_strategy=self.retry_strategy,
-            live_preview=self.live_preview
-        )
-
+   
     @property
     def get_api_key(self):
         """
@@ -323,8 +325,7 @@ class Stack:
         base_url = f'{self.http_instance.endpoint}/stacks/sync'
         self.sync_param['environment'] = self.http_instance.headers['environment']
         query = parse.urlencode(self.sync_param)
-        url = f'{base_url}?{query}'
-        return self.http_instance.get(url)
+        return self.http_instance.get(f'{base_url}?{query}')
 
     def image_transform(self, image_url, **kwargs):
         """
@@ -341,6 +342,15 @@ class Stack:
             raise PermissionError(
                 'image_url required for the image_transformation')
         return ImageTransform(self.http_instance, image_url, **kwargs)
+    
+    def _setup_live_preview(self):
+        if self.live_preview and self.live_preview.get("enable"):
+            region_prefix = "" if self.region.value == "us" else f"{self.region.value}-"
+            self.live_preview["host"] = f"{region_prefix}rest-preview.contentstack.com"
+
+            if self.live_preview.get("preview_token"):
+                self.headers["preview_token"] = self.live_preview["preview_token"]
+
 
     def live_preview_query(self, **kwargs):
         """
@@ -361,28 +371,31 @@ class Stack:
                 'authorization': 'management_token'
                 )
         """
+        if self.live_preview and self.live_preview.get("enable") and "live_preview_query" in kwargs:
+            query = kwargs["live_preview_query"]
+            if isinstance(query, dict):
+                self.live_preview.update(query)
+                self.live_preview["live_preview"] = query.get("live_preview", "init")
+                if "content_type_uid" in query:
+                    self.live_preview["content_type_uid"] = query["content_type_uid"]
+                if "entry_uid" in query:
+                    self.live_preview["entry_uid"] = query["entry_uid"]
 
-        if self.live_preview is not None and self.live_preview['enable'] and 'live_preview_query' in kwargs:
-            self.live_preview.update(**kwargs['live_preview_query'])
-            query = kwargs['live_preview_query']
-            if query is not None:
-                self.live_preview['live_preview'] = query['live_preview']
-            else:
-                self.live_preview['live_preview'] = 'init'
-            if 'content_type_uid' in self.live_preview and self.live_preview['content_type_uid'] is not None:
-                self.live_preview['content_type_uid'] = query['content_type_uid']
-            if 'entry_uid' in self.live_preview and self.live_preview['entry_uid'] is not None:
-                self.live_preview['entry_uid'] = query['entry_uid']
-            self._cal_url()
+                for key in ["release_id", "preview_timestamp"]:
+                    if key in query:
+                        self.http_instance.headers[key] = query[key]
+                    else:
+                        self.http_instance.headers.pop(key, None)
+
+                self._cal_url()
         return self
 
     def _cal_url(self):
-        host = self.live_preview['host']
-        ct = self.live_preview['content_type_uid']
-        url = f'https://{host}/v3/content_types/{ct}/entries'
-        if 'entry_uid' in self.live_preview:
-            uid = self.live_preview['entry_uid']
-            lv = self.live_preview['live_preview']
-            url = f'{url}/{uid}?live_preview={lv}'
-        self.live_preview['url'] = url
-        pass
+        host = self.live_preview.get("host", DEFAULT_HOST)
+        content_type = self.live_preview.get("content_type_uid", "default_content_type")
+        url = f"https://{host}/v3/content_types/{content_type}/entries"
+        entry_uid = self.live_preview.get("entry_uid")
+        live_preview = self.live_preview.get("live_preview", "init")
+        if entry_uid:
+            url = f"{url}/{entry_uid}?live_preview={live_preview}"
+        self.live_preview["url"] = url
