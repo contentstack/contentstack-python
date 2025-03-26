@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## _v1.11.1_
+
+### **Date: 26-MARCH-2025**
+
+- Updated the dependencies
+
 ## _v1.11.0_
 
 ### **Date: 17-MARCH-2025**
