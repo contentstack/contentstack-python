@@ -41,7 +41,7 @@ blinker~=1.8.2
 itsdangerous~=2.2.0
 isort==5.13.2
 pkginfo==1.11.1
-pylint==3.2.6
+ruff==0.11.5
 astroid==3.2.4
 mccabe==0.7.0
 platformdirs==3.9.1
