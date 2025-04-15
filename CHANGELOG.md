@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## _v1.11.2_
+
+### **Date: 21-APRIL-2025**
+
+- Version bump and security fixes.
+
 ## _v1.11.1_
 
 ### **Date: 26-MARCH-2025**
