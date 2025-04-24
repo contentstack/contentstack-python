@@ -1,76 +1,93 @@
 """
+Utility functions for logging and URL manipulation.
 Last modified by ishaileshmishra on 06/08/20.
 Copyright 2019 Contentstack. All rights reserved.
 """
 
 import json
 import logging
-from urllib.parse import urlencode, urljoin
-
-log = logging.getLogger(__name__)
+from urllib.parse import urlencode
 
 
-def config_logging(logging_type: logging.WARNING):
+def setup_logging(logging_type=logging.INFO, filename='app.log'):
     """
-    This is to create logging config
-    :param logging_type:  Level of the logging
-    :return: basicConfig instance
+    Global one-time logging configuration.
+    Should be called from your main application entry point.
     """
     logging.basicConfig(
-        filename='app.log',
+        filename=filename,
         level=logging_type,
         format='[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s',
-        datefmt='%H:%M:%S'
+        datefmt='%Y-%m-%d %H:%M:%S'
     )
 
 
 class Utils:
+    @staticmethod
+    def setup_logger(name="AppLogger", level=logging.INFO, filename='app.log'):
+        """
+        Creates and configures a named logger with file and console output.
+        Prevents duplicate handlers.
+        """
+        logger = logging.getLogger(name)
+        if not logger.handlers:
+            logger.setLevel(level)
+
+            formatter = logging.Formatter(
+                '[%(asctime)s] %(levelname)s - %(name)s - %(message)s',
+                datefmt='%Y-%m-%d %H:%M:%S'
+            )
+
+            file_handler = logging.FileHandler(filename)
+            file_handler.setFormatter(formatter)
+            logger.addHandler(file_handler)
+
+            console_handler = logging.StreamHandler()
+            console_handler.setFormatter(formatter)
+            logger.addHandler(console_handler)
+
+        return logger
 
     @staticmethod
-    def config_logging():
-        """ Setting up logging """
-        logging.basicConfig(
-            filename='report_log.log',
-            format='%(asctime)s - %(message)s',
-            level=logging.INFO
-        )
-
-    @staticmethod
-    def setup_logger():
-        """setup logger for the application"""
-        return logging.getLogger("Config")
-
-    @staticmethod
-    def log(message):
-        """this generates log message"""
-        logging.debug(message)
+    def log(message, level=logging.DEBUG):
+        """
+        Log a message with the specified level.
+        Default is DEBUG.
+        """
+        logger = logging.getLogger("AppLogger")
+        logger.log(level, message)
 
     @staticmethod
     def do_url_encode(params):
         """
-        To encode url with query parameters
-        :param params:
-        :return: encoded url
+        Encode query parameters to URL-safe format.
+        :param params: Dictionary of parameters
+        :return: Encoded URL query string
         """
-        return parse.urlencode(params)
+        if not isinstance(params, dict):
+            raise ValueError("params must be a dictionary")
+        return urlencode(params, doseq=True)
 
     @staticmethod
-    def get_complete_url(base_url: str, params: dict) -> str:
+    def get_complete_url(base_url: str, params: dict, skip_encoding=False) -> str:
         """
-        Creates a complete URL using base_url and their respective parameters.
-        :param base_url: The base URL to which parameters are appended.
-        :param params: A dictionary of parameters to be included in the URL.
-        :return: A complete URL with encoded parameters.
+        Construct a full URL by combining base URL and encoded parameters.
+        Handles JSON stringification for the `query` key.
+        :param base_url: Base API URL
+        :param params: Dictionary of query parameters
+        :param skip_encoding: Set True to skip URL encoding
+        :return: Complete URL
         """
-        # Ensure 'query' is properly serialized as a JSON string without extra quotes
-        if 'query' in params:
+        if not isinstance(base_url, str) or not isinstance(params, dict):
+            raise ValueError("base_url must be a string and params must be a dictionary")
+
+        if 'query' in params and not skip_encoding:
             params["query"] = json.dumps(params["query"], separators=(',', ':'))
 
-        # Encode parameters
-        query_string = urlencode(params, doseq=True)
-        
-        # Join base_url and query_string
-        if '?' in base_url:
-            return f'{base_url}&{query_string}'
+        if not skip_encoding:
+            query_string = urlencode(params, doseq=True)
         else:
-            return f'{base_url}?{query_string}'
+            query_string = "&".join(f"{k}={v}" for k, v in params.items())
+
+        # Append with appropriate separator
+        return f'{base_url}&{query_string}' if '?' in base_url else f'{base_url}?{query_string}'

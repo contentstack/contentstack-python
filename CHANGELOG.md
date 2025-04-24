@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## _v2.0.0_
+
+### **Date: 28-APRIL-2025**
+
+- Custom logger support
+
 ## _v1.11.2_
 
 ### **Date: 21-APRIL-2025**
