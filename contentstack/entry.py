@@ -9,9 +9,6 @@ from urllib import parse
 from contentstack.deep_merge_lp import DeepMergeMixin
 from contentstack.entryqueryable import EntryQueryable
 
-log = logging.getLogger(__name__)
-
-
 class Entry(EntryQueryable):
     """
     An entry is the actual piece of content that you want to publish.
@@ -23,7 +20,7 @@ class Entry(EntryQueryable):
     locale={locale_code}
     """
 
-    def __init__(self, http_instance, content_type_uid, entry_uid):
+    def __init__(self, http_instance, content_type_uid, entry_uid, logger=None):
         super().__init__()
         EntryQueryable.__init__(self)
         self.entry_param = {}
@@ -31,6 +28,7 @@ class Entry(EntryQueryable):
         self.content_type_id = content_type_uid
         self.entry_uid = entry_uid
         self.base_url = self.__get_base_url()
+        self.logger = logger or logging.getLogger(__name__)
 
     def environment(self, environment):
         """

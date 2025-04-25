@@ -1,9 +1,6 @@
 import enum
 import logging
 
-log = logging.getLogger(__name__)
-
-
 class QueryOperation(enum.Enum):
     """
     QueryOperation is enum that Provides Options to perform operation to query the result.
@@ -38,9 +35,10 @@ class BaseQuery:
     Common Query class works for Query As well as Asset
     """
 
-    def __init__(self):
+    def __init__(self, logger=None):
         self.parameters = {}
         self.query_params = {}
+        self.logger = logger or logging.getLogger(__name__)
 
     def where(self, field_uid: str, query_operation: QueryOperation, fields=None):
         """

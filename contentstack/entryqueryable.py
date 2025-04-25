@@ -4,16 +4,14 @@ that is used as parents class for the query and entry classes
 """
 import logging
 
-log = logging.getLogger(__name__)
-
-
 class EntryQueryable:
     """
     This class is base class for the Entry and Query class that shares common functions
     """
 
-    def __init__(self):
+    def __init__(self, logger=None):
         self.entry_queryable_param = {}
+        self.logger = logger or logging.getLogger(__name__)
 
     def locale(self, locale: str):
         """

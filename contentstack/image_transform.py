@@ -8,8 +8,6 @@ different transform_params in second parameter in array form
 
 import logging
 
-log = logging.getLogger(__name__)
-
 
 class ImageTransform:  # pylint: disable=too-few-public-methods
     """
@@ -17,7 +15,7 @@ class ImageTransform:  # pylint: disable=too-few-public-methods
     files
     """
 
-    def __init__(self, http_instance, image_url, **kwargs):
+    def __init__(self, http_instance, image_url, logger=None, **kwargs):
         """
         creates instance of the ImageTransform class
         :param httpInstance: instance of HttpsConnection
@@ -35,6 +33,7 @@ class ImageTransform:  # pylint: disable=too-few-public-methods
         self.http_instance = http_instance
         self.image_url = image_url
         self.image_params = kwargs
+        self.logger = logger or logging.getLogger(__name__)
 
     def get_url(self):
         """
