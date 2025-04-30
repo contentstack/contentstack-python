@@ -9,7 +9,6 @@ from contentstack.contenttype import ContentType
 from contentstack.https_connection import HTTPSConnection
 from contentstack.image_transform import ImageTransform
 
-log = logging.getLogger(__name__)
 DEFAULT_HOST = 'cdn.contentstack.io'
 
 
@@ -42,6 +41,7 @@ class Stack:
                  live_preview=None,
                  branch=None,
                  early_access = None,
+                 logger=None,
                  ):
         """
         # Class that wraps the credentials of the authenticated user. Think of
@@ -78,7 +78,7 @@ class Stack:
                 live_preview={enable=True, authorization='your auth token'}, retry_strategy= _strategy)
         ```
         """
-        logging.basicConfig(level=logging.DEBUG)
+        self.logger = logger or logging.getLogger(__name__)
         self.headers = {}
         self._query_params = {}
         self.sync_param = {}

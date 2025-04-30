@@ -14,9 +14,6 @@ from urllib import parse
 from contentstack.entry import Entry
 from contentstack.query import Query
 
-log = logging.getLogger(__name__)
-
-
 class ContentType:
     """
     Content type defines the structure or schema of a page or a
@@ -26,10 +23,11 @@ class ContentType:
     content type.
     """
 
-    def __init__(self, http_instance, content_type_uid):
+    def __init__(self, http_instance, content_type_uid, logger=None):
         self.http_instance = http_instance
         self.__content_type_uid = content_type_uid
         self.local_param = {}
+        self.logger = logger or logging.getLogger(__name__)
 
     def entry(self, entry_uid: str):
         r"""

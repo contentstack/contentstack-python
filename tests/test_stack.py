@@ -1,7 +1,10 @@
 import unittest
 import config
 import contentstack
+import logging
+import io
 from contentstack.stack import ContentstackRegion
+from contentstack.stack import Stack
 
 API_KEY = config.APIKEY
 DELIVERY_TOKEN = config.DELIVERYTOKEN
@@ -183,3 +186,22 @@ class TestStack(unittest.TestCase):
         stack = contentstack.Stack(
             config.APIKEY, config.DELIVERYTOKEN, config.ENVIRONMENT, early_access=["taxonomy", "teams"])
         self.assertEqual(self.early_access, stack.get_early_access)
+        
+    def test_stack_with_custom_logger(self):
+        log_stream = io.StringIO()
+        custom_logger = logging.getLogger("contentstack.custom.test_logger")
+        custom_logger.setLevel(logging.INFO)
+
+        if custom_logger.hasHandlers():
+            custom_logger.handlers.clear()
+
+        handler = logging.StreamHandler(log_stream)
+        formatter = logging.Formatter('%(levelname)s - %(name)s - %(message)s')
+        handler.setFormatter(formatter)
+        custom_logger.addHandler(handler)
+        Stack("api_key", "delivery_token", "dev", logger=custom_logger)
+        custom_logger.info("INFO - contentstack.custom.test_logger - Test log entry")
+        handler.flush()
+        logs = log_stream.getvalue()
+        print("\nCaptured Logs:\n", logs)
+        self.assertIn("INFO - contentstack.custom.test_logger - Test log entry", logs)

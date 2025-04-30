@@ -7,13 +7,10 @@ These files can be attached and used in multiple entries.
 import logging
 from urllib import parse
 
-log = logging.getLogger(__name__)
-
-
 class Asset:
     r"""`Asset` refer to all the media files (images, videos, PDFs, audio files, and so on)."""
 
-    def __init__(self, http_instance, uid=None):
+    def __init__(self, http_instance, uid=None, logger=None):
         self.http_instance = http_instance
         self.asset_params = {}
         self.__uid = uid
@@ -22,6 +19,7 @@ class Asset:
         self.base_url = f'{self.http_instance.endpoint}/assets/{self.__uid}'
         if 'environment' in self.http_instance.headers:
             self.asset_params['environment'] = self.http_instance.headers['environment']
+        self.logger = logger or logging.getLogger(__name__)
 
     def environment(self, environment):
         r"""Provide the name of the environment if you wish to retrieve the assets published

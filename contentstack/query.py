@@ -12,8 +12,6 @@ from contentstack.basequery import BaseQuery
 from contentstack.deep_merge_lp import DeepMergeMixin
 from contentstack.entryqueryable import EntryQueryable
 
-log = logging.getLogger(__name__)
-
 
 class QueryType(enum.Enum):
     """
@@ -40,7 +38,7 @@ class Query(BaseQuery, EntryQueryable):
             >>> result = query.locale('locale-code').excepts('field_uid').limit(4).skip(5).find()
     """
 
-    def __init__(self, http_instance, content_type_uid):
+    def __init__(self, http_instance, content_type_uid, logger=None):
         super().__init__()
         EntryQueryable.__init__(self)
         self.content_type_uid = content_type_uid
@@ -50,6 +48,7 @@ class Query(BaseQuery, EntryQueryable):
                 'You are not allowed here without content_type_uid')
         self.base_url = f'{self.http_instance.endpoint}/content_types/{self.content_type_uid}/entries'
         self.base_url = self.__get_base_url()
+        self.logger = logger or logging.getLogger(__name__)
 
     def __get_base_url(self, endpoint=''):
         if endpoint is not None and endpoint.strip(): # .strip() removes leading/trailing whitespace

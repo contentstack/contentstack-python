@@ -9,9 +9,6 @@ from requests.adapters import HTTPAdapter
 import contentstack
 from contentstack.controller import get_request
 
-log = logging.getLogger(__name__)
-
-
 def __get_os_platform():
     os_platform = platform.system()
     if os_platform == 'Darwin':
