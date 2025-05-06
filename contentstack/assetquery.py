@@ -9,15 +9,12 @@ import logging
 from contentstack.basequery import BaseQuery
 from contentstack.utility import Utils
 
-log = logging.getLogger(__name__)
-
-
 class AssetQuery(BaseQuery):
     """
     This call fetches the list of all the assets of a particular stack.
     """
 
-    def __init__(self, http_instance):
+    def __init__(self, http_instance, logger=None):
         super().__init__()
         self.http_instance = http_instance
         self.asset_query_params = {}
@@ -25,6 +22,7 @@ class AssetQuery(BaseQuery):
         if "environment" in self.http_instance.headers:
             env = self.http_instance.headers["environment"]
             self.base_url = f"{self.base_url}?environment={env}"
+        self.logger = logger or logging.getLogger(__name__)
 
     def environment(self, environment):
         r"""Provide the name of the environment if you wish to retrieve the assets published
