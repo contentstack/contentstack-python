@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## _v2.0.1_
+
+### **Date: 12-MAY-2025**
+
+- Setuptools package version bump
+
 ## _v2.0.0_
 
 ### **Date: 28-APRIL-2025**
