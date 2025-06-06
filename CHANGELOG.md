@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## _v2.1.0_
+
+### **Date: 02-June-2025**
+
+- Global fields support added.
+
 ## _v2.0.1_
 
 ### **Date: 12-MAY-2025**

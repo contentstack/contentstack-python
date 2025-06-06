@@ -6,6 +6,7 @@ from urllib3.util import Retry
 from contentstack.asset import Asset
 from contentstack.assetquery import AssetQuery
 from contentstack.contenttype import ContentType
+from contentstack.globalfields import GlobalField
 from contentstack.https_connection import HTTPSConnection
 from contentstack.image_transform import ImageTransform
 
@@ -202,6 +203,15 @@ class Stack:
         :return: ContentType
         """
         return ContentType(self.http_instance, content_type_uid)
+    
+    def global_field(self, global_field_uid=None):
+        """
+        Global field defines the structure or schema of a page or a section
+        of your web or mobile property.
+        param global_field_uid:
+        :return: GlobalField
+        """
+        return GlobalField(self.http_instance, global_field_uid)
 
     def asset(self, uid):
         """
