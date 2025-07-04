@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## _v2.1.1_
+
+### **Date: 07-July-2025**
+
+- Fixed sanity testcases and removed hardcoded secrets.
+
 ## _v2.1.0_
 
 ### **Date: 02-June-2025**
