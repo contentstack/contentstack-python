@@ -137,22 +137,22 @@ class TestEntry(unittest.TestCase):
                 
     def test_23_content_type_variants(self):
         content_type = self.stack.content_type('faq')
-        entry = content_type.variants(VARIANT_UID)
+        entry = content_type.variants(VARIANT_UID).find()
         self.assertIn('variants', entry['entries'][0]['publish_details'])
         
     def test_24_entry_variants(self):
         content_type = self.stack.content_type('faq')
-        entry = content_type.entry(FAQ_UID).variants(VARIANT_UID)
+        entry = content_type.entry(FAQ_UID).variants(VARIANT_UID).fetch()
         self.assertIn('variants', entry['entry']['publish_details'])
         
     def test_25_content_type_variants_with_has_hash_variant(self):
         content_type = self.stack.content_type('faq')
-        entry = content_type.variants([VARIANT_UID])
+        entry = content_type.variants([VARIANT_UID]).find()
         self.assertIn('variants', entry['entries'][0]['publish_details'])
         
     def test_25_content_type_entry_variants_with_has_hash_variant(self):
         content_type = self.stack.content_type('faq').entry(FAQ_UID)
-        entry = content_type.variants([VARIANT_UID])
+        entry = content_type.variants([VARIANT_UID]).fetch()
         self.assertIn('variants', entry['entry']['publish_details'])
         
         
