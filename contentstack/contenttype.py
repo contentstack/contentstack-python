@@ -125,10 +125,11 @@ class ContentType:
         :param variant_uid: {str} -- variant_uid
         :return: Entry, so you can chain this call.
         """
+        headers = self.http_instance.headers.copy()  # Create a local copy of headers
         if isinstance(variant_uid, str):
-            self.http_instance.headers['x-cs-variant-uid'] = variant_uid
+            headers['x-cs-variant-uid'] = variant_uid
         elif isinstance(variant_uid, list):
-            self.http_instance.headers['x-cs-variant-uid'] = ','.join(variant_uid)
+            headers['x-cs-variant-uid'] = ','.join(variant_uid)
         
         if params is not None:
             self.local_param.update(params)
@@ -136,5 +137,5 @@ class ContentType:
         encoded_params = parse.urlencode(self.local_param)
         endpoint = self.http_instance.endpoint
         url = f'{endpoint}/content_types/{self.__content_type_uid}/entries?{encoded_params}'
-        result = self.http_instance.get(url)
+        result = self.http_instance.get(url, headers=headers)
         return result
