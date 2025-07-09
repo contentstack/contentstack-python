@@ -236,7 +236,7 @@ class Entry(EntryQueryable):
             entry_uid=self.entry_uid,
             variant_uid=variant_uid,
             params=params,
-            logger=None
+            logger=self.logger
         )
 
 

@@ -1,10 +1,9 @@
 import logging
 from urllib import parse
 
-from contentstack.deep_merge_lp import DeepMergeMixin
 from contentstack.entryqueryable import EntryQueryable
 
-class Variants(EntryQueryable, ):
+class Variants(EntryQueryable):
     """
     An entry is the actual piece of content that you want to publish.
     Entries can be created for one of the available content types.
@@ -57,7 +56,7 @@ class Variants(EntryQueryable, ):
     
     def fetch(self, params=None):
         """
-        This method is useful to fetch variant entries of a paticular content type and entries of the of the stack.
+        This method is useful to fetch variant entries of a particular content type and entries of the of the stack.
         :return:dict -- contentType response
         ------------------------------
         Example:
