@@ -222,6 +222,26 @@ class Entry(EntryQueryable):
             merged_response = DeepMergeMixin(entry_response, lp_entry).to_dict()  # Convert to dictionary
             return merged_response  # Now correctly returns a dictionary
         raise ValueError("Missing required keys in live_preview data")
+    
+    def variants(self, variant_uid: str | list[str], params: dict = None):
+        """
+        Fetches the variants of the entry
+        :param variant_uid: {str} -- variant_uid
+        :return: Entry, so you can chain this call.
+        """
+        if isinstance(variant_uid, str):
+            self.http_instance.headers['x-cs-variant-uid'] = variant_uid
+        elif isinstance(variant_uid, list):
+            self.http_instance.headers['x-cs-variant-uid'] = ','.join(variant_uid)
+        
+        if params is not None:
+            self.entry_param.update(params)
+        encoded_params = parse.urlencode(self.entry_param)
+        endpoint = self.http_instance.endpoint
+        url = f'{endpoint}/content_types/{self.content_type_id}/entries/{self.entry_uid}?{encoded_params}'
+        result = self.http_instance.get(url)
+        return result
+
 
 
 

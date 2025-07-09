@@ -118,3 +118,23 @@ class ContentType:
         url = f'{endpoint}/content_types?{encoded_params}'
         result = self.http_instance.get(url)
         return result
+    
+    def variants(self, variant_uid: str | list[str], params: dict = None):
+        """
+        Fetches the variants of the content type
+        :param variant_uid: {str} -- variant_uid
+        :return: Entry, so you can chain this call.
+        """
+        if isinstance(variant_uid, str):
+            self.http_instance.headers['x-cs-variant-uid'] = variant_uid
+        elif isinstance(variant_uid, list):
+            self.http_instance.headers['x-cs-variant-uid'] = ','.join(variant_uid)
+        
+        if params is not None:
+            self.local_param.update(params)
+        
+        encoded_params = parse.urlencode(self.local_param)
+        endpoint = self.http_instance.endpoint
+        url = f'{endpoint}/content_types/{self.__content_type_uid}/entries?{encoded_params}'
+        result = self.http_instance.get(url)
+        return result

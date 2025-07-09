@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## _v2.2.0_
+
+### **Date: 14-July-2025**
+
+- Variants Support Added.
+
 ## _v2.1.1_
 
 ### **Date: 07-July-2025**
