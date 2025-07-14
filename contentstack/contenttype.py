@@ -13,6 +13,7 @@ from urllib import parse
 
 from contentstack.entry import Entry
 from contentstack.query import Query
+from contentstack.variants import Variants
 
 class ContentType:
     """
@@ -118,3 +119,18 @@ class ContentType:
         url = f'{endpoint}/content_types?{encoded_params}'
         result = self.http_instance.get(url)
         return result
+    
+    def variants(self, variant_uid: str | list[str], params: dict = None):
+        """
+        Fetches the variants of the content type
+        :param variant_uid: {str} -- variant_uid
+        :return: Entry, so you can chain this call.
+        """
+        return Variants(
+            http_instance=self.http_instance,
+            content_type_uid=self.__content_type_uid,
+            entry_uid=None,
+            variant_uid=variant_uid,
+            params=params,
+            logger=None
+        )

@@ -4,9 +4,9 @@ import config
 import contentstack
 from contentstack.deep_merge_lp import DeepMergeMixin
 
-management_token = 'cs8743874323343u9'
-entry_uid = 'blt8743874323343u9'
-preview_token = 'abcdefgh1234567890'
+management_token = config.MANAGEMENT_TOKEN
+entry_uid = config.LIVE_PREVIEW_ENTRY_UID
+preview_token = config.PREVIEW_TOKEN
 
 _lp_query = {
     'live_preview': '#0#0#0#0#0#0#0#0#0#',
