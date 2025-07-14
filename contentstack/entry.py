@@ -8,6 +8,7 @@ from urllib import parse
 
 from contentstack.deep_merge_lp import DeepMergeMixin
 from contentstack.entryqueryable import EntryQueryable
+from contentstack.variants import Variants
 
 class Entry(EntryQueryable):
     """
@@ -222,6 +223,22 @@ class Entry(EntryQueryable):
             merged_response = DeepMergeMixin(entry_response, lp_entry).to_dict()  # Convert to dictionary
             return merged_response  # Now correctly returns a dictionary
         raise ValueError("Missing required keys in live_preview data")
+    
+    def variants(self, variant_uid: str | list[str], params: dict = None):
+        """
+        Fetches the variants of the entry
+        :param variant_uid: {str} -- variant_uid
+        :return: Entry, so you can chain this call.
+        """
+        return Variants(
+            http_instance=self.http_instance,
+            content_type_uid=self.content_type_id,
+            entry_uid=self.entry_uid,
+            variant_uid=variant_uid,
+            params=params,
+            logger=self.logger
+        )
+
 
 
 
