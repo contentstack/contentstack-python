@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## _v2.3.0_
+
+### **Date: 21-July-2025**
+
+- Taxonomy Support Added.
+
 ## _v2.2.0_
 
 ### **Date: 14-July-2025**
