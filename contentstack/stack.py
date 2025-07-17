@@ -6,6 +6,7 @@ from urllib3.util import Retry
 from contentstack.asset import Asset
 from contentstack.assetquery import AssetQuery
 from contentstack.contenttype import ContentType
+from contentstack.taxonomy import Taxonomy
 from contentstack.globalfields import GlobalField
 from contentstack.https_connection import HTTPSConnection
 from contentstack.image_transform import ImageTransform
@@ -203,6 +204,14 @@ class Stack:
         :return: ContentType
         """
         return ContentType(self.http_instance, content_type_uid)
+    
+    def taxonomy(self):
+        """
+        taxonomy defines the structure or schema of a page or a section
+        of your web or mobile property.
+        :return: taxonomy
+        """
+        return Taxonomy(self.http_instance)
     
     def global_field(self, global_field_uid=None):
         """

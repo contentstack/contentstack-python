@@ -16,6 +16,7 @@ from .test_global_fields import TestGlobalFieldInit
 from .test_early_fetch import TestGlobalFieldFetch
 from .test_early_find import TestGlobalFieldFind
 from .test_live_preview import TestLivePreviewConfig
+from .test_taxonomies import TestTaxonomyAPI
 
 
 def all_tests():
@@ -27,6 +28,7 @@ def all_tests():
     test_module_globalFields = TestLoader().loadTestsFromName(TestGlobalFieldInit)
     test_module_globalFields_fetch = TestLoader().loadTestsFromName(TestGlobalFieldFetch)
     test_module_globalFields_find = TestLoader().loadTestsFromName(TestGlobalFieldFind)
+    test_module_taxonomies = TestLoader().loadTestsFromTestCase(TestTaxonomyAPI)
     TestSuite([
         test_module_stack,
         test_module_asset,
@@ -35,5 +37,6 @@ def all_tests():
         test_module_live_preview,
         test_module_globalFields,
         test_module_globalFields_fetch,
-        test_module_globalFields_find
+        test_module_globalFields_find,
+        test_module_taxonomies
     ])
