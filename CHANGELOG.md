@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## _v2.4.0_
+
+### **Date: 01-September-2025**
+
+- AWS AU and GCP EU region support added.
+
 ## _v2.3.0_
 
 ### **Date: 21-July-2025**
