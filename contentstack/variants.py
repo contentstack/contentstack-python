@@ -1,5 +1,6 @@
 import logging
 from urllib import parse
+from contentstack.error_messages import ErrorMessages
 
 from contentstack.entryqueryable import EntryQueryable
 
@@ -74,7 +75,7 @@ class Variants(EntryQueryable):
         :return: Entry, so you can chain this call.
         """
         if self.entry_uid is None:
-            raise ValueError("entry_uid is required")
+            raise ValueError(ErrorMessages.ENTRY_UID_REQUIRED)
         else:
             headers = self.http_instance.headers.copy()  # Create a local copy of headers
             if isinstance(self.variant_uid, str):

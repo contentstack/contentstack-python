@@ -6,6 +6,7 @@ import enum
 import json
 import logging
 import warnings
+from contentstack.error_messages import ErrorMessages
 from urllib import parse
 
 from contentstack.basequery import BaseQuery
@@ -44,8 +45,7 @@ class Query(BaseQuery, EntryQueryable):
         self.content_type_uid = content_type_uid
         self.http_instance = http_instance
         if self.content_type_uid is None:
-            raise PermissionError(
-                'You are not allowed here without content_type_uid')
+            raise PermissionError(ErrorMessages.CONTENT_TYPE_UID_REQUIRED)
         self.base_url = f'{self.http_instance.endpoint}/content_types/{self.content_type_uid}/entries'
         self.base_url = self.__get_base_url()
         self.logger = logger or logging.getLogger(__name__)
@@ -54,8 +54,7 @@ class Query(BaseQuery, EntryQueryable):
         if endpoint is not None and endpoint.strip(): # .strip() removes leading/trailing whitespace
             self.http_instance.endpoint = endpoint
         if None in (self.http_instance, self.content_type_uid):
-            raise KeyError(
-                'Provide valid http_instance, content_type_uid or entry_uid')
+            raise KeyError(ErrorMessages.INVALID_KEY_OR_VALUE)
         url = f'{self.http_instance.endpoint}/content_types/{self.content_type_uid}/entries'
 
         return url
@@ -138,7 +137,7 @@ class Query(BaseQuery, EntryQueryable):
             >>> result = query.find()
         -------------------------------------
         """
-        warnings.warn('deprecated in 1.7.0, Use regex function instead')
+        warnings.warn(ErrorMessages.DEPRECATED_SEARCH)
         if value is not None:
             self.query_params["typeahead"] = value
         return self
@@ -170,7 +169,7 @@ class Query(BaseQuery, EntryQueryable):
             self.query_params["query"] = {
                 key: {"$in_query": query_object.parameters}}
         else:
-            raise ValueError('Invalid Key or Value provided')
+            raise ValueError(ErrorMessages.INVALID_KEY_OR_VALUE)
         return self
 
     def where_not_in(self, key, query_object):
@@ -200,7 +199,7 @@ class Query(BaseQuery, EntryQueryable):
             self.query_params["query"] = {
                 key: {"$nin_query": query_object.parameters}}
         else:
-            raise ValueError('Invalid Key or Value provided')
+            raise ValueError(ErrorMessages.INVALID_KEY_OR_VALUE)
         return self
 
     def include_fallback(self):
@@ -330,14 +329,14 @@ class Query(BaseQuery, EntryQueryable):
             try:
                 response = json.loads(response)  # Convert JSON string to dictionary
             except json.JSONDecodeError as e:
-                print(f"JSON decode error: {e}")
+                print(ErrorMessages.INVALID_JSON.format(error=str(e)))
                 return {"error": "Invalid JSON response"}  # Return an error dictionary
 
         if self.http_instance.live_preview is not None and 'errors' not in response:
             if 'entries' in response:
                 self.http_instance.live_preview['entry_response'] = response['entries'][0]  # Get first entry
             else:
-                print(f"Error: 'entries' key missing in response: {response}")
+                print(ErrorMessages.MISSING_ENTRIES_KEY)
                 return {"error": "'entries' key missing in response"}
             return self._merged_response()
         return response
@@ -356,7 +355,7 @@ class Query(BaseQuery, EntryQueryable):
                 if 'entry' in lp_resp:
                     self.http_instance.live_preview['lp_response'] = {'entry': lp_resp['entry']} # Extract entry
                 else:
-                    print(f"Warning: Missing 'entry' key in lp_response: {lp_resp}")
+                    print(ErrorMessages.MISSING_ENTRY_KEY)
             return None
         return None
 
@@ -368,4 +367,4 @@ class Query(BaseQuery, EntryQueryable):
             merged_response = DeepMergeMixin(entry_response, lp_response)
             return merged_response  # Return the merged dictionary
 
-        raise ValueError("Missing required keys in live_preview data")
+        raise ValueError(ErrorMessages.MISSING_LIVE_PREVIEW_KEYS)
