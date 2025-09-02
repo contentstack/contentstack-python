@@ -61,3 +61,7 @@ tomlkit~=0.13.2
 urllib3==2.5.0
 exceptiongroup~=1.2.2
 iniconfig~=2.0.0
+pytest-cov>=4.0.0
+pytest-html>=3.0.0
+black>=23.0.0
+flake8>=6.0.0

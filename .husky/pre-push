@@ -1,0 +1,34 @@
+#!/usr/bin/env sh
+
+echo "🚀 Running pre-push checks..."
+
+# Activate virtual environment if it exists
+if [ -d "venv" ]; then
+    echo "🔧 Activating virtual environment..."
+    source venv/bin/activate
+fi
+
+# Run tests to ensure code quality
+echo "🧪 Running tests..."
+if ! pytest --html=tests/report/test-report.html; then
+    echo "❌ Tests failed. Please fix before pushing."
+    exit 1
+fi
+
+# Run coverage check
+echo "📊 Checking test coverage..."
+if ! pytest --cov=contentstack --cov-report=term-missing; then
+    echo "❌ Coverage check failed. Please improve test coverage."
+    exit 1
+fi
+
+# Run security scan on dependencies (optional)
+if [ -n "$SNYK_TOKEN" ]; then
+    echo "🔍 Running comprehensive Snyk scan..."
+    if ! snyk test --severity-threshold=high; then
+        echo "❌ High severity vulnerabilities found. Please fix before pushing."
+        exit 1
+    fi
+fi
+
+echo "✅ All pre-push checks passed!"
