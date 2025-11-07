@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## _v2.4.1_
+
+### **Date: 10-November-2025**
+
+- Improved Error messages. 
+
 ## _v2.4.0_
 
 ### **Date: 01-September-2025**
