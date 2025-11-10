@@ -7,6 +7,7 @@ Copyright 2019 Contentstack. All rights reserved.
 import json
 import logging
 from urllib.parse import urlencode
+from contentstack.error_messages import ErrorMessages
 
 
 def setup_logging(logging_type=logging.INFO, filename='app.log'):
@@ -65,7 +66,7 @@ class Utils:
         :return: Encoded URL query string
         """
         if not isinstance(params, dict):
-            raise ValueError("params must be a dictionary")
+            raise ValueError(ErrorMessages.INVALID_PARAMS_TYPE)
         return urlencode(params, doseq=True)
 
     @staticmethod
@@ -79,7 +80,7 @@ class Utils:
         :return: Complete URL
         """
         if not isinstance(base_url, str) or not isinstance(params, dict):
-            raise ValueError("base_url must be a string and params must be a dictionary")
+            raise ValueError(ErrorMessages.INVALID_URL_PARAMS)
 
         if 'query' in params and not skip_encoding:
             params["query"] = json.dumps(params["query"], separators=(',', ':'))

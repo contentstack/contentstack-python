@@ -1,5 +1,6 @@
 import enum
 import logging
+from contentstack.error_messages import ErrorMessages
 
 class QueryOperation(enum.Enum):
     """
@@ -137,8 +138,10 @@ class BaseQuery:
 
         -----------------------------------
         """
-        if None in (key, value):
-            raise KeyError('Invalid key or value')
+        if key is None:
+            raise KeyError(ErrorMessages.INVALID_KEY)
+        if value is None:
+            raise KeyError(ErrorMessages.INVALID_VALUE)
         self.query_params[key] = str(value)
         return self
 
@@ -164,8 +167,10 @@ class BaseQuery:
         Returns:
             self-- Class instance, So that method chaining can be performed
         """
-        if None in (key, value):
-            raise KeyError('Invalid key or value')
+        if key is None:
+            raise KeyError(ErrorMessages.INVALID_KEY)
+        if value is None:
+            raise KeyError(ErrorMessages.INVALID_VALUE)
         self.parameters[key] = str(value)
         return self
 
@@ -186,7 +191,7 @@ class BaseQuery:
         ----------------------------------
         """
         if key is None:
-            raise ValueError('Kindly provide valid key')
+            raise ValueError(ErrorMessages.INVALID_KEY)
         if key in self.query_params:
             self.query_params.pop(key, None)
         return self

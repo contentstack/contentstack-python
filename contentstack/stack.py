@@ -2,6 +2,7 @@ import enum
 import logging
 from urllib import parse
 from urllib3.util import Retry
+from contentstack.error_messages import ErrorMessages
 
 from contentstack.asset import Asset
 from contentstack.assetquery import AssetQuery
@@ -112,17 +113,11 @@ class Stack:
 
     def _validate_stack(self):
         if self.api_key is None or self.api_key == '':
-            raise PermissionError(
-                'You are not permitted to the stack without valid APIKey'
-            )
+            raise PermissionError(ErrorMessages.INVALID_API_KEY)
         if self.delivery_token is None or self.delivery_token == "":
-            raise PermissionError(
-                'You are not permitted to the stack without valid Delivery Token'
-            )
+            raise PermissionError(ErrorMessages.INVALID_DELIVERY_TOKEN)
         if self.environment is None or self.environment == "":
-            raise PermissionError(
-                'You are not permitted to the stack without valid Environment'
-            )
+            raise PermissionError(ErrorMessages.INVALID_ENVIRONMENT_TOKEN)
 
         if self.region.value == 'eu' and self.host == DEFAULT_HOST:
             self.host = 'eu-cdn.contentstack.com'
@@ -244,7 +239,7 @@ class Stack:
         -----------------------------
         """
         if uid is None or not isinstance(uid, str):
-            raise KeyError('Please provide a valid uid')
+            raise KeyError(ErrorMessages.INVALID_UID)
         return Asset(self.http_instance, uid=uid)
 
     def asset_query(self):

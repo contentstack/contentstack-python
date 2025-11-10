@@ -10,6 +10,7 @@ content type.
 import json
 import logging
 from urllib import parse
+from contentstack.error_messages import ErrorMessages
 
 from contentstack.entry import Entry
 from contentstack.query import Query
@@ -46,11 +47,9 @@ class ContentType:
         --------------------------------
         """
         if self.__content_type_uid is None:
-            raise PermissionError('Please provide valid content_type_uid')
+            raise PermissionError(ErrorMessages.INVALID_CONTENT_TYPE_UID)
         if entry_uid is None:
-            raise PermissionError(json.dumps({
-                "message": 'Please provide valid entry uid',
-                "message_detail": 'Entry UID can not be None'}))
+            raise PermissionError(ErrorMessages.INVALID_UID)
         entry = Entry(self.http_instance,
                       self.__content_type_uid, entry_uid=entry_uid)
         return entry
@@ -69,7 +68,7 @@ class ContentType:
         ------------------------------
         """
         if self.__content_type_uid is None:
-            raise PermissionError('Kindly provide content_type_uid')
+            raise PermissionError(ErrorMessages.CONTENT_TYPE_UID_REQUIRED)
         return Query(self.http_instance, self.__content_type_uid)
 
     def fetch(self):
@@ -87,8 +86,7 @@ class ContentType:
         ------------------------------
         """
         if self.__content_type_uid is None:
-            raise KeyError(
-                'content_type_uid can not be None to fetch contenttype')
+            raise KeyError(ErrorMessages.CONTENT_TYPE_UID_REQUIRED)
         self.local_param['environment'] = self.http_instance.headers['environment']
         uri = f'{self.http_instance.endpoint}/content_types/{self.__content_type_uid}'
         encoded_params = parse.urlencode(self.local_param)
