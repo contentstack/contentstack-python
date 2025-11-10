@@ -1,8 +1,10 @@
+from contentstack.error_messages import ErrorMessages
+
 class DeepMergeMixin:
 
     def __init__(self, entry_response, lp_response):
         if not isinstance(entry_response, list) or not isinstance(lp_response, list):
-            raise TypeError("Both entry_response and lp_response must be lists of dictionaries")
+            raise TypeError(ErrorMessages.INVALID_RESPONSE_TYPE)
 
         self.entry_response = entry_response
         self.lp_response = lp_response

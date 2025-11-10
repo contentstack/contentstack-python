@@ -91,7 +91,7 @@ class TestEntry(unittest.TestCase):
             self.assertEqual(None, result['uid'])
         except KeyError as e:
             if hasattr(e, 'message'):
-                self.assertEqual("Invalid field_UID provided", e.args[0])
+                self.assertEqual("Invalid field UID. Provide a valid UID and try again.", e.args[0])
 
     def test_entry_queryable_excepts(self):
         try:
@@ -100,7 +100,7 @@ class TestEntry(unittest.TestCase):
             self.assertEqual(None, result['uid'])
         except KeyError as e:
             if hasattr(e, 'message'):
-                self.assertEqual("Invalid field_UID provided", e.args[0])
+                self.assertEqual("Invalid field UID. Provide a valid UID and try again.", e.args[0])
 
     def test_16_entry_queryable_include_content_type(self):
         entry = self.stack.content_type('faq').entry(FAQ_UID).include_content_type()

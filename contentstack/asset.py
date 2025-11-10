@@ -6,6 +6,7 @@ These files can be attached and used in multiple entries.
 
 import logging
 from urllib import parse
+from contentstack.error_messages import ErrorMessages
 
 class Asset:
     r"""`Asset` refer to all the media files (images, videos, PDFs, audio files, and so on)."""
@@ -15,7 +16,7 @@ class Asset:
         self.asset_params = {}
         self.__uid = uid
         if self.__uid is None or self.__uid.strip() == 0:
-            raise KeyError('Please provide valid uid')
+            raise KeyError(ErrorMessages.INVALID_UID)
         self.base_url = f'{self.http_instance.endpoint}/assets/{self.__uid}'
         if 'environment' in self.http_instance.headers:
             self.asset_params['environment'] = self.http_instance.headers['environment']
@@ -68,7 +69,7 @@ class Asset:
         -----------------------------
         """
         if None in (key, value) or not isinstance(key, str):
-            raise KeyError('Kindly provide valid params')
+            raise KeyError(ErrorMessages.INVALID_PARAMS)
         self.asset_params[key] = value
         return self
 
