@@ -17,6 +17,7 @@ class Asset:
         self.__uid = uid
         if self.__uid is None or self.__uid.strip() == 0:
             raise KeyError(ErrorMessages.INVALID_UID)
+        self.uid = uid
         self.base_url = f'{self.http_instance.endpoint}/assets/{self.__uid}'
         if 'environment' in self.http_instance.headers:
             self.asset_params['environment'] = self.http_instance.headers['environment']
