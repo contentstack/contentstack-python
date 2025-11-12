@@ -3,6 +3,7 @@ EntryQueryable class contains common functions
 that is used as parents class for the query and entry classes
 """
 import logging
+from contentstack.error_messages import ErrorMessages
 
 class EntryQueryable:
     """
@@ -55,7 +56,7 @@ class EntryQueryable:
             if isinstance(field_uid, str):
                 self.entry_queryable_param['only[BASE][]'] = field_uid
             else:
-                raise KeyError("Invalid field_uid provided")
+                raise KeyError(ErrorMessages.INVALID_FIELD_UID)
         return self
 
     def excepts(self, field_uid: str):
@@ -69,7 +70,7 @@ class EntryQueryable:
             if isinstance(field_uid, str):
                 self.entry_queryable_param['except[BASE][]'] = field_uid
             else:
-                raise KeyError("Invalid field_uid provided")
+                raise KeyError(ErrorMessages.INVALID_FIELD_UID)
         return self
 
     def include_reference(self, field_uid):

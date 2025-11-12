@@ -102,14 +102,14 @@ class TestAsset(unittest.TestCase):
         try:
             self.asset = self.stack.asset(None)
         except Exception as inst:
-            self.assertEqual('Please provide a valid uid', inst.args[0])
+            self.assertEqual('Invalid UID. Provide a valid UID and try again.', inst.args[0])
 
     def test_072_check_none_coverage_test(self):
         try:
             self.asset = self.stack.asset(uid=ASSET_UID)
             self.asset.params(2, 'value')
         except Exception as inst:
-            self.assertEqual('Kindly provide valid params', inst.args[0])
+            self.assertEqual('Invalid parameters. Provide valid parameters and try again.', inst.args[0])
 
     def test_08_support_include_fallback(self):
         self.asset = self.stack.asset(uid=ASSET_UID)

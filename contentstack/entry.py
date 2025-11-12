@@ -5,6 +5,7 @@ API Reference: https://www.contentstack.com/docs/developers/apis/content-deliver
 #min-similarity-lines=10
 import logging
 from urllib import parse
+from contentstack.error_messages import ErrorMessages
 
 from contentstack.deep_merge_lp import DeepMergeMixin
 from contentstack.entryqueryable import EntryQueryable
@@ -49,7 +50,7 @@ class Entry(EntryQueryable):
         ------------------------------
         """
         if environment is None:
-            raise KeyError('Kindly provide a valid environment')
+            raise KeyError(ErrorMessages.INVALID_ENVIRONMENT)
         self.http_instance.headers['environment'] = environment
         return self
 
@@ -72,7 +73,7 @@ class Entry(EntryQueryable):
         ------------------------------
         """
         if version is None:
-            raise KeyError('Kindly provide a valid version')
+            raise KeyError(ErrorMessages.INVALID_VERSION)
         self.entry_param['version'] = version
         return self
 
@@ -94,7 +95,7 @@ class Entry(EntryQueryable):
         -----------------------------
         """
         if None in (key, value) and not isinstance(key, str):
-            raise ValueError('Kindly provide valid key and value arguments')
+            raise ValueError(ErrorMessages.INVALID_KEY_VALUE_ARGS)
         self.entry_param[key] = value
         return self
 
@@ -113,7 +114,7 @@ class Entry(EntryQueryable):
             >>> result = entry.fetch()
         ----------------------------
         """
-        print('Requesting fallback....')
+        print(ErrorMessages.REQUESTING_FALLBACK)
         self.entry_param['include_fallback'] = 'true'
         return self
 
@@ -157,8 +158,7 @@ class Entry(EntryQueryable):
         if endpoint is not None and endpoint.strip(): # .strip() removes leading/trailing whitespace
             self.http_instance.endpoint = endpoint
         if None in (self.http_instance, self.content_type_id, self.entry_uid):
-            raise KeyError(
-                'Provide valid http_instance, content_type_uid or entry_uid')
+            raise KeyError(ErrorMessages.INVALID_KEY_OR_VALUE)
         url = f'{self.http_instance.endpoint}/content_types/{self.content_type_id}/entries/{self.entry_uid}'
         return url
 
@@ -217,12 +217,12 @@ class Entry(EntryQueryable):
             if not isinstance(lp_entry, list):
                 lp_entry = [lp_entry]  # Wrap in a list if it's a dict
             if not all(isinstance(item, dict) for item in entry_response):
-                raise TypeError(f"entry_response must be a list of dictionaries. Got: {entry_response}")
+                raise TypeError(ErrorMessages.INVALID_ENTRY_RESPONSE)
             if not all(isinstance(item, dict) for item in lp_entry):
-                raise TypeError(f"lp_entry must be a list of dictionaries. Got: {lp_entry}")
+                raise TypeError(ErrorMessages.INVALID_LP_ENTRY)
             merged_response = DeepMergeMixin(entry_response, lp_entry).to_dict()  # Convert to dictionary
             return merged_response  # Now correctly returns a dictionary
-        raise ValueError("Missing required keys in live_preview data")
+        raise ValueError(ErrorMessages.MISSING_LIVE_PREVIEW_KEYS)
     
     def variants(self, variant_uid: str | list[str], params: dict = None):
         """
