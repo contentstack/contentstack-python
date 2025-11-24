@@ -118,3 +118,7 @@ venv.bak/
 .mypy_cache/
 .idea/
 .vscode/
+
+pipeline.yaml
+docs/
+test-results
