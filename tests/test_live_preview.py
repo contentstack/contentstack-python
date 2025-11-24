@@ -37,7 +37,7 @@ API_KEY = config.API_KEY
 DELIVERY_TOKEN = config.DELIVERY_TOKEN
 ENVIRONMENT = config.ENVIRONMENT
 HOST = config.HOST
-ENTRY_UID = config.API_KEY
+ENTRY_UID = config.COMPLEX_ENTRY_UID
 
 class TestLivePreviewConfig(unittest.TestCase):
 
@@ -56,7 +56,7 @@ class TestLivePreviewConfig(unittest.TestCase):
                 'host': 'api.contentstack.io',
                 'management_token': 'string987654321'
             })
-        self.stack.content_type('product').entry(entry_uid)
+        self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID).entry(entry_uid)
         self.assertEqual(3, len(self.stack.get_live_preview))
         self.assertFalse(self.stack.get_live_preview['enable'])
         self.assertTrue(self.stack.get_live_preview['management_token'])
@@ -127,7 +127,7 @@ class TestLivePreviewConfig(unittest.TestCase):
     def test_07_branching(self):
         stack = contentstack.Stack(
             'api_key', 'delivery_token', 'environment', branch='dev_branch')
-        stack.content_type('product')
+        stack.content_type(config.COMPLEX_CONTENT_TYPE_UID)
         self.assertEqual('dev_branch', stack.get_branch)
 
     def test_08_live_preview_query_hash_included(self):
@@ -237,7 +237,7 @@ class TestLivePreviewObject(unittest.TestCase):
             'host': 'api.contentstack.io',
             'management_token': 'string987654321'
         })
-        self.stack.content_type('product').entry(entry_uid)
+        self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID).entry(entry_uid)
         self.assertEqual(3, len(self.stack.get_live_preview))
         self.assertFalse(self.stack.get_live_preview['enable'])
         self.assertTrue(self.stack.get_live_preview['management_token'])

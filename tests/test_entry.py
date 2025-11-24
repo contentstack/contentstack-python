@@ -49,35 +49,34 @@ class TestEntry(unittest.TestCase):
         self.assertEqual('param_value', entry.entry_param['param_key'])
 
     def test_07_entry_base_only(self):
-        entry = self.stack.content_type(COMPLEX_CONTENT_TYPE_UID).entry(COMPLEX_ENTRY_UID).only('field_UID')
+        entry = self.stack.content_type(COMPLEX_CONTENT_TYPE_UID).entry(COMPLEX_ENTRY_UID).only('title')
         entry.fetch()
         self.assertEqual({'environment': 'development',
-                          'only[BASE][]': 'field_UID'}, entry.entry_param)
+                          'only[BASE][]': 'title'}, entry.entry_param)
 
     def test_08_entry_base_excepts(self):
-        entry = self.stack.content_type(COMPLEX_CONTENT_TYPE_UID).entry(COMPLEX_ENTRY_UID).excepts('field_UID')
+        entry = self.stack.content_type(COMPLEX_CONTENT_TYPE_UID).entry(COMPLEX_ENTRY_UID).excepts('title')
         entry.fetch()
         self.assertEqual({'environment': 'development',
-                          'except[BASE][]': 'field_UID'}, entry.entry_param)
+                          'except[BASE][]': 'title'}, entry.entry_param)
 
     def test_10_entry_base_include_reference_only(self):
-        entry = self.stack.content_type(COMPLEX_CONTENT_TYPE_UID).entry(COMPLEX_ENTRY_UID).only('field1')
+        entry = self.stack.content_type(COMPLEX_CONTENT_TYPE_UID).entry(COMPLEX_ENTRY_UID).only('title')
         entry.fetch()
-        self.assertEqual({'environment': 'development', 'only[BASE][]': 'field1'},
+        self.assertEqual({'environment': 'development', 'only[BASE][]': 'title'},
                          entry.entry_param)
 
     def test_11_entry_base_include_reference_excepts(self):
-        entry = self.stack.content_type(COMPLEX_CONTENT_TYPE_UID).entry(COMPLEX_ENTRY_UID).excepts('field1')
+        entry = self.stack.content_type(COMPLEX_CONTENT_TYPE_UID).entry(COMPLEX_ENTRY_UID).excepts('title')
         entry.fetch()
-        self.assertEqual({'environment': 'development', 'except[BASE][]': 'field1'},
+        self.assertEqual({'environment': 'development', 'except[BASE][]': 'title'},
                          entry.entry_param)
 
     def test_12_entry_include_reference_github_issue(self):
         stack_for_products = contentstack.Stack(
-            "API_KEY", "DELIVERY_TOKEN", "ENVIRONMENT")
-        _entry = stack_for_products.content_type('product').entry("ENTRY_UI").include_reference(
-            ["categories",
-             "brand"])
+            config.API_KEY, config.DELIVERY_TOKEN, config.ENVIRONMENT, host=config.HOST)
+        _entry = stack_for_products.content_type(config.COMPLEX_CONTENT_TYPE_UID).entry(config.COMPLEX_ENTRY_UID).include_reference(
+            ["authors", "related_content"])
         response = _entry.fetch()
 
     def test_13_entry_support_include_fallback_unit_test(self):
@@ -182,8 +181,8 @@ class TestEntry(unittest.TestCase):
         """Test entry only with multiple field calls"""
         entry = (self.stack.content_type(COMPLEX_CONTENT_TYPE_UID)
                  .entry(COMPLEX_ENTRY_UID)
-                 .only('field1')
-                 .only('field2'))
+                 .only('title')
+                 .only('url'))
         entry.fetch()
         # Note: Multiple only calls may overwrite or append
         self.assertIn('only[BASE][]', entry.entry_param)
@@ -192,8 +191,8 @@ class TestEntry(unittest.TestCase):
         """Test entry excepts with multiple field calls"""
         entry = (self.stack.content_type(COMPLEX_CONTENT_TYPE_UID)
                  .entry(COMPLEX_ENTRY_UID)
-                 .excepts('field1')
-                 .excepts('field2'))
+                 .excepts('title')
+                 .excepts('url'))
         entry.fetch()
         # Note: Multiple excepts calls may overwrite or append
         self.assertIn('except[BASE][]', entry.entry_param)
@@ -291,8 +290,8 @@ class TestEntry(unittest.TestCase):
         """Test entry with both only and excepts"""
         entry = (self.stack.content_type(COMPLEX_CONTENT_TYPE_UID)
                  .entry(COMPLEX_ENTRY_UID)
-                 .only('field1')
-                 .excepts('field2'))
+                 .only('title')
+                 .excepts('url'))
         entry.fetch()
         self.assertIn('only[BASE][]', entry.entry_param)
         self.assertIn('except[BASE][]', entry.entry_param)
@@ -301,7 +300,7 @@ class TestEntry(unittest.TestCase):
         """Test entry include_reference with multiple fields"""
         entry = (self.stack.content_type(COMPLEX_CONTENT_TYPE_UID)
                  .entry(COMPLEX_ENTRY_UID)
-                 .include_reference(['field1', 'field2', 'field3']))
+                 .include_reference(['title', 'url', 'date']))
         result = entry.fetch()
         self.assertIsNotNone(result)
 
@@ -350,8 +349,8 @@ class TestEntry(unittest.TestCase):
         entry = (self.stack.content_type(COMPLEX_CONTENT_TYPE_UID)
                  .entry(COMPLEX_ENTRY_UID)
                  .locale('en-us')
-                 .only('field1')
-                 .excepts('field2')
+                 .only('title')
+                 .excepts('url')
                  .include_reference(['ref1', 'ref2'])
                  .include_content_type()
                  .include_reference_content_type_uid()

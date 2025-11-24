@@ -177,10 +177,10 @@ class TestStack(unittest.TestCase):
             self.assertEqual(0, result['total_count'])
 
     def test_21_content_type(self):
-        content_type = self.stack.content_type('application_theme')
+        content_type = self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID)
         result = content_type.fetch()
         if result is not None:
-            self.assertEqual('application_theme',
+            self.assertEqual(config.COMPLEX_CONTENT_TYPE_UID,
                              result['content_type']['uid'])
 
     def test_check_region(self):
@@ -266,9 +266,9 @@ class TestStack(unittest.TestCase):
 
     def test_28_content_type_method(self):
         """Test content_type method returns ContentType instance"""
-        content_type = self.stack.content_type('test_content_type')
+        content_type = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
         self.assertIsNotNone(content_type)
-        self.assertEqual('test_content_type', content_type._ContentType__content_type_uid)
+        self.assertEqual(config.SIMPLE_CONTENT_TYPE_UID, content_type._ContentType__content_type_uid)
 
     def test_29_content_type_with_none_uid(self):
         """Test content_type method with None UID"""

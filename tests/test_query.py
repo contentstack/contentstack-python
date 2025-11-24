@@ -16,10 +16,10 @@ class TestQuery(unittest.TestCase):
         self.const_value = 'Apple Inc.'
         self.stack = contentstack.Stack(
             API_KEY, DELIVERY_TOKEN, ENVIRONMENT, host=HOST)
-        self.query = self.stack.content_type('room').query()
-        self.query1 = self.stack.content_type('product').query()
-        self.query2 = self.stack.content_type('app_theme').query()
-        self.query3 = self.stack.content_type('product').query()
+        self.query = self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID).query()
+        self.query1 = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID).query()
+        self.query2 = self.stack.content_type(config.MEDIUM_CONTENT_TYPE_UID).query()
+        self.query3 = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID).query()
 
     def test_01_functional_or_in_query_type_common_in_query(self):
         query1 = self.query1.where(

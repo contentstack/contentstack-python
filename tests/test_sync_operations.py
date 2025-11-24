@@ -232,7 +232,7 @@ class SyncItemTypesTest(BaseIntegrationTest):
         
         result = TestHelpers.safe_api_call(
             "sync_entries_only",
-            lambda: self.stack.sync_init(type='entry_published')
+            lambda: self.stack.sync_init(publish_type='entry_published')
         )
         
         if result:
@@ -248,7 +248,7 @@ class SyncItemTypesTest(BaseIntegrationTest):
         
         result = TestHelpers.safe_api_call(
             "sync_assets_only",
-            lambda: self.stack.sync_init(type='asset_published')
+            lambda: self.stack.sync_init(publish_type='asset_published')
         )
         
         if result:
@@ -264,7 +264,7 @@ class SyncItemTypesTest(BaseIntegrationTest):
         
         result = TestHelpers.safe_api_call(
             "sync_deleted",
-            lambda: self.stack.sync_init(type='entry_deleted')
+            lambda: self.stack.sync_init(publish_type='entry_deleted')
         )
         
         if result:

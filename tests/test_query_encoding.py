@@ -6,6 +6,7 @@ Tests query handling with special characters, URL encoding, UTF-8, etc.
 import unittest
 from typing import Dict, Any, List, Optional
 import config
+from contentstack.basequery import QueryOperation
 from tests.base_integration_test import BaseIntegrationTest
 from tests.utils.test_helpers import TestHelpers
 
@@ -26,7 +27,7 @@ class QueryEncodingBasicTest(BaseIntegrationTest):
             "query_with_spaces",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$regex': 'Sam Wilson'}})  # Space in search term
+            .where('title', QueryOperation.MATCHES, fields='Sam Wilson')  # Space in search term
             .find
         )
         
@@ -46,7 +47,7 @@ class QueryEncodingBasicTest(BaseIntegrationTest):
                 f"query_with_{char}",
                 self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
                 .query()
-                .where({'title': {'$regex': f'.*{char}.*'}})
+                .where('title', QueryOperation.MATCHES, fields=char)
                 .limit(5)
                 .find
             )
@@ -64,7 +65,7 @@ class QueryEncodingBasicTest(BaseIntegrationTest):
             "query_single_quotes",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$regex': ".*'.*"}})
+            .query({'title': {'$regex': ".*'.*"}})
             .limit(5)
             .find
         )
@@ -74,7 +75,7 @@ class QueryEncodingBasicTest(BaseIntegrationTest):
             "query_double_quotes",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$regex': '.*".*'}})
+            .where('title', QueryOperation.MATCHES, fields='.*".*')
             .limit(5)
             .find
         )
@@ -89,7 +90,7 @@ class QueryEncodingBasicTest(BaseIntegrationTest):
             "query_forward_slash",
             self.stack.content_type(config.MEDIUM_CONTENT_TYPE_UID)
             .query()
-            .where({'url': {'$regex': '/'}})  # URLs typically have slashes
+            .where('url', QueryOperation.MATCHES, fields='/')  # URLs typically have slashes
             .limit(5)
             .find
         )
@@ -106,7 +107,7 @@ class QueryEncodingBasicTest(BaseIntegrationTest):
             "query_backslash",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$regex': '.*'}})  # Backslash in regex
+            .where('title', QueryOperation.MATCHES, fields='.*')  # Backslash in regex
             .limit(5)
             .find
         )
@@ -135,7 +136,7 @@ class QueryEncodingUTF8Test(BaseIntegrationTest):
                 f"query_unicode_{unicode_str[:5]}",
                 self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
                 .query()
-                .where({'title': {'$regex': f'.*{unicode_str}.*'}})
+                .where('title', QueryOperation.MATCHES, fields=unicode_str)
                 .limit(3)
                 .find
             )
@@ -155,7 +156,7 @@ class QueryEncodingUTF8Test(BaseIntegrationTest):
                 f"query_emoji",
                 self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
                 .query()
-                .where({'title': {'$regex': f'.*{emoji}.*'}})
+                .where('title', QueryOperation.MATCHES, fields=emoji)
                 .limit(3)
                 .find
             )
@@ -174,7 +175,7 @@ class QueryEncodingUTF8Test(BaseIntegrationTest):
                 f"query_accent_{char}",
                 self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
                 .query()
-                .where({'title': {'$regex': f'.*{char}.*'}})
+                .where('title', QueryOperation.MATCHES, fields=char)
                 .limit(3)
                 .find
             )
@@ -190,7 +191,7 @@ class QueryEncodingUTF8Test(BaseIntegrationTest):
             "query_chinese",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$regex': '.*中文.*'}})
+            .where('title', QueryOperation.MATCHES, fields='.*中文.*')
             .limit(3)
             .find
         )
@@ -206,7 +207,7 @@ class QueryEncodingUTF8Test(BaseIntegrationTest):
             "query_arabic",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$regex': '.*العربية.*'}})
+            .where('title', QueryOperation.MATCHES, fields='.*العربية.*')
             .limit(3)
             .find
         )
@@ -232,7 +233,7 @@ class QueryEncodingURLTest(BaseIntegrationTest):
             "query_url_chars",
             self.stack.content_type(config.MEDIUM_CONTENT_TYPE_UID)
             .query()
-            .where({'url': {'$exists': True}})
+            .where('url', QueryOperation.EXISTS, fields=True)
             .limit(5)
             .find
         )
@@ -249,7 +250,7 @@ class QueryEncodingURLTest(BaseIntegrationTest):
             "query_percent_encoded",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$regex': '.*%20.*'}})  # %20 is space in URL encoding
+            .where('title', QueryOperation.MATCHES, fields='.*%20.*')  # %20 is space in URL encoding
             .limit(3)
             .find
         )
@@ -265,7 +266,7 @@ class QueryEncodingURLTest(BaseIntegrationTest):
             "query_plus_sign",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$regex': '.*\\+.*'}})
+            .where('title', QueryOperation.MATCHES, fields='.*\\+.*')
             .limit(3)
             .find
         )
@@ -281,7 +282,7 @@ class QueryEncodingURLTest(BaseIntegrationTest):
             "query_equals_sign",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$regex': '.*=.*'}})
+            .where('title', QueryOperation.MATCHES, fields='.*=.*')
             .limit(3)
             .find
         )
@@ -297,7 +298,7 @@ class QueryEncodingURLTest(BaseIntegrationTest):
             "query_ampersand",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$regex': '.*&.*'}})
+            .where('title', QueryOperation.MATCHES, fields='.*&.*')
             .limit(3)
             .find
         )
@@ -323,7 +324,7 @@ class QueryEncodingRegexTest(BaseIntegrationTest):
             "query_regex_chars",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$regex': '^.*$'}})  # Match any title
+            .where('title', QueryOperation.MATCHES, fields='^.*$')  # Match any title
             .limit(5)
             .find
         )
@@ -339,7 +340,7 @@ class QueryEncodingRegexTest(BaseIntegrationTest):
             "query_escaped_regex",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$regex': '\\w+'}})  # Word characters
+            .where('title', QueryOperation.MATCHES, fields='\\w+')  # Word characters
             .limit(5)
             .find
         )
@@ -355,7 +356,7 @@ class QueryEncodingRegexTest(BaseIntegrationTest):
             "query_case_insensitive",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$regex': '(?i)wilson'}})  # Case-insensitive
+            .where('title', QueryOperation.MATCHES, fields='(?i)wilson')  # Case-insensitive
             .limit(5)
             .find
         )
@@ -372,7 +373,7 @@ class QueryEncodingRegexTest(BaseIntegrationTest):
             "query_multiline_regex",
             self.stack.content_type(config.MEDIUM_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$regex': '^[A-Z].*'}})  # Starts with capital letter
+            .where('title', QueryOperation.MATCHES, fields='^[A-Z].*')  # Starts with capital letter
             .limit(5)
             .find
         )
@@ -389,7 +390,7 @@ class QueryEncodingRegexTest(BaseIntegrationTest):
             "query_word_boundary",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$regex': '\\b\\w+\\b'}})  # Word boundaries
+            .where('title', QueryOperation.MATCHES, fields='\\b\\w+\\b')  # Word boundaries
             .limit(5)
             .find
         )
@@ -414,7 +415,7 @@ class QueryEncodingEdgeCasesTest(BaseIntegrationTest):
             "query_null_char",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$exists': True}})
+            .where('title', QueryOperation.EXISTS, fields=True)
             .limit(3)
             .find
         )
@@ -432,7 +433,7 @@ class QueryEncodingEdgeCasesTest(BaseIntegrationTest):
             "query_long_string",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$regex': f'.*{long_string[:10]}.*'}})  # Use first 10 chars
+            .where('title', QueryOperation.MATCHES, fields=long_string[:10])  # Use first 10 chars
             .limit(3)
             .find
         )
@@ -451,7 +452,7 @@ class QueryEncodingEdgeCasesTest(BaseIntegrationTest):
                 f"query_html_entity",
                 self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
                 .query()
-                .where({'title': {'$regex': f'.*{entity}.*'}})
+                .where('title', QueryOperation.MATCHES, fields=entity)
                 .limit(3)
                 .find
             )
@@ -470,7 +471,7 @@ class QueryEncodingEdgeCasesTest(BaseIntegrationTest):
                 f"query_xml_char",
                 self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
                 .query()
-                .where({'title': {'$regex': f'.*\\{char}.*'}})
+                .query({'title': {'$regex': f'.*\\{char}.*'}})
                 .limit(3)
                 .find
             )
@@ -487,7 +488,7 @@ class QueryEncodingEdgeCasesTest(BaseIntegrationTest):
             "query_json_chars",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$exists': True}})
+            .where('title', QueryOperation.EXISTS, fields=True)
             .limit(3)
             .find
         )

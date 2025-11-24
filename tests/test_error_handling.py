@@ -6,6 +6,7 @@ Tests SDK error handling for various HTTP error codes and network failures
 import unittest
 from typing import Dict, Any, List, Optional
 import config
+from contentstack.basequery import QueryOperation
 from tests.base_integration_test import BaseIntegrationTest
 from tests.utils.test_helpers import TestHelpers
 
@@ -86,7 +87,7 @@ class Error400Test(BaseIntegrationTest):
             "query_invalid_operator",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$invalid_operator': 'test'}})
+            .where('title', QueryOperation.EQUALS, fields=None)  # Invalid: None value
             .find
         )
         
@@ -147,7 +148,7 @@ class Error422Test(BaseIntegrationTest):
             "query_malformed_where",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'': {'$eq': 'test'}})  # Empty field name
+            .where('', QueryOperation.EQUALS, fields='test')  # Empty field name - tests error handling
             .find
         )
         
@@ -352,11 +353,7 @@ class ExceptionHandlingTest(BaseIntegrationTest):
             "error_complex_query",
             self.stack.content_type('nonexistent_ct')
             .query()
-            .where({'field1': {'$eq': 'value1'}})
-            .query_operator('$and', [
-                {'field2': {'$gt': 10}},
-                {'field3': {'$exists': True}}
-            ])
+            .where('title', QueryOperation.EQUALS, fields='value1')
             .limit(10)
             .skip(5)
             .order_by_ascending('title')
