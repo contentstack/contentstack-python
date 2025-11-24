@@ -5,17 +5,18 @@ import contentstack
 from contentstack.deep_merge_lp import DeepMergeMixin
 
 management_token = config.MANAGEMENT_TOKEN
-entry_uid = config.LIVE_PREVIEW_ENTRY_UID
+entry_uid = config.SIMPLE_ENTRY_UID
+content_type_uid = config.SIMPLE_CONTENT_TYPE_UID
 preview_token = config.PREVIEW_TOKEN
 
 _lp_query = {
     'live_preview': '#0#0#0#0#0#0#0#0#0#',
-    'content_type_uid': 'product',
+    'content_type_uid': content_type_uid,
     'entry_uid': entry_uid
 }
 _lp_preview_timestamp_query = {
     'live_preview': '#0#0#0#0#0#0#0#0#0#',
-    'content_type_uid': 'product',
+    'content_type_uid': content_type_uid,
     'entry_uid': entry_uid,
     'preview_timestamp': '2025-03-07T12:00:00Z',
     'release_id': '123456789'
