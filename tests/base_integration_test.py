@@ -104,13 +104,14 @@ class BaseIntegrationTest(unittest.TestCase):
     
     # === ASSERTION HELPERS ===
     
-    def assert_has_results(self, response):
+    def assert_has_results(self, response, message="Expected results in response"):
         """
         Assert response has results
         If no results, logs warning but doesn't fail (graceful degradation)
         
         Args:
             response: API response
+            message: Optional custom message for logging
         
         Returns:
             bool: True if has results, False otherwise

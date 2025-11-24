@@ -20,7 +20,34 @@ class PerformanceAssertion:
         timer = PerformanceAssertion.start_timer()
         # ... operation ...
         elapsed = PerformanceAssertion.end_timer(timer, "fetch_operation")
+        
+        # Or use context manager:
+        with PerformanceAssertion.Timer("operation_name") as timer:
+            # ... operation ...
+            pass
+        print(f"Elapsed: {timer.elapsed_ms}ms")
     """
+    
+    # === TIMER CONTEXT MANAGER ===
+    
+    class Timer:
+        """Context manager for timing operations"""
+        def __init__(self, name: str):
+            self.name = name
+            self.start_time = None
+            self.end_time = None
+            self.elapsed_ms = None
+            self._logger = logging.getLogger(__name__)
+        
+        def __enter__(self):
+            self.start_time = time.perf_counter()
+            return self
+        
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            self.end_time = time.perf_counter()
+            self.elapsed_ms = (self.end_time - self.start_time) * 1000
+            self._logger.info(f"⏱️ {self.name}: {self.elapsed_ms:.2f}ms")
+            return False  # Don't suppress exceptions
     
     # === TIMING UTILITIES ===
     
