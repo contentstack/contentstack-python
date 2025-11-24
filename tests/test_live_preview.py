@@ -5,8 +5,8 @@ import contentstack
 from contentstack.deep_merge_lp import DeepMergeMixin
 
 management_token = config.MANAGEMENT_TOKEN
-entry_uid = config.SIMPLE_ENTRY_UID
-content_type_uid = config.SIMPLE_CONTENT_TYPE_UID
+entry_uid = config.COMPLEX_ENTRY_UID
+content_type_uid = config.COMPLEX_CONTENT_TYPE_UID
 preview_token = config.PREVIEW_TOKEN
 
 _lp_query = {
