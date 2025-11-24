@@ -7,8 +7,8 @@ from urllib3 import Retry
 from contentstack.stack import ContentstackRegion
 from contentstack.stack import Stack
 
-API_KEY = config.APIKEY
-DELIVERY_TOKEN = config.DELIVERYTOKEN
+API_KEY = config.API_KEY
+DELIVERY_TOKEN = config.DELIVERY_TOKEN
 ENVIRONMENT = config.ENVIRONMENT
 HOST = config.HOST
 
@@ -54,7 +54,7 @@ class TestStack(unittest.TestCase):
     def test_04_permission_error_api_key(self):
         try:
             stack_local = contentstack.Stack(
-                '', config.DELIVERYTOKEN, config.ENVIRONMENT)
+                '', config.DELIVERY_TOKEN, config.ENVIRONMENT)
             self.assertEqual(None, stack_local.api_key)
         except PermissionError as e:
             if hasattr(e, 'message'):
@@ -63,7 +63,7 @@ class TestStack(unittest.TestCase):
 
     def test_05_permission_error_delivery_token(self):
         try:
-            stack = contentstack.Stack(config.APIKEY, '', config.ENVIRONMENT)
+            stack = contentstack.Stack(config.API_KEY, '', config.ENVIRONMENT)
             self.assertEqual(None, stack.delivery_token)
         except PermissionError as e:
             if hasattr(e, 'message'):
@@ -73,7 +73,7 @@ class TestStack(unittest.TestCase):
     def test_05_permission_error_environment(self):
         try:
             stack = contentstack.Stack(
-                config.APIKEY, config.DELIVERYTOKEN, '')
+                config.API_KEY, config.DELIVERY_TOKEN, '')
             self.assertEqual(None, stack.delivery_token)
         except PermissionError as e:
             if hasattr(e, 'message'):
@@ -82,22 +82,22 @@ class TestStack(unittest.TestCase):
 
     def test_07_get_api_key(self):
         stack = contentstack.Stack(
-            config.APIKEY, config.DELIVERYTOKEN, config.ENVIRONMENT)
-        self.assertEqual(config.APIKEY, stack.get_api_key)
+            config.API_KEY, config.DELIVERY_TOKEN, config.ENVIRONMENT)
+        self.assertEqual(config.API_KEY, stack.get_api_key)
 
     def test_08_get_delivery_token(self):
         stack = contentstack.Stack(
-            config.APIKEY, config.DELIVERYTOKEN, config.ENVIRONMENT)
-        self.assertEqual(config.DELIVERYTOKEN, stack.get_delivery_token)
+            config.API_KEY, config.DELIVERY_TOKEN, config.ENVIRONMENT)
+        self.assertEqual(config.DELIVERY_TOKEN, stack.get_delivery_token)
 
     def test_09_get_environment(self):
         stack = contentstack.Stack(
-            config.APIKEY, config.DELIVERYTOKEN, config.ENVIRONMENT)
+            config.API_KEY, config.DELIVERY_TOKEN, config.ENVIRONMENT)
         self.assertEqual(config.ENVIRONMENT, stack.get_environment)
 
     def test_10_get_headers(self):
         stack = contentstack.Stack(
-            config.APIKEY, config.DELIVERYTOKEN, config.ENVIRONMENT)
+            config.API_KEY, config.DELIVERY_TOKEN, config.ENVIRONMENT)
         self.assertEqual(True, 'api_key' in stack.headers)
         self.assertEqual(True, 'access_token' in stack.get_headers)
         self.assertEqual(True, 'environment' in stack.get_headers)
@@ -186,19 +186,19 @@ class TestStack(unittest.TestCase):
     def test_check_region(self):
         """_summary_
         """
-        _stack = contentstack.Stack(config.APIKEY, config.DELIVERYTOKEN, config.ENVIRONMENT,
+        _stack = contentstack.Stack(config.API_KEY, config.DELIVERY_TOKEN, config.ENVIRONMENT,
                                     host=config.HOST, region=ContentstackRegion.AZURE_NA)
         var = _stack.region.value
         self.assertEqual('azure-na', var)
     
     def test_22_check_early_access_headers(self):
         stack = contentstack.Stack(
-            config.APIKEY, config.DELIVERYTOKEN, config.ENVIRONMENT, early_access=[])
+            config.API_KEY, config.DELIVERY_TOKEN, config.ENVIRONMENT, early_access=[])
         self.assertEqual(True, 'x-header-ea' in stack.get_headers)
 
     def test_23_get_early_access(self):
         stack = contentstack.Stack(
-            config.APIKEY, config.DELIVERYTOKEN, config.ENVIRONMENT, early_access=["taxonomy", "teams"])
+            config.API_KEY, config.DELIVERY_TOKEN, config.ENVIRONMENT, early_access=["taxonomy", "teams"])
         self.assertEqual(self.early_access, stack.get_early_access)
         
     def test_stack_with_custom_logger(self):

@@ -32,11 +32,11 @@ _lp_2_0 = {
     'host': 'rest-preview.contentstack.com'
 }
 
-API_KEY = config.APIKEY
-DELIVERY_TOKEN = config.DELIVERYTOKEN
+API_KEY = config.API_KEY
+DELIVERY_TOKEN = config.DELIVERY_TOKEN
 ENVIRONMENT = config.ENVIRONMENT
 HOST = config.HOST
-ENTRY_UID = config.APIKEY
+ENTRY_UID = config.API_KEY
 
 class TestLivePreviewConfig(unittest.TestCase):
 

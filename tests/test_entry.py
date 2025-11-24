@@ -3,8 +3,8 @@ import unittest
 import config
 import contentstack
 
-API_KEY = config.APIKEY
-DELIVERY_TOKEN = config.DELIVERYTOKEN
+API_KEY = config.API_KEY
+DELIVERY_TOKEN = config.DELIVERY_TOKEN
 ENVIRONMENT = config.ENVIRONMENT
 HOST = config.HOST
 FAQ_UID = config.FAQ_UID  # Add this in your config.py
