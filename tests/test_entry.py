@@ -10,6 +10,7 @@ HOST = config.HOST
 COMPLEX_ENTRY_UID = config.COMPLEX_ENTRY_UID
 COMPLEX_CONTENT_TYPE_UID = config.COMPLEX_CONTENT_TYPE_UID
 VARIANT_UID = config.VARIANT_UID
+VARIANT_ENTRY_UID = config.VARIANT_ENTRY_UID
 
 class TestEntry(unittest.TestCase):
 
@@ -156,7 +157,7 @@ class TestEntry(unittest.TestCase):
         
     def test_24_entry_variants(self):
         content_type = self.stack.content_type(COMPLEX_CONTENT_TYPE_UID)
-        entry = content_type.entry(COMPLEX_ENTRY_UID).variants(VARIANT_UID).fetch()
+        entry = content_type.entry(VARIANT_ENTRY_UID).variants(VARIANT_UID).fetch()
         # variant_uid is inside each publish_details array element
         publish_details = entry['entry'].get('publish_details', [])
         if isinstance(publish_details, list) and len(publish_details) > 0:
@@ -190,7 +191,7 @@ class TestEntry(unittest.TestCase):
         
     def test_26_content_type_entry_variants_with_list(self):
         """Test variants with list of variant UIDs"""
-        content_type = self.stack.content_type(COMPLEX_CONTENT_TYPE_UID).entry(COMPLEX_ENTRY_UID)
+        content_type = self.stack.content_type(COMPLEX_CONTENT_TYPE_UID).entry(VARIANT_ENTRY_UID)
         entry = content_type.variants([VARIANT_UID]).fetch()
         # variant_uid is inside each publish_details array element
         publish_details = entry['entry'].get('publish_details', [])

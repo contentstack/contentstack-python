@@ -31,7 +31,12 @@ class JSONRTEBasicTest(BaseIntegrationTest):
         
         result = TestHelpers.safe_api_call("fetch_json_rte", entry.fetch)
         
+        if result is None:
+            self.logger.error(f"❌ Fetch returned None for entry {config.COMPLEX_ENTRY_UID}")
+            self.skipTest("Entry fetch failed - API error")
+        
         if not self.assert_has_results(result):
+            self.logger.error(f"❌ Response structure: {list(result.keys()) if isinstance(result, dict) else type(result)}")
             self.skipTest("Entry not available")
         
         entry_data = result['entry']
