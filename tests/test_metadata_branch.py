@@ -6,6 +6,7 @@ Tests metadata inclusion, branch-specific queries, and branch switching
 import unittest
 from typing import Dict, Any, List, Optional
 import config
+from contentstack.basequery import QueryOperation
 from tests.base_integration_test import BaseIntegrationTest
 from tests.utils.test_helpers import TestHelpers
 
@@ -401,7 +402,7 @@ class MetadataFieldProjectionTest(BaseIntegrationTest):
             "metadata_only_fields",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .entry(config.SIMPLE_ENTRY_UID)
-            .only(['title', 'uid'])
+            .only('title').only('uid')
             .include_metadata()
             .fetch
         )
@@ -420,7 +421,7 @@ class MetadataFieldProjectionTest(BaseIntegrationTest):
             "metadata_except_fields",
             self.stack.content_type(config.MEDIUM_CONTENT_TYPE_UID)
             .entry(config.MEDIUM_ENTRY_UID)
-            .excepts(['body', 'content'])
+            .excepts('body').excepts('content')
             .include_metadata()
             .fetch
         )
@@ -439,7 +440,7 @@ class MetadataFieldProjectionTest(BaseIntegrationTest):
             "query_metadata_projection",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .only(['title', 'uid'])
+            .only('title').only('uid')
             .include_metadata()
             .limit(3)
             .find
@@ -555,10 +556,10 @@ class MetadataEdgeCasesTest(BaseIntegrationTest):
             "metadata_complex_query",
             self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$exists': True}})
+            .where('title', QueryOperation.EXISTS, True)
             .include_reference(['authors'])
             .include_metadata()
-            .only(['title', 'authors'])
+            .only('title').only('authors')
             .limit(3)
             .find
         )

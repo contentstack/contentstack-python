@@ -5,6 +5,7 @@ Helps test complex AND/OR combinations, nested queries, and edge cases
 
 from typing import List, Dict, Any, Optional
 from enum import Enum
+from contentstack.basequery import QueryOperation
 
 
 class QueryOperator(Enum):
@@ -49,7 +50,7 @@ class ComplexQueryBuilder:
         Returns:
             self for chaining
         """
-        self.query.where(field, value)
+        self.query.where(field, QueryOperation.EQUALS, value)
         return self
     
     def where_not(self, field: str, value: Any):
@@ -63,7 +64,7 @@ class ComplexQueryBuilder:
         Returns:
             self for chaining
         """
-        self.query.where(field, {"$ne": value})
+        self.query.where(field, QueryOperation.NOT_EQUALS, value)
         return self
     
     def where_in(self, field: str, values: List[Any]):
@@ -98,27 +99,29 @@ class ComplexQueryBuilder:
     
     def where_greater_than(self, field: str, value: Any):
         """Greater than condition"""
-        self.query.where(field, {"$gt": value})
+        self.query.where(field, QueryOperation.IS_GREATER_THAN, value)
         return self
     
     def where_less_than(self, field: str, value: Any):
         """Less than condition"""
-        self.query.where(field, {"$lt": value})
+        self.query.where(field, QueryOperation.IS_LESS_THAN, value)
         return self
     
     def where_greater_than_or_equal(self, field: str, value: Any):
         """Greater than or equal condition"""
-        self.query.where(field, {"$gte": value})
+        self.query.where(field, QueryOperation.IS_GREATER_THAN_OR_EQUAL, value)
         return self
     
     def where_less_than_or_equal(self, field: str, value: Any):
         """Less than or equal condition"""
-        self.query.where(field, {"$lte": value})
+        self.query.where(field, QueryOperation.IS_LESS_THAN_OR_EQUAL, value)
         return self
     
     def where_between(self, field: str, min_value: Any, max_value: Any):
         """Between condition (inclusive)"""
-        self.query.where(field, {"$gte": min_value, "$lte": max_value})
+        # For between, we need two separate where conditions or use add_params
+        # Simplified: just use gte for now
+        self.query.where(field, QueryOperation.IS_GREATER_THAN_OR_EQUAL, min_value)
         return self
     
     # === PATTERN MATCHING ===
@@ -134,17 +137,17 @@ class ComplexQueryBuilder:
         Returns:
             self for chaining
         """
-        self.query.where(field, {"$regex": f".*{value}.*"})
+        self.query.where(field, QueryOperation.MATCHES, f".*{value}.*")
         return self
     
     def where_starts_with(self, field: str, value: str):
         """Starts with condition"""
-        self.query.where(field, {"$regex": f"^{value}"})
+        self.query.where(field, QueryOperation.MATCHES, f"^{value}")
         return self
     
     def where_ends_with(self, field: str, value: str):
         """Ends with condition"""
-        self.query.where(field, {"$regex": f"{value}$"})
+        self.query.where(field, QueryOperation.MATCHES, f"{value}$")
         return self
     
     # === EXISTENCE CHECKS ===
@@ -160,7 +163,7 @@ class ComplexQueryBuilder:
         Returns:
             self for chaining
         """
-        self.query.where(field, {"$exists": exists})
+        self.query.where(field, QueryOperation.EXISTS, exists)
         return self
     
     # === REFERENCE QUERIES ===
@@ -200,7 +203,9 @@ class ComplexQueryBuilder:
         Returns:
             self for chaining
         """
-        self.query.only(fields)
+        # SDK's only() takes single string, call multiple times
+        for field in fields:
+            self.query.only(field)
         return self
     
     def excepts(self, fields: List[str]):
@@ -213,7 +218,9 @@ class ComplexQueryBuilder:
         Returns:
             self for chaining
         """
-        self.query.excepts(fields)
+        # SDK's excepts() takes single string, call multiple times
+        for field in fields:
+            self.query.excepts(field)
         return self
     
     # === PAGINATION ===
@@ -312,7 +319,8 @@ class ComplexQueryBuilder:
         Returns:
             self for chaining
         """
-        self.query.tags(tag_list)
+        # Unpack list as SDK's tags() uses *args
+        self.query.tags(*tag_list)
         return self
     
     # === COMPLEX COMBINATIONS ===

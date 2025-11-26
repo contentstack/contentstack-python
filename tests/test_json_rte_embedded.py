@@ -350,7 +350,7 @@ class JSONRTEEdgeCasesTest(BaseIntegrationTest):
         
         entry = self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID).entry(config.COMPLEX_ENTRY_UID)
         entry.include_embedded_items()
-        entry.only(['uid', 'title', 'content_block'])
+        entry.only('uid').only('title').only('content_block')
         
         result = TestHelpers.safe_api_call("json_rte_only_fields", entry.fetch)
         

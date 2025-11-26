@@ -456,7 +456,7 @@ class CacheInvalidationTest(BaseIntegrationTest):
             "projection_only_title",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .entry(config.SIMPLE_ENTRY_UID)
-            .only(['title'])
+            .only('title')
             .fetch
         )
         
@@ -465,7 +465,7 @@ class CacheInvalidationTest(BaseIntegrationTest):
             "projection_title_uid",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .entry(config.SIMPLE_ENTRY_UID)
-            .only(['title', 'uid'])
+            .only('title').only('uid')
             .fetch
         )
         

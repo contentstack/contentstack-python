@@ -6,6 +6,7 @@ Tests comprehensive only/except field combinations, nested fields, and edge case
 import unittest
 from typing import Dict, Any, List, Optional
 import config
+from contentstack.basequery import QueryOperation
 from tests.base_integration_test import BaseIntegrationTest
 from tests.utils.test_helpers import TestHelpers
 
@@ -26,7 +27,7 @@ class FieldProjectionOnlyTest(BaseIntegrationTest):
             "fetch_single_only",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .entry(config.SIMPLE_ENTRY_UID)
-            .only(['title'])
+            .only('title')
             .fetch
         )
         
@@ -44,7 +45,7 @@ class FieldProjectionOnlyTest(BaseIntegrationTest):
             "fetch_multiple_only",
             self.stack.content_type(config.MEDIUM_CONTENT_TYPE_UID)
             .entry(config.MEDIUM_ENTRY_UID)
-            .only(['title', 'url', 'date'])
+            .only('title').only('url').only('date')
             .fetch
         )
         
@@ -62,7 +63,7 @@ class FieldProjectionOnlyTest(BaseIntegrationTest):
             "query_with_only",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .only(['title', 'uid'])
+            .only('title').only('uid')
             .limit(3)
             .find
         )
@@ -82,7 +83,7 @@ class FieldProjectionOnlyTest(BaseIntegrationTest):
             "fetch_nested_only",
             self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID)
             .entry(config.COMPLEX_ENTRY_UID)
-            .only(['title', 'seo.title', 'seo.description'])
+            .only('title').only('seo.title').only('seo.description')
             .fetch
         )
         
@@ -103,7 +104,7 @@ class FieldProjectionOnlyTest(BaseIntegrationTest):
             self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID)
             .entry(config.COMPLEX_ENTRY_UID)
             .include_reference(['authors'])
-            .only(['title', 'authors.name'])
+            .only('title').only('authors.name')
             .fetch
         )
         
@@ -129,7 +130,7 @@ class FieldProjectionExceptTest(BaseIntegrationTest):
             "fetch_single_except",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .entry(config.SIMPLE_ENTRY_UID)
-            .excepts(['bio'])  # Exclude bio field
+            .excepts('bio')  # Exclude bio field
             .fetch
         )
         
@@ -147,7 +148,7 @@ class FieldProjectionExceptTest(BaseIntegrationTest):
             "fetch_multiple_except",
             self.stack.content_type(config.MEDIUM_CONTENT_TYPE_UID)
             .entry(config.MEDIUM_ENTRY_UID)
-            .excepts(['body', 'content', 'description'])
+            .excepts('body').excepts('content').excepts('description')
             .fetch
         )
         
@@ -166,7 +167,7 @@ class FieldProjectionExceptTest(BaseIntegrationTest):
             "query_with_except",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .excepts(['email', 'phone'])
+            .excepts('email').excepts('phone')
             .limit(3)
             .find
         )
@@ -186,7 +187,7 @@ class FieldProjectionExceptTest(BaseIntegrationTest):
             "fetch_nested_except",
             self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID)
             .entry(config.COMPLEX_ENTRY_UID)
-            .excepts(['seo.keywords', 'content_block.html'])
+            .excepts('seo.keywords').excepts('content_block.html')
             .fetch
         )
         
@@ -204,7 +205,7 @@ class FieldProjectionExceptTest(BaseIntegrationTest):
             self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID)
             .entry(config.COMPLEX_ENTRY_UID)
             .include_reference(['authors'])
-            .excepts(['authors.bio', 'authors.email'])
+            .excepts('authors.bio').excepts('authors.email')
             .fetch
         )
         
@@ -230,7 +231,7 @@ class FieldProjectionCombinedTest(BaseIntegrationTest):
             self.stack.content_type(config.MEDIUM_CONTENT_TYPE_UID)
             .entry(config.MEDIUM_ENTRY_UID)
             .locale('en-us')
-            .only(['title', 'url'])
+            .only('title').only('url')
             .fetch
         )
         
@@ -248,7 +249,7 @@ class FieldProjectionCombinedTest(BaseIntegrationTest):
             "fetch_except_metadata",
             self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID)
             .entry(config.COMPLEX_ENTRY_UID)
-            .excepts(['body', 'content'])
+            .excepts('body').excepts('content')
             .include_metadata()
             .fetch
         )
@@ -267,8 +268,8 @@ class FieldProjectionCombinedTest(BaseIntegrationTest):
             "query_only_where",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .only(['title', 'uid'])
-            .where({'title': {'$exists': True}})
+            .only('title').only('uid')
+            .where('title', QueryOperation.EXISTS, True)
             .limit(5)
             .find
         )
@@ -284,7 +285,7 @@ class FieldProjectionCombinedTest(BaseIntegrationTest):
             "query_except_order",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .excepts(['bio', 'description'])
+            .excepts('bio').excepts('description')
             .order_by_ascending('title')
             .limit(5)
             .find
@@ -303,7 +304,7 @@ class FieldProjectionCombinedTest(BaseIntegrationTest):
             "fetch_only_version",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .entry(config.SIMPLE_ENTRY_UID)
-            .only(['title', 'uid'])
+            .only('title').only('uid')
             .version(1)
             .fetch
         )
@@ -347,7 +348,7 @@ class FieldProjectionEdgeCasesTest(BaseIntegrationTest):
             "fetch_except_many",
             self.stack.content_type(config.MEDIUM_CONTENT_TYPE_UID)
             .entry(config.MEDIUM_ENTRY_UID)
-            .excepts(['body', 'content', 'description', 'summary', 'excerpt'])
+            .excepts('body').excepts('content').excepts('description').excepts('summary').excepts('excerpt')
             .fetch
         )
         
@@ -365,7 +366,7 @@ class FieldProjectionEdgeCasesTest(BaseIntegrationTest):
             "fetch_only_nonexistent",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .entry(config.SIMPLE_ENTRY_UID)
-            .only(['title', 'nonexistent_field_xyz'])
+            .only('title').only('nonexistent_field_xyz')
             .fetch
         )
         
@@ -383,7 +384,7 @@ class FieldProjectionEdgeCasesTest(BaseIntegrationTest):
             "query_deep_nested_only",
             self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID)
             .query()
-            .only(['title', 'content_block.json_rte.children'])
+            .only('title').only('content_block.json_rte.children')
             .limit(3)
             .find
         )
@@ -399,8 +400,8 @@ class FieldProjectionEdgeCasesTest(BaseIntegrationTest):
             "fetch_only_except_together",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .entry(config.SIMPLE_ENTRY_UID)
-            .only(['title', 'url', 'bio'])
-            .excepts(['bio'])  # Applied after only
+            .only('title').only('url').only('bio')
+            .excepts('bio')  # Applied after only
             .fetch
         )
         

@@ -192,7 +192,7 @@ class DeepReferencesTest(BaseIntegrationTest):
         
         entry = self.stack.content_type(config.MEDIUM_CONTENT_TYPE_UID).entry(config.MEDIUM_ENTRY_UID)
         entry.include_reference('reference')
-        entry.only(['title', 'uid', 'reference'])
+        entry.only('title').only('uid').only('reference')
         
         result = TestHelpers.safe_api_call("ref_with_only", entry.fetch)
         

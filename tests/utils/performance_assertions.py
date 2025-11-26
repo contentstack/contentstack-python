@@ -39,6 +39,11 @@ class PerformanceAssertion:
             self.elapsed_ms = None
             self._logger = logging.getLogger(__name__)
         
+        @property
+        def duration(self):
+            """Alias for elapsed_ms for backward compatibility"""
+            return self.elapsed_ms
+        
         def __enter__(self):
             self.start_time = time.perf_counter()
             return self

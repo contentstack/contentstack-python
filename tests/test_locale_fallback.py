@@ -6,6 +6,7 @@ Tests comprehensive locale fallback behavior (en-gb → en-us, fr-fr → en-us, 
 import unittest
 from typing import Dict, Any, List, Optional
 import config
+from contentstack.basequery import QueryOperation
 from tests.base_integration_test import BaseIntegrationTest
 from tests.utils.test_helpers import TestHelpers
 
@@ -264,7 +265,7 @@ class LocaleFallbackFieldProjectionTest(BaseIntegrationTest):
             .entry(config.MEDIUM_ENTRY_UID)
             .locale('ru-ru')  # Russian
             .include_fallback()
-            .only(['title', 'url'])
+            .only('title').only('url')
             .fetch
         )
         
@@ -283,7 +284,7 @@ class LocaleFallbackFieldProjectionTest(BaseIntegrationTest):
             .entry(config.MEDIUM_ENTRY_UID)
             .locale('ar-ae')  # Arabic
             .include_fallback()
-            .excepts(['content', 'body'])
+            .excepts('content').excepts('body')
             .fetch
         )
         
@@ -303,7 +304,7 @@ class LocaleFallbackFieldProjectionTest(BaseIntegrationTest):
             .query()
             .locale('nl-nl')  # Dutch
             .include_fallback()
-            .only(['title', 'uid'])
+            .only('title').only('uid')
             .find
         )
         
@@ -436,7 +437,7 @@ class LocaleFallbackEdgeCasesTest(BaseIntegrationTest):
             .query()
             .locale('no-no')  # Norwegian
             .include_fallback()
-            .where({'title': {'$exists': True}})
+            .where('title', QueryOperation.EXISTS, True)
             .find
         )
         

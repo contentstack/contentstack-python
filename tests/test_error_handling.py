@@ -3,6 +3,7 @@ Test Suite: Error Handling Comprehensive
 Tests SDK error handling for various HTTP error codes and network failures
 """
 
+import json
 import unittest
 from typing import Dict, Any, List, Optional
 import config
@@ -191,7 +192,7 @@ class EmptyResultHandlingTest(BaseIntegrationTest):
             "query_no_results",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$eq': 'nonexistent_title_xyz_123456'}})
+            .where('title', QueryOperation.EQUALS, 'nonexistent_title_xyz_123456')
             .find
         )
         
@@ -208,11 +209,13 @@ class EmptyResultHandlingTest(BaseIntegrationTest):
             "query_impossible_filter",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({
-                '$and': [
-                    {'title': {'$eq': 'A'}},
-                    {'title': {'$eq': 'B'}}  # Same field can't be both A and B
-                ]
+            .add_params({
+                'query': json.dumps({
+                    '$and': [
+                        {'title': {'$eq': 'A'}},
+                        {'title': {'$eq': 'B'}}  # Same field can't be both A and B
+                    ]
+                })
             })
             .find
         )
@@ -273,7 +276,7 @@ class InvalidParameterTest(BaseIntegrationTest):
             "query_invalid_regex",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$regex': '[invalid(regex'}})  # Malformed regex
+            .where('title', QueryOperation.MATCHES, '[invalid(regex')  # Malformed regex
             .find
         )
         

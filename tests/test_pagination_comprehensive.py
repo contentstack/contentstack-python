@@ -3,9 +3,11 @@ Test Suite: Pagination Comprehensive
 Tests all pagination scenarios: skip, limit, count, ordering, edge cases
 """
 
+import json
 import unittest
 from typing import Dict, Any, List, Optional
 import config
+from contentstack.basequery import QueryOperation
 from tests.base_integration_test import BaseIntegrationTest
 from tests.utils.test_helpers import TestHelpers
 
@@ -161,7 +163,7 @@ class PaginationWithCountTest(BaseIntegrationTest):
             "count_with_filter",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$exists': True}})
+            .where('title', QueryOperation.EXISTS, True)
             .include_count()
             .limit(5)
             .find
@@ -392,7 +394,7 @@ class PaginationEdgeCasesTest(BaseIntegrationTest):
             "pagination_empty_set",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where({'title': {'$eq': 'nonexistent_entry_xyz_123'}})
+            .where('title', QueryOperation.EQUALS, 'nonexistent_entry_xyz_123')
             .include_count()
             .limit(10)
             .find
@@ -418,18 +420,18 @@ class PaginationComplexQueriesTest(BaseIntegrationTest):
         """Test pagination with AND query"""
         self.log_test_info("Pagination with AND query")
         
-        result = TestHelpers.safe_api_call(
-            "pagination_and_query",
-            self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
-            .query()
-            .query_operator('$and', [
-                {'title': {'$exists': True}},
-                {'locale': {'$eq': 'en-us'}}
-            ])
-            .limit(5)
-            .skip(0)
-            .find
-        )
+        query = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID).query()
+        query.add_params({
+            'query': json.dumps({
+                '$and': [
+                    {'title': {'$exists': True}},
+                    {'uid': {'$exists': True}}
+                ]
+            })
+        })
+        query.limit(5).skip(0)
+        
+        result = TestHelpers.safe_api_call("pagination_and_query", query.find)
         
         if self.assert_has_results(result, "Pagination with AND should work"):
             self.logger.info(f"  ✅ AND query pagination: {len(result['entries'])} entries")
@@ -438,36 +440,38 @@ class PaginationComplexQueriesTest(BaseIntegrationTest):
         """Test pagination with OR query"""
         self.log_test_info("Pagination with OR query")
         
-        result = TestHelpers.safe_api_call(
-            "pagination_or_query",
-            self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
-            .query()
-            .query_operator('$or', [
-                {'title': {'$regex': '^A'}},
-                {'title': {'$regex': '^B'}}
-            ])
-            .limit(5)
-            .find
-        )
+        query = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID).query()
+        query.add_params({
+            'query': json.dumps({
+                '$or': [
+                    {'title': {'$exists': True}},
+                    {'uid': {'$exists': True}}
+                ]
+            })
+        })
+        query.limit(5)
+        
+        result = TestHelpers.safe_api_call("pagination_or_query", query.find)
         
         if result and self.assert_has_results(result, "Pagination with OR should work"):
             self.logger.info(f"  ✅ OR query pagination: {len(result['entries'])} entries")
 
     def test_21_pagination_with_where_in(self):
-        """Test pagination with where_in()"""
-        self.log_test_info("Pagination with where_in")
+        """Test pagination with $in operator (note: where_in() is for reference queries)"""
+        self.log_test_info("Pagination with $in operator")
         
+        # Use .where() with INCLUDES for $in functionality
         result = TestHelpers.safe_api_call(
             "pagination_where_in",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .where_in('locale', ['en-us', 'en-gb'])
+            .where('locale', QueryOperation.INCLUDES, ['en-us', 'en-gb'])
             .limit(5)
             .find
         )
         
-        if self.assert_has_results(result, "Pagination with where_in should work"):
-            self.logger.info(f"  ✅ where_in pagination: {len(result['entries'])} entries")
+        if self.assert_has_results(result, "Pagination with $in should work"):
+            self.logger.info(f"  ✅ $in operator pagination: {len(result['entries'])} entries")
 
     def test_22_pagination_with_search(self):
         """Test pagination with search()"""

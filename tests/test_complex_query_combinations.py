@@ -6,6 +6,7 @@ Current Coverage: Partial - basic queries tested, complex combinations not teste
 Target: Comprehensive coverage of all query combinations and edge cases
 """
 
+import json
 import unittest
 import sys
 import os
@@ -169,11 +170,19 @@ class ANDQueryTest(BaseIntegrationTest):
     """
     
     def test_09_and_operator_basic(self):
-        """Test basic AND operator"""
+        """Test basic AND operator with multiple conditions"""
         self.log_test_info("Testing AND operator")
         
         query = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID).query()
-        query.query_operator('$and')
+        # Use add_params for $and query
+        query.add_params({
+            'query': json.dumps({
+                '$and': [
+                    {'title': {'$exists': True}},
+                    {'uid': {'$exists': True}}
+                ]
+            })
+        })
         query.limit(5)
         
         result = TestHelpers.safe_api_call("and_basic", query.find)
@@ -187,8 +196,16 @@ class ANDQueryTest(BaseIntegrationTest):
         self.log_test_info("Testing multiple AND conditions")
         
         query = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID).query()
-        query.query_operator('$and')
-        # Add multiple conditions
+        # Use add_params for multiple $and conditions
+        query.add_params({
+            'query': json.dumps({
+                '$and': [
+                    {'title': {'$exists': True}},
+                    {'uid': {'$exists': True}},
+                    {'created_at': {'$exists': True}}
+                ]
+            })
+        })
         query.limit(5)
         
         result = TestHelpers.safe_api_call("and_multiple", query.find)
@@ -207,7 +224,15 @@ class ORQueryTest(BaseIntegrationTest):
         self.log_test_info("Testing OR operator")
         
         query = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID).query()
-        query.query_operator('$or')
+        # Use add_params for $or query - match entries with specific titles
+        query.add_params({
+            'query': json.dumps({
+                '$or': [
+                    {'title': {'$exists': True}},
+                    {'uid': {'$exists': True}}
+                ]
+            })
+        })
         query.limit(5)
         
         result = TestHelpers.safe_api_call("or_basic", query.find)
@@ -220,7 +245,16 @@ class ORQueryTest(BaseIntegrationTest):
         self.log_test_info("Testing OR with multiple conditions")
         
         query = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID).query()
-        query.query_operator('$or')
+        # Use add_params for multiple $or conditions
+        query.add_params({
+            'query': json.dumps({
+                '$or': [
+                    {'title': {'$exists': True}},
+                    {'uid': {'$exists': True}},
+                    {'created_at': {'$exists': True}}
+                ]
+            })
+        })
         query.limit(5)
         
         result = TestHelpers.safe_api_call("or_multiple", query.find)
@@ -235,8 +269,8 @@ class WhereInQueryTest(BaseIntegrationTest):
     """
     
     def test_13_where_in(self):
-        """Test where_in"""
-        self.log_test_info("Testing where_in")
+        """Test $in operator (note: where_in() is for reference queries)"""
+        self.log_test_info("Testing $in operator")
         
         query = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID).query()
         # Get some UIDs first
@@ -246,9 +280,9 @@ class WhereInQueryTest(BaseIntegrationTest):
             uids = TestHelpers.extract_uids(sample_result['entries'])
             
             if len(uids) > 0:
-                # Query using where_in
+                # Query using $in operator via .where() with INCLUDES
                 query2 = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID).query()
-                query2.where_in('uid', uids[:2])
+                query2.where('uid', QueryOperation.INCLUDES, uids[:2])
                 
                 result = TestHelpers.safe_api_call("where_in", query2.find)
                 
@@ -256,11 +290,12 @@ class WhereInQueryTest(BaseIntegrationTest):
                     self.log_test_info(f"✅ where_in returned {len(result['entries'])} entries")
     
     def test_14_where_not_in(self):
-        """Test where_not_in"""
-        self.log_test_info("Testing where_not_in")
+        """Test $nin operator (note: where_not_in() is for reference queries)"""
+        self.log_test_info("Testing $nin operator")
         
         query = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID).query()
-        query.where_not_in('uid', [config.SIMPLE_ENTRY_UID])
+        # Use .where() with EXCLUDES for $nin functionality
+        query.where('uid', QueryOperation.EXCLUDES, [config.SIMPLE_ENTRY_UID])
         query.limit(3)
         
         result = TestHelpers.safe_api_call("where_not_in", query.find)
@@ -314,7 +349,8 @@ class TagsQueryTest(BaseIntegrationTest):
         self.log_test_info("Testing tags filter")
         
         query = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID).query()
-        query.tags(['test_tag'])
+        # tags() accepts variable args, not a list
+        query.tags('test_tag')
         query.limit(3)
         
         result = TestHelpers.safe_api_call("tags_filter", query.find)
@@ -333,7 +369,7 @@ class FieldProjectionTest(BaseIntegrationTest):
         self.log_test_info("Testing only() fields")
         
         query = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID).query()
-        query.only(['uid', 'title'])
+        query.only('uid').only('title')
         query.limit(2)
         
         result = TestHelpers.safe_api_call("only_fields", query.find)
@@ -352,7 +388,7 @@ class FieldProjectionTest(BaseIntegrationTest):
         self.log_test_info("Testing except() fields")
         
         query = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID).query()
-        query.excepts(['created_by', 'updated_by'])
+        query.excepts('created_by').excepts('updated_by')
         query.limit(2)
         
         result = TestHelpers.safe_api_call("except_fields", query.find)
@@ -365,7 +401,7 @@ class FieldProjectionTest(BaseIntegrationTest):
         self.log_test_info("Testing only() with references")
         
         query = self.stack.content_type(config.MEDIUM_CONTENT_TYPE_UID).query()
-        query.only(['uid', 'title', 'reference'])
+        query.only('uid').only('title').only('reference')
         query.include_reference('reference')
         query.limit(2)
         
@@ -518,7 +554,7 @@ class EdgeCaseQueryTest(BaseIntegrationTest):
         self.log_test_info("Testing empty result set")
         
         query = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID).query()
-        query.where('uid', 'nonexistent_uid_12345')
+        query.where('uid', QueryOperation.EQUALS, 'nonexistent_uid_12345')
         
         result = TestHelpers.safe_api_call("empty_results", query.find)
         

@@ -70,7 +70,7 @@ class TestLivePreviewConfig(unittest.TestCase):
         self.stack.live_preview_query(live_preview_query=_lp_query)
         self.assertIsNotNone(self.stack.live_preview['management_token'])
         self.assertEqual(7, len(self.stack.live_preview))
-        self.assertEqual('product', self.stack.live_preview['content_type_uid'])
+        self.assertEqual(config.COMPLEX_CONTENT_TYPE_UID, self.stack.live_preview['content_type_uid'])
 
     def test_022_preview_timestamp_with_livepreview_2_0_enabled(self):
         self.stack = contentstack.Stack(
@@ -81,7 +81,7 @@ class TestLivePreviewConfig(unittest.TestCase):
         self.stack.live_preview_query(live_preview_query=_lp_preview_timestamp_query)
         self.assertIsNotNone(self.stack.live_preview['preview_token'])
         self.assertEqual(9, len(self.stack.live_preview))
-        self.assertEqual('product', self.stack.live_preview['content_type_uid'])
+        self.assertEqual(config.COMPLEX_CONTENT_TYPE_UID, self.stack.live_preview['content_type_uid'])
         self.assertEqual('123456789', self.stack.live_preview['release_id'])
         self.assertEqual('2025-03-07T12:00:00Z', self.stack.live_preview['preview_timestamp'])
 
@@ -94,7 +94,7 @@ class TestLivePreviewConfig(unittest.TestCase):
         self.stack.live_preview_query(live_preview_query=_lp_query)
         self.assertIsNotNone(self.stack.live_preview['preview_token'])
         self.assertEqual(9, len(self.stack.live_preview))
-        self.assertEqual('product', self.stack.live_preview['content_type_uid'])
+        self.assertEqual(config.COMPLEX_CONTENT_TYPE_UID, self.stack.live_preview['content_type_uid'])
 
     def test_03_set_host(self):
         self.stack = contentstack.Stack(
@@ -148,7 +148,7 @@ class TestLivePreviewConfig(unittest.TestCase):
             live_preview=_lp
         )
         self.stack.live_preview_query(live_preview_query=_lp_query)
-        self.stack.content_type('product').entry(entry_uid=entry_uid)
+        self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID).entry(entry_uid=entry_uid)
         self.assertEqual(3, len(self.stack.headers))
         self.assertEqual(True, 'access_token' in self.stack.headers)
         self.assertEqual(True, 'api_key' in self.stack.headers)
@@ -161,7 +161,7 @@ class TestLivePreviewConfig(unittest.TestCase):
             live_preview=_lp
         )
         self.stack.live_preview_query(live_preview_query=_lp_query)
-        entry = self.stack.content_type('product').entry(entry_uid=ENTRY_UID)
+        entry = self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID).entry(entry_uid=ENTRY_UID)
         resp = entry.fetch()
         print(resp)
         self.assertEqual(6, len(self.stack.headers))

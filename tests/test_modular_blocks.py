@@ -203,7 +203,7 @@ class ModularBlocksQueryTest(BaseIntegrationTest):
         self.log_test_info("Testing query with block field projection")
         
         query = self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID).query()
-        query.only(['uid', 'title', 'content_block'])
+        query.only('uid').only('title').only('content_block')
         query.limit(2)
         
         result = TestHelpers.safe_api_call("query_block_projection", query.find)

@@ -6,6 +6,7 @@ Tests global field fetching, resolution, nested globals, and references
 import unittest
 from typing import Dict, Any, List, Optional
 import config
+from contentstack.basequery import QueryOperation
 from tests.base_integration_test import BaseIntegrationTest
 from tests.utils.test_helpers import TestHelpers
 
@@ -127,7 +128,7 @@ class GlobalFieldInEntriesTest(BaseIntegrationTest):
             "fetch_only_global_data",
             self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID)
             .entry(config.COMPLEX_ENTRY_UID)
-            .only(['title', 'seo'])
+            .only('title').only('seo')
             .fetch
         )
         
@@ -234,7 +235,7 @@ class GlobalFieldNestedTest(BaseIntegrationTest):
             "query_global_filter",
             self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID)
             .query()
-            .where({'seo.title': {'$exists': True}})
+            .where('seo.title', QueryOperation.EXISTS, True)
             .limit(5)
             .find
         )
@@ -260,7 +261,7 @@ class GlobalFieldWithModifiersTest(BaseIntegrationTest):
             "global_with_only",
             self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID)
             .entry(config.COMPLEX_ENTRY_UID)
-            .only(['title', 'seo.title', 'seo.description'])
+            .only('title').only('seo.title').only('seo.description')
             .fetch
         )
         
@@ -277,7 +278,7 @@ class GlobalFieldWithModifiersTest(BaseIntegrationTest):
             "global_with_except",
             self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID)
             .entry(config.COMPLEX_ENTRY_UID)
-            .excepts(['seo.keywords', 'content_block.html'])
+            .excepts('seo.keywords').excepts('content_block.html')
             .fetch
         )
         

@@ -65,7 +65,7 @@ class QueryEncodingBasicTest(BaseIntegrationTest):
             "query_single_quotes",
             self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
             .query()
-            .query({'title': {'$regex': ".*'.*"}})
+            .where('title', QueryOperation.MATCHES, ".*'.*")
             .limit(5)
             .find
         )
@@ -471,7 +471,7 @@ class QueryEncodingEdgeCasesTest(BaseIntegrationTest):
                 f"query_xml_char",
                 self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
                 .query()
-                .query({'title': {'$regex': f'.*\\{char}.*'}})
+                .where('title', QueryOperation.MATCHES, f'.*\\{char}.*')
                 .limit(3)
                 .find
             )
