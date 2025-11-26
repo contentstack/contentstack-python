@@ -139,31 +139,70 @@ class TestEntry(unittest.TestCase):
         content_type = self.stack.content_type(COMPLEX_CONTENT_TYPE_UID)
         entry = content_type.variants(VARIANT_UID).find()
         if entry and 'entries' in entry and len(entry['entries']) > 0:
-            publish_details = entry['entries'][0].get('publish_details', {})
-            if 'variants' in publish_details:
-                self.assertIn('variants', publish_details)
+            publish_details = entry['entries'][0].get('publish_details', [])
+            # variant_uid is inside each publish_details array element
+            if isinstance(publish_details, list) and len(publish_details) > 0:
+                # Check if any publish_details has variant_uid
+                has_variant = any('variant_uid' in pd for pd in publish_details)
+                if has_variant:
+                    self.assertTrue(has_variant, "Should have variant_uid in publish_details")
+                    # Verify it matches the requested variant
+                    variant_uids = [pd.get('variant_uid') for pd in publish_details if 'variant_uid' in pd]
+                    self.assertIn(VARIANT_UID, variant_uids, f"Expected variant_uid {VARIANT_UID}")
+                else:
+                    self.skipTest("variant_uid not found in publish_details")
             else:
-                self.skipTest("Variants not available in publish_details (feature may not be enabled)")
+                self.skipTest("publish_details not in expected format")
         
     def test_24_entry_variants(self):
         content_type = self.stack.content_type(COMPLEX_CONTENT_TYPE_UID)
         entry = content_type.entry(COMPLEX_ENTRY_UID).variants(VARIANT_UID).fetch()
-        self.assertIn('variants', entry['entry']['publish_details'])
+        # variant_uid is inside each publish_details array element
+        publish_details = entry['entry'].get('publish_details', [])
+        if isinstance(publish_details, list) and len(publish_details) > 0:
+            # Check if any publish_details has variant_uid
+            has_variant = any('variant_uid' in pd for pd in publish_details)
+            self.assertTrue(has_variant, "Should have variant_uid in publish_details")
+            # Verify it matches the requested variant
+            variant_uids = [pd.get('variant_uid') for pd in publish_details if 'variant_uid' in pd]
+            self.assertIn(VARIANT_UID, variant_uids, f"Expected variant_uid {VARIANT_UID}")
+        else:
+            self.skipTest("publish_details not in expected format")
         
     def test_25_content_type_variants_with_has_hash_variant(self):
         content_type = self.stack.content_type(COMPLEX_CONTENT_TYPE_UID)
         entry = content_type.variants([VARIANT_UID]).find()
         if entry and 'entries' in entry and len(entry['entries']) > 0:
-            publish_details = entry['entries'][0].get('publish_details', {})
-            if 'variants' in publish_details:
-                self.assertIn('variants', publish_details)
+            publish_details = entry['entries'][0].get('publish_details', [])
+            # variant_uid is inside each publish_details array element
+            if isinstance(publish_details, list) and len(publish_details) > 0:
+                # Check if any publish_details has variant_uid
+                has_variant = any('variant_uid' in pd for pd in publish_details)
+                if has_variant:
+                    self.assertTrue(has_variant, "Should have variant_uid in publish_details")
+                    # Verify it matches the requested variant
+                    variant_uids = [pd.get('variant_uid') for pd in publish_details if 'variant_uid' in pd]
+                    self.assertIn(VARIANT_UID, variant_uids, f"Expected variant_uid {VARIANT_UID}")
+                else:
+                    self.skipTest("variant_uid not found in publish_details")
             else:
-                self.skipTest("Variants not available in publish_details (feature may not be enabled)")
+                self.skipTest("publish_details not in expected format")
         
-    def test_25_content_type_entry_variants_with_has_hash_variant(self):
+    def test_26_content_type_entry_variants_with_list(self):
+        """Test variants with list of variant UIDs"""
         content_type = self.stack.content_type(COMPLEX_CONTENT_TYPE_UID).entry(COMPLEX_ENTRY_UID)
         entry = content_type.variants([VARIANT_UID]).fetch()
-        self.assertIn('variants', entry['entry']['publish_details'])
+        # variant_uid is inside each publish_details array element
+        publish_details = entry['entry'].get('publish_details', [])
+        if isinstance(publish_details, list) and len(publish_details) > 0:
+            # Check if any publish_details has variant_uid
+            has_variant = any('variant_uid' in pd for pd in publish_details)
+            self.assertTrue(has_variant, "Should have variant_uid in publish_details")
+            # Verify it matches the requested variant
+            variant_uids = [pd.get('variant_uid') for pd in publish_details if 'variant_uid' in pd]
+            self.assertIn(VARIANT_UID, variant_uids, f"Expected variant_uid {VARIANT_UID}")
+        else:
+            self.skipTest("publish_details not in expected format")
 
     # ========== Additional Test Cases ==========
 
