@@ -16,6 +16,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from tests.base_integration_test import BaseIntegrationTest
 from tests.utils.test_helpers import TestHelpers
 from tests.utils.complex_query_builder import ComplexQueryBuilder
+from contentstack.basequery import QueryOperation
 import config
 
 

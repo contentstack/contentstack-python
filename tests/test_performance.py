@@ -15,6 +15,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from tests.base_integration_test import BaseIntegrationTest
 from tests.utils.test_helpers import TestHelpers
 from tests.utils.performance_assertions import PerformanceAssertion
+from contentstack.basequery import QueryOperation
 import config
 
 
@@ -150,7 +151,7 @@ class ComparisonPerformanceTest(BaseIntegrationTest):
         
         # Query for single entry
         query = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID).query()
-        query.where('uid', config.SIMPLE_ENTRY_UID)
+        query.where('uid', QueryOperation.EQUALS, config.SIMPLE_ENTRY_UID)
         query_result, query_time = PerformanceAssertion.measure_operation(
             query.find,
             "query_single"
@@ -375,7 +376,7 @@ class EdgeCasePerformanceTest(BaseIntegrationTest):
         self.log_test_info("Testing empty result performance")
         
         query = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID).query()
-        query.where('uid', 'nonexistent_12345')
+        query.where('uid', QueryOperation.EQUALS, 'nonexistent_12345')
         
         result, elapsed_ms = PerformanceAssertion.measure_operation(
             query.find,

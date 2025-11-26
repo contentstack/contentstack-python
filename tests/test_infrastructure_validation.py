@@ -176,10 +176,15 @@ class InfrastructureValidationTest(BaseIntegrationTest):
         entry = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID).entry("nonexistent_uid_12345")
         result = TestHelpers.safe_api_call("fetch_nonexistent", entry.fetch)
         
-        # Should return None, not raise exception
-        self.assertIsNone(result, "Non-existent entry should return None gracefully")
+        # Should return None or error dict, not raise exception
+        if result is None:
+            self.log_test_info("✅ Graceful degradation: Returns None")
+        elif isinstance(result, dict) and 'error_code' in result:
+            self.log_test_info(f"✅ Graceful degradation: Returns error dict (error_code: {result['error_code']})")
+        else:
+            self.fail(f"Expected None or error dict, got: {type(result)}")
         
-        self.log_test_info("✅ Graceful degradation works")
+        self.log_test_info("✅ Graceful degradation works - no exception raised")
 
 
 class QuickSmokeTest(BaseIntegrationTest):

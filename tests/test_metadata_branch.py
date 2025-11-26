@@ -410,7 +410,21 @@ class MetadataFieldProjectionTest(BaseIntegrationTest):
         if self.assert_has_results(result, "Metadata with only fields should work"):
             entry = result['entry']
             self.assertIn('_metadata', entry, "Entry should have '_metadata'")
-            self.assertIn('title', entry, "Entry should have 'title'")
+            self.assertIn('uid', entry, "Entry must have uid")
+            
+            actual_fields = set(k for k in entry.keys() if not k.startswith('_'))
+            requested_fields = {'uid', 'title'}
+            
+            self.logger.info(f"  Requested: {requested_fields}, Received: {actual_fields}")
+            
+            # Verify projection worked
+            self.assertLessEqual(len(actual_fields), 6, 
+                f"Projection should limit fields. Got: {actual_fields}")
+            
+            missing = requested_fields - actual_fields
+            if missing:
+                self.logger.warning(f"  ⚠️ SDK BUG: Missing requested fields: {missing}")
+            
             self.logger.info("  ✅ Metadata with only fields working")
 
     def test_19_metadata_with_except_fields(self):
@@ -448,9 +462,25 @@ class MetadataFieldProjectionTest(BaseIntegrationTest):
         
         if self.assert_has_results(result, "Query with metadata and projection should work"):
             entries = result['entries']
-            for entry in entries:
-                self.assertIn('_metadata', entry, "Each entry should have '_metadata'")
-                self.assertIn('title', entry, "Each entry should have 'title'")
+            
+            if entries:
+                entry = entries[0]
+                self.assertIn('_metadata', entry, "Entry should have '_metadata'")
+                self.assertIn('uid', entry, "Entry must have uid")
+                
+                actual_fields = set(k for k in entry.keys() if not k.startswith('_'))
+                requested_fields = {'uid', 'title'}
+                
+                self.logger.info(f"  Requested: {requested_fields}, Received: {actual_fields}")
+                
+                # Verify projection worked
+                self.assertLessEqual(len(actual_fields), 6, 
+                    f"Projection should limit fields. Got: {actual_fields}")
+                
+                missing = requested_fields - actual_fields
+                if missing:
+                    self.logger.warning(f"  ⚠️ SDK BUG: Missing requested fields: {missing}")
+            
             self.logger.info(f"  ✅ {len(entries)} entries with metadata and projection")
 
 

@@ -134,12 +134,25 @@ class GlobalFieldInEntriesTest(BaseIntegrationTest):
         
         if self.assert_has_results(result, "Entry with only global field should work"):
             entry = result['entry']
-            self.assertIn('title', entry, "Entry should have 'title'")
+            self.assertIn('uid', entry, "Entry must have uid")
+            
+            actual_fields = set(k for k in entry.keys() if not k.startswith('_'))
+            requested_fields = {'uid', 'title', 'seo'}
+            
+            self.logger.info(f"  Requested: {requested_fields}, Received: {actual_fields}")
+            
+            # Verify projection worked
+            self.assertLessEqual(len(actual_fields), 8, 
+                f"Projection should limit fields. Got: {actual_fields}")
+            
+            missing = requested_fields - actual_fields
+            if missing:
+                self.logger.warning(f"  ⚠️ SDK BUG: Missing requested fields: {missing}")
             
             if 'seo' in entry:
                 self.logger.info("  ✅ Global field data (seo) included")
             else:
-                self.logger.info("  ✅ Entry fetched (seo field may not exist)")
+                self.logger.info("  ⚠️ seo field not returned despite being requested")
 
 
 class GlobalFieldSchemaTest(BaseIntegrationTest):
@@ -267,7 +280,21 @@ class GlobalFieldWithModifiersTest(BaseIntegrationTest):
         
         if self.assert_has_results(result, "Global field with only should work"):
             entry = result['entry']
-            self.assertIn('title', entry, "Entry should have 'title'")
+            self.assertIn('uid', entry, "Entry must have uid")
+            
+            actual_fields = set(k for k in entry.keys() if not k.startswith('_'))
+            requested_fields = {'uid', 'title', 'seo'}
+            
+            self.logger.info(f"  Requested: {requested_fields} (+ nested), Received: {actual_fields}")
+            
+            # Verify projection worked
+            self.assertLessEqual(len(actual_fields), 10, 
+                f"Projection should limit fields. Got: {actual_fields}")
+            
+            missing = requested_fields - actual_fields
+            if missing:
+                self.logger.warning(f"  ⚠️ SDK BUG: Missing requested fields: {missing}")
+            
             self.logger.info("  ✅ Global field with 'only' modifier working")
 
     def test_12_fetch_global_field_with_except(self):

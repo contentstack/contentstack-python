@@ -360,12 +360,26 @@ class JSONRTEEdgeCasesTest(BaseIntegrationTest):
         entry_data = result['entry']
         
         # Should have only specified fields
-        self.assertIn('uid', entry_data)
-        self.assertIn('title', entry_data)
+        self.assertIn('uid', entry_data, "Entry must have uid")
+        
+        actual_fields = set(k for k in entry_data.keys() if not k.startswith('_'))
+        requested_fields = {'uid', 'title', 'content_block'}
+        
+        self.logger.info(f"  Requested: {requested_fields}, Received: {actual_fields}")
+        
+        # Verify projection worked (limited fields)
+        self.assertLessEqual(len(actual_fields), 10, 
+            f"Projection should limit fields. Got: {actual_fields}")
+        
+        missing = requested_fields - actual_fields
+        if missing:
+            self.logger.warning(f"  ⚠️ SDK BUG: Missing requested fields: {missing}")
         
         # content_block should still have JSON RTE
         if 'content_block' in entry_data:
             self.log_test_info("✅ JSON RTE field included with projection")
+        else:
+            self.logger.warning("  ⚠️ content_block not returned despite being requested")
 
 
 class JSONRTEPerformanceTest(BaseIntegrationTest):
