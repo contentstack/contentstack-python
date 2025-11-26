@@ -122,3 +122,4 @@ venv.bak/
 pipeline.yaml
 docs/
 test-results
+pytest-output.log

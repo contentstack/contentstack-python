@@ -55,6 +55,7 @@ class TestAsset(unittest.TestCase):
             [408, 429], self.stack.retry_strategy.status_forcelist)
 
     def test_01_assets_query_initial_run(self):
+        global ASSET_UID
         result = self.asset_query.find()
         if result is not None:
             assets = result.get('assets', [])
@@ -62,7 +63,6 @@ class TestAsset(unittest.TestCase):
             self.assertGreater(len(assets), 0, "Should have at least one asset")
             # Use the first asset if ASSET_UID not set
             if assets and not ASSET_UID:
-                global ASSET_UID
                 ASSET_UID = assets[0]['uid']
 
     def test_02_asset_method(self):
