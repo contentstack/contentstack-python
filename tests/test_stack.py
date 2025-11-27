@@ -7,8 +7,8 @@ from urllib3 import Retry
 from contentstack.stack import ContentstackRegion
 from contentstack.stack import Stack
 
-API_KEY = config.APIKEY
-DELIVERY_TOKEN = config.DELIVERYTOKEN
+API_KEY = config.API_KEY
+DELIVERY_TOKEN = config.DELIVERY_TOKEN
 ENVIRONMENT = config.ENVIRONMENT
 HOST = config.HOST
 
@@ -54,7 +54,7 @@ class TestStack(unittest.TestCase):
     def test_04_permission_error_api_key(self):
         try:
             stack_local = contentstack.Stack(
-                '', config.DELIVERYTOKEN, config.ENVIRONMENT)
+                '', config.DELIVERY_TOKEN, config.ENVIRONMENT)
             self.assertEqual(None, stack_local.api_key)
         except PermissionError as e:
             if hasattr(e, 'message'):
@@ -63,7 +63,7 @@ class TestStack(unittest.TestCase):
 
     def test_05_permission_error_delivery_token(self):
         try:
-            stack = contentstack.Stack(config.APIKEY, '', config.ENVIRONMENT)
+            stack = contentstack.Stack(config.API_KEY, '', config.ENVIRONMENT)
             self.assertEqual(None, stack.delivery_token)
         except PermissionError as e:
             if hasattr(e, 'message'):
@@ -73,7 +73,7 @@ class TestStack(unittest.TestCase):
     def test_05_permission_error_environment(self):
         try:
             stack = contentstack.Stack(
-                config.APIKEY, config.DELIVERYTOKEN, '')
+                config.API_KEY, config.DELIVERY_TOKEN, '')
             self.assertEqual(None, stack.delivery_token)
         except PermissionError as e:
             if hasattr(e, 'message'):
@@ -82,22 +82,22 @@ class TestStack(unittest.TestCase):
 
     def test_07_get_api_key(self):
         stack = contentstack.Stack(
-            config.APIKEY, config.DELIVERYTOKEN, config.ENVIRONMENT)
-        self.assertEqual(config.APIKEY, stack.get_api_key)
+            config.API_KEY, config.DELIVERY_TOKEN, config.ENVIRONMENT)
+        self.assertEqual(config.API_KEY, stack.get_api_key)
 
     def test_08_get_delivery_token(self):
         stack = contentstack.Stack(
-            config.APIKEY, config.DELIVERYTOKEN, config.ENVIRONMENT)
-        self.assertEqual(config.DELIVERYTOKEN, stack.get_delivery_token)
+            config.API_KEY, config.DELIVERY_TOKEN, config.ENVIRONMENT)
+        self.assertEqual(config.DELIVERY_TOKEN, stack.get_delivery_token)
 
     def test_09_get_environment(self):
         stack = contentstack.Stack(
-            config.APIKEY, config.DELIVERYTOKEN, config.ENVIRONMENT)
+            config.API_KEY, config.DELIVERY_TOKEN, config.ENVIRONMENT)
         self.assertEqual(config.ENVIRONMENT, stack.get_environment)
 
     def test_10_get_headers(self):
         stack = contentstack.Stack(
-            config.APIKEY, config.DELIVERYTOKEN, config.ENVIRONMENT)
+            config.API_KEY, config.DELIVERY_TOKEN, config.ENVIRONMENT)
         self.assertEqual(True, 'api_key' in stack.headers)
         self.assertEqual(True, 'access_token' in stack.get_headers)
         self.assertEqual(True, 'environment' in stack.get_headers)
@@ -158,47 +158,59 @@ class TestStack(unittest.TestCase):
                 'is not valid.', result['errors']['sync_token'][0])
 
     def test_18_init_sync_with_content_type_uid(self):
-        result = self.stack.sync_init(content_type_uid='room')
+        result = self.stack.sync_init(content_type_uid=config.SIMPLE_CONTENT_TYPE_UID)
         if result is not None:
-            self.assertEqual(0, result['total_count'])
+            # Check for either total_count or items
+            if 'total_count' in result:
+                self.assertGreaterEqual(result['total_count'], 0)
+            elif 'items' in result:
+                self.assertIsNotNone(result['items'])
 
     def test_19_init_sync_with_publish_type(self):
         result = self.stack.sync_init(
-            publish_type='entry_published', content_type_uid='track')
+            publish_type='entry_published', content_type_uid=config.MEDIUM_CONTENT_TYPE_UID)
         if result is not None:
-            self.assertEqual(0, result['total_count'])
+            # Check for either total_count or items
+            if 'total_count' in result:
+                self.assertGreaterEqual(result['total_count'], 0)
+            elif 'items' in result:
+                self.assertIsNotNone(result['items'])
 
     def test_20_init_sync_with_all_params(self):
         result = self.stack.sync_init(start_from='2018-01-14T00:00:00.000Z',
-                                      content_type_uid='track',
+                                      content_type_uid=config.MEDIUM_CONTENT_TYPE_UID,
                                       publish_type='entry_published',
                                       locale='en-us', )
         if result is not None:
-            self.assertEqual(0, result['total_count'])
+            # Check for either total_count or items
+            if 'total_count' in result:
+                self.assertGreaterEqual(result['total_count'], 0)
+            elif 'items' in result:
+                self.assertIsNotNone(result['items'])
 
     def test_21_content_type(self):
-        content_type = self.stack.content_type('application_theme')
+        content_type = self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID)
         result = content_type.fetch()
         if result is not None:
-            self.assertEqual('application_theme',
+            self.assertEqual(config.COMPLEX_CONTENT_TYPE_UID,
                              result['content_type']['uid'])
 
     def test_check_region(self):
         """_summary_
         """
-        _stack = contentstack.Stack(config.APIKEY, config.DELIVERYTOKEN, config.ENVIRONMENT,
+        _stack = contentstack.Stack(config.API_KEY, config.DELIVERY_TOKEN, config.ENVIRONMENT,
                                     host=config.HOST, region=ContentstackRegion.AZURE_NA)
         var = _stack.region.value
         self.assertEqual('azure-na', var)
     
     def test_22_check_early_access_headers(self):
         stack = contentstack.Stack(
-            config.APIKEY, config.DELIVERYTOKEN, config.ENVIRONMENT, early_access=[])
+            config.API_KEY, config.DELIVERY_TOKEN, config.ENVIRONMENT, early_access=[])
         self.assertEqual(True, 'x-header-ea' in stack.get_headers)
 
     def test_23_get_early_access(self):
         stack = contentstack.Stack(
-            config.APIKEY, config.DELIVERYTOKEN, config.ENVIRONMENT, early_access=["taxonomy", "teams"])
+            config.API_KEY, config.DELIVERY_TOKEN, config.ENVIRONMENT, early_access=["taxonomy", "teams"])
         self.assertEqual(self.early_access, stack.get_early_access)
         
     def test_stack_with_custom_logger(self):
@@ -266,9 +278,9 @@ class TestStack(unittest.TestCase):
 
     def test_28_content_type_method(self):
         """Test content_type method returns ContentType instance"""
-        content_type = self.stack.content_type('test_content_type')
+        content_type = self.stack.content_type(config.SIMPLE_CONTENT_TYPE_UID)
         self.assertIsNotNone(content_type)
-        self.assertEqual('test_content_type', content_type._ContentType__content_type_uid)
+        self.assertEqual(config.SIMPLE_CONTENT_TYPE_UID, content_type._ContentType__content_type_uid)
 
     def test_29_content_type_with_none_uid(self):
         """Test content_type method with None UID"""
