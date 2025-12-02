@@ -33,7 +33,7 @@ pytz==2024.1
 Babel==2.14.0
 pep517==0.13.1
 tomli~=2.0.1
-Werkzeug==3.0.6
+Werkzeug==3.1.4
 Flask~=2.3.2
 click~=8.1.7
 MarkupSafe==2.1.5
