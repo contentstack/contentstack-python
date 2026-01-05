@@ -211,5 +211,284 @@ class TestAsset(unittest.TestCase):
         self.assertTrue(
             self.asset_query.asset_query_params.__contains__('include_metadata'))
 
+    def test_26_where_with_include_count_and_pagination(self):
+        """Test combination of where, include_count, skip, and limit for assets"""
+        query = (self.asset_query
+                 .where("title", QueryOperation.EQUALS, fields=IMAGE)
+                 .include_count()
+                 .skip(2)
+                 .limit(5))
+        self.assertEqual({"title": IMAGE}, query.parameters)
+        self.assertEqual("true", query.query_params["include_count"])
+        self.assertEqual("2", query.query_params["skip"])
+        self.assertEqual("5", query.query_params["limit"])
+
+    def test_27_where_with_order_by_and_pagination(self):
+        """Test combination of where, order_by, skip, and limit for assets"""
+        query = (self.asset_query
+                 .where("file_size", QueryOperation.IS_GREATER_THAN, fields=1000)
+                 .order_by_ascending("file_size")
+                 .skip(0)
+                 .limit(10))
+        self.assertEqual({"file_size": {"$gt": 1000}}, query.parameters)
+        self.assertEqual("file_size", query.query_params["asc"])
+        self.assertEqual("0", query.query_params["skip"])
+        self.assertEqual("10", query.query_params["limit"])
+
+    def test_28_multiple_where_conditions_with_all_base_methods(self):
+        """Test multiple where conditions combined with all BaseQuery methods for assets"""
+        query = (self.asset_query
+                 .where("title", QueryOperation.EQUALS, fields=IMAGE)
+                 .where("file_size", QueryOperation.IS_LESS_THAN, fields=10000)
+                 .where("content_type", QueryOperation.INCLUDES, fields=["image/jpeg", "image/png"])
+                 .include_count()
+                 .skip(5)
+                 .limit(20)
+                 .order_by_descending("created_at")
+                 .param("locale", "en-us"))
+        
+        # Verify parameters
+        self.assertEqual(3, len(query.parameters))
+        self.assertEqual(IMAGE, query.parameters["title"])
+        self.assertEqual({"$lt": 10000}, query.parameters["file_size"])
+        self.assertEqual({"$in": ["image/jpeg", "image/png"]}, query.parameters["content_type"])
+        
+        # Verify query_params
+        self.assertEqual("true", query.query_params["include_count"])
+        self.assertEqual("5", query.query_params["skip"])
+        self.assertEqual("20", query.query_params["limit"])
+        self.assertEqual("created_at", query.query_params["desc"])
+        self.assertEqual("en-us", query.query_params["locale"])
+
+    def test_29_where_with_all_query_operations_combined(self):
+        """Test where with all QueryOperation types combined for assets"""
+        query = (self.asset_query
+                 .where("title", QueryOperation.EQUALS, fields=IMAGE)
+                 .where("file_size", QueryOperation.NOT_EQUALS, fields=0)
+                 .where("tags", QueryOperation.INCLUDES, fields=["tag1"])
+                 .where("excluded", QueryOperation.EXCLUDES, fields=["tag2"])
+                 .where("min_size", QueryOperation.IS_GREATER_THAN, fields=100)
+                 .where("max_size", QueryOperation.IS_LESS_THAN, fields=1000000)
+                 .where("width", QueryOperation.IS_GREATER_THAN_OR_EQUAL, fields=100)
+                 .where("height", QueryOperation.IS_LESS_THAN_OR_EQUAL, fields=2000)
+                 .where("has_metadata", QueryOperation.EXISTS, fields=True)
+                 .where("filename", QueryOperation.MATCHES, fields=".*\\.jpg$"))
+        
+        self.assertEqual(10, len(query.parameters))
+        self.assertEqual(IMAGE, query.parameters["title"])
+        self.assertEqual({"$ne": 0}, query.parameters["file_size"])
+        self.assertEqual({"$in": ["tag1"]}, query.parameters["tags"])
+        self.assertEqual({"$nin": ["tag2"]}, query.parameters["excluded"])
+        self.assertEqual({"$gt": 100}, query.parameters["min_size"])
+        self.assertEqual({"$lt": 1000000}, query.parameters["max_size"])
+        self.assertEqual({"$gte": 100}, query.parameters["width"])
+        self.assertEqual({"$lte": 2000}, query.parameters["height"])
+        self.assertEqual({"$exists": True}, query.parameters["has_metadata"])
+        self.assertEqual({"$regex": ".*\\.jpg$"}, query.parameters["filename"])
+
+    def test_30_asset_specific_methods_with_base_query_methods(self):
+        """Test AssetQuery specific methods combined with BaseQuery methods"""
+        query = (self.asset_query
+                 .where("title", QueryOperation.EQUALS, fields=IMAGE)
+                 .environment("dev")
+                 .version("1")
+                 .include_dimension()
+                 .relative_url()
+                 .include_count()
+                 .skip(0)
+                 .limit(10)
+                 .order_by_ascending("title"))
+        
+        self.assertEqual({"title": IMAGE}, query.parameters)
+        self.assertEqual("dev", query.http_instance.headers["environment"])
+        self.assertEqual("1", query.asset_query_params["version"])
+        self.assertEqual("true", query.asset_query_params["include_dimension"])
+        self.assertEqual("true", query.asset_query_params["relative_urls"])
+        self.assertEqual("true", query.query_params["include_count"])
+        self.assertEqual("0", query.query_params["skip"])
+        self.assertEqual("10", query.query_params["limit"])
+        self.assertEqual("title", query.query_params["asc"])
+
+    def test_31_include_fallback_with_where_and_base_methods(self):
+        """Test include_fallback combined with where and BaseQuery methods"""
+        query = (self.asset_query
+                 .where("title", QueryOperation.EQUALS, fields=IMAGE)
+                 .include_fallback()
+                 .include_count()
+                 .skip(5)
+                 .limit(15)
+                 .order_by_ascending("title"))
+        
+        self.assertEqual({"title": IMAGE}, query.parameters)
+        self.assertEqual("true", query.asset_query_params["include_fallback"])
+        self.assertEqual("true", query.query_params["include_count"])
+        self.assertEqual("5", query.query_params["skip"])
+        self.assertEqual("15", query.query_params["limit"])
+        self.assertEqual("title", query.query_params["asc"])
+
+    def test_32_include_metadata_with_where_and_base_methods(self):
+        """Test include_metadata combined with where and BaseQuery methods"""
+        query = (self.asset_query
+                 .where("file_size", QueryOperation.IS_GREATER_THAN, fields=1000)
+                 .include_metadata()
+                 .include_count()
+                 .skip(10)
+                 .limit(20)
+                 .order_by_descending("file_size"))
+        
+        self.assertEqual({"file_size": {"$gt": 1000}}, query.parameters)
+        self.assertEqual("true", query.asset_query_params["include_metadata"])
+        self.assertEqual("true", query.query_params["include_count"])
+        self.assertEqual("10", query.query_params["skip"])
+        self.assertEqual("20", query.query_params["limit"])
+        self.assertEqual("file_size", query.query_params["desc"])
+
+    def test_33_locale_with_where_and_pagination(self):
+        """Test locale combined with where and pagination for assets"""
+        query = (self.asset_query
+                 .locale('en-us')
+                 .where("title", QueryOperation.EQUALS, fields=IMAGE)
+                 .include_count()
+                 .skip(0)
+                 .limit(10))
+        
+        self.assertEqual("en-us", query.asset_query_params["locale"])
+        self.assertEqual({"title": IMAGE}, query.parameters)
+        self.assertEqual("true", query.query_params["include_count"])
+        self.assertEqual("0", query.query_params["skip"])
+        self.assertEqual("10", query.query_params["limit"])
+
+    def test_34_include_branch_with_where_and_base_methods(self):
+        """Test include_branch combined with where and BaseQuery methods"""
+        query = (self.asset_query
+                 .where("title", QueryOperation.INCLUDES, fields=[IMAGE, "other.jpg"])
+                 .include_branch()
+                 .include_count()
+                 .skip(0)
+                 .limit(10))
+        
+        self.assertEqual({"title": {"$in": [IMAGE, "other.jpg"]}}, query.parameters)
+        self.assertEqual("true", query.asset_query_params["include_branch"])
+        self.assertEqual("true", query.query_params["include_count"])
+        self.assertEqual("0", query.query_params["skip"])
+        self.assertEqual("10", query.query_params["limit"])
+
+    def test_35_complex_combination_all_asset_and_base_methods(self):
+        """Test complex combination of all AssetQuery and BaseQuery methods"""
+        query = (self.asset_query
+                 .where("title", QueryOperation.EQUALS, fields=IMAGE)
+                 .where("file_size", QueryOperation.IS_GREATER_THAN, fields=1000)
+                 .where("content_type", QueryOperation.INCLUDES, fields=["image/jpeg", "image/png"])
+                 .environment("production")
+                 .version("2")
+                 .include_dimension()
+                 .relative_url()
+                 .include_fallback()
+                 .include_metadata()
+                 .include_branch()
+                 .locale("en-us")
+                 .include_count()
+                 .skip(10)
+                 .limit(50)
+                 .order_by_descending("created_at")
+                 .param("custom_param", "custom_value"))
+        
+        # Verify parameters
+        self.assertEqual(3, len(query.parameters))
+        self.assertEqual(IMAGE, query.parameters["title"])
+        self.assertEqual({"$gt": 1000}, query.parameters["file_size"])
+        self.assertEqual({"$in": ["image/jpeg", "image/png"]}, query.parameters["content_type"])
+        
+        # Verify asset_query_params
+        self.assertEqual("production", query.http_instance.headers["environment"])
+        self.assertEqual("2", query.asset_query_params["version"])
+        self.assertEqual("true", query.asset_query_params["include_dimension"])
+        self.assertEqual("true", query.asset_query_params["relative_urls"])
+        self.assertEqual("true", query.asset_query_params["include_fallback"])
+        self.assertEqual("true", query.asset_query_params["include_metadata"])
+        self.assertEqual("true", query.asset_query_params["include_branch"])
+        self.assertEqual("en-us", query.asset_query_params["locale"])
+        
+        # Verify query_params
+        self.assertEqual("true", query.query_params["include_count"])
+        self.assertEqual("10", query.query_params["skip"])
+        self.assertEqual("50", query.query_params["limit"])
+        self.assertEqual("created_at", query.query_params["desc"])
+        self.assertEqual("custom_value", query.query_params["custom_param"])
+
+    def test_36_add_params_with_where_and_other_methods(self):
+        """Test add_params combined with where and other methods for assets"""
+        query = (self.asset_query
+                 .where("title", QueryOperation.EQUALS, fields=IMAGE)
+                 .add_params({"locale": "en-us", "include_count": "true"})
+                 .skip(5)
+                 .limit(10))
+        
+        self.assertEqual({"title": IMAGE}, query.parameters)
+        self.assertEqual("en-us", query.query_params["locale"])
+        self.assertEqual("true", query.query_params["include_count"])
+        self.assertEqual("5", query.query_params["skip"])
+        self.assertEqual("10", query.query_params["limit"])
+
+    def test_37_remove_param_after_combination(self):
+        """Test remove_param after building a complex asset query"""
+        query = (self.asset_query
+                 .where("title", QueryOperation.EQUALS, fields=IMAGE)
+                 .include_count()
+                 .skip(10)
+                 .limit(20)
+                 .param("key1", "value1")
+                 .param("key2", "value2")
+                 .remove_param("key1"))
+        
+        self.assertEqual({"title": IMAGE}, query.parameters)
+        self.assertNotIn("key1", query.query_params)
+        self.assertEqual("value2", query.query_params["key2"])
+        self.assertEqual("true", query.query_params["include_count"])
+        self.assertEqual("10", query.query_params["skip"])
+        self.assertEqual("20", query.query_params["limit"])
+
+    def test_38_order_by_ascending_then_descending_coexist(self):
+        """Test that order_by_ascending and order_by_descending can coexist for assets"""
+        query = (self.asset_query
+                 .where("title", QueryOperation.EQUALS, fields=IMAGE)
+                 .order_by_ascending("title")
+                 .order_by_descending("file_size"))
+        
+        self.assertEqual({"title": IMAGE}, query.parameters)
+        # Both asc and desc can coexist (they use different keys)
+        self.assertEqual("title", query.query_params["asc"])
+        self.assertEqual("file_size", query.query_params["desc"])
+
+    def test_39_multiple_where_conditions_with_complex_operations(self):
+        """Test multiple where conditions with complex operations and all BaseQuery methods for assets"""
+        query = (self.asset_query
+                 .where("title", QueryOperation.EQUALS, fields=IMAGE)
+                 .where("file_size", QueryOperation.IS_GREATER_THAN, fields=1000)
+                 .where("file_size", QueryOperation.IS_LESS_THAN, fields=100000)
+                 .where("tags", QueryOperation.INCLUDES, fields=["image", "photo"])
+                 .where("excluded_tags", QueryOperation.EXCLUDES, fields=["archive"])
+                 .include_count()
+                 .skip(0)
+                 .limit(100)
+                 .order_by_descending("file_size")
+                 .param("locale", "en-us")
+                 .include_fallback())
+        
+        # Verify all where conditions are present
+        self.assertEqual(IMAGE, query.parameters["title"])
+        # Note: file_size is overwritten by the second where call - last call wins
+        self.assertEqual({"$lt": 100000}, query.parameters["file_size"])
+        self.assertEqual({"$in": ["image", "photo"]}, query.parameters["tags"])
+        self.assertEqual({"$nin": ["archive"]}, query.parameters["excluded_tags"])
+        
+        # Verify all query_params
+        self.assertEqual("true", query.query_params["include_count"])
+        self.assertEqual("0", query.query_params["skip"])
+        self.assertEqual("100", query.query_params["limit"])
+        self.assertEqual("file_size", query.query_params["desc"])
+        self.assertEqual("en-us", query.query_params["locale"])
+        self.assertEqual("true", query.asset_query_params["include_fallback"])
+
 # if __name__ == '__main__':
 #     unittest.main()
