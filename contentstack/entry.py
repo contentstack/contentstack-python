@@ -54,6 +54,25 @@ class Entry(EntryQueryable):
         self.http_instance.headers['environment'] = environment
         return self
 
+    def remove_environment(self):
+        """Removes environment from the request headers
+        :return: Entry, so we can chain the call
+        -------------------------------
+        Example::
+
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry(uid='entry_uid')
+            >>> entry = entry.environment('test')
+            >>> entry = entry.remove_environment()
+            >>> result = entry.fetch()
+        -------------------------------
+        """
+        if 'environment' in self.http_instance.headers:
+            self.http_instance.headers.pop('environment')
+        return self
+
     def version(self, version):
         """When no version is specified, it returns the latest version
         To retrieve a specific version, specify the version number under this parameter.
@@ -96,6 +115,9 @@ class Entry(EntryQueryable):
         """
         if None in (key, value) and not isinstance(key, str):
             raise ValueError(ErrorMessages.INVALID_KEY_VALUE_ARGS)
+        # Convert non-string values to strings
+        if not isinstance(value, str):
+            value = str(value)
         self.entry_param[key] = value
         return self
 
