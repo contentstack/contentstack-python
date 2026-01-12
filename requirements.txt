@@ -5,7 +5,7 @@ python-dateutil==2.8.2
 requests==2.32.4
 coverage==7.6.0
 tox==4.5.1
-virtualenv==20.26.6
+virtualenv~=20.36.1
 Sphinx==7.3.7
 sphinxcontrib-websupport==1.2.7
 pip==25.3
@@ -33,7 +33,7 @@ pytz==2024.1
 Babel==2.14.0
 pep517==0.13.1
 tomli~=2.0.1
-Werkzeug==3.1.4
+werkzeug~=3.1.5
 Flask~=2.3.2
 click~=8.1.7
 MarkupSafe==2.1.5
@@ -58,7 +58,7 @@ zipp==3.20.1
 distlib~=0.3.8
 cachetools~=5.4.0
 tomlkit~=0.13.2
-urllib3==2.6.0
+urllib3~=2.6.3
 exceptiongroup~=1.2.2
 iniconfig~=2.0.0
 pytest-cov>=4.0.0
