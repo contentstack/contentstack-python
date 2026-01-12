@@ -5,17 +5,18 @@ import contentstack
 from contentstack.deep_merge_lp import DeepMergeMixin
 
 management_token = config.MANAGEMENT_TOKEN
-entry_uid = config.LIVE_PREVIEW_ENTRY_UID
+entry_uid = config.COMPLEX_ENTRY_UID
+content_type_uid = config.COMPLEX_CONTENT_TYPE_UID
 preview_token = config.PREVIEW_TOKEN
 
 _lp_query = {
     'live_preview': '#0#0#0#0#0#0#0#0#0#',
-    'content_type_uid': 'product',
+    'content_type_uid': content_type_uid,
     'entry_uid': entry_uid
 }
 _lp_preview_timestamp_query = {
     'live_preview': '#0#0#0#0#0#0#0#0#0#',
-    'content_type_uid': 'product',
+    'content_type_uid': content_type_uid,
     'entry_uid': entry_uid,
     'preview_timestamp': '2025-03-07T12:00:00Z',
     'release_id': '123456789'
@@ -32,11 +33,11 @@ _lp_2_0 = {
     'host': 'rest-preview.contentstack.com'
 }
 
-API_KEY = config.APIKEY
-DELIVERY_TOKEN = config.DELIVERYTOKEN
+API_KEY = config.API_KEY
+DELIVERY_TOKEN = config.DELIVERY_TOKEN
 ENVIRONMENT = config.ENVIRONMENT
 HOST = config.HOST
-ENTRY_UID = config.APIKEY
+ENTRY_UID = config.COMPLEX_ENTRY_UID
 
 class TestLivePreviewConfig(unittest.TestCase):
 
@@ -55,7 +56,7 @@ class TestLivePreviewConfig(unittest.TestCase):
                 'host': 'api.contentstack.io',
                 'management_token': 'string987654321'
             })
-        self.stack.content_type('product').entry(entry_uid)
+        self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID).entry(entry_uid)
         self.assertEqual(3, len(self.stack.get_live_preview))
         self.assertFalse(self.stack.get_live_preview['enable'])
         self.assertTrue(self.stack.get_live_preview['management_token'])
@@ -69,7 +70,7 @@ class TestLivePreviewConfig(unittest.TestCase):
         self.stack.live_preview_query(live_preview_query=_lp_query)
         self.assertIsNotNone(self.stack.live_preview['management_token'])
         self.assertEqual(7, len(self.stack.live_preview))
-        self.assertEqual('product', self.stack.live_preview['content_type_uid'])
+        self.assertEqual(config.COMPLEX_CONTENT_TYPE_UID, self.stack.live_preview['content_type_uid'])
 
     def test_022_preview_timestamp_with_livepreview_2_0_enabled(self):
         self.stack = contentstack.Stack(
@@ -80,7 +81,7 @@ class TestLivePreviewConfig(unittest.TestCase):
         self.stack.live_preview_query(live_preview_query=_lp_preview_timestamp_query)
         self.assertIsNotNone(self.stack.live_preview['preview_token'])
         self.assertEqual(9, len(self.stack.live_preview))
-        self.assertEqual('product', self.stack.live_preview['content_type_uid'])
+        self.assertEqual(config.COMPLEX_CONTENT_TYPE_UID, self.stack.live_preview['content_type_uid'])
         self.assertEqual('123456789', self.stack.live_preview['release_id'])
         self.assertEqual('2025-03-07T12:00:00Z', self.stack.live_preview['preview_timestamp'])
 
@@ -93,7 +94,7 @@ class TestLivePreviewConfig(unittest.TestCase):
         self.stack.live_preview_query(live_preview_query=_lp_query)
         self.assertIsNotNone(self.stack.live_preview['preview_token'])
         self.assertEqual(9, len(self.stack.live_preview))
-        self.assertEqual('product', self.stack.live_preview['content_type_uid'])
+        self.assertEqual(config.COMPLEX_CONTENT_TYPE_UID, self.stack.live_preview['content_type_uid'])
 
     def test_03_set_host(self):
         self.stack = contentstack.Stack(
@@ -126,7 +127,7 @@ class TestLivePreviewConfig(unittest.TestCase):
     def test_07_branching(self):
         stack = contentstack.Stack(
             'api_key', 'delivery_token', 'environment', branch='dev_branch')
-        stack.content_type('product')
+        stack.content_type(config.COMPLEX_CONTENT_TYPE_UID)
         self.assertEqual('dev_branch', stack.get_branch)
 
     def test_08_live_preview_query_hash_included(self):
@@ -147,7 +148,7 @@ class TestLivePreviewConfig(unittest.TestCase):
             live_preview=_lp
         )
         self.stack.live_preview_query(live_preview_query=_lp_query)
-        self.stack.content_type('product').entry(entry_uid=entry_uid)
+        self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID).entry(entry_uid=entry_uid)
         self.assertEqual(3, len(self.stack.headers))
         self.assertEqual(True, 'access_token' in self.stack.headers)
         self.assertEqual(True, 'api_key' in self.stack.headers)
@@ -160,7 +161,7 @@ class TestLivePreviewConfig(unittest.TestCase):
             live_preview=_lp
         )
         self.stack.live_preview_query(live_preview_query=_lp_query)
-        entry = self.stack.content_type('product').entry(entry_uid=ENTRY_UID)
+        entry = self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID).entry(entry_uid=ENTRY_UID)
         resp = entry.fetch()
         print(resp)
         self.assertEqual(6, len(self.stack.headers))
@@ -236,7 +237,7 @@ class TestLivePreviewObject(unittest.TestCase):
             'host': 'api.contentstack.io',
             'management_token': 'string987654321'
         })
-        self.stack.content_type('product').entry(entry_uid)
+        self.stack.content_type(config.COMPLEX_CONTENT_TYPE_UID).entry(entry_uid)
         self.assertEqual(3, len(self.stack.get_live_preview))
         self.assertFalse(self.stack.get_live_preview['enable'])
         self.assertTrue(self.stack.get_live_preview['management_token'])

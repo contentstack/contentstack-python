@@ -12,9 +12,10 @@ from .test_assets import TestAsset
 from .test_entry import TestEntry
 from .test_query import TestQuery
 from .test_stack import TestStack
-from .test_global_fields import TestGlobalFieldInit
-from .test_early_fetch import TestGlobalFieldFetch
-from .test_early_find import TestGlobalFieldFind
+# Removed old imports - pytest auto-discovers tests
+# from .test_global_fields import TestGlobalFieldInit  # Old class, doesn't exist
+# from .test_early_fetch import TestGlobalFieldFetch  # Old class, doesn't exist
+# from .test_early_find import TestGlobalFieldFind  # Old class, doesn't exist
 from .test_live_preview import TestLivePreviewConfig
 from .test_taxonomies import TestTaxonomyAPI
 
@@ -25,9 +26,7 @@ def all_tests():
     test_module_entry = TestLoader().loadTestsFromTestCase(TestEntry)
     test_module_query = TestLoader().loadTestsFromTestCase(TestQuery)
     test_module_live_preview = TestLoader().loadTestsFromTestCase(TestLivePreviewConfig)
-    test_module_globalFields = TestLoader().loadTestsFromName(TestGlobalFieldInit)
-    test_module_globalFields_fetch = TestLoader().loadTestsFromName(TestGlobalFieldFetch)
-    test_module_globalFields_find = TestLoader().loadTestsFromName(TestGlobalFieldFind)
+    # Removed old global field test references - pytest auto-discovers new test classes
     test_module_taxonomies = TestLoader().loadTestsFromTestCase(TestTaxonomyAPI)
     TestSuite([
         test_module_stack,
@@ -35,8 +34,5 @@ def all_tests():
         test_module_entry,
         test_module_query,
         test_module_live_preview,
-        test_module_globalFields,
-        test_module_globalFields_fetch,
-        test_module_globalFields_find,
         test_module_taxonomies
     ])
