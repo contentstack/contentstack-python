@@ -10,7 +10,7 @@ Sphinx==7.3.7
 sphinxcontrib-websupport==1.2.7
 pip==25.3
 build==0.10.0
-wheel==0.45.1
+wheel~=0.46.2
 lxml==5.3.1
 utils~=1.0.2
 keyring==23.13.1
@@ -26,7 +26,7 @@ env~=0.1.0
 filelock~=3.20.1
 pluggy~=1.5.0
 six~=1.16.0
-packaging~=23.1
+packaging>=24.0
 pytest==7.3.1
 dill~=0.3.8
 pytz==2024.1
