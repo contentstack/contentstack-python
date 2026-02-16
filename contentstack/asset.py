@@ -118,6 +118,35 @@ class Asset:
         self.asset_params['include_fallback'] = "true"
         return self
 
+    def asset_fields(self, *field_names):
+        r"""Include specific asset fields in the response.
+        Supported values: user_defined_fields, embedded_metadata, ai_generated_metadata, visual_markups.
+        Pass one or more field names. Can be called multiple times to add more fields.
+
+        :param field_names: One or more asset field names (user_defined_fields, embedded_metadata, ai_generated_metadata, visual_markups)
+        :return: `Asset`, so we can chain the call
+        ----------------------------
+        Example::
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> asset = stack.asset(uid='asset_uid')
+            >>> result = asset.asset_fields('user_defined_fields', 'visual_markups').fetch()
+        ----------------------------
+        """
+        if field_names:
+            values = []
+            for name in field_names:
+                if isinstance(name, (list, tuple)):
+                    values.extend(str(v) for v in name)
+                else:
+                    values.append(str(name))
+            if values:
+                existing = self.asset_params.get('asset_fields[]', [])
+                if not isinstance(existing, list):
+                    existing = [existing]
+                self.asset_params['asset_fields[]'] = existing + values
+        return self
+
     def fetch(self):
         r"""This call fetches the latest version of a specific asset of a particular stack.
         :return: json response of asset
