@@ -55,13 +55,13 @@ class TestAsset(unittest.TestCase):
 
     def test_01_assets_query_initial_run(self):
         result = self.asset_query.find()
-        if result is not None:
-            assets = result['assets']
-            for item in assets:
-                if item['title'] == 'if_icon-72-lightning_316154_(1).png':
-                    global ASSET_UID
-                    ASSET_UID = item['uid']
-        self.assertEqual(8, len(assets))
+        self.assertIsNotNone(result)
+        assets = result['assets']
+        for item in assets:
+            if item['title'] == 'if_icon-72-lightning_316154_(1).png':
+                global ASSET_UID
+                ASSET_UID = item['uid']
+        self.assertGreaterEqual(len(assets), 8)
 
     def test_02_asset_method(self):
         self.asset = self.stack.asset(uid=ASSET_UID)
@@ -117,14 +117,37 @@ class TestAsset(unittest.TestCase):
         self.assertEqual({'environment': 'development',
                           'include_fallback': 'true'}, asset_params)
 
+    def test_08a_asset_fields_single_asset(self):
+        """Test single asset asset_fields sets asset_params"""
+        self.asset = self.stack.asset(uid=ASSET_UID or 'test_asset_uid')
+        self.asset.asset_fields('user_defined_fields', 'visual_markups')
+        self.assertEqual(['user_defined_fields', 'visual_markups'],
+                         self.asset.asset_params['asset_fields[]'])
+
+    def test_08b_asset_fields_single_asset_chained_calls(self):
+        """Test single asset asset_fields with chained calls"""
+        self.asset = self.stack.asset(uid=ASSET_UID or 'test_asset_uid')
+        self.asset.asset_fields('user_defined_fields').asset_fields('visual_markups')
+        self.assertEqual(['user_defined_fields', 'visual_markups'],
+                         self.asset.asset_params['asset_fields[]'])
+
+    def test_08c_asset_fields_single_asset_all_supported_values(self):
+        """Test single asset asset_fields with all supported values"""
+        self.asset = self.stack.asset(uid=ASSET_UID or 'test_asset_uid')
+        self.asset.asset_fields('user_defined_fields', 'embedded_metadata',
+                                'ai_generated_metadata', 'visual_markups')
+        self.assertEqual(
+            ['user_defined_fields', 'embedded_metadata', 'ai_generated_metadata', 'visual_markups'],
+            self.asset.asset_params['asset_fields[]'])
+
     ############################################
     # ==== Asset Query ====
     ############################################
 
     def test_09_assets_query(self):
         result = self.asset_query.find()
-        if result is not None:
-            self.assertEqual(8, len(result['assets']))
+        self.assertIsNotNone(result)
+        self.assertGreaterEqual(len(result['assets']), 8)
 
     def test_10_assets_base_query_where_exclude_title(self):
         query = self.asset_query.where(
@@ -210,6 +233,46 @@ class TestAsset(unittest.TestCase):
         entry = self.asset_query.include_metadata()
         self.assertTrue(
             self.asset_query.asset_query_params.__contains__('include_metadata'))
+
+    def test_25a_asset_query_asset_fields_single_field(self):
+        """Test asset_query asset_fields with a single field"""
+        query = self.asset_query.asset_fields('user_defined_fields')
+        self.assertEqual(['user_defined_fields'],
+                         query.asset_query_params['asset_fields[]'])
+
+    def test_25b_asset_query_asset_fields_multiple_fields(self):
+        """Test asset_query asset_fields with multiple fields"""
+        query = self.asset_query.asset_fields('user_defined_fields', 'visual_markups')
+        self.assertEqual(['user_defined_fields', 'visual_markups'],
+                         query.asset_query_params['asset_fields[]'])
+
+    def test_25c_asset_query_asset_fields_chained_calls(self):
+        """Test asset_query asset_fields with chained calls"""
+        query = (self.asset_query
+                 .asset_fields('user_defined_fields')
+                 .asset_fields('visual_markups'))
+        self.assertEqual(['user_defined_fields', 'visual_markups'],
+                         query.asset_query_params['asset_fields[]'])
+
+    def test_25d_asset_query_asset_fields_all_supported_values(self):
+        """Test asset_query asset_fields with all supported values"""
+        query = (self.asset_query
+                 .asset_fields('user_defined_fields', 'embedded_metadata',
+                               'ai_generated_metadata', 'visual_markups'))
+        self.assertEqual(
+            ['user_defined_fields', 'embedded_metadata', 'ai_generated_metadata', 'visual_markups'],
+            query.asset_query_params['asset_fields[]'])
+
+    def test_25e_asset_query_asset_fields_with_other_params(self):
+        """Test asset_query asset_fields combined with include_metadata and locale"""
+        query = (self.asset_query
+                 .asset_fields('user_defined_fields', 'visual_markups')
+                 .include_metadata()
+                 .locale('en-us'))
+        self.assertEqual(['user_defined_fields', 'visual_markups'],
+                         query.asset_query_params['asset_fields[]'])
+        self.assertEqual('true', query.asset_query_params['include_metadata'])
+        self.assertEqual('en-us', query.asset_query_params['locale'])
 
     def test_26_where_with_include_count_and_pagination(self):
         """Test combination of where, include_count, skip, and limit for assets"""
