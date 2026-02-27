@@ -363,6 +363,46 @@ class TestEntry(unittest.TestCase):
         self.assertIn('include_reference_content_type_uid', entry.entry_queryable_param)
         self.assertEqual('value', entry.entry_queryable_param['custom'])
 
+    def test_47_entry_asset_fields_single_field(self):
+        """Test entry asset_fields with a single field"""
+        entry = self.stack.content_type('faq').entry(FAQ_UID).asset_fields('user_defined_fields')
+        self.assertEqual(['user_defined_fields'], entry.entry_queryable_param['asset_fields[]'])
+
+    def test_48_entry_asset_fields_multiple_fields(self):
+        """Test entry asset_fields with multiple fields in one call"""
+        entry = (self.stack.content_type('faq')
+                 .entry(FAQ_UID)
+                 .asset_fields('user_defined_fields', 'visual_markups'))
+        self.assertEqual(['user_defined_fields', 'visual_markups'],
+                         entry.entry_queryable_param['asset_fields[]'])
+
+    def test_49_entry_asset_fields_chained_calls(self):
+        """Test entry asset_fields with chained calls"""
+        entry = (self.stack.content_type('faq')
+                 .entry(FAQ_UID)
+                 .asset_fields('user_defined_fields')
+                 .asset_fields('visual_markups'))
+        self.assertEqual(['user_defined_fields', 'visual_markups'],
+                         entry.entry_queryable_param['asset_fields[]'])
+
+    def test_50_entry_asset_fields_all_supported_values(self):
+        """Test entry asset_fields with all supported values"""
+        entry = (self.stack.content_type('faq')
+                 .entry(FAQ_UID)
+                 .asset_fields('user_defined_fields', 'embedded_metadata',
+                               'ai_generated_metadata', 'visual_markups'))
+        self.assertEqual(
+            ['user_defined_fields', 'embedded_metadata', 'ai_generated_metadata', 'visual_markups'],
+            entry.entry_queryable_param['asset_fields[]'])
+
+    def test_51_query_asset_fields(self):
+        """Test query asset_fields sets entry_queryable_param"""
+        query = (self.stack.content_type('faq')
+                 .query()
+                 .asset_fields('user_defined_fields', 'visual_markups'))
+        self.assertEqual(['user_defined_fields', 'visual_markups'],
+                         query.entry_queryable_param['asset_fields[]'])
+
         
 if __name__ == '__main__':
     unittest.main()
