@@ -176,6 +176,26 @@ class Entry(EntryQueryable):
         self.entry_param['include_embedded_items[]'] = "BASE"
         return self
 
+    def asset_fields(self, *field_names):
+        """Include specific asset fields in the response.
+        Supported values: user_defined_fields, embedded_metadata, ai_generated_metadata, visual_markups.
+        Pass one or more field names. Can be called multiple times to add more fields.
+
+        :param field_names: One or more asset field names (user_defined_fields, embedded_metadata, ai_generated_metadata, visual_markups)
+        :return: Entry, so we can chain the call
+        ----------------------------
+        Example::
+
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry(uid='entry_uid')
+            >>> entry = entry.asset_fields('user_defined_fields', 'visual_markups')
+            >>> result = entry.fetch()
+        ----------------------------
+        """
+        return super().asset_fields(*field_names)
+
     def __get_base_url(self, endpoint=''):
         if endpoint is not None and endpoint.strip(): # .strip() removes leading/trailing whitespace
             self.http_instance.endpoint = endpoint
