@@ -167,6 +167,45 @@ class EntryQueryable:
         self.entry_queryable_param['include_metadata'] = 'true'
         return self
 
+    def asset_fields(self, *field_names):
+        """
+        Include specific asset fields in the response.
+        Supported values: user_defined_fields, embedded_metadata, ai_generated_metadata, visual_markups.
+        Pass one or more field names. Can be called multiple times to add more fields.
+
+        :param field_names: One or more asset field names (user_defined_fields, embedded_metadata, ai_generated_metadata, visual_markups)
+        :return: self: so you can chain this call.
+
+        Example (Query):
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> query = content_type.query()
+            >>> query = query.asset_fields('user_defined_fields', 'visual_markups')
+            >>> result = query.find()
+
+        Example (Entry):
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> content_type = stack.content_type('content_type_uid')
+            >>> entry = content_type.entry('entry_uid')
+            >>> entry = entry.asset_fields('user_defined_fields', 'visual_markups')
+            >>> result = entry.fetch()
+        """
+        if field_names:
+            values = []
+            for name in field_names:
+                if isinstance(name, (list, tuple)):
+                    values.extend(str(v) for v in name)
+                else:
+                    values.append(str(name))
+            if values:
+                existing = self.entry_queryable_param.get('asset_fields[]', [])
+                if not isinstance(existing, list):
+                    existing = [existing]
+                self.entry_queryable_param['asset_fields[]'] = existing + values
+        return self
+
     def add_param(self, key: str, value: str):
         """
         This method adds key and value to an Entry.

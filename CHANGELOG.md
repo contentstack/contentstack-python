@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## _v2.5.0_
+
+### **Date: 02-March-2026**
+
+- Assets fields(DAM 2.0) support added
 ## _v2.4.1_
 
 ### **Date: 10-November-2025**
