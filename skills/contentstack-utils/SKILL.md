@@ -1,7 +1,6 @@
 ---
-description: "CDA Delivery SDK — Stack, queries, live preview, requests session"
-globs: ["contentstack/**/*.py"]
-alwaysApply: false
+name: contentstack-utils
+description: Contentstack Python CDA SDK — Stack, queries, entries, assets, live preview, taxonomy, HTTP session.
 ---
 
 # Contentstack Python Delivery SDK (`contentstack/`)
@@ -25,6 +24,19 @@ alwaysApply: false
 ## HTTP layer
 
 - **`https_connection.py`** — **`requests.Session`**, **`HTTPAdapter`**, **`get_request`** from **`controller.py`**; user-agent uses **`contentstack.__title__`** / **`__version__`**.
+
+## Extending
+
+- Add query or stack methods consistent with [CDA query parameters](https://www.contentstack.com/docs/developers/apis/content-delivery-api/).
+- Keep transport logic in **`HTTPSConnection`** / **`controller`** rather than duplicating **`requests`** setup.
+
+## Dependencies
+
+- **`requests`**, **`urllib3`** (**Retry**), **`python-dateutil`**
+
+## Related skills
+
+- [`framework/SKILL.md`](../framework/SKILL.md) — retries, **`HTTPAdapter`**, timeouts
 
 ## Docs
 

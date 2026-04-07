@@ -1,7 +1,6 @@
 ---
-description: "Branches, install, and tests for contentstack-python"
-globs: ["**/*.py", "requirements.txt", "setup.py", "tests/pytest.ini"]
-alwaysApply: false
+name: dev-workflow
+description: Branches, install, tests, and versioning for contentstack-python.
 ---
 
 # Development workflow — Contentstack Python CDA SDK
@@ -16,6 +15,6 @@ alwaysApply: false
 
 - Bump **`contentstack/__init__.py`** **`__version__`** and **`setup.py`**-driven releases per semver for user-visible SDK changes.
 
-## Links
+## References
 
-- [`AGENTS.md`](../../AGENTS.md) · [`skills/contentstack-delivery-python/SKILL.md`](../../skills/contentstack-delivery-python/SKILL.md)
+- [`AGENTS.md`](../../AGENTS.md) · [`contentstack-utils/SKILL.md`](../contentstack-utils/SKILL.md)

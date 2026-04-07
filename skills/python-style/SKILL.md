@@ -1,12 +1,9 @@
 ---
-description: "Python conventions for the CDA SDK package and packaging"
-globs:
-  - "contentstack/**/*.py"
-  - "setup.py"
-alwaysApply: false
+name: python-style
+description: Python layout, packaging, and conventions for the Contentstack CDA SDK package.
 ---
 
-# Python — Contentstack CDA SDK
+# Python style — Contentstack CDA SDK
 
 ## Layout
 

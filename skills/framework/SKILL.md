@@ -19,6 +19,6 @@ description: HTTP layer for the Python CDA SDK — requests Session, urllib3 ret
 
 - **Integration** — full stack via **`tests/`** and **`config`**; **unit-style** assertions on URL building and headers where tests exist.
 
-## Rule shortcut
+## Related skills
 
-- `.cursor/rules/contentstack-delivery-python.mdc`
+- [`contentstack-utils/SKILL.md`](../contentstack-utils/SKILL.md)

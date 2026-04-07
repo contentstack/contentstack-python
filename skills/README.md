@@ -3,8 +3,10 @@
 | Skill | When to use |
 |-------|-------------|
 | [`code-review/`](code-review/SKILL.md) | PR review, semver, public API on **Stack** |
-| [`testing/`](testing/SKILL.md) | **pytest** + **`tests/`** + **`config.py`** |
-| [`contentstack-delivery-python/`](contentstack-delivery-python/SKILL.md) | **Stack**, queries, entries, assets, live preview |
+| [`contentstack-utils/`](contentstack-utils/SKILL.md) | **Stack**, queries, entries, assets, live preview, CDA behavior |
+| [`dev-workflow/`](dev-workflow/SKILL.md) | Branch/PR, install, tests, **config.py**, versioning |
 | [`framework/`](framework/SKILL.md) | **requests**, **HTTPSConnection**, retries |
+| [`python-style/`](python-style/SKILL.md) | **`contentstack/`** layout, **setup.py**, Python conventions |
+| [`testing/`](testing/SKILL.md) | **pytest** + **`tests/`** + **`config.py`** |
 
-**Overview:** [`AGENTS.md`](../AGENTS.md) · **Rules:** [`.cursor/rules/README.md`](../.cursor/rules/README.md)
+**Overview:** [`AGENTS.md`](../AGENTS.md) · **Cursor rules index:** [`.cursor/rules/README.md`](../.cursor/rules/README.md)
