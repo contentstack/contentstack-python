@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## _v2.5.2_
+
+### **Date: 18-May-2026**
+
+- Bumped urllib3 in development requirements to address reported vulnerabilities.
+
 ## _v2.5.1_
 
 ### **Date: 15-April-2026**
