@@ -118,17 +118,20 @@ class ContentType:
         result = self.http_instance.get(url)
         return result
     
-    def variants(self, variant_uid: str | list[str], params: dict = None):
+    def variants(self, variant_uid: str | list[str], branch: str = None, params: dict = None):
         """
         Fetches the variants of the content type
-        :param variant_uid: {str} -- variant_uid
-        :return: Entry, so you can chain this call.
+        :param variant_uid: {str | list[str]} -- variant UID or list of variant UIDs
+        :param branch: {str} -- optional branch name to scope the variant request
+        :param params: {dict} -- optional query parameters
+        :return: Variants, so you can chain this call.
         """
         return Variants(
             http_instance=self.http_instance,
             content_type_uid=self.__content_type_uid,
             entry_uid=None,
             variant_uid=variant_uid,
+            branch=branch,
             params=params,
             logger=None
         )
