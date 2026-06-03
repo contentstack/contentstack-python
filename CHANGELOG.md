@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## _v2.5.3_
+
+### **Date: 08-June-2026**
+
+- Fixed security issues.
+
 ## _v2.5.2_
 
 ### **Date: 18-May-2026**

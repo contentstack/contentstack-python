@@ -51,7 +51,7 @@ Pygments~=2.20.0
 wrapt==1.16.0
 certifi==2024.8.30
 oauthlib==3.2.2
-idna==3.10
+idna==3.15
 chardet~=5.2.0
 alabaster==0.7.16
 zipp==3.20.1
