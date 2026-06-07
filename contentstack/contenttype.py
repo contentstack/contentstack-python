@@ -7,6 +7,7 @@ content type.
 
 # ************* Module ContentType **************
 # Your code has been rated at 10.00/10 by pylint
+from __future__ import annotations
 import json
 import logging
 from urllib import parse

@@ -46,6 +46,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/contentstack/contentstack-python",
     packages=['contentstack'],
+    package_data={'contentstack': ['assets/regions.json']},
     license='MIT',
     test_suite='tests',
     install_requires=requirements,

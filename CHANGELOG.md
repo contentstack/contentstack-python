@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## _v2.6.0_
+
+### **Date: 07-June-2026**
+
+- Dynamic endpoint resolution via new `Endpoint` class.
+- Region-to-URL mapping is now loaded from a bundled `regions.json` (sourced from `artifacts.contentstack.com`) instead of hardcoded `if/elif` chains.
+- Added `Endpoint.get_contentstack_endpoint(region, service, omit_https)` — resolves any supported region to its `contentDelivery`, `contentManagement`, or other service URL.
+- Added `contentstack.get_contentstack_endpoint()` module-level proxy.
+- `Stack` now auto-resolves `host` and `live_preview` management host via `Endpoint` on initialization.
+- Added `scripts/download_regions.py` to pre-populate `regions.json` at install time.
+- Runtime fallback: if `regions.json` is absent, the SDK downloads it live on first use.
+
 ## _v2.5.1_
 
 ### **Date: 15-April-2026**
