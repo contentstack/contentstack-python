@@ -2,7 +2,7 @@
 
 ## _v2.6.0_
 
-### **Date: 07-June-2026**
+### **Date: 15-June-2026**
 
 - Dynamic endpoint resolution via new `Endpoint` class.
 - Region-to-URL mapping is now loaded from a bundled `regions.json` (sourced from `artifacts.contentstack.com`) instead of hardcoded `if/elif` chains.
