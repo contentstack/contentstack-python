@@ -7,6 +7,7 @@ from contentstack.error_messages import ErrorMessages
 from contentstack.asset import Asset
 from contentstack.assetquery import AssetQuery
 from contentstack.contenttype import ContentType
+from contentstack.endpoint import Endpoint
 from contentstack.taxonomy import Taxonomy
 from contentstack.globalfields import GlobalField
 from contentstack.https_connection import HTTPSConnection
@@ -119,20 +120,15 @@ class Stack:
         if self.environment is None or self.environment == "":
             raise PermissionError(ErrorMessages.INVALID_ENVIRONMENT_TOKEN)
 
-        if self.region.value == 'eu' and self.host == DEFAULT_HOST:
-            self.host = 'eu-cdn.contentstack.com'
-        elif self.region.value == 'au' and self.host == DEFAULT_HOST:
-            self.host = 'au-cdn.contentstack.com'
-        elif self.region.value == 'azure-na' and self.host == DEFAULT_HOST:
-            self.host = 'azure-na-cdn.contentstack.com'
-        elif self.region.value == 'azure-eu' and self.host == DEFAULT_HOST:
-            self.host = 'azure-eu-cdn.contentstack.com'
-        elif self.region.value == 'gcp-na' and self.host == DEFAULT_HOST:
-            self.host = 'gcp-na-cdn.contentstack.com'
-        elif self.region.value == 'gcp-eu' and self.host == DEFAULT_HOST:
-            self.host = 'gcp-eu-cdn.contentstack.com'
-        elif self.region.value != 'us':
-            self.host = f'{self.region.value}-{DEFAULT_HOST}'
+        if self.host == DEFAULT_HOST:
+            try:
+                self.host = Endpoint.get_contentstack_endpoint(
+                    self.region.value, 'contentDelivery', omit_https=True)
+            except (ValueError, RuntimeError):
+                # Unknown/custom region — fall back to legacy pattern so
+                # code written before this feature was added continues to work.
+                if self.region.value != 'us':
+                    self.host = f'{self.region.value}-{DEFAULT_HOST}'
         self.endpoint = f'https://{self.host}/{self.version}'
 
     def _setup_headers(self):
@@ -365,8 +361,14 @@ class Stack:
     
     def _setup_live_preview(self):
         if self.live_preview and self.live_preview.get("enable"):
-            region_prefix = "" if self.region.value == "us" else f"{self.region.value}-"
-            self.live_preview["host"] = f"{region_prefix}rest-preview.contentstack.com"
+            if not self.live_preview.get("host"):
+                try:
+                    mgmt_host = Endpoint.get_contentstack_endpoint(
+                        self.region.value, 'contentManagement', omit_https=True)
+                except (ValueError, RuntimeError):
+                    region_prefix = "" if self.region.value == "us" else f"{self.region.value}-"
+                    mgmt_host = f"{region_prefix}api.contentstack.io"
+                self.live_preview["host"] = mgmt_host
 
             if self.live_preview.get("preview_token"):
                 self.headers["preview_token"] = self.live_preview["preview_token"]
