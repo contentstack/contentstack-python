@@ -1,12 +1,16 @@
-# Project skills — Contentstack Python CDA SDK
+# Skills – Contentstack Python CDA SDK
 
-| Skill | When to use |
-|-------|-------------|
-| [`code-review/`](code-review/SKILL.md) | PR review, semver, public API on **Stack** |
-| [`contentstack-utils/`](contentstack-utils/SKILL.md) | **Stack**, queries, entries, assets, live preview, CDA behavior |
-| [`dev-workflow/`](dev-workflow/SKILL.md) | Branch/PR, install, tests, **config.py**, versioning |
-| [`framework/`](framework/SKILL.md) | **requests**, **HTTPSConnection**, retries |
-| [`python-style/`](python-style/SKILL.md) | **`contentstack/`** layout, **setup.py**, Python conventions |
-| [`testing/`](testing/SKILL.md) | **pytest** + **`tests/`** + **`config.py`** |
+Source of truth for detailed guidance. Read **[`AGENTS.md`](../AGENTS.md)** first, then open the skill that matches your task.
 
-**Overview:** [`AGENTS.md`](../AGENTS.md) · **Cursor rules index:** [`.cursor/rules/README.md`](../.cursor/rules/README.md)
+## When to use which skill
+
+| Skill folder | Use when |
+|---|---|
+| `dev-workflow` | Setting up locally, running tests, bumping the version, or before a PR |
+| `contentstack-utils` | Working with `Stack`, queries, entries, assets, live preview, taxonomy, or variants |
+| `python-style` | Editing `contentstack/` modules or `setup.py` — layout, naming, conventions |
+| `testing` | Adding or changing tests under `tests/`, managing `config.py`, credential hygiene |
+| `code-review` | PR checklist, API semver, HTTP regressions, secrets audit |
+| `framework` | Changing `HTTPSConnection`, retries, `urllib3` usage, or `requests` session config |
+
+Each folder contains `SKILL.md` with YAML frontmatter (`name`, `description`).
