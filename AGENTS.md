@@ -1,49 +1,50 @@
-# AGENTS.md — AI / automation context
+# Contentstack Python CDA SDK – Agent guide
 
-## Project
+**Universal entry point** for contributors and AI agents. Detailed conventions live in **`skills/*/SKILL.md`**.
 
-| | |
-|---|---|
-| **Name** | **Contentstack** (PyPI) — **Python Content Delivery SDK** |
-| **Purpose** | Python client for the **Content Delivery API (CDA)**: **Stack**, content types, entries, assets, queries, live preview, taxonomy, variants. Uses **`requests`** + **`urllib3.Retry`** via **`HTTPSConnection`**. |
-| **Repository** | [contentstack/contentstack-python](https://github.com/contentstack/contentstack-python.git) |
+## What this repo is
 
-## Tech stack
+| Field | Detail |
+|--------|--------|
+| **Name:** | [contentstack/contentstack-python](https://github.com/contentstack/contentstack-python) |
+| **Purpose:** | Python client for the **Content Delivery API (CDA)**: stacks, content types, entries, assets, queries, live preview, taxonomy, and variants. Uses **`requests`** + **`urllib3.Retry`** via **`HTTPSConnection`**. |
+| **Out of scope:** | Content management (create / update / delete) — use `contentstack-management-python` for CMA operations. |
+
+## Tech stack (at a glance)
 
 | Area | Details |
 |------|---------|
-| **Language** | **Python** (see **`setup.py`** `python_requires`, classifiers) |
-| **HTTP** | **`requests`**, **`urllib3`** |
-| **Tests** | **pytest** + **`unittest.TestCase`** under **`tests/`** |
-| **Packaging** | **`setuptools`** / **`setup.py`**, package **`contentstack`** |
+| Language | Python ≥ 3.6 (`setup.py` `python_requires`) |
+| Build | `setuptools` / `setup.py`; package `contentstack` |
+| Tests | `pytest` — `tests/test_*.py`; config in `tests/pytest.ini` |
+| Lint / coverage | `ruff`, `flake8`, `black`, `isort`; `pytest-cov` for coverage |
+| HTTP | `requests`, `urllib3` |
 
-## Source layout
+## Commands (quick reference)
 
-| Path | Role |
-|------|------|
-| `contentstack/stack.py` | **`Stack`**, **`ContentstackRegion`**, endpoint and **HTTPSConnection** wiring |
-| `contentstack/https_connection.py`, `contentstack/controller.py` | Session, retries, **`get_request`** |
-| `contentstack/query.py`, `contentstack/basequery.py` | Queries |
-| `contentstack/entry.py`, `asset.py`, `contenttype.py`, … | Domain modules |
-| `contentstack/__init__.py` | Public exports (**`Stack`**, **`Entry`**, **`Asset`**, …), **`__version__`** |
-| `config.py` (repo root) | Test credentials and UIDs — **must not commit secrets** |
-| `tests/*.py` | Integration-style tests importing **`config`** |
+| Command Type | Command |
+|---|---|
+| Build | `pip install -e .` |
+| Install deps | `pip install -r requirements.txt` |
+| Test | `pytest tests/` |
+| Coverage | `pytest --cov=contentstack tests/` |
+| Lint | `ruff check contentstack/` |
 
-## Common commands
+CI: [`.github/workflows/python-publish.yml`](.github/workflows/python-publish.yml) · [`.github/workflows/check-branch.yml`](.github/workflows/check-branch.yml)
 
-```bash
-pip install -r requirements.txt
-pip install -e .
-pytest tests/
-```
+## Where the documentation lives: skills
 
-## Environment / test configuration
+| Skill | Path | What it covers |
+|---|---|---|
+| Development workflow | [`skills/dev-workflow/SKILL.md`](skills/dev-workflow/SKILL.md) | Install, tests, `config.py`, versioning, PR baseline |
+| Contentstack CDA SDK | [`skills/contentstack-utils/SKILL.md`](skills/contentstack-utils/SKILL.md) | `Stack`, queries, entries, assets, live preview, taxonomy, HTTP session |
+| Python style & repo layout | [`skills/python-style/SKILL.md`](skills/python-style/SKILL.md) | Package layout, `setup.py`, naming conventions, no secret logging |
+| Testing | [`skills/testing/SKILL.md`](skills/testing/SKILL.md) | `pytest`, `tests/`, `config.py`, credential hygiene |
+| Code review | [`skills/code-review/SKILL.md`](skills/code-review/SKILL.md) | PR checklist, public API, `Stack`, HTTP layer, secrets |
+| Framework / HTTP | [`skills/framework/SKILL.md`](skills/framework/SKILL.md) | `requests`, `HTTPSConnection`, `urllib3` retries, timeouts |
 
-Tests load stack settings from root **`config.py`** (e.g. **HOST**, **APIKEY**, **DELIVERYTOKEN**, **ENVIRONMENT**). Use a local, gitignored file or sanitized values for CI. Do not commit secrets.
+An index with "when to use" hints is in [`skills/README.md`](skills/README.md).
 
-## Further guidance
+## Using Cursor (optional)
 
-- **Cursor rules:** [`.cursor/rules/README.md`](.cursor/rules/README.md)
-- **Skills:** [`skills/README.md`](skills/README.md)
-
-Product docs: [Content Delivery API](https://www.contentstack.com/docs/developers/apis/content-delivery-api/).
+If you use **Cursor**, [`.cursor/rules/README.md`](.cursor/rules/README.md) only points to **`AGENTS.md`**—same docs as everyone else.
