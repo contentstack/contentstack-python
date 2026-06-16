@@ -11,6 +11,17 @@
 - `Stack` now auto-resolves `host` and `live_preview` management host via `Endpoint` on initialization.
 - Added `scripts/download_regions.py` to pre-populate `regions.json` at install time.
 - Runtime fallback: if `regions.json` is absent, the SDK downloads it live on first use.
+## _v2.5.3_
+
+### **Date: 08-June-2026**
+
+- Fixed security issues.
+
+## _v2.5.2_
+
+### **Date: 18-May-2026**
+
+- Bumped urllib3 in development requirements to address reported vulnerabilities.
 
 ## _v2.5.1_
 
