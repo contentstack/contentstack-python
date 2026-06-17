@@ -2,7 +2,7 @@
 
 ## _v2.6.0_
 
-### **Date: 07-June-2026**
+### **Date: 22-June-2026**
 
 - Dynamic endpoint resolution via new `Endpoint` class.
 - Region-to-URL mapping is now loaded from a bundled `regions.json` (sourced from `artifacts.contentstack.com`) instead of hardcoded `if/elif` chains.
@@ -11,6 +11,9 @@
 - `Stack` now auto-resolves `host` and `live_preview` management host via `Endpoint` on initialization.
 - Added `scripts/download_regions.py` to pre-populate `regions.json` at install time.
 - Runtime fallback: if `regions.json` is absent, the SDK downloads it live on first use.
+- Added `refresh_regions()` utility to programmatically download the latest regions manifest from the Contentstack CDN and overwrite the bundled `assets/regions.json`.
+- Exposed `refresh_regions` at the package level (`from contentstack import refresh_regions`) for use in CI pipelines and tooling.
+- `setup.py` now auto-refreshes `regions.json` at build time via a custom `BuildPyWithRegions` command, keeping bundled region data current on every `pip install`.
 
 ## _v2.5.1_
 

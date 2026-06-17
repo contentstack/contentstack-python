@@ -10,6 +10,7 @@ from .endpoint import Endpoint
 from .https_connection import HTTPSConnection
 from contentstack.stack import Stack
 from .utility import Utils
+from .region_refresh import refresh_regions
 
 __all__ = (
 "Entry",
@@ -18,7 +19,8 @@ __all__ = (
 "Endpoint",
 "HTTPSConnection",
 "Stack",
-"Utils"
+"Utils",
+"refresh_regions",
 )
 
 
