@@ -11,6 +11,7 @@ Can also be wired into setup.py post-install hooks or tox envsetup if needed.
 import json
 import os
 import sys
+import requests
 
 REGIONS_URL = 'https://artifacts.contentstack.com/regions.json'
 
@@ -23,15 +24,6 @@ DEST = os.path.join(
 def download():
     dest_dir = os.path.dirname(DEST)
     os.makedirs(dest_dir, exist_ok=True)
-
-    try:
-        import requests
-    except ImportError:
-        sys.stderr.write(
-            'contentstack: requests library not available. '
-            'Install dependencies first: pip install -r requirements.txt\n'
-        )
-        sys.exit(1)
 
     print(f'contentstack: Downloading regions.json from {REGIONS_URL} ...')
 
