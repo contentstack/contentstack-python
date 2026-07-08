@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## _v2.6.1_
+
+### **Date: 13-July-2026**
+
+- Removed unused `keyring` dependency to resolve a Snyk license-policy issue on the transitive `secretstorage` package.(Snyk Fix)
+
 ## _v2.6.0_
 
 ### **Date: 22-June-2026**
