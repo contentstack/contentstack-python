@@ -42,7 +42,7 @@ def get_contentstack_endpoint(region='us', service='', omit_https=False):
 __title__ = 'contentstack-delivery-python'
 __author__ = 'contentstack'
 __status__ = 'debug'
-__version__ = 'v2.6.1'
+__version__ = 'v2.7.0'
 __endpoint__ = 'cdn.contentstack.io'
 __email__ = 'support@contentstack.com'
 __developer_email__ = 'mobile@contentstack.com'

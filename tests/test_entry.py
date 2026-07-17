@@ -9,6 +9,7 @@ ENVIRONMENT = config.ENVIRONMENT
 HOST = config.HOST
 FAQ_UID = config.FAQ_UID  # Add this in your config.py
 VARIANT_UID = config.VARIANT_UID
+BRANCH = getattr(config, 'BRANCH', None)
 
 class TestEntry(unittest.TestCase):
 
@@ -317,6 +318,48 @@ class TestEntry(unittest.TestCase):
         entry = content_type.entry(FAQ_UID).variants([VARIANT_UID, VARIANT_UID])
         result = entry.fetch()
         self.assertIn('variants', result['entry']['publish_details'])
+
+    @unittest.skipIf(BRANCH is None, "config.BRANCH is required for branch variant tests")
+    def test_41a_entry_variants_with_branch(self):
+        """Test single entry variants with branch"""
+        content_type = self.stack.content_type('faq')
+        result = content_type.entry(FAQ_UID).variants(VARIANT_UID, BRANCH).fetch()
+        self.assertIn('variants', result['entry']['publish_details'])
+
+    @unittest.skipIf(BRANCH is None, "config.BRANCH is required for branch variant tests")
+    def test_41b_entry_variants_multiple_uids_with_branch(self):
+        """Test single entry variants with multiple UIDs and branch"""
+        content_type = self.stack.content_type('faq')
+        result = content_type.entry(FAQ_UID).variants([VARIANT_UID], BRANCH).fetch()
+        self.assertIn('variants', result['entry']['publish_details'])
+
+    @unittest.skipIf(BRANCH is None, "config.BRANCH is required for branch variant tests")
+    def test_41c_content_type_variants_find_with_branch(self):
+        """Test entries query variants with branch"""
+        content_type = self.stack.content_type('faq')
+        result = content_type.variants(VARIANT_UID, BRANCH).find()
+        self.assertIn('variants', result['entries'][0]['publish_details'])
+
+    @unittest.skipIf(BRANCH is None, "config.BRANCH is required for branch variant tests")
+    def test_41d_content_type_variants_multiple_uids_find_with_branch(self):
+        """Test entries query variants with multiple UIDs and branch"""
+        content_type = self.stack.content_type('faq')
+        result = content_type.variants([VARIANT_UID], BRANCH).find()
+        self.assertIn('variants', result['entries'][0]['publish_details'])
+
+    @unittest.skipIf(BRANCH is None, "config.BRANCH is required for branch variant tests")
+    def test_41e_content_type_variants_branch_as_keyword_arg(self):
+        """Test content_type.variants() with branch passed as keyword argument"""
+        content_type = self.stack.content_type('faq')
+        result = content_type.variants(VARIANT_UID, branch=BRANCH).find()
+        self.assertIn('variants', result['entries'][0]['publish_details'])
+
+    @unittest.skipIf(BRANCH is None, "config.BRANCH is required for branch variant tests")
+    def test_41f_content_type_variants_branch_with_params(self):
+        """Test content_type.variants() with branch and extra query params"""
+        content_type = self.stack.content_type('faq')
+        result = content_type.variants(VARIANT_UID, branch=BRANCH, params={'locale': 'en-us'}).find()
+        self.assertIn('variants', result['entries'][0]['publish_details'])
 
     def test_42_entry_environment_removal(self):
         """Test entry remove_environment method"""

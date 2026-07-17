@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## _v2.7.0_
+
+### **Date: 20-July-2026**
+
+- Added optional branch support for entry variants on `Entry.variants()` and `ContentType.variants()`.
+
 ## _v2.6.1_
 
 ### **Date: 13-July-2026**

@@ -267,17 +267,20 @@ class Entry(EntryQueryable):
             return merged_response  # Now correctly returns a dictionary
         raise ValueError(ErrorMessages.MISSING_LIVE_PREVIEW_KEYS)
     
-    def variants(self, variant_uid: str | list[str], params: dict = None):
+    def variants(self, variant_uid: str | list[str], branch: str = None, params: dict = None):
         """
         Fetches the variants of the entry
-        :param variant_uid: {str} -- variant_uid
-        :return: Entry, so you can chain this call.
+        :param variant_uid: {str | list[str]} -- variant UID or list of variant UIDs
+        :param branch: {str} -- optional branch name to scope the variant request
+        :param params: {dict} -- optional query parameters
+        :return: Variants, so you can chain this call.
         """
         return Variants(
             http_instance=self.http_instance,
             content_type_uid=self.content_type_id,
             entry_uid=self.entry_uid,
             variant_uid=variant_uid,
+            branch=branch,
             params=params,
             logger=self.logger
         )
