@@ -9,10 +9,24 @@ import sys
 
 try:
     from setuptools import setup, find_packages
+    from setuptools.command.build_py import build_py
 except ImportError:
     from distutils.core import setup
 
 package = "contentstack"
+
+
+class BuildPyWithRegions(build_py):
+    """Fetch latest regions.json from Contentstack CDN before packaging."""
+
+    def run(self):
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        try:
+            from contentstack.region_refresh import refresh_regions
+            refresh_regions()
+        except Exception as exc:
+            print(f"WARNING: Could not refresh regions.json: {exc}", file=sys.stderr)
+        super().run()
 
 def get_version(package):
     """
@@ -32,6 +46,7 @@ requirements = [
 ]
 
 setup(
+    cmdclass={"build_py": BuildPyWithRegions},
     title="contentstack-python",
     name="Contentstack",
     status="Active",
@@ -46,6 +61,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/contentstack/contentstack-python",
     packages=['contentstack'],
+    package_data={'contentstack': ['assets/regions.json']},
     license='MIT',
     test_suite='tests',
     install_requires=requirements,

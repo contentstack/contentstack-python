@@ -1,40 +1,45 @@
 ---
 name: code-review
-description: PR review for Contentstack Python CDA SDK — public API, Stack, HTTP layer, tests.
+description: Use when reviewing PRs for the Python CDA SDK — public API, Stack, HTTP layer, tests, secrets.
 ---
 
-# Code review — Contentstack Python CDA SDK
+# Code review – Contentstack Python CDA SDK
 
-## Checklist
+## When to use
 
-- [ ] **API:** New or changed **`Stack`** / content-type / query / entry methods documented; **`contentstack/__init__.py`** exports updated if needed.
-- [ ] **Version:** **`__version__`** in **`contentstack/__init__.py`** aligned with release strategy for breaking changes.
-- [ ] **HTTP:** **`https_connection.py`** / **`controller.py`** changes keep retry and timeout behavior predictable.
-- [ ] **Tests:** **`pytest tests/`** passes; extend **`tests/`** when CDA behavior changes.
-- [ ] **Secrets:** No tokens in repo; **`config.py`** remains local-only when it holds real credentials.
+- Reviewing a PR, self-review before submit, or running an automated review pass.
 
-## Public API
+## Instructions
 
-- **Exported** **`Stack`**, **ContentType**, **Query**, asset/entry helpers match **README** and consumer expectations; **`contentstack/__init__.py`** **`__all__`** stays accurate when exports change.
-- **Docstrings** on **`Stack`** and key public methods when behavior or options change.
+### Checklist
 
-## Compatibility
+- [ ] **API:** New or changed `Stack` / content-type / query / entry methods documented; `contentstack/__init__.py` exports updated if needed.
+- [ ] **Version:** `__version__` in `contentstack/__init__.py` aligned with release strategy for breaking changes.
+- [ ] **HTTP:** `https_connection.py` / `controller.py` changes keep retry and timeout behavior predictable.
+- [ ] **Tests:** `pytest tests/` passes; extend `tests/` when CDA behavior changes.
+- [ ] **Secrets:** No tokens in repo; `config.py` remains local-only when it holds real credentials.
 
-- Avoid breaking **`Stack.__init__`** signatures or method chains without a semver strategy; document migration for breaking changes (**`setup.py`** / **`__version__`**).
+### Public API
 
-## HTTP / dependencies
+- Exported `Stack`, `ContentType`, `Query`, asset/entry helpers match `README` and consumer expectations; `contentstack/__init__.py` `__all__` stays accurate when exports change.
+- Docstrings on `Stack` and key public methods when behavior or options change.
 
-- Changes to **`requests`**, **retry** behavior, or **`HTTPSConnection`** should stay consistent with **`contentstack/controller.py`** and **`urllib3`** **`Retry`** usage in **`stack.py`**.
+### Compatibility
 
-## Tests
+- Avoid breaking `Stack.__init__` signatures or method chains without a semver strategy; document migration for breaking changes in `setup.py` / `__version__`.
 
-- **Tests** hit the live CDA when using **`config`** credentials; extend **`tests/`** when request/response behavior changes. Do not commit new secrets.
+### HTTP / dependencies
 
-## Security
+- Changes to `requests`, retry behavior, or `HTTPSConnection` should stay consistent with `contentstack/controller.py` and `urllib3.Retry` usage in `stack.py`.
 
-- No hardcoded tokens in source or docs; no logging of **api keys**, **delivery tokens**, **preview**, or **management** tokens.
+### Security
 
-## References
+- No hardcoded tokens in source or docs; no logging of `api_key`, `delivery_token`, `preview_token`, or `management_token`.
 
-- [`dev-workflow/SKILL.md`](../dev-workflow/SKILL.md)
-- [`python-style/SKILL.md`](../python-style/SKILL.md)
+### Severity (optional)
+
+| Level | Examples |
+|-------|----------|
+| **Blocker** | Breaking public API without approval; security issue; no tests for new logic |
+| **Major** | Inconsistent HTTP/retry behavior; README examples that don't match code |
+| **Minor** | Style; minor docs |

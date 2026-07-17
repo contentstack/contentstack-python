@@ -1,10 +1,31 @@
 # CHANGELOG
 
-## _v2.6.0_
+## _v2.7.0_
 
-### **Date: 18-May-2026**
+### **Date: 20-July-2026**
 
 - Added optional branch support for entry variants on `Entry.variants()` and `ContentType.variants()`.
+
+## _v2.6.1_
+
+### **Date: 13-July-2026**
+
+- Removed unused `keyring` dependency to resolve a Snyk license-policy issue on the transitive `secretstorage` package.(Snyk Fix)
+
+## _v2.6.0_
+
+### **Date: 22-June-2026**
+
+- Dynamic endpoint resolution via new `Endpoint` class.
+- Region-to-URL mapping is now loaded from a bundled `regions.json` (sourced from `artifacts.contentstack.com`) instead of hardcoded `if/elif` chains.
+- Added `Endpoint.get_contentstack_endpoint(region, service, omit_https)` — resolves any supported region to its `contentDelivery`, `contentManagement`, or other service URL.
+- Added `contentstack.get_contentstack_endpoint()` module-level proxy.
+- `Stack` now auto-resolves `host` and `live_preview` management host via `Endpoint` on initialization.
+- Bundled `contentstack/assets/regions.json` included in `package_data` — always present after `pip install`.
+- `setup.py` auto-refreshes `regions.json` at build time via a custom `BuildPyWithRegions` command; network failures warn but never block the build.
+- Runtime fallback: if `regions.json` is absent, the SDK downloads it live on the first `Endpoint` call.
+- Added `refresh_regions()` utility to programmatically download the latest regions manifest from the Contentstack CDN and overwrite the bundled `assets/regions.json` (`from contentstack import refresh_regions`).
+- Added `python3 -m contentstack.region_refresh` CLI command for refreshing the registry after `pip install` (source-tree script `scripts/download_regions.py` is for contributors only).
 
 ## _v2.5.1_
 
