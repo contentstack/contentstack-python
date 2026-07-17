@@ -188,3 +188,12 @@ class TestVariantsBranch:
         result = entry.variants("variant_uid", params={"locale": "en-us"})
         assert result.branch is None
         assert result.entry_param == {"locale": "en-us"}
+
+    def test_content_type_variants_fetch_raises_without_entry_uid(self, mock_http_instance):
+        from contentstack.contenttype import ContentType
+        import pytest
+
+        content_type = ContentType(mock_http_instance, "faq")
+        variants = content_type.variants("variant_uid")
+        with pytest.raises(ValueError):
+            variants.fetch()

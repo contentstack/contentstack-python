@@ -347,6 +347,20 @@ class TestEntry(unittest.TestCase):
         result = content_type.variants([VARIANT_UID], BRANCH).find()
         self.assertIn('variants', result['entries'][0]['publish_details'])
 
+    @unittest.skipIf(BRANCH is None, "config.BRANCH is required for branch variant tests")
+    def test_41e_content_type_variants_branch_as_keyword_arg(self):
+        """Test content_type.variants() with branch passed as keyword argument"""
+        content_type = self.stack.content_type('faq')
+        result = content_type.variants(VARIANT_UID, branch=BRANCH).find()
+        self.assertIn('variants', result['entries'][0]['publish_details'])
+
+    @unittest.skipIf(BRANCH is None, "config.BRANCH is required for branch variant tests")
+    def test_41f_content_type_variants_branch_with_params(self):
+        """Test content_type.variants() with branch and extra query params"""
+        content_type = self.stack.content_type('faq')
+        result = content_type.variants(VARIANT_UID, branch=BRANCH, params={'locale': 'en-us'}).find()
+        self.assertIn('variants', result['entries'][0]['publish_details'])
+
     def test_42_entry_environment_removal(self):
         """Test entry remove_environment method"""
         entry = (self.stack.content_type('faq')
