@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## _v2.7.1_
+
+### **Date: 22-July-2026**
+
+- Upgraded `setuptools` to `83.0.0` to resolve a Snyk-flagged Improper Unicode Encoding Handling issue.(Snyk Fix)
+
 ## _v2.7.0_
 
 ### **Date: 20-July-2026**
