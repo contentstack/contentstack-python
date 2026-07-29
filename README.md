@@ -126,6 +126,36 @@ image = stack.image_transform(url, {'width': 100, 'height': 100}).get_url()
 image = stack.image_transform(url, {'auto': 'webp'}).get_url()
 ```
 
+### Working with Taxonomies
+
+Taxonomies published to an environment/locale can be fetched directly via the Content Delivery API.
+
+```python
+# List all published taxonomies
+result = stack.taxonomy().limit(10).include_count().find()
+taxonomies = result['taxonomies']
+
+# Fetch a single taxonomy, with locale fallback
+taxonomy = stack.taxonomy('regions').locale('fr-fr').include_fallback().fetch()
+
+# List all terms in a taxonomy
+terms_result = stack.taxonomy('regions').term().locale('en-us').depth(3).find()
+
+# Fetch a single term
+term = stack.taxonomy('regions').term('california').fetch()
+
+# Term hierarchy traversal
+ancestors = stack.taxonomy('regions').term('san-francisco').depth(5).ancestors()
+descendants = stack.taxonomy('electronics').term('laptops').depth(2).descendants()
+locales = stack.taxonomy('regions').term('california').locales()
+```
+
+`stack.taxonomy()` (no uid) with a filter chained still filters entries by taxonomy, unchanged:
+
+```python
+result = stack.taxonomy().in_('taxonomies.category', ['category1', 'category2']).find()
+```
+
 ### Using the Sync API with Python SDK
 
 The Sync API takes care of syncing your Contentstack data with your application and ensures that the data is always
