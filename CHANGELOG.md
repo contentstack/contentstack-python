@@ -2,7 +2,7 @@
 
 ## _v2.8.0_
 
-### **Date: 28-July-2026**
+### **Date: 03-Aug-2026**
 
 - Added Taxonomy CDA support: `stack.taxonomy(uid)` now fetches a single published taxonomy (`.fetch()`), lists its terms (`.term().find()`), and fetches/traverses a single term (`.term(uid).fetch()/.locales()/.ancestors()/.descendants()`), with `.locale()`, `.include_fallback()`, `.include_branch()`, `.depth()`, `.skip()`, `.limit()`, `.include_count()`, and `.param()` chainable across the new classes. `stack.taxonomy()` (no uid) now also lists all published taxonomies via `.find()` when no filter is chained — existing entry-filter usage (`.in_()`, `.above()`, `.below()`, `.exists()`, etc. followed by `.find()`) is fully backward compatible and unchanged.
 
