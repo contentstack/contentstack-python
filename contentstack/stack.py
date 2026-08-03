@@ -8,7 +8,7 @@ from contentstack.asset import Asset
 from contentstack.assetquery import AssetQuery
 from contentstack.contenttype import ContentType
 from contentstack.endpoint import Endpoint
-from contentstack.taxonomy import Taxonomy
+from contentstack.taxonomy import Taxonomy, TaxonomyQuery
 from contentstack.globalfields import GlobalField
 from contentstack.https_connection import HTTPSConnection
 from contentstack.image_transform import ImageTransform
@@ -202,13 +202,35 @@ class Stack:
         """
         return ContentType(self.http_instance, content_type_uid)
     
-    def taxonomy(self):
+    def taxonomy(self, taxonomy_uid: str = None):
         """
-        taxonomy defines the structure or schema of a page or a section
-        of your web or mobile property.
-        :return: taxonomy
+        Without taxonomy_uid: returns a TaxonomyQuery. Chain a filter
+        (in_, or_, and_, exists, above, below, equal_and_above, equal_and_below)
+        then find() to fetch entries filtered by taxonomy (legacy behavior,
+        unchanged). Or call find() directly with nothing chained to list all
+        published taxonomies from the Content Delivery API.
+
+        With taxonomy_uid: returns a Taxonomy for CDA access to that specific
+        published taxonomy (fetch(), term()).
+
+        :param taxonomy_uid: {str} -- (optional) unique identifier of the taxonomy.
+        :return: TaxonomyQuery or Taxonomy
+        -----------------------------
+        Example::
+
+            >>> import contentstack
+            >>> stack = contentstack.Stack('api_key', 'delivery_token', 'environment')
+            >>> # Legacy: filter entries by taxonomy
+            >>> result = stack.taxonomy().in_('taxonomies.color', ['red']).find()
+            >>> # New: list all published taxonomies
+            >>> result = stack.taxonomy().limit(10).find()
+            >>> # New: fetch a single published taxonomy
+            >>> result = stack.taxonomy('regions').fetch()
+        -----------------------------
         """
-        return Taxonomy(self.http_instance)
+        if taxonomy_uid:
+            return Taxonomy(self.http_instance, taxonomy_uid)
+        return TaxonomyQuery(self.http_instance)
     
     def global_field(self, global_field_uid=None):
         """
