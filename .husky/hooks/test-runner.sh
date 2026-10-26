@@ -20,7 +20,12 @@ fi
 
 # Run tests
 echo "  - Running tests..."
-if pytest --html=tests/report/test-report.html; then
+# HTML report only when pytest-html is installed (it is optional)
+HTML_ARGS=""
+if python -c "import pytest_html" 2>/dev/null; then
+    HTML_ARGS="--html=tests/report/test-report.html"
+fi
+if pytest $HTML_ARGS; then
     echo "    ✅ All tests passed"
 else
     echo "    ❌ Tests failed. Please fix before pushing."

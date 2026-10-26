@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## _v2.8.1_
+
+### **Date: 26-Oct-2026**
+
+- Resolved Snyk dependency findings in `requirements.txt` (DX-27844 to DX-27852, DX-23123, DX-23125 to DX-23129):
+  - Bumped `urllib3` to `~=2.8.0`, `certifi` to `>=2026.10.19` and `setuptools` to `>=84.1.0`.
+  - Removed unused packages that were the source of the remaining vulnerability and licence findings: `twython` (and its `oauthlib`), `tox` (and its `virtualenv`, `chardet`, `distlib`, `filelock`, `platformdirs`, `cachetools`), `utils`, `astroid`, `pytest-html` and `black`. None are imported by the SDK. The runtime requirements in `setup.py` are unchanged.
+
 ## _v2.8.0_
 
 ### **Date: 03-Aug-2026**
