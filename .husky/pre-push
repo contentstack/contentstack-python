@@ -1,4 +1,14 @@
 #!/usr/bin/env sh
+# >>> GitGuardian secret scan (managed by Contentstack Security) >>>
+if [ -z "${CI:-}" ]; then
+  if ! command -v ggshield >/dev/null 2>&1; then
+    echo "ggshield is not installed - secret scanning is required. Setup: https://contentstack.atlassian.net/wiki/x/FIDVEwE" >&2
+    exit 1
+  fi
+  ggshield secret scan pre-push "$@" || exit 1
+fi
+# <<< GitGuardian secret scan <<<
+
 
 echo "🚀 Running pre-push checks..."
 
